@@ -53,7 +53,7 @@ CTTF2RDFDlg::CTTF2RDFDlg(CWnd* pParent /*=NULL*/)
 	, m_strTTFFile(_T(""))
 	, m_strRDFFile(_T(""))
 	, m_strText(_T("RDF LTD."))
-	, m_iGeometry(EXTRSUSION_AREA_SOLID_SET)
+	, m_iGeometry(FACE2D_SET)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }

@@ -170,6 +170,9 @@ public: // Methods
 	// dtor
 	virtual ~CText2RDF();
 
+	OwlInstance Translate(OwlInstance iInstance,
+		double dX, double dY, double dZ);
+
 	// --------------------------------------------------------------------------------------------
 	// Convert
 	void Run();

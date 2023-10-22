@@ -32,6 +32,39 @@ CText2RDF::~CText2RDF()
 {
 }
 
+OwlInstance CText2RDF::Translate(
+	OwlInstance iInstance,
+	double dX, double dY, double dZ)
+{
+	ASSERT(iInstance != 0);
+
+	int64_t iMatrixInstance = CreateInstance(m_iMatrixClass);
+	ASSERT(iMatrixInstance != 0);
+
+	vector<double> vecTransformationMatrix =
+	{
+		1., 0., 0.,
+		0., 1., 0.,
+		0., 0., 1.,
+		dX, dY, dZ,
+	};
+
+	SetDatatypeProperty(
+		iMatrixInstance,
+		GetPropertyByName(m_iModel, "coordinates"),
+		vecTransformationMatrix.data(),
+		vecTransformationMatrix.size());
+
+	int64_t iTransformationInstance = CreateInstance(m_iTransformationClass, "Translate");
+	ASSERT(iTransformationInstance != 0);
+
+	SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "matrix"), &iMatrixInstance, 1);
+	SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "object"), &iInstance, 1);
+
+	return iTransformationInstance;
+}
+
+
 // ------------------------------------------------------------------------------------------------
 void CText2RDF::Run()
 {
@@ -94,6 +127,7 @@ void CText2RDF::Run()
 
 	FT_Set_Pixel_Sizes(face, 0, 16);
 
+	vector<int64_t> vecFace2DInstances;
 	for (size_t iChar = 0; iChar < strText.GetLength(); iChar++)
 	{
 		FT_ULong charcode = strText[iChar];
@@ -233,7 +267,7 @@ void CText2RDF::Run()
 				* Face2DSet
 				*/
 				__int64 iFace2DSetInstance = CreateInstance(m_iFace2DSetClass);
-				assert(iFace2DSetInstance != 0);
+				assert(iFace2DSetInstance != 0);				
 
 				// polygons
 				SetObjectProperty(iFace2DSetInstance, GetPropertyByName(m_iModel, "polygons"), vecTransformations.data(), vecTransformations.size());
@@ -242,6 +276,8 @@ void CText2RDF::Run()
 				m_vecContours[0]->m_iOffsetX = m_iOffsetX;
 
 				m_mapLetters[strText[iChar]] = m_vecContours;
+
+				vecFace2DInstances.push_back(iFace2DSetInstance);
 			} // if (itLetter == m_mapLetters.end())
 			else
 			{
@@ -270,6 +306,8 @@ void CText2RDF::Run()
 				SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_42"), &_42, 1);
 
 				SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "matrix"), &iMatrixInstance, 1);
+
+				vecFace2DInstances.push_back(iTransformationInstance);
 			} // else if (itLetter == m_mapLetters.end())			
 		} // case FACE2D_SET:
 		break;
@@ -398,9 +436,31 @@ void CText2RDF::Run()
 	} // for (; itLetter != ...
 	m_mapLetters.clear();
 
+	if (m_iGeometry == FACE2D_SET)
+	{
+		assert(!vecFace2DInstances.empty());
+
+		__int64 iCollectionInstance = CreateInstance(m_iCollectionClass);
+		assert(iCollectionInstance != 0);
+
+		SetObjectProperty(iCollectionInstance, GetPropertyByName(m_iModel, "objects"), vecFace2DInstances.data(), vecFace2DInstances.size());
+
+		double arAABBMin[] = { 0., 0., 0. };
+		double arAABBMax[] = { 0., 0., 0. };
+		GetBoundingBox(
+			iCollectionInstance,
+			(double*)&arAABBMin,
+			(double*)&arAABBMax);
+
+		Translate(
+			iCollectionInstance,
+			-(arAABBMin[0] + arAABBMax[0]) / 2., -(arAABBMin[1] + arAABBMax[1]) / 2., -(arAABBMin[2] + arAABBMax[2]) / 2.);
+	}	
+
 	/*
 	* Save
-	*/
+	*/	
+	SetOverrideFileIO(m_iModel, 1 + 16, 7 + 16); // base64
 	SaveModelW(m_iModel, (LPCTSTR)m_strRDFFile);
 
 	/*
