@@ -7,6 +7,9 @@
 #include "TTF2RDFDlg.h"
 #include "afxdialogex.h"
 
+#include <fstream>
+using namespace std;
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -166,10 +169,57 @@ HCURSOR CTTF2RDFDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+void CTTF2RDFDlg::ExportASCII(char cStart, char cEnd)
+{
+	// props
+	// ascii
+	// ttf:advance:x
+
+	wofstream hFile(L"ascii.h");
+	hFile << "#pragma once";
+
+	hFile << "\n\n#include \"engine.h\"";
+
+	// namespace START
+	hFile << "\n\nnamespace ascii {";
+
+	// constants
+	for (char c = cStart; c <= cEnd; c++)
+	{
+		CText2RDF convertor(CString(c, 1), m_strTTFFile, m_strRDFFile, FACE2D_SET);
+		convertor.Run();
+
+		wifstream base64ContentStream(m_strRDFFile);
+		wstring strBase64Content((std::istreambuf_iterator<wchar_t>(base64ContentStream)), std::istreambuf_iterator<wchar_t>());
+
+		hFile << "\nconst char* _" << (int)c << " = \"";
+		hFile << strBase64Content;
+		hFile << "\";";
+	} // for (char c = ...
+
+	// map
+	hFile << "\n\nstatic map<char, OwlInstance> CHARS;";
+
+	// init START
+	hFile << "\n\nstatic void init(OwlModel iModel) {";
+	for (char c = cStart; c <= cEnd; c++)
+	{
+		hFile << "\n\tCHARS[" << (int)c << "] = ImportModelA(iModel, (const unsigned char*)_" << (int)c << ");";
+	}	
+	// init END
+	hFile << "\n}";
+
+	// namespace END
+	hFile << "\n};";
+}
+
 // ------------------------------------------------------------------------------------------------
 void CTTF2RDFDlg::OnBnClickedButtonRun()
 {
 	UpdateData(TRUE);
+
+	// ASCII
+	ExportASCII(32, 126);
 
 	if (m_strTTFFile.IsEmpty())
 	{

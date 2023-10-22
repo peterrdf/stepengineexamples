@@ -31,6 +31,7 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
+	void ExportASCII(char cStart, char cEnd);
 	afx_msg void OnBnClickedButtonRun();
 	CString m_strTTFFile;
 	CString m_strRDFFile;

@@ -72,8 +72,6 @@ void CText2RDF::Run()
 	assert(!m_strRDFFile.IsEmpty());
 
 	CString strText = m_strText;
-	strText.Trim();
-
 	assert(!strText.IsEmpty());
 
 	m_iOffsetX = 0;
@@ -438,8 +436,6 @@ void CText2RDF::Run()
 
 	if (m_iGeometry == FACE2D_SET)
 	{
-		assert(!vecFace2DInstances.empty());
-
 		__int64 iCollectionInstance = CreateInstance(m_iCollectionClass);
 		assert(iCollectionInstance != 0);
 
