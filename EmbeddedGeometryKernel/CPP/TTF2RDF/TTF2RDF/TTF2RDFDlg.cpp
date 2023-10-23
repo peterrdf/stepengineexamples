@@ -185,6 +185,9 @@ void CTTF2RDFDlg::ExportASCII(char cStart, char cEnd)
 	hFile << "#pragma once";
 
 	hFile << "\n\n#include \"engine.h\"";
+	hFile << "\n\n#include <map>";
+	hFile << "\n\n#include <vector>";
+	hFile << "\nusing namespace std;";
 
 	// namespace START
 	hFile << "\n\nnamespace ascii {";
@@ -198,7 +201,7 @@ void CTTF2RDFDlg::ExportASCII(char cStart, char cEnd)
 		wifstream base64ContentStream(m_strRDFFile);
 		wstring strBase64Content((std::istreambuf_iterator<wchar_t>(base64ContentStream)), std::istreambuf_iterator<wchar_t>());
 
-		hFile << "\nconst char* _" << (int)c << " = \"";
+		hFile << "\nstatic const char* _" << (int)c << " = \"";
 		hFile << strBase64Content;
 		hFile << "\";";
 	} // for (char c = ...
@@ -207,14 +210,20 @@ void CTTF2RDFDlg::ExportASCII(char cStart, char cEnd)
 	hFile << "\n\nstatic map<char, OwlInstance> CHARS;";
 
 	// init START
-	hFile << "\n\nstatic void init(OwlModel iModel) {";
+	hFile << "\n\nstatic void importChars(OwlModel iModel) {";	
 	hFile << "\n\tOwlInstance iInstance = 0;";
+	hFile << "\n\tvector<OwlInstance> vecInstances;";
 	for (char c = cStart; c <= cEnd; c++)
 	{
 		hFile << "\n\tiInstance = ImportModelA(iModel, (const unsigned char*)_" << (int)c << ");";
-		hFile << "\n\tSetNameOfInstance(iInstance, \"ASCII:" << (escapeChar(c) ? "\\" : "") << c << "\");";
-		hFile << "\n\tCHARS[" << (int)c << "] = iInstance;";
+		hFile << "\n\tSetNameOfInstance(iInstance, \"ASCII: '" << (escapeChar(c) ? "\\" : "") << c << "'\");";
+		hFile << "\n\tCHARS[" << (int)c << "] = iInstance; vecInstances.push_back(iInstance);";
 	}	
+
+	hFile << "\n\n\tOwlClass iNillClass = GetClassByName(iModel, \"Nill\");";
+	hFile << "\n\tOwlInstance iNillInstance = CreateInstance(iNillClass, \"ASCII\");";
+	hFile << "\n\tSetObjectProperty(iNillInstance, GetPropertyByName(iModel, \"objects\"), vecInstances.data(), vecInstances.size());";
+
 	// init END
 	hFile << "\n}";
 
@@ -224,7 +233,7 @@ void CTTF2RDFDlg::ExportASCII(char cStart, char cEnd)
 	hFile << "\n\tif (itChar != CHARS.end()) {";
 	hFile << "\n\t\treturn itChar->second;";
 	hFile << "\n\t}";
-	hFile << "\n\n\treturn 0;";	
+	hFile << "\n\treturn 0;";	
 	// getCharInstance END
 	hFile << "\n}";
 
@@ -251,8 +260,11 @@ void CTTF2RDFDlg::OnBnClickedButtonRun()
 		return;
 	}
 
-	// Test: ASCII
-	ExportASCII(32, 126); return;
+	// ASCII
+	if (m_iGeometry == FACE2D_SET)
+	{
+		ExportASCII(32, 126);
+	}	
 
 	CString strText = m_strText;
 	strText.Trim();

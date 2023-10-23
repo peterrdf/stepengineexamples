@@ -56,7 +56,7 @@ OwlInstance CText2RDF::Translate(
 		vecTransformationMatrix.data(),
 		vecTransformationMatrix.size());
 
-	int64_t iTransformationInstance = CreateInstance(m_iTransformationClass, "Translate");
+	int64_t iTransformationInstance = CreateInstance(m_iTransformationClass);
 	ASSERT(iTransformationInstance != 0);
 
 	SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "matrix"), &iMatrixInstance, 1);
@@ -127,7 +127,7 @@ void CText2RDF::Run()
 	FT_Set_Pixel_Sizes(face, 0, 16);
 
 	vector<int64_t> vecFace2DInstances;
-	for (size_t iChar = 0; iChar < strText.GetLength(); iChar++)
+	for (int iChar = 0; iChar < strText.GetLength(); iChar++)
 	{
 		FT_ULong charcode = strText[iChar];
 
