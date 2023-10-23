@@ -160,11 +160,14 @@ private: // Members
 	// Geometry
 	int m_iGeometry;
 
+	// Transformation
+	bool m_bCenter;
+
 public: // Methods
 
 	// --------------------------------------------------------------------------------------------
 	// ctor
-	CText2RDF(const CString & strText, const CString & strTTFFile, const CString & strRDFFile, int iGeometry);
+	CText2RDF(const CString & strText, const CString & strTTFFile, const CString & strRDFFile, int iGeometry, bool bCenter = true);
 
 	// --------------------------------------------------------------------------------------------
 	// dtor

@@ -169,6 +169,12 @@ HCURSOR CTTF2RDFDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+static bool escapeChar(char c)
+{
+	return ((c == '\\') ||
+		(c == '"'));
+}
+
 void CTTF2RDFDlg::ExportASCII(char cStart, char cEnd)
 {
 	// props
@@ -186,7 +192,7 @@ void CTTF2RDFDlg::ExportASCII(char cStart, char cEnd)
 	// constants
 	for (char c = cStart; c <= cEnd; c++)
 	{
-		CText2RDF convertor(CString(c, 1), m_strTTFFile, m_strRDFFile, FACE2D_SET);
+		CText2RDF convertor(CString(c, 1), m_strTTFFile, m_strRDFFile, FACE2D_SET, false);
 		convertor.Run();
 
 		wifstream base64ContentStream(m_strRDFFile);
@@ -202,11 +208,24 @@ void CTTF2RDFDlg::ExportASCII(char cStart, char cEnd)
 
 	// init START
 	hFile << "\n\nstatic void init(OwlModel iModel) {";
+	hFile << "\n\tOwlInstance iInstance = 0;";
 	for (char c = cStart; c <= cEnd; c++)
 	{
-		hFile << "\n\tCHARS[" << (int)c << "] = ImportModelA(iModel, (const unsigned char*)_" << (int)c << ");";
+		hFile << "\n\tiInstance = ImportModelA(iModel, (const unsigned char*)_" << (int)c << ");";
+		hFile << "\n\tSetNameOfInstance(iInstance, \"ASCII:" << (escapeChar(c) ? "\\" : "") << c << "\");";
+		hFile << "\n\tCHARS[" << (int)c << "] = iInstance;";
 	}	
 	// init END
+	hFile << "\n}";
+
+	// getCharInstance START
+	hFile << "\n\nstatic OwlInstance getCharInstance(char c) {";
+	hFile << "\n\tauto itChar = CHARS.find(c);";
+	hFile << "\n\tif (itChar != CHARS.end()) {";
+	hFile << "\n\t\treturn itChar->second;";
+	hFile << "\n\t}";
+	hFile << "\n\n\treturn 0;";	
+	// getCharInstance END
 	hFile << "\n}";
 
 	// namespace END
@@ -216,10 +235,7 @@ void CTTF2RDFDlg::ExportASCII(char cStart, char cEnd)
 // ------------------------------------------------------------------------------------------------
 void CTTF2RDFDlg::OnBnClickedButtonRun()
 {
-	UpdateData(TRUE);
-
-	// ASCII
-	ExportASCII(32, 126);
+	UpdateData(TRUE);	
 
 	if (m_strTTFFile.IsEmpty())
 	{
@@ -234,6 +250,9 @@ void CTTF2RDFDlg::OnBnClickedButtonRun()
 
 		return;
 	}
+
+	// Test: ASCII
+	ExportASCII(32, 126); return;
 
 	CString strText = m_strText;
 	strText.Trim();

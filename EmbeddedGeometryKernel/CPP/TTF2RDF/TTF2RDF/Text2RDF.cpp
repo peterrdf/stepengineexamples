@@ -2,7 +2,7 @@
 #include "Text2RDF.h"
 
 // ------------------------------------------------------------------------------------------------
-CText2RDF::CText2RDF(const CString & strText, const CString & strTTFFile, const CString & strRDFFile, int iGeometry)
+CText2RDF::CText2RDF(const CString & strText, const CString & strTTFFile, const CString & strRDFFile, int iGeometry, bool bCenter/* = true*/)
 	: m_iModel(0)
 	, m_iLine3DClass(0)
 	, m_iPoint3DClass(0)
@@ -24,6 +24,7 @@ CText2RDF::CText2RDF(const CString & strText, const CString & strTTFFile, const 
 	, m_iOffsetX(0)
 	, m_iOffsetY(0)
 	, m_iGeometry(iGeometry)
+	, m_bCenter(bCenter)
 {
 }
 
@@ -161,250 +162,250 @@ void CText2RDF::Run()
 
 		switch (m_iGeometry)
 		{
-		case LINES_AND_CURVES:
-		{
-			itLetter = m_mapLetters.find(strText[iChar]);
-			if (itLetter == m_mapLetters.end())
+			case LINES_AND_CURVES:
 			{
-				/*
-				* Create Collection for each letter
-				*/
-				__int64 iCollectionInstance = CreateInstance(m_iCollectionClass);
-				assert(iCollectionInstance != 0);
-
-				m_vecContours[0]->m_iGeometryInstance = iCollectionInstance;
-				m_vecContours[0]->m_iOffsetX = m_iOffsetX;
-
-				vector<int64_t> vecLetter;
-				for (size_t iContour = 0; iContour < m_vecContours.size(); iContour++)
+				itLetter = m_mapLetters.find(strText[iChar]);
+				if (itLetter == m_mapLetters.end())
 				{
-					for (size_t iInstance = 0; iInstance < m_vecContours[iContour]->m_vecInstances.size(); iInstance++)
+					/*
+					* Create Collection for each letter
+					*/
+					__int64 iCollectionInstance = CreateInstance(m_iCollectionClass);
+					assert(iCollectionInstance != 0);
+
+					m_vecContours[0]->m_iGeometryInstance = iCollectionInstance;
+					m_vecContours[0]->m_iOffsetX = m_iOffsetX;
+
+					vector<int64_t> vecLetter;
+					for (size_t iContour = 0; iContour < m_vecContours.size(); iContour++)
 					{
-						vecLetter.push_back(m_vecContours[iContour]->m_vecInstances[iInstance]);
-					}
-				} // for (size_t iContour = ...
+						for (size_t iInstance = 0; iInstance < m_vecContours[iContour]->m_vecInstances.size(); iInstance++)
+						{
+							vecLetter.push_back(m_vecContours[iContour]->m_vecInstances[iInstance]);
+						}
+					} // for (size_t iContour = ...
 
-				SetObjectProperty(iCollectionInstance, GetPropertyByName(m_iModel, "objects"), vecLetter.data(), vecLetter.size());
+					SetObjectProperty(iCollectionInstance, GetPropertyByName(m_iModel, "objects"), vecLetter.data(), vecLetter.size());
 
-				m_mapLetters[strText[iChar]] = m_vecContours;
-			} // if (itLetter == m_mapLetters.end())
-			else
-			{
-				/*
-				* Resuse the Collection
-				*/
-
-				// Contour
-				CGlyphContour * pContour = itLetter->second[0];
-				assert(pContour->m_iGeometryInstance != 0);
-
-				// Transformation
-				__int64 iTransformationInstance = CreateInstance(m_iTransformationClass);
-				assert(iTransformationInstance != 0);
-
-				// object
-				SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "object"), &pContour->m_iGeometryInstance, 1);
-
-				// matrix
-				__int64 iMatrixInstance = CreateInstance(m_iMatrixClass);
-				assert(iMatrixInstance != 0);
-
-				double _41 = DOUBLE_FROM_26_6(-pContour->m_iOffsetX + m_iOffsetX);
-				double _42 = DOUBLE_FROM_26_6(m_iOffsetY);
-				SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_41"), &_41, 1);
-				SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_42"), &_42, 1);
-
-				SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "matrix"), &iMatrixInstance, 1);
-			} // else if (itLetter == m_mapLetters.end())
-		} // case LINES_AND_CURVES:
-		break;
-
-		case FACE2D_SET:
-		{
-			itLetter = m_mapLetters.find(strText[iChar]);
-			if (itLetter == m_mapLetters.end())
-			{
-				/*
-				* Create Polygon3D and Transformation for each contour
-				*/
-
-				// One Transformation per Polygon3D
-				vector<int64_t> vecTransformations;
-				for (size_t iContour = 0; iContour < m_vecContours.size(); iContour++)
+					m_mapLetters[strText[iChar]] = m_vecContours;
+				} // if (itLetter == m_mapLetters.end())
+				else
 				{
-					// Polygon3D
-					__int64 iPolygon3DInstance = CreateInstance(m_iPolygon3DClass);
-					assert(iPolygon3DInstance != 0);
+					/*
+					* Resuse the Collection
+					*/
 
-					m_vecContours[iContour]->m_iGeometryInstance = iPolygon3DInstance;
-
-					SetObjectProperty(iPolygon3DInstance, GetPropertyByName(m_iModel, "lineParts"), m_vecContours[iContour]->m_vecInstances.data(), m_vecContours[iContour]->m_vecInstances.size());
+					// Contour
+					CGlyphContour * pContour = itLetter->second[0];
+					assert(pContour->m_iGeometryInstance != 0);
 
 					// Transformation
 					__int64 iTransformationInstance = CreateInstance(m_iTransformationClass);
 					assert(iTransformationInstance != 0);
 
 					// object
-					SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "object"), &iPolygon3DInstance, 1);
+					SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "object"), &pContour->m_iGeometryInstance, 1);
 
 					// matrix
 					__int64 iMatrixInstance = CreateInstance(m_iMatrixClass);
 					assert(iMatrixInstance != 0);
 
-					double _41 = DOUBLE_FROM_26_6(m_vecContours[iContour]->m_iOffsetX + m_iOffsetX);
-					double _42 = DOUBLE_FROM_26_6(m_vecContours[iContour]->m_iOffsetY + m_iOffsetY);
+					double _41 = DOUBLE_FROM_26_6(-pContour->m_iOffsetX + m_iOffsetX);
+					double _42 = DOUBLE_FROM_26_6(m_iOffsetY);
 					SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_41"), &_41, 1);
 					SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_42"), &_42, 1);
 
 					SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "matrix"), &iMatrixInstance, 1);
+				} // else if (itLetter == m_mapLetters.end())
+			} // case LINES_AND_CURVES:
+			break;
 
-					vecTransformations.push_back(iTransformationInstance);
-				} // for (size_t iContour = ...
-
-				/*
-				* Face2DSet
-				*/
-				__int64 iFace2DSetInstance = CreateInstance(m_iFace2DSetClass);
-				assert(iFace2DSetInstance != 0);				
-
-				// polygons
-				SetObjectProperty(iFace2DSetInstance, GetPropertyByName(m_iModel, "polygons"), vecTransformations.data(), vecTransformations.size());
-
-				m_vecContours[0]->m_iGeometryInstance = iFace2DSetInstance;
-				m_vecContours[0]->m_iOffsetX = m_iOffsetX;
-
-				m_mapLetters[strText[iChar]] = m_vecContours;
-
-				vecFace2DInstances.push_back(iFace2DSetInstance);
-			} // if (itLetter == m_mapLetters.end())
-			else
+			case FACE2D_SET:
 			{
-				/*
-				* Resuse the Face2DSet
-				*/
-
-				// Contour
-				CGlyphContour * pContour = itLetter->second[0];
-				assert(pContour->m_iGeometryInstance != 0);
-
-				// Transformation
-				__int64 iTransformationInstance = CreateInstance(m_iTransformationClass);
-				assert(iTransformationInstance != 0);
-
-				// object
-				SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "object"), &pContour->m_iGeometryInstance, 1);
-
-				// matrix
-				__int64 iMatrixInstance = CreateInstance(m_iMatrixClass);
-				assert(iMatrixInstance != 0);
-
-				double _41 = DOUBLE_FROM_26_6(-pContour->m_iOffsetX + m_iOffsetX);
-				double _42 = DOUBLE_FROM_26_6(m_iOffsetY);
-				SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_41"), &_41, 1);
-				SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_42"), &_42, 1);
-
-				SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "matrix"), &iMatrixInstance, 1);
-
-				vecFace2DInstances.push_back(iTransformationInstance);
-			} // else if (itLetter == m_mapLetters.end())			
-		} // case FACE2D_SET:
-		break;
-
-		case EXTRSUSION_AREA_SOLID_SET:
-		{
-			itLetter = m_mapLetters.find(strText[iChar]);
-			if (itLetter == m_mapLetters.end())
-			{
-				/*
-				* Create Polygon3D and Transformation for each contour
-				*/
-
-				// One Transformation per Polygon3D
-				vector<int64_t> vecTransformations;
-				for (size_t iContour = 0; iContour < m_vecContours.size(); iContour++)
+				itLetter = m_mapLetters.find(strText[iChar]);
+				if (itLetter == m_mapLetters.end())
 				{
-					// Polygon3D
-					__int64 iPolygon3DInstance = CreateInstance(m_iPolygon3DClass);
-					assert(iPolygon3DInstance != 0);
+					/*
+					* Create Polygon3D and Transformation for each contour
+					*/
 
-					m_vecContours[iContour]->m_iGeometryInstance = iPolygon3DInstance;
+					// One Transformation per Polygon3D
+					vector<int64_t> vecTransformations;
+					for (size_t iContour = 0; iContour < m_vecContours.size(); iContour++)
+					{
+						// Polygon3D
+						__int64 iPolygon3DInstance = CreateInstance(m_iPolygon3DClass);
+						assert(iPolygon3DInstance != 0);
 
-					SetObjectProperty(iPolygon3DInstance, GetPropertyByName(m_iModel, "lineParts"), m_vecContours[iContour]->m_vecInstances.data(), m_vecContours[iContour]->m_vecInstances.size());
+						m_vecContours[iContour]->m_iGeometryInstance = iPolygon3DInstance;
+
+						SetObjectProperty(iPolygon3DInstance, GetPropertyByName(m_iModel, "lineParts"), m_vecContours[iContour]->m_vecInstances.data(), m_vecContours[iContour]->m_vecInstances.size());
+
+						// Transformation
+						__int64 iTransformationInstance = CreateInstance(m_iTransformationClass);
+						assert(iTransformationInstance != 0);
+
+						// object
+						SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "object"), &iPolygon3DInstance, 1);
+
+						// matrix
+						__int64 iMatrixInstance = CreateInstance(m_iMatrixClass);
+						assert(iMatrixInstance != 0);
+
+						double _41 = DOUBLE_FROM_26_6(m_vecContours[iContour]->m_iOffsetX + m_iOffsetX);
+						double _42 = DOUBLE_FROM_26_6(m_vecContours[iContour]->m_iOffsetY + m_iOffsetY);
+						SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_41"), &_41, 1);
+						SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_42"), &_42, 1);
+
+						SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "matrix"), &iMatrixInstance, 1);
+
+						vecTransformations.push_back(iTransformationInstance);
+					} // for (size_t iContour = ...
+
+					/*
+					* Face2DSet
+					*/
+					__int64 iFace2DSetInstance = CreateInstance(m_iFace2DSetClass);
+					assert(iFace2DSetInstance != 0);				
+
+					// polygons
+					SetObjectProperty(iFace2DSetInstance, GetPropertyByName(m_iModel, "polygons"), vecTransformations.data(), vecTransformations.size());
+
+					m_vecContours[0]->m_iGeometryInstance = iFace2DSetInstance;
+					m_vecContours[0]->m_iOffsetX = m_iOffsetX;
+
+					m_mapLetters[strText[iChar]] = m_vecContours;
+
+					vecFace2DInstances.push_back(iFace2DSetInstance);
+				} // if (itLetter == m_mapLetters.end())
+				else
+				{
+					/*
+					* Resuse the Face2DSet
+					*/
+
+					// Contour
+					CGlyphContour * pContour = itLetter->second[0];
+					assert(pContour->m_iGeometryInstance != 0);
 
 					// Transformation
 					__int64 iTransformationInstance = CreateInstance(m_iTransformationClass);
 					assert(iTransformationInstance != 0);
 
 					// object
-					SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "object"), &iPolygon3DInstance, 1);
+					SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "object"), &pContour->m_iGeometryInstance, 1);
 
 					// matrix
 					__int64 iMatrixInstance = CreateInstance(m_iMatrixClass);
 					assert(iMatrixInstance != 0);
 
-					double _41 = DOUBLE_FROM_26_6(m_vecContours[iContour]->m_iOffsetX + m_iOffsetX);
-					double _42 = DOUBLE_FROM_26_6(m_vecContours[iContour]->m_iOffsetY + m_iOffsetY);
+					double _41 = DOUBLE_FROM_26_6(-pContour->m_iOffsetX + m_iOffsetX);
+					double _42 = DOUBLE_FROM_26_6(m_iOffsetY);
 					SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_41"), &_41, 1);
 					SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_42"), &_42, 1);
 
 					SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "matrix"), &iMatrixInstance, 1);
 
-					vecTransformations.push_back(iTransformationInstance);
-				} // for (size_t iContour = ...
+					vecFace2DInstances.push_back(iTransformationInstance);
+				} // else if (itLetter == m_mapLetters.end())			
+			} // case FACE2D_SET:
+			break;
 
-				/*
-				* ExtrusionAreaSolidSet
-				*/
-				__int64 iExtrusionAreaSolidSetInstance = CreateInstance(m_iExtrusionAreaSolidSetClass);
-				assert(iExtrusionAreaSolidSetInstance != 0);
-
-				// extrusionAreaSet
-				SetObjectProperty(iExtrusionAreaSolidSetInstance, GetPropertyByName(m_iModel, "extrusionAreaSet"), vecTransformations.data(), vecTransformations.size());
-
-				double dExtrusionLength = 1.;
-				SetDatatypeProperty(iExtrusionAreaSolidSetInstance, GetPropertyByName(m_iModel, "extrusionLength"), &dExtrusionLength, 1);
-
-				m_vecContours[0]->m_iGeometryInstance = iExtrusionAreaSolidSetInstance;
-				m_vecContours[0]->m_iOffsetX = m_iOffsetX;
-
-				m_mapLetters[strText[iChar]] = m_vecContours;
-			} // if (itLetter == m_mapLetters.end())
-			else
+			case EXTRSUSION_AREA_SOLID_SET:
 			{
-				/*
-				* Resuse the ExtrusionAreaSolidSet
-				*/
+				itLetter = m_mapLetters.find(strText[iChar]);
+				if (itLetter == m_mapLetters.end())
+				{
+					/*
+					* Create Polygon3D and Transformation for each contour
+					*/
 
-				// Contour
-				CGlyphContour * pContour = itLetter->second[0];
-				assert(pContour->m_iGeometryInstance != 0);
+					// One Transformation per Polygon3D
+					vector<int64_t> vecTransformations;
+					for (size_t iContour = 0; iContour < m_vecContours.size(); iContour++)
+					{
+						// Polygon3D
+						__int64 iPolygon3DInstance = CreateInstance(m_iPolygon3DClass);
+						assert(iPolygon3DInstance != 0);
 
-				// Transformation
-				__int64 iTransformationInstance = CreateInstance(m_iTransformationClass);
-				assert(iTransformationInstance != 0);
+						m_vecContours[iContour]->m_iGeometryInstance = iPolygon3DInstance;
 
-				// object
-				SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "object"), &pContour->m_iGeometryInstance, 1);
+						SetObjectProperty(iPolygon3DInstance, GetPropertyByName(m_iModel, "lineParts"), m_vecContours[iContour]->m_vecInstances.data(), m_vecContours[iContour]->m_vecInstances.size());
 
-				// matrix
-				__int64 iMatrixInstance = CreateInstance(m_iMatrixClass);
-				assert(iMatrixInstance != 0);
+						// Transformation
+						__int64 iTransformationInstance = CreateInstance(m_iTransformationClass);
+						assert(iTransformationInstance != 0);
 
-				double _41 = DOUBLE_FROM_26_6(-pContour->m_iOffsetX + m_iOffsetX);
-				double _42 = DOUBLE_FROM_26_6(m_iOffsetY);
-				SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_41"), &_41, 1);
-				SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_42"), &_42, 1);
+						// object
+						SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "object"), &iPolygon3DInstance, 1);
 
-				SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "matrix"), &iMatrixInstance, 1);
-			} // else if (itLetter == m_mapLetters.end())			
-		} // case EXTRSUSION_AREA_SOLID_SET:
-		break;
+						// matrix
+						__int64 iMatrixInstance = CreateInstance(m_iMatrixClass);
+						assert(iMatrixInstance != 0);
 
-		default:
-		{
-			assert(false); // unexpected
-		}
-		break;
+						double _41 = DOUBLE_FROM_26_6(m_vecContours[iContour]->m_iOffsetX + m_iOffsetX);
+						double _42 = DOUBLE_FROM_26_6(m_vecContours[iContour]->m_iOffsetY + m_iOffsetY);
+						SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_41"), &_41, 1);
+						SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_42"), &_42, 1);
+
+						SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "matrix"), &iMatrixInstance, 1);
+
+						vecTransformations.push_back(iTransformationInstance);
+					} // for (size_t iContour = ...
+
+					/*
+					* ExtrusionAreaSolidSet
+					*/
+					__int64 iExtrusionAreaSolidSetInstance = CreateInstance(m_iExtrusionAreaSolidSetClass);
+					assert(iExtrusionAreaSolidSetInstance != 0);
+
+					// extrusionAreaSet
+					SetObjectProperty(iExtrusionAreaSolidSetInstance, GetPropertyByName(m_iModel, "extrusionAreaSet"), vecTransformations.data(), vecTransformations.size());
+
+					double dExtrusionLength = 1.;
+					SetDatatypeProperty(iExtrusionAreaSolidSetInstance, GetPropertyByName(m_iModel, "extrusionLength"), &dExtrusionLength, 1);
+
+					m_vecContours[0]->m_iGeometryInstance = iExtrusionAreaSolidSetInstance;
+					m_vecContours[0]->m_iOffsetX = m_iOffsetX;
+
+					m_mapLetters[strText[iChar]] = m_vecContours;
+				} // if (itLetter == m_mapLetters.end())
+				else
+				{
+					/*
+					* Resuse the ExtrusionAreaSolidSet
+					*/
+
+					// Contour
+					CGlyphContour * pContour = itLetter->second[0];
+					assert(pContour->m_iGeometryInstance != 0);
+
+					// Transformation
+					__int64 iTransformationInstance = CreateInstance(m_iTransformationClass);
+					assert(iTransformationInstance != 0);
+
+					// object
+					SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "object"), &pContour->m_iGeometryInstance, 1);
+
+					// matrix
+					__int64 iMatrixInstance = CreateInstance(m_iMatrixClass);
+					assert(iMatrixInstance != 0);
+
+					double _41 = DOUBLE_FROM_26_6(-pContour->m_iOffsetX + m_iOffsetX);
+					double _42 = DOUBLE_FROM_26_6(m_iOffsetY);
+					SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_41"), &_41, 1);
+					SetDatatypeProperty(iMatrixInstance, GetPropertyByName(m_iModel, "_42"), &_42, 1);
+
+					SetObjectProperty(iTransformationInstance, GetPropertyByName(m_iModel, "matrix"), &iMatrixInstance, 1);
+				} // else if (itLetter == m_mapLetters.end())			
+			} // case EXTRSUSION_AREA_SOLID_SET:
+			break;
+
+			default:
+			{
+				assert(false); // unexpected
+			}
+			break;
 		} // switch (m_iGeometry)
 
 		/*
@@ -439,18 +440,33 @@ void CText2RDF::Run()
 		__int64 iCollectionInstance = CreateInstance(m_iCollectionClass);
 		assert(iCollectionInstance != 0);
 
-		SetObjectProperty(iCollectionInstance, GetPropertyByName(m_iModel, "objects"), vecFace2DInstances.data(), vecFace2DInstances.size());
+		SetObjectProperty(iCollectionInstance, GetPropertyByName(m_iModel, "objects"), vecFace2DInstances.data(), vecFace2DInstances.size());		
 
-		double arAABBMin[] = { 0., 0., 0. };
-		double arAABBMax[] = { 0., 0., 0. };
-		GetBoundingBox(
-			iCollectionInstance,
-			(double*)&arAABBMin,
-			(double*)&arAABBMax);
+		if (m_bCenter)
+		{
+			double arAABBMin[] = { 0., 0., 0. };
+			double arAABBMax[] = { 0., 0., 0. };
+			GetBoundingBox(
+				iCollectionInstance,
+				(double*)&arAABBMin,
+				(double*)&arAABBMax);
 
-		Translate(
+			Translate(
+				iCollectionInstance,
+				-(arAABBMin[0] + arAABBMax[0]) / 2., -(arAABBMin[1] + arAABBMax[1]) / 2., -(arAABBMin[2] + arAABBMax[2]) / 2.);
+		}
+
+		// Advance - X
+		RdfProperty iProperty = CreateProperty(
+			m_iModel,
+			DATATYPEPROPERTY_TYPE_INTEGER,
+			"ttf:advance:x");
+
+		SetDatatypeProperty(
 			iCollectionInstance,
-			-(arAABBMin[0] + arAABBMax[0]) / 2., -(arAABBMin[1] + arAABBMax[1]) / 2., -(arAABBMin[2] + arAABBMax[2]) / 2.);
+			iProperty,
+			&m_iOffsetX,
+			1);
 	}	
 
 	/*
