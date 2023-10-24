@@ -1,20 +1,20 @@
 
-// TTF2RDFDlg.h : header file
+// TTF2BINDlg.h : header file
 //
 
 #pragma once
 
-#include "Text2RDF.h"
+#include "Text2BIN.h"
 
-// CTTF2RDFDlg dialog
-class CTTF2RDFDlg : public CDialogEx
+// CTTF2BINDlg dialog
+class CTTF2BINDlg : public CDialogEx
 {
 // Construction
 public:
-	CTTF2RDFDlg(CWnd* pParent = NULL);	// standard constructor
+	CTTF2BINDlg(CWnd* pParent = NULL);	// standard constructor
 
 // Dialog Data
-	enum { IDD = IDD_TTF2RDF_DIALOG };
+	enum { IDD = IDD_TTF2BIN_DIALOG };
 
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
@@ -34,10 +34,10 @@ public:
 	void ExportASCII(char cStart, char cEnd);
 	afx_msg void OnBnClickedButtonRun();
 	CString m_strTTFFile;
-	CString m_strRDFFile;
+	CString m_strBINFile;
 	CString m_strText;
 	afx_msg void OnBnClickedButtonTtfFile();
-	afx_msg void OnBnClickedButtonRdfFile();
+	afx_msg void OnBnClickedButtonBinFile();
 	afx_msg void OnEnChangeEditText();
 	int m_iGeometry;
 	afx_msg void OnBnClickedRadioLinesAndCurves();

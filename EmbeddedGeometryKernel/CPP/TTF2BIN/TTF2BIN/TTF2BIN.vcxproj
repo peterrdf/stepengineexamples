@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{ABCE75EA-A01D-424D-960E-10DF213EDF2A}</ProjectGuid>
-    <RootNamespace>TTF2RDF</RootNamespace>
+    <RootNamespace>TTF2TTF2BIN</RootNamespace>
     <Keyword>MFCProj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -198,9 +198,8 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Text2RDF.h" />
-    <ClInclude Include="TTF2RDF.h" />
-    <ClInclude Include="TTF2RDFDlg.h" />
+    <ClInclude Include="Text2BIN.h" />
+    <ClInclude Include="TTF2BIN.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -209,25 +208,25 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Text2RDF.cpp" />
-    <ClCompile Include="TTF2RDF.cpp" />
-    <ClCompile Include="TTF2RDFDlg.cpp" />
+    <ClCompile Include="Text2BIN.cpp" />
+    <ClCompile Include="TTF2BIN.cpp" />
+    <ClCompile Include="TTF2BINDlg.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="TTF2RDF.rc" />
+    <ResourceCompile Include="TTF2BIN.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\TTF2RDF.rc2" />
+    <None Include="res\TTF2BIN.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\TTF2RDF.ico" />
+    <Image Include="res\TTF2BIN.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties RESOURCE_FILE="TTF2RDF.rc" />
+      <UserProperties RESOURCE_FILE="TTF2BIN.rc" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

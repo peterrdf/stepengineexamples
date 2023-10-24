@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "Text2RDF.h"
+#include "Text2BIN.h"
 
 // ------------------------------------------------------------------------------------------------
-CText2RDF::CText2RDF(const CString & strText, const CString & strTTFFile, const CString & strRDFFile, int iGeometry, bool bCenter/* = true*/)
+CText2BIN::CText2BIN(const CString & strText, const CString & strTTFFile, const CString & strBINFile, int iGeometry, bool bCenter/* = true*/)
 	: m_iModel(0)
 	, m_iLine3DClass(0)
 	, m_iPoint3DClass(0)
@@ -18,7 +18,7 @@ CText2RDF::CText2RDF(const CString & strText, const CString & strTTFFile, const 
 	, m_pCurrentContour(NULL)
 	, m_strText(strText)
 	, m_strTTFFile(strTTFFile)
-	, m_strRDFFile(strRDFFile)
+	, m_strBINFile(strBINFile)
 	, m_iX(0)
 	, m_iY(0)
 	, m_iOffsetX(0)
@@ -29,11 +29,11 @@ CText2RDF::CText2RDF(const CString & strText, const CString & strTTFFile, const 
 }
 
 // ------------------------------------------------------------------------------------------------
-CText2RDF::~CText2RDF()
+CText2BIN::~CText2BIN()
 {
 }
 
-OwlInstance CText2RDF::Translate(
+OwlInstance CText2BIN::Translate(
 	OwlInstance iInstance,
 	double dX, double dY, double dZ)
 {
@@ -67,10 +67,10 @@ OwlInstance CText2RDF::Translate(
 
 
 // ------------------------------------------------------------------------------------------------
-void CText2RDF::Run()
+void CText2BIN::Run()
 {
 	assert(!m_strTTFFile.IsEmpty());
-	assert(!m_strRDFFile.IsEmpty());
+	assert(!m_strBINFile.IsEmpty());
 
 	CString strText = m_strText;
 	assert(!strText.IsEmpty());
@@ -473,7 +473,7 @@ void CText2RDF::Run()
 	* Save
 	*/	
 	SetOverrideFileIO(m_iModel, 1 + 16, 7 + 16); // base64
-	SaveModelW(m_iModel, (LPCTSTR)m_strRDFFile);
+	SaveModelW(m_iModel, (LPCTSTR)m_strBINFile);
 
 	/*
 	* Clean up
@@ -483,7 +483,7 @@ void CText2RDF::Run()
 }
 
 // ------------------------------------------------------------------------------------------------
-void CText2RDF::SetFormatSettings(__int64 iModel)
+void CText2BIN::SetFormatSettings(__int64 iModel)
 {
 	// X, Y, Z, Nx, Ny, Nz, Tx, Ty, Ambient, Diffuse, Emissive, Specular, Tnx, Tny, Tnz, Bnx, Bny, Bnz
 	// (Tx, Ty - bit 6; Normal vectors - bit 5, Diffuse, Emissive, Specular - bit 25, 26 & 27, Tangent vectors - bit 28, Binormal vectors - bit 29)
@@ -500,10 +500,10 @@ void CText2RDF::SetFormatSettings(__int64 iModel)
 }
 
 // ------------------------------------------------------------------------------------------------
-/*static*/ int CText2RDF::move_to(const FT_Vector *to, void *user)
+/*static*/ int CText2BIN::move_to(const FT_Vector *to, void *user)
 {
 	assert(user != NULL);
-	CText2RDF * pData = (CText2RDF *)user;
+	CText2BIN * pData = (CText2BIN *)user;
 
 	printf("move_to([%g, %g])\n",
 		DOUBLE_FROM_26_6(to->x), DOUBLE_FROM_26_6(to->y));
@@ -521,10 +521,10 @@ void CText2RDF::SetFormatSettings(__int64 iModel)
 }
 
 // ------------------------------------------------------------------------------------------------
-/*static*/ int CText2RDF::line_to(const FT_Vector *to, void *user)
+/*static*/ int CText2BIN::line_to(const FT_Vector *to, void *user)
 {
 	assert(user != NULL);
-	CText2RDF * pData = (CText2RDF *)user;
+	CText2BIN * pData = (CText2BIN *)user;
 
 	printf("line_to([%g, %g])\n", DOUBLE_FROM_26_6(to->x), DOUBLE_FROM_26_6(to->y));	
 
@@ -555,10 +555,10 @@ void CText2RDF::SetFormatSettings(__int64 iModel)
 }
 
 // ------------------------------------------------------------------------------------------------
-/*static*/ int CText2RDF::conic_to(const FT_Vector *control, const FT_Vector *to, void *user)
+/*static*/ int CText2BIN::conic_to(const FT_Vector *control, const FT_Vector *to, void *user)
 {
 	assert(user != NULL);
-	CText2RDF * pData = (CText2RDF *)user;
+	CText2BIN * pData = (CText2BIN *)user;
 
 	printf("conic_to(c = [%g, %g], to = [%g, %g])\n",
 		DOUBLE_FROM_26_6(control->x), DOUBLE_FROM_26_6(control->y),
@@ -637,11 +637,11 @@ void CText2RDF::SetFormatSettings(__int64 iModel)
 }
 
 // ------------------------------------------------------------------------------------------------
-/*static*/ int CText2RDF::cubic_to(const FT_Vector *control1, const FT_Vector *control2,
+/*static*/ int CText2BIN::cubic_to(const FT_Vector *control1, const FT_Vector *control2,
 	const FT_Vector *to, void *user)
 {
 	assert(user != NULL);
-	CText2RDF * pData = (CText2RDF *)user;
+	CText2BIN * pData = (CText2BIN *)user;
 
 	printf("cubic_to(c1 = [%g, %g], c2 = [%g, %g], to = [%g, % g])\n",
 		DOUBLE_FROM_26_6(control1->x), DOUBLE_FROM_26_6(control1->y),

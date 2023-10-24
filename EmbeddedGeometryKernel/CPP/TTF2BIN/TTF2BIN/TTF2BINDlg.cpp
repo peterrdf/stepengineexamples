@@ -1,10 +1,10 @@
 
-// TTF2RDFDlg.cpp : implementation file
+// TTF2BINDlg.cpp : implementation file
 //
 
 #include "stdafx.h"
-#include "TTF2RDF.h"
-#include "TTF2RDFDlg.h"
+#include "TTF2BIN.h"
+#include "TTF2BINDlg.h"
 #include "afxdialogex.h"
 
 #include <fstream>
@@ -47,46 +47,46 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CTTF2RDFDlg dialog
+// CTTF2BINDlg dialog
 
 
 
-CTTF2RDFDlg::CTTF2RDFDlg(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CTTF2RDFDlg::IDD, pParent)
+CTTF2BINDlg::CTTF2BINDlg(CWnd* pParent /*=NULL*/)
+	: CDialogEx(CTTF2BINDlg::IDD, pParent)
 	, m_strTTFFile(_T(""))
-	, m_strRDFFile(_T(""))
+	, m_strBINFile(_T(""))
 	, m_strText(_T("RDF LTD."))
 	, m_iGeometry(FACE2D_SET)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
-void CTTF2RDFDlg::DoDataExchange(CDataExchange* pDX)
+void CTTF2BINDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_EDIT_TTF_FILE, m_strTTFFile);
-	DDX_Text(pDX, IDC_EDIT_RDF_FILE, m_strRDFFile);
+	DDX_Text(pDX, IDC_EDIT_BIN_FILE, m_strBINFile);
 	DDX_Text(pDX, IDC_EDIT_TEXT, m_strText);
 	DDX_Radio(pDX, IDC_RADIO_LINES_AND_CURVES, m_iGeometry);
 }
 
-BEGIN_MESSAGE_MAP(CTTF2RDFDlg, CDialogEx)
+BEGIN_MESSAGE_MAP(CTTF2BINDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_BUTTON_RUN, &CTTF2RDFDlg::OnBnClickedButtonRun)
-	ON_BN_CLICKED(IDC_BUTTON_TTF_FILE, &CTTF2RDFDlg::OnBnClickedButtonTtfFile)
-	ON_BN_CLICKED(IDC_BUTTON_RDF_FILE, &CTTF2RDFDlg::OnBnClickedButtonRdfFile)
-	ON_EN_CHANGE(IDC_EDIT_TEXT, &CTTF2RDFDlg::OnEnChangeEditText)
-	ON_BN_CLICKED(IDC_RADIO_LINES_AND_CURVES, &CTTF2RDFDlg::OnBnClickedRadioLinesAndCurves)
-	ON_BN_CLICKED(IDC_RADIO_FACE2D, &CTTF2RDFDlg::OnBnClickedRadioFace2d)
-	ON_BN_CLICKED(IDC_RADIO_EXTRSUSION_AREA_SOLID, &CTTF2RDFDlg::OnBnClickedRadioExtrsusionAreaSolid)
+	ON_BN_CLICKED(IDC_BUTTON_RUN, &CTTF2BINDlg::OnBnClickedButtonRun)
+	ON_BN_CLICKED(IDC_BUTTON_TTF_FILE, &CTTF2BINDlg::OnBnClickedButtonTtfFile)
+	ON_BN_CLICKED(IDC_BUTTON_BIN_FILE, &CTTF2BINDlg::OnBnClickedButtonBinFile)
+	ON_EN_CHANGE(IDC_EDIT_TEXT, &CTTF2BINDlg::OnEnChangeEditText)
+	ON_BN_CLICKED(IDC_RADIO_LINES_AND_CURVES, &CTTF2BINDlg::OnBnClickedRadioLinesAndCurves)
+	ON_BN_CLICKED(IDC_RADIO_FACE2D, &CTTF2BINDlg::OnBnClickedRadioFace2d)
+	ON_BN_CLICKED(IDC_RADIO_EXTRSUSION_AREA_SOLID, &CTTF2BINDlg::OnBnClickedRadioExtrsusionAreaSolid)
 END_MESSAGE_MAP()
 
 
-// CTTF2RDFDlg message handlers
+// CTTF2BINDlg message handlers
 
-BOOL CTTF2RDFDlg::OnInitDialog()
+BOOL CTTF2BINDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
@@ -120,7 +120,7 @@ BOOL CTTF2RDFDlg::OnInitDialog()
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
-void CTTF2RDFDlg::OnSysCommand(UINT nID, LPARAM lParam)
+void CTTF2BINDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
 	{
@@ -137,7 +137,7 @@ void CTTF2RDFDlg::OnSysCommand(UINT nID, LPARAM lParam)
 //  to draw the icon.  For MFC applications using the document/view model,
 //  this is automatically done for you by the framework.
 
-void CTTF2RDFDlg::OnPaint()
+void CTTF2BINDlg::OnPaint()
 {
 	if (IsIconic())
 	{
@@ -164,7 +164,7 @@ void CTTF2RDFDlg::OnPaint()
 
 // The system calls this function to obtain the cursor to display while the user drags
 //  the minimized window.
-HCURSOR CTTF2RDFDlg::OnQueryDragIcon()
+HCURSOR CTTF2BINDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
@@ -175,7 +175,7 @@ static bool escapeChar(char c)
 		(c == '"'));
 }
 
-void CTTF2RDFDlg::ExportASCII(char cStart, char cEnd)
+void CTTF2BINDlg::ExportASCII(char cStart, char cEnd)
 {
 	// props
 	// ascii
@@ -195,10 +195,10 @@ void CTTF2RDFDlg::ExportASCII(char cStart, char cEnd)
 	// constants
 	for (char c = cStart; c <= cEnd; c++)
 	{
-		CText2RDF convertor(CString(c, 1), m_strTTFFile, m_strRDFFile, FACE2D_SET, false);
+		CText2BIN convertor(CString(c, 1), m_strTTFFile, m_strBINFile, FACE2D_SET, false);
 		convertor.Run();
 
-		wifstream base64ContentStream(m_strRDFFile);
+		wifstream base64ContentStream(m_strBINFile);
 		wstring strBase64Content((std::istreambuf_iterator<wchar_t>(base64ContentStream)), std::istreambuf_iterator<wchar_t>());
 
 		hFile << "\nstatic const char* _" << (int)c << " = \"";
@@ -242,7 +242,7 @@ void CTTF2RDFDlg::ExportASCII(char cStart, char cEnd)
 }
 
 // ------------------------------------------------------------------------------------------------
-void CTTF2RDFDlg::OnBnClickedButtonRun()
+void CTTF2BINDlg::OnBnClickedButtonRun()
 {
 	UpdateData(TRUE);	
 
@@ -253,9 +253,9 @@ void CTTF2RDFDlg::OnBnClickedButtonRun()
 		return;
 	}
 
-	if (m_strRDFFile.IsEmpty())
+	if (m_strBINFile.IsEmpty())
 	{
-		::MessageBox(GetSafeHwnd(), _T("Please, select an RDF file."), _T("Error"), MB_ICONERROR | MB_OK);
+		::MessageBox(GetSafeHwnd(), _T("Please, select an BIN file."), _T("Error"), MB_ICONERROR | MB_OK);
 
 		return;
 	}
@@ -276,14 +276,14 @@ void CTTF2RDFDlg::OnBnClickedButtonRun()
 		return;
 	}
 
-	CText2RDF convertor(strText, m_strTTFFile, m_strRDFFile, m_iGeometry);
+	CText2BIN convertor(strText, m_strTTFFile, m_strBINFile, m_iGeometry);
 	convertor.Run();
 
 	::MessageBox(GetSafeHwnd(), _T("Done."), _T("Information"), MB_ICONINFORMATION | MB_OK);
 }
 
 // ------------------------------------------------------------------------------------------------
-void CTTF2RDFDlg::OnBnClickedButtonTtfFile()
+void CTTF2BINDlg::OnBnClickedButtonTtfFile()
 {
 	CFileDialog dlgOpenFile(TRUE);
 	OPENFILENAME & ofn = dlgOpenFile.GetOFN();
@@ -301,44 +301,44 @@ void CTTF2RDFDlg::OnBnClickedButtonTtfFile()
 }
 
 // ------------------------------------------------------------------------------------------------
-void CTTF2RDFDlg::OnBnClickedButtonRdfFile()
+void CTTF2BINDlg::OnBnClickedButtonBinFile()
 {
 	CFileDialog dlgOpenFile(FALSE);
 	OPENFILENAME & ofn = dlgOpenFile.GetOFN();
-	ofn.lpstrFilter = _T("RDF Files (*.rdf)\0*.rdf\0All Files (*.*)\0*.*\0\0");
+	ofn.lpstrFilter = _T("BIN Files (*.bin)\0*.bin\0All Files (*.*)\0*.*\0\0");
 	ofn.lpstrTitle = _T("Please, select a file");
-	ofn.lpstrDefExt = _T(".rdf");
+	ofn.lpstrDefExt = _T(".bin");
 
 	if (dlgOpenFile.DoModal() != IDOK)
 	{
 		return;
 	}
 
-	m_strRDFFile = dlgOpenFile.GetPathName();
+	m_strBINFile = dlgOpenFile.GetPathName();
 
 	UpdateData(FALSE);
 }
 
 // ------------------------------------------------------------------------------------------------
-void CTTF2RDFDlg::OnEnChangeEditText()
+void CTTF2BINDlg::OnEnChangeEditText()
 {
 	UpdateData(TRUE);
 }
 
 // ------------------------------------------------------------------------------------------------
-void CTTF2RDFDlg::OnBnClickedRadioLinesAndCurves()
+void CTTF2BINDlg::OnBnClickedRadioLinesAndCurves()
 {
 	UpdateData(TRUE);
 }
 
 // ------------------------------------------------------------------------------------------------
-void CTTF2RDFDlg::OnBnClickedRadioFace2d()
+void CTTF2BINDlg::OnBnClickedRadioFace2d()
 {
 	UpdateData(TRUE);
 }
 
 // ------------------------------------------------------------------------------------------------
-void CTTF2RDFDlg::OnBnClickedRadioExtrsusionAreaSolid()
+void CTTF2BINDlg::OnBnClickedRadioExtrsusionAreaSolid()
 {
 	UpdateData(TRUE);
 }

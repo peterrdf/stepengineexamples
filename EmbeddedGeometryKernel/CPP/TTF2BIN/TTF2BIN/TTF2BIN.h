@@ -1,5 +1,5 @@
 
-// TTF2RDF.h : main header file for the PROJECT_NAME application
+// TTF2BIN.h : main header file for the PROJECT_NAME application
 //
 
 #pragma once
@@ -11,14 +11,14 @@
 #include "resource.h"		// main symbols
 
 
-// CTTF2RDFApp:
-// See TTF2RDF.cpp for the implementation of this class
+// CTTF2BINApp:
+// See TTF2BIN.cpp for the implementation of this class
 //
 
-class CTTF2RDFApp : public CWinApp
+class CTTF2BINApp : public CWinApp
 {
 public:
-	CTTF2RDFApp();
+	CTTF2BINApp();
 
 // Overrides
 public:
@@ -29,4 +29,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-extern CTTF2RDFApp theApp;
+extern CTTF2BINApp theApp;

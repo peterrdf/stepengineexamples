@@ -1,26 +1,26 @@
 
-// TTF2RDF.cpp : Defines the class behaviors for the application.
+// TTF2BIN.cpp : Defines the class behaviors for the application.
 //
 
 #include "stdafx.h"
-#include "TTF2RDF.h"
-#include "TTF2RDFDlg.h"
+#include "TTF2BIN.h"
+#include "TTF2BINDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 
-// CTTF2RDFApp
+// CTTF2BINApp
 
-BEGIN_MESSAGE_MAP(CTTF2RDFApp, CWinApp)
+BEGIN_MESSAGE_MAP(CTTF2BINApp, CWinApp)
 	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
 END_MESSAGE_MAP()
 
 
-// CTTF2RDFApp construction
+// CTTF2BINApp construction
 
-CTTF2RDFApp::CTTF2RDFApp()
+CTTF2BINApp::CTTF2BINApp()
 {
 	// support Restart Manager
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
@@ -30,14 +30,14 @@ CTTF2RDFApp::CTTF2RDFApp()
 }
 
 
-// The one and only CTTF2RDFApp object
+// The one and only CTTF2BINApp object
 
-CTTF2RDFApp theApp;
+CTTF2BINApp theApp;
 
 
-// CTTF2RDFApp initialization
+// CTTF2BINApp initialization
 
-BOOL CTTF2RDFApp::InitInstance()
+BOOL CTTF2BINApp::InitInstance()
 {
 	// InitCommonControlsEx() is required on Windows XP if an application
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable
@@ -70,7 +70,7 @@ BOOL CTTF2RDFApp::InitInstance()
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 
-	CTTF2RDFDlg dlg;
+	CTTF2BINDlg dlg;
 	m_pMainWnd = &dlg;
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)

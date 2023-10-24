@@ -33,7 +33,7 @@ using namespace std;
 #define DOUBLE_FROM_26_6(t) ((double)(t) / 64.0)
 
 // ------------------------------------------------------------------------------------------------
-class CText2RDF
+class CText2BIN
 {
 
 private: // Classes
@@ -154,7 +154,7 @@ private: // Members
 
 	// --------------------------------------------------------------------------------------------
 	// Output
-	CString m_strRDFFile;	
+	CString m_strBINFile;
 
 	// --------------------------------------------------------------------------------------------
 	// Geometry
@@ -167,11 +167,11 @@ public: // Methods
 
 	// --------------------------------------------------------------------------------------------
 	// ctor
-	CText2RDF(const CString & strText, const CString & strTTFFile, const CString & strRDFFile, int iGeometry, bool bCenter = true);
+	CText2BIN(const CString & strText, const CString & strTTFFile, const CString & strBINFile, int iGeometry, bool bCenter = true);
 
 	// --------------------------------------------------------------------------------------------
 	// dtor
-	virtual ~CText2RDF();
+	virtual ~CText2BIN();
 
 	OwlInstance Translate(OwlInstance iInstance,
 		double dX, double dY, double dZ);
