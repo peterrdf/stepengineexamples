@@ -1,0 +1,10 @@
+Install =>
+https://www.npmjs.com/package/http-server
+
+npm install http-server -g
+
+Run it (...\Services\GeomWebApplication\GeomWebApplication\web) =>
+http-server
+
+Open a browser (add '/webgl/ suffix') =>
+http://172.17.190.33:8080/webgl/
