@@ -16,3 +16,5 @@
 /EmbeddedGeometryKernel/CPP/TTF2BIN/x64/Release/TTF2BIN.pdb
 /EmbeddedGeometryKernel/CPP/TTF2BIN/x64/Debug/TTF2BIN.exe
 /EmbeddedGeometryKernel/CPP/TTF2BIN/x64/Release/TTF2BIN.exe
+/bin/32bit/.vs
+/bin/32bit/WASM/.vs
