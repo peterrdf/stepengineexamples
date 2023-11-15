@@ -132,7 +132,7 @@
             }
             else {
                 if (vUseBinnPhongModel > 0.5) {
-                    vec3 ambientLightWeighting = vec3(0.001, 0.001, 0.001);
+                    vec3 ambientLightWeighting = vec3(0.4, 0.4, 0.4);
 
                     vec3 lightDirection = normalize(uPointLightingLocation - vPosition.xyz);
                     vec3 normal = normalize(vTransformedNormal);
