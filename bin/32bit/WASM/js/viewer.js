@@ -1129,7 +1129,7 @@ var Viewer = function () {
       this._worldDimensions.Zmax - this._worldDimensions.Zmin
     )
 
-    this._defaultEyeVector[2] = -(2 * this._worldDimensions.MaxDistance)
+    this._defaultEyeVector[2] = -(2 * this._worldDimensions.MaxDistance)    
     this._eyeVector = vec3.create(this._defaultEyeVector)    
   }
 
@@ -1427,10 +1427,14 @@ var Viewer = function () {
         this._worldDimensions.MaxDistance = Math.max(
           this._worldDimensions.MaxDistance,
           this._worldDimensions.Zmax - this._worldDimensions.Zmin
-        )        
+        )
+
+        if (this._worldDimensions.MaxDistance === 0) {
+          this._worldDimensions = { Xmin: -0.5, Ymin: -0.5, Zmin: -0.5, Xmax: 0.5, Ymax: 0.5, Zmax: 0.5, MaxDistance: 2.0 }
+        }
       } // if (g_instances.length > 0)
       else {
-        this._worldDimensions = { Xmin: -0.5, Ymin: -0.5, Zmin: -0.5, Xmax: 0.5, Ymax: 0.5, Zmax: 0.5, MaxDistance: 1.0 }
+        this._worldDimensions = { Xmin: -0.5, Ymin: -0.5, Zmin: -0.5, Xmax: 0.5, Ymax: 0.5, Zmax: 0.5, MaxDistance: 2.0 }
       }
 
       this._defaultEyeVector[2] = -(2 * this._worldDimensions.MaxDistance)

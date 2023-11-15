@@ -32,8 +32,8 @@ function loadContent(fileName, fileExtension, fileContent) {
   if (fileExtension === 'dxf') {
     Module.loadDXF(true, true);
   }
-  else if (fileExtension === 'bin') {
-    Module.loadBIN(true, true);
+  else if ((fileExtension === 'bin') || (fileExtension == 'rdf')) {
+    Module.loadBIN(true, true, true);
   }
   else if ((fileExtension == 'dae') || (fileExtension == 'zae')) {
     Module.loadDAE(true, true);
