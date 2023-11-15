@@ -1,10 +1,26 @@
+*** I ***
+npm
+
 Install =>
 https://www.npmjs.com/package/http-server
 
 npm install http-server -g
 
-Run it (...\Services\GeomWebApplication\GeomWebApplication\web) =>
+Run =>
 http-server
 
-Open a browser (add '/webgl/ suffix') =>
-http://172.17.190.33:8080/webgl/
+URL (example) =>
+http://172.17.190.33:8080/
+...
+
+*** II ***
+python
+
+Install =>
+Microsoft Store => Python 
+
+Run =>
+runme.bat
+
+URL (example) =>
+Serving HTTP on 127.0.0.1 port 8000 (http://127.0.0.1:8000/) ...
