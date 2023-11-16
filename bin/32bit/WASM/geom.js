@@ -1,5 +1,12 @@
+// Main model
 var g_instances = [];
 var g_geometries = [];
+// Scene model
+var g_sceneInstances = [];
+var g_sceneGeometries = [];
+// Navigator model
+var g_navigatorInstances = [];
+var g_navigatorGeometries = [];
 var g_groups = [];
 g_groups.push('IfcBeam');
 g_groups.push('IfcColumn');

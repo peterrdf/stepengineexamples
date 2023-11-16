@@ -1477,10 +1477,26 @@ var Viewer = function () {
    */
   Viewer.prototype.drawInstances = function () {
     if (KEEP_NOT_SELECTED_OBJECTS_COLOR || this._selectedObjects.length === 0) {
-      this.drawConceptualFaces(true)
-      this.drawConceptualFaces(false)
-      this.drawConceptualFacesPolygons()
-      this.drawLines()
+      // Main model
+      this.drawConceptualFaces(true, g_instances, g_geometries)
+      this.drawConceptualFaces(false, g_instances, g_geometries)
+
+      // Scene model      
+      this.drawConceptualFaces(true, g_sceneInstances, g_sceneGeometries)
+      this.drawConceptualFaces(false, g_sceneInstances, g_sceneGeometries)
+
+      // Main model
+      this.drawConceptualFacesPolygons(g_instances, g_geometries)
+
+      // Scene model
+      this.drawConceptualFacesPolygons(g_sceneInstances, g_sceneGeometries)
+
+      // Main model
+      this.drawLines(g_instances, g_geometries)
+
+      // Scene model
+      this.drawLines(g_sceneInstances, g_sceneGeometries)
+
       this.drawPoints()
       this.drawSelectedInstances()
       this.drawPickedInstance()
@@ -1490,7 +1506,7 @@ var Viewer = function () {
       this.drawNotSelectedConceptualFaces()
     }
 
-    this.drawGird()
+    this.drawGrid()
 
     this.drawSelectedInstancesLabels()
   }
@@ -1631,12 +1647,12 @@ var Viewer = function () {
   /**
    * Triangles
    */
-  Viewer.prototype.drawConceptualFaces = function (opaqueObjects) {
+  Viewer.prototype.drawConceptualFaces = function (opaqueObjects, instances, geometries) {
     if (!this._viewTriangles) {
       return
     }
 
-    if ((g_instances.length === 0) || (g_geometries.length === 0)) {
+    if ((instances.length === 0) || (geometries.length === 0)) {
       return
     }
 
@@ -1652,8 +1668,8 @@ var Viewer = function () {
     }    
 
     try {
-      for (let i = 0; i < g_instances.length; i++) {
-        if (!g_instances[i].visible) {
+      for (let i = 0; i < instances.length; i++) {
+        if (!instances[i].visible) {
           continue
         }
 
@@ -1666,13 +1682,13 @@ var Viewer = function () {
           continue
         }
 
-        for (let g = 0; g < g_instances[i].geometry.length; g++) {
-          let geometry = g_geometries[g_instances[i].geometry[g]]
+        for (let g = 0; g < instances[i].geometry.length; g++) {
+          let geometry = geometries[instances[i].geometry[g]]
           if (!geometry.conceptualFaces) {
             continue
           }
           
-          this.applyTransformationMatrix(g_instances[i].matrix[g])
+          this.applyTransformationMatrix(instances[i].matrix[g])
 
           if (!this.setVBO(geometry)) {
             console.error('Internal error!')
@@ -1849,12 +1865,12 @@ var Viewer = function () {
   /**
    * Conceptual faces polygons
    */
-  Viewer.prototype.drawConceptualFacesPolygons = function () {
+  Viewer.prototype.drawConceptualFacesPolygons = function (instances, geometries) {
     if (!this._viewWireframes) {
       return
     }
 
-    if (g_instances.length === 0) {
+    if ((instances.length === 0) || (geometries.length === 0)) {
       return
     }
 
@@ -1870,18 +1886,18 @@ var Viewer = function () {
     gl.uniform3f(this._shaderProgram.uMaterialEmissiveColor, 0.0, 0.0, 0.0)
 
     try {
-      for (let i = 0; i < g_instances.length; i++) {
-        if (!g_instances[i].visible) {
+      for (let i = 0; i < instances.length; i++) {
+        if (!instances[i].visible) {
           continue
         }
 
-        for (let g = 0; g < g_instances[i].geometry.length; g++) {
-          let geometry = g_geometries[g_instances[i].geometry[g]]
+        for (let g = 0; g < instances[i].geometry.length; g++) {
+          let geometry = geometries[instances[i].geometry[g]]
           if (!geometry.conceptualFacesPolygons) {
             continue
           }
 
-          this.applyTransformationMatrix(g_instances[i].matrix[g])
+          this.applyTransformationMatrix(instances[i].matrix[g])
 
           if (!this.setVBO(geometry)) {
             console.error('Internal error!')
@@ -1911,12 +1927,12 @@ var Viewer = function () {
   /**
    * Lines
    */
-  Viewer.prototype.drawLines = function () {
+  Viewer.prototype.drawLines = function (instances, geometries) {
     if (!this._viewLines) {
       return
     }
 
-    if (g_instances.length === 0) {
+    if ((instances.length === 0) || (geometries.length === 0)) {
       return
     }
 
@@ -1932,18 +1948,18 @@ var Viewer = function () {
     gl.uniform3f(this._shaderProgram.uMaterialEmissiveColor, 0.0, 0.0, 0.0)
 
     try {
-      for (let i = 0; i < g_instances.length; i++) {
-        if (!g_instances[i].visible) {
+      for (let i = 0; i < instances.length; i++) {
+        if (!instances[i].visible) {
           continue
         }
 
-        for (let g = 0; g < g_instances[i].geometry.length; g++) {
-          let geometry = g_geometries[g_instances[i].geometry[g]]
+        for (let g = 0; g < instances[i].geometry.length; g++) {
+          let geometry = geometries[instances[i].geometry[g]]
           if (!geometry.conceptualFaces) {
             continue
           }
 
-          this.applyTransformationMatrix(g_instances[i].matrix[g])
+          this.applyTransformationMatrix(instances[i].matrix[g])
 
           if (!this.setVBO(geometry)) {
             console.error('Internal error!')
@@ -2217,7 +2233,7 @@ var Viewer = function () {
   /**
    * Grid
    */
-  Viewer.prototype.drawGird = function () {
+  Viewer.prototype.drawGrid = function () {
     if (!this._viewGrid) {
       return
     }

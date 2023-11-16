@@ -1,6 +1,8 @@
 var Module = {
   onRuntimeInitialized: function () {
     console.log('onRuntimeInitialized')
+    
+    loadSceneInstances()
 
     printRuleSets()
   },
@@ -30,22 +32,22 @@ function loadContent(fileName, fileExtension, fileContent) {
   Module['FS_createDataFile']('/data/', 'input.ifc', fileContent, true, true);
 
   if (fileExtension === 'dxf') {
-    Module.loadDXF(true, true);
+    Module.loadDXF(true, true)
   }
   else if ((fileExtension === 'bin') || (fileExtension == 'rdf')) {
     Module.loadBIN(true, true, true);
   }
   else if ((fileExtension == 'dae') || (fileExtension == 'zae')) {
-    Module.loadDAE(true, true);
+    Module.loadDAE(true, true)
   }
   else if (fileExtension == 'obj') {
-    Module.loadOBJ(true, true);
+    Module.loadOBJ(true, true)
   }
   else {
-    Module.loadSTEP(true, true);
+    Module.loadSTEP(true, true)
   }
 
-  FS.unlink('/data/' + 'input.ifc');
+  FS.unlink('/data/' + 'input.ifc')
 
   loadInstances();
   updateFileNameField(fileName);
@@ -234,6 +236,23 @@ function loadInstances() {
   catch (ex) {
     console.error(ex)
   }
+}
+
+function loadSceneInstances() {
+  Module.loadCoordinateSystem()
+
+  loadInstances()
+
+  for (let i = 0; i < g_instances.length; i++) {
+    g_sceneInstances.push(g_instances[i]);
+  }
+
+  for (let g = 0; g < g_geometries.length; g++) {
+    g_sceneGeometries.push(g_geometries[g]);
+  }
+
+  g_instances = []
+  g_geometries = []
 }
 
 function clearFields() { }

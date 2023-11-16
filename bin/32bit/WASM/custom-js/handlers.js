@@ -1,6 +1,6 @@
 /*
-         * Mouse/touch support
-         */
+* Mouse/touch support
+*/
 const SELECT_MODE = 0;
 const ZOOM_MODE = 1;
 const ROTATE_MODE = 2;
@@ -49,7 +49,7 @@ function runWebGLApp() {
     /**
      * Init IFCViewer
      */
-    g_viewer.init('canvas-element-id', $('#canvas_container').width(), $('#canvas_container').height());
+  g_viewer.init('canvas-element-id', $('#canvas_container').width(), $('#canvas_container').height());  
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop
