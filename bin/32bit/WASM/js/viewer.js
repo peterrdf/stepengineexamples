@@ -34,6 +34,9 @@ const BOTTOP_VIEW = 4
 const LEFT_VIEW = 5
 const RIGHT_VIEW = 6
 
+const NAVIGATION_VIEW_LENGTH = 200;
+const MIN_VIEW_PORT_LENGTH = 100;
+
 /*
  * Viewer
  */
@@ -135,6 +138,8 @@ var Viewer = function () {
   this._viewWireframes = VIEW_WIREFRAMES;
   this._viewLines = VIEW_LINES;
   this._viewPoints = VIEW_POINTS;
+  this._viewCoordinateSystem = VIEW_COORDINATE_SYSTEM;
+  this._viewNavigator = VIEW_NAVIGATOR;
   this._viewGrid = VIEW_GRID;
   this._viewBBox = VIEW_BBOX;
   this._viewBBoxX = VIEW_BBOX_X;
@@ -434,7 +439,7 @@ var Viewer = function () {
     gl.depthFunc(gl.LEQUAL)
 
     this.setLights()
-    this.drawInstances()
+    this.drawInstances()    
     this.drawSceneInstances()
     this.drawNavigatorInstances()
     this.drawInstancesSelectionFrameBuffer()
@@ -1482,8 +1487,7 @@ var Viewer = function () {
       this.drawConceptualFaces(true, g_instances, g_geometries)
       this.drawConceptualFaces(false, g_instances, g_geometries)
       this.drawConceptualFacesPolygons(g_instances, g_geometries)
-      this.drawLines(g_instances, g_geometries)
-      this.drawLines(g_sceneInstances, g_sceneGeometries)
+      this.drawLines(g_instances, g_geometries)      
       this.drawPoints()
       this.drawSelectedInstances()
       this.drawPickedInstance()
@@ -1499,15 +1503,33 @@ var Viewer = function () {
   }
 
   Viewer.prototype.drawSceneInstances = function () {
+    if (!this._viewCoordinateSystem) {
+      return
+    }
+
     this.drawConceptualFaces(true, g_sceneInstances, g_sceneGeometries)
     this.drawConceptualFaces(false, g_sceneInstances, g_sceneGeometries)
     this.drawConceptualFacesPolygons(g_sceneInstances, g_sceneGeometries)
+    this.drawLines(g_sceneInstances, g_sceneGeometries)
   }
 
   Viewer.prototype.drawNavigatorInstances = function () {
+    if (!this._viewNavigator) {
+      return
+    }
+
+    this.setDefultMatrices()
+
+    gl.viewport(
+      (gl.canvas.width / 4) - (NAVIGATION_VIEW_LENGTH / 2),
+      gl.canvas.height - NAVIGATION_VIEW_LENGTH,
+      NAVIGATION_VIEW_LENGTH,
+      NAVIGATION_VIEW_LENGTH)
+
     this.drawConceptualFaces(true, g_navigatorInstances, g_navigatorGeometries)
     this.drawConceptualFaces(false, g_navigatorInstances, g_navigatorGeometries)
     this.drawConceptualFacesPolygons(g_navigatorInstances, g_navigatorGeometries)
+    this.drawLines(g_sceneInstances, g_sceneGeometries)
   }
 
   /**

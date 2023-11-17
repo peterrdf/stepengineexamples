@@ -8,6 +8,8 @@ var VIEW_LINES = true;
 var VIEW_POINTS = true;
 var VIEW_MEASUREMENTS = true;
 
+var VIEW_COORDINATE_SYSTEM = true;
+var VIEW_NAVIGATOR = true;
 var VIEW_GRID = false;
 
 var VIEW_BBOX = true;
