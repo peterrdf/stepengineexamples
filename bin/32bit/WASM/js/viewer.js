@@ -62,6 +62,8 @@ var Viewer = function () {
   this._mtxProjection = mat4.create()
   this._mtxNormal = mat4.create()
   this._mtxInversePMV = mat4.create()
+  this._updateProjectionMatrix = true
+  this._applyTranslations = true
 
   /*
    * Scene
@@ -69,7 +71,7 @@ var Viewer = function () {
   this._clearColor = [0.0, 0.0, 0.0, 0.0]
   this._pointLightingLocation = vec3.create([0, 0, 10000])
   this._materialShininess = 30.0
-  this._defaultEyeVector = [0, 0, -2]
+  this._defaultEyeVector = [0, 0, -5]
   this._eyeVector = vec3.create(this._defaultEyeVector)
   this._rotateX = 30
   this._rotateY = 30
@@ -346,6 +348,10 @@ var Viewer = function () {
    * Default Projection matrix
    */
   Viewer.prototype.setDefultProjectionMatrix = function () {
+    if (!this._updateProjectionMatrix) {
+      return
+    }
+
     /*
      * Projection matrix
      */
@@ -378,7 +384,13 @@ var Viewer = function () {
      * Model-View matrix
      */
     mat4.identity(this._mtxModelView)
-    mat4.translate(this._mtxModelView, this._eyeVector)
+
+    if (this._applyTranslations) {
+      mat4.translate(this._mtxModelView, this._eyeVector)
+    }
+    else {
+      mat4.translate(this._mtxModelView, [0, 0, -5])
+    }
 
     mat4.multiply(this._mtxProjection, this._mtxModelView, this._mtxInversePMV)
     mat4.inverse(this._mtxInversePMV)
@@ -389,20 +401,21 @@ var Viewer = function () {
     /*
      * Fit the image
      */
+    if (this._applyTranslations) {
+      // [0.0 -> X/Y/Zmin + X/Y/Zmax]
+      mat4.translate(this._mtxModelView, [
+        -this._worldDimensions.Xmin,
+        -this._worldDimensions.Ymin,
+        -this._worldDimensions.Zmin,
+      ])
 
-    // [0.0 -> X/Y/Zmin + X/Y/Zmax]
-    mat4.translate(this._mtxModelView, [
-      -this._worldDimensions.Xmin,
-      -this._worldDimensions.Ymin,
-      -this._worldDimensions.Zmin,
-    ])
-
-    // Center
-    mat4.translate(this._mtxModelView, [
-      -(this._worldDimensions.Xmax - this._worldDimensions.Xmin) / 2,
-      -(this._worldDimensions.Ymax - this._worldDimensions.Ymin) / 2,
-      -(this._worldDimensions.Zmax - this._worldDimensions.Zmin) / 2,
-    ])
+      // Center
+      mat4.translate(this._mtxModelView, [
+        -(this._worldDimensions.Xmax - this._worldDimensions.Xmin) / 2,
+        -(this._worldDimensions.Ymax - this._worldDimensions.Ymin) / 2,
+        -(this._worldDimensions.Zmax - this._worldDimensions.Zmin) / 2,
+      ])
+    }
 
     gl.uniformMatrix4fv(
       this._shaderProgram.uMVMatrix,
@@ -1160,7 +1173,7 @@ var Viewer = function () {
     this._pointLightingLocation = vec3.create([0, 0, 10000])
     this._materialShininess = 30.0
 
-    this._defaultEyeVector = [0, 0, -2]
+    this._defaultEyeVector = [0, 0, -5]
     this._eyeVector = vec3.create(this._defaultEyeVector)
 
     /*
@@ -1518,18 +1531,72 @@ var Viewer = function () {
       return
     }
 
-    this.setDefultMatrices()
+    /*
+     * Projection matrix
+     */
+    mat4.identity(this._mtxProjection)
+    mat4.perspective(
+      45,
+      1,
+      0.001,
+      1000000.0,
+      this._mtxProjection
+    )
+
+    gl.uniformMatrix4fv(
+      this._shaderProgram.uPMatrix,
+      false,
+      this._mtxProjection
+    )
+
+    /*
+     * Model-View matrix
+     */
+    mat4.identity(this._mtxModelView)
+    mat4.translate(this._mtxModelView, [0, 0, -5])
+
+    mat4.multiply(this._mtxProjection, this._mtxModelView, this._mtxInversePMV)
+    mat4.inverse(this._mtxInversePMV)
+
+    mat4.rotate(this._mtxModelView, (this._rotateX * Math.PI) / 180, [1, 0, 0])
+    mat4.rotate(this._mtxModelView, (this._rotateY * Math.PI) / 180, [0, 1, 0])
+
+    gl.uniformMatrix4fv(
+      this._shaderProgram.uMVMatrix,
+      false,
+      this._mtxModelView
+    )
+
+    /*
+     * Normals matrix
+     */
+    mat4.set(this._mtxModelView, this._mtxNormal)
+    mat4.inverse(this._mtxNormal)
+    mat4.transpose(this._mtxNormal)
+
+    gl.uniformMatrix4fv(this._shaderProgram.uNMatrix, false, this._mtxNormal)
 
     gl.viewport(
-      (gl.canvas.width / 4) - (NAVIGATION_VIEW_LENGTH / 2),
-      gl.canvas.height - NAVIGATION_VIEW_LENGTH,
+      (gl.canvas.width / 2.5) - (NAVIGATION_VIEW_LENGTH),
+      100,
       NAVIGATION_VIEW_LENGTH,
       NAVIGATION_VIEW_LENGTH)
 
-    this.drawConceptualFaces(true, g_navigatorInstances, g_navigatorGeometries)
-    this.drawConceptualFaces(false, g_navigatorInstances, g_navigatorGeometries)
-    this.drawConceptualFacesPolygons(g_navigatorInstances, g_navigatorGeometries)
-    this.drawLines(g_sceneInstances, g_sceneGeometries)
+    this._updateProjectionMatrix = false
+    this._applyTranslations = false
+
+    try {
+      this.drawConceptualFaces(true, g_navigatorInstances, g_navigatorGeometries)
+      this.drawConceptualFaces(false, g_navigatorInstances, g_navigatorGeometries)
+      this.drawConceptualFacesPolygons(g_navigatorInstances, g_navigatorGeometries)
+      this.drawLines(g_navigatorInstances, g_navigatorGeometries)
+    }
+    catch (ex) {
+      console.error(ex);
+    }
+
+    this._updateProjectionMatrix = true
+    this._applyTranslations = true
   }
 
   /**
@@ -1591,7 +1658,12 @@ var Viewer = function () {
        */
       mat4.identity(this._mtxModelView)
 
-      mat4.translate(this._mtxModelView, this._eyeVector)
+      if (this._applyTranslations) {
+        mat4.translate(this._mtxModelView, this._eyeVector)
+      }
+      else {
+        mat4.translate(this._mtxModelView, [0, 0, -5])
+      }
 
       mat4.rotate(
         this._mtxModelView,
@@ -1607,20 +1679,21 @@ var Viewer = function () {
       /*
        * Fit the image
        */
+      if (this._applyTranslations) {
+        // [0.0 -> X/Y/Zmin + X/Y/Zmax]
+        mat4.translate(this._mtxModelView, [
+          -this._worldDimensions.Xmin,
+          -this._worldDimensions.Ymin,
+          -this._worldDimensions.Zmin,
+        ])
 
-      // [0.0 -> X/Y/Zmin + X/Y/Zmax]
-      mat4.translate(this._mtxModelView, [
-        -this._worldDimensions.Xmin,
-        -this._worldDimensions.Ymin,
-        -this._worldDimensions.Zmin,
-      ])
-
-      // Center
-      mat4.translate(this._mtxModelView, [
-        -(this._worldDimensions.Xmax - this._worldDimensions.Xmin) / 2,
-        -(this._worldDimensions.Ymax - this._worldDimensions.Ymin) / 2,
-        -(this._worldDimensions.Zmax - this._worldDimensions.Zmin) / 2,
-      ])
+        // Center
+        mat4.translate(this._mtxModelView, [
+          -(this._worldDimensions.Xmax - this._worldDimensions.Xmin) / 2,
+          -(this._worldDimensions.Ymax - this._worldDimensions.Ymin) / 2,
+          -(this._worldDimensions.Zmax - this._worldDimensions.Zmin) / 2,
+        ])
+      }
 
       /*
        * Transformation matrix
