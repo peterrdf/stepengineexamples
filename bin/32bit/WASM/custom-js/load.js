@@ -3,6 +3,7 @@ var Module = {
     console.log('onRuntimeInitialized')
     
     loadSceneInstances()
+    loadNavigatorInstances()
 
     printRuleSets()
   },
@@ -35,7 +36,7 @@ function loadContent(fileName, fileExtension, fileContent) {
     Module.loadDXF(true, true)
   }
   else if ((fileExtension === 'bin') || (fileExtension == 'rdf')) {
-    Module.loadBIN(true, true, true);
+    Module.loadBIN(true, true);
   }
   else if ((fileExtension == 'dae') || (fileExtension == 'zae')) {
     Module.loadDAE(true, true)
@@ -249,6 +250,23 @@ function loadSceneInstances() {
 
   for (let g = 0; g < g_geometries.length; g++) {
     g_sceneGeometries.push(g_geometries[g]);
+  }
+
+  g_instances = []
+  g_geometries = []
+}
+
+function loadNavigatorInstances() {
+  Module.loadNavigator()
+
+  loadInstances()
+
+  for (let i = 0; i < g_instances.length; i++) {
+    g_navigatorInstances.push(g_instances[i]);
+  }
+
+  for (let g = 0; g < g_geometries.length; g++) {
+    g_navigatorGeometries.push(g_geometries[g]);
   }
 
   g_instances = []

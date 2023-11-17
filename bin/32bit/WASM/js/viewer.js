@@ -435,6 +435,8 @@ var Viewer = function () {
 
     this.setLights()
     this.drawInstances()
+    this.drawSceneInstances()
+    this.drawNavigatorInstances()
     this.drawInstancesSelectionFrameBuffer()
   }  
 
@@ -1477,26 +1479,11 @@ var Viewer = function () {
    */
   Viewer.prototype.drawInstances = function () {
     if (KEEP_NOT_SELECTED_OBJECTS_COLOR || this._selectedObjects.length === 0) {
-      // Main model
       this.drawConceptualFaces(true, g_instances, g_geometries)
       this.drawConceptualFaces(false, g_instances, g_geometries)
-
-      // Scene model      
-      this.drawConceptualFaces(true, g_sceneInstances, g_sceneGeometries)
-      this.drawConceptualFaces(false, g_sceneInstances, g_sceneGeometries)
-
-      // Main model
       this.drawConceptualFacesPolygons(g_instances, g_geometries)
-
-      // Scene model
-      this.drawConceptualFacesPolygons(g_sceneInstances, g_sceneGeometries)
-
-      // Main model
       this.drawLines(g_instances, g_geometries)
-
-      // Scene model
       this.drawLines(g_sceneInstances, g_sceneGeometries)
-
       this.drawPoints()
       this.drawSelectedInstances()
       this.drawPickedInstance()
@@ -1509,6 +1496,18 @@ var Viewer = function () {
     this.drawGrid()
 
     this.drawSelectedInstancesLabels()
+  }
+
+  Viewer.prototype.drawSceneInstances = function () {
+    this.drawConceptualFaces(true, g_sceneInstances, g_sceneGeometries)
+    this.drawConceptualFaces(false, g_sceneInstances, g_sceneGeometries)
+    this.drawConceptualFacesPolygons(g_sceneInstances, g_sceneGeometries)
+  }
+
+  Viewer.prototype.drawNavigatorInstances = function () {
+    this.drawConceptualFaces(true, g_navigatorInstances, g_navigatorGeometries)
+    this.drawConceptualFaces(false, g_navigatorInstances, g_navigatorGeometries)
+    this.drawConceptualFacesPolygons(g_navigatorInstances, g_navigatorGeometries)
   }
 
   /**
