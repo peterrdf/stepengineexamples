@@ -49,7 +49,12 @@ function runWebGLApp() {
     /**
      * Init IFCViewer
      */
-  g_viewer.init('canvas-element-id', $('#canvas_container').width(), $('#canvas_container').height());  
+  g_viewer.init('canvas-element-id', $('#canvas_container').width(), $('#canvas_container').height());
+
+  setTimeout(() => {
+    loadSceneInstances()
+    loadNavigatorInstances()
+  }, 500)  
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop

@@ -1,9 +1,6 @@
 var Module = {
   onRuntimeInitialized: function () {
     console.log('onRuntimeInitialized')
-    
-    loadSceneInstances()
-    loadNavigatorInstances()
 
     printRuleSets()
   },
