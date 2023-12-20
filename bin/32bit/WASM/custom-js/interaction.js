@@ -12,8 +12,8 @@ function zoom(zoomIn) {
     }
 
     var zoomFactor = zoomIn
-      ? g_viewer._worldDimensions.MaxDistance * 0.05
-      : -(g_viewer._worldDimensions.MaxDistance * 0.05)
+      ? g_viewer._worldDimensions.MaxDistance * 0.0075
+      : -(g_viewer._worldDimensions.MaxDistance * 0.0075)
 
     var near = [0, 0, 0, 0]
     var far = [0, 0, 0, 0]
@@ -47,7 +47,7 @@ function zoom(zoomIn) {
  */
 function mouseWheelZoom(zoomIn, zoomX, zoomY, speed) {
   try {
-    var zoomFactor = zoomIn ? 0.35 * speed : -0.35 * speed
+    var zoomFactor = zoomIn ? 0.005 * speed : -0.005 * speed
 
     var near = [0, 0, 0, 0]
     var far = [0, 0, 0, 0]
