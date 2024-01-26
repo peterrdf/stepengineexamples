@@ -8,66 +8,115 @@ var Module = {
 
 function embeddedMode() {
   try {
-    return window.self !== window.top;
+    return window.self !== window.top
   } catch (e) {
-    return true;
+    return true
   }
 }
 
 function getFileExtension(file) {
   if (file && file.length > 4) {
-    return file.substr(file.length - 3, 3).toLowerCase();
+    return file.substr(file.length - 3, 3).toLowerCase()
   }
 
-  return null;
+  return null
 }
 
-function loadContent(fileName, fileExtension, fileContent) {
-  g_instances = [];
-  g_geometries = [];
+function addContent(fileName, fileExtension, fileContent) {
+  console.log('addContent BEGIN: ' + fileName)
+  
+  // Cache
+  let instances = [...g_instances]
+  let geometries = [...g_geometries]
 
-  Module.unload();
-  Module['FS_createDataFile']('/data/', 'input.ifc', fileContent, true, true);
+  // Load new instances
+  g_instances = []
+  g_geometries = []
+
+  Module.unload()
+  Module['FS_createDataFile']('/data/', 'input.ifc', fileContent, true, true)
 
   if (fileExtension === 'dxf') {
-    Module.loadDXF(true, true)
+    Module.loadDXF(true, !embeddedMode())
   }
   else if ((fileExtension === 'bin') || (fileExtension == 'rdf')) {
-    Module.loadBIN(true, true);
+    Module.loadBIN(true, !embeddedMode(), SCALE_AND_CENTER)
   }
   else if ((fileExtension == 'dae') || (fileExtension == 'zae')) {
-    Module.loadDAE(true, true)
+    Module.loadDAE(true, !embeddedMode())
   }
   else if (fileExtension == 'obj') {
-    Module.loadOBJ(true, true)
+    Module.loadOBJ(true, !embeddedMode())
+  }
+  else if ((fileExtension == 'gml') ||
+    (fileExtension == 'citygml') ||
+    (fileExtension == 'xml') ||
+    (fileExtension == 'json')) {
+    console.log('gis')//.gml, citygml, .xml, .json
   }
   else {
-    Module.loadSTEP(true, true)
+    Module.loadSTEP(true, !embeddedMode(), SCALE_AND_CENTER)
   }
 
   FS.unlink('/data/' + 'input.ifc')
 
-  loadInstances();
-  updateFileNameField(fileName);
-  loadAllIFCTrees();
+  loadInstances(false)
+
+  // Re-index Geometry-s/Add Instance-s
+  for (let i = 0; i < g_instances.length; i++) {
+    for (let g = 0; g < g_instances[i].geometry.length; g++) {
+      g_instances[i].geometry[g] = g_instances[i].geometry[g] + geometries.length
+    }
+
+    instances.push(g_instances[i])
+  }
+
+  // Add Geometry-s
+  for (let g = 0; g < g_geometries.length; g++) {
+    geometries.push(g_geometries[g])
+  }
+
+  // Update
+  g_instances = [...instances]
+  g_geometries = [...geometries]
+
+  // Update Viewer
+  g_viewer.loadInstances()
+
+  if (!embeddedMode()) {
+    updateFileNameField(fileName)
+    loadAllIFCTrees()
+  }
+
+  console.log('addContent END: ' + fileName)
+}
+
+function loadContent(fileName, fileExtension, fileContent) {
+  // WebGL Cleanup
+  g_viewer.deleteBuffers()
+
+  g_instances = []
+  g_geometries = []
+
+  addContent(fileName, fileExtension, fileContent)
 }
 
 function loadZAE(fileName, data) {
-  var jsZip = new JSZip();
+  var jsZip = new JSZip()
   jsZip.loadAsync(data).then(function (zip) {
-    let daeFile = getDAEFile(zip);
+    let daeFile = getDAEFile(zip)
     if (daeFile) {
       zip.file(daeFile).async('string').then(function (fileContent) {
-        loadContent(fileName, 'dae', fileContent);
+        loadContent(fileName, 'dae', fileContent)
 
-        var textureCnt = Module.getTextureCnt();
+        var textureCnt = Module.getTextureCnt()
         for (let t = 0; t < textureCnt; t++) {
-          var textureName = Module.getTextureInfo(t + 1);
-          loadTexture(zip, textureName);
+          var textureName = Module.getTextureInfo(t + 1)
+          loadTexture(zip, textureName)
         }
-      });
+      })
     }
-  });
+  })
 }
 
 function loadFile(file) {
@@ -75,30 +124,28 @@ function loadFile(file) {
 
   var fileReader = new FileReader()
   fileReader.onload = function () {
-    var fileContent = new Uint8Array(fileReader.result);
+    var fileContent = new Uint8Array(fileReader.result)
 
-    var fileExtension = getFileExtension(file.name);
+    var fileExtension = getFileExtension(file.name)
     if (fileExtension === 'zae') {
       try {
         loadZAE(file.name, fileContent)
       }
       catch (e) {
-        console.error(e);
+        console.error(e)
       }
     }
     else {
-      loadContent(file.name, fileExtension, fileContent);
+      loadContent(file.name, fileExtension, fileContent)
     }
   }
 
   fileReader.readAsArrayBuffer(file)
 }
 
-function loadInstances() {
+function loadInstances(updateViewer) {
   try {
     Module.createCache()
-
-    g_viewer._hasTexures = false
 
     let texturesCount = Module.getTextureCnt()
     console.log('Textures Count: ' + texturesCount)
@@ -208,28 +255,28 @@ function loadInstances() {
         matrix: [],
       }
 
-      let instanceGeometryCnt = Module.getInstanceGemetryCnt(i)
+      let instanceGeometryCnt = Module.getInstanceGeometryCnt(i)
       for (let r = 0; r < instanceGeometryCnt; r++) {
-        let instanceGeometryRef = Module.getInstanceGemetryRef(i, r)        
+        let instanceGeometryRef = Module.getInstanceGeometryRef(i, r)
         instance.geometry.push(instanceGeometryRef)
 
         let matrix = []
-        let instanceGemetryMatrix = Module.getInstanceGemetryMatrix(i, g_geometries[instanceGeometryRef])
-        if (!!instanceGemetryMatrix && instanceGemetryMatrix.size() === 16) {
-          for (let i = 0; i < instanceGemetryMatrix.size(); i++) {
-            matrix.push(instanceGemetryMatrix.get(i))
+        let instanceGeometryMatrix = Module.getInstanceGeometryMatrix(i, 0)
+        if (!!instanceGeometryMatrix && instanceGeometryMatrix.size() === 16) {
+          for (let i = 0; i < instanceGeometryMatrix.size(); i++) {
+            matrix.push(instanceGeometryMatrix.get(i))
           }
         }
-
         instance.matrix.push(matrix)
       } // for (let r = ...
 
       g_instances.push(instance)
     } // for (let i = ...
 
-    g_viewer._hasTexures = texturesCount > 0
-    g_viewer._scaleFactor = Module.getScale()
-    g_viewer.loadInstances()
+    if (updateViewer) {
+      g_viewer._scaleFactor = SCALE_AND_CENTER ? Module.getScale() : 1.0;     
+      g_viewer.loadInstances()
+    }
   }
   catch (ex) {
     console.error(ex)
@@ -239,14 +286,14 @@ function loadInstances() {
 function loadSceneInstances() {
   Module.loadCoordinateSystem()
 
-  loadInstances()
+  loadInstances(true)
 
   for (let i = 0; i < g_instances.length; i++) {
-    g_sceneInstances.push(g_instances[i]);
+    g_sceneInstances.push(g_instances[i])
   }
 
   for (let g = 0; g < g_geometries.length; g++) {
-    g_sceneGeometries.push(g_geometries[g]);
+    g_sceneGeometries.push(g_geometries[g])
   }
 
   g_instances = []
@@ -256,14 +303,14 @@ function loadSceneInstances() {
 function loadNavigatorInstances() {
   Module.loadNavigator()
 
-  loadInstances()
+  loadInstances(true)
 
   for (let i = 0; i < g_instances.length; i++) {
-    g_navigatorInstances.push(g_instances[i]);
+    g_navigatorInstances.push(g_instances[i])
   }
 
   for (let g = 0; g < g_geometries.length; g++) {
-    g_navigatorGeometries.push(g_geometries[g]);
+    g_navigatorGeometries.push(g_geometries[g])
   }
 
   g_instances = []
@@ -273,63 +320,65 @@ function loadNavigatorInstances() {
 function clearFields() { }
 
 function readFileByUri(file, callback) {
-  var rawFile = new XMLHttpRequest();
-  rawFile.open('GET', file, true);
-  rawFile.setRequestHeader('Content-Type', 'text/xml');
-  rawFile.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-  rawFile.setRequestHeader('Access-Control-Allow-Origin', '*');
-  rawFile.onreadystatechange = function () {
-    if (rawFile.readyState === 4 && rawFile.status === 200) {
-      callback(rawFile.responseText);
+  try {
+    var rawFile = new XMLHttpRequest() 
+    rawFile.open('GET', "http://localhost:8088/fileservice/byUri?fileUri=" + encodeURIComponent(file))
+    rawFile.setRequestHeader("Content-type", "application/json; charset=utf-8")
+    rawFile.onreadystatechange = function () {
+      if (rawFile.readyState === 4 && rawFile.status === 200) {
+        callback(rawFile.responseText)
+      }
     }
+    rawFile.send()
   }
-  rawFile.send(null);
+  catch (ex) {
+    console.error(ex)
+  }
 }
 
 function getDAEFile(zip) {
   if (zip) {
     for (let [fileName] of Object.entries(zip.files)) {
       if (getFileExtension(fileName) === 'dae') {
-        return fileName;
+        return fileName
       }
     }
   }
-
-  return null;
+  return null
 }
 
 function loadTexture(zip, textureName) {
   if (zip) {
     zip.file(textureName).async('blob').then(function (blob) {
       g_viewer._textures[textureName] = g_viewer.createTextureBLOB(blob)
-    });
+    })
   }
 }
 
 function loadFileByUri(file) {
-  let fileExtension = getFileExtension(file);
+  let fileExtension = getFileExtension(file)
 
   if (fileExtension === 'zae') {
     try {
       JSZipUtils.getBinaryContent(file, function (err, data) {
         if (err) {
-          throw err;
+          throw err
         }
-        loadZAE(file, data);
-      });
+        loadZAE(file, data)
+      })
     }
     catch (e) {
-      console.error(e);
+      console.error(e)
     }
   }
   else {
     readFileByUri(`${file}`, function (fileContent) {
       try {
-        loadContent(file, fileExtension, fileContent);
+        loadContent(file, fileExtension, fileContent)
       }
       catch (e) {
-        console.error(e);
+        console.error(e)
       }
-    });
+    })
   }
 }

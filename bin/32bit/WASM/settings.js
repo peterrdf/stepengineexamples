@@ -1,3 +1,5 @@
+var SCALE_AND_CENTER = true;
+
 var FLY_TO_OBJECT_STEPS = 7;
 var FLY_TO_OBJECT_TIMEOUT = 10;
 var FLY_TO_OBJECT_FRAMES_COUNT = 20;
@@ -9,7 +11,7 @@ var VIEW_POINTS = true;
 var VIEW_MEASUREMENTS = true;
 
 var VIEW_COORDINATE_SYSTEM = true;
-var VIEW_NAVIGATOR = true;
+var VIEW_NAVIGATOR = false;
 var VIEW_GRID = false;
 
 var VIEW_BBOX = true;

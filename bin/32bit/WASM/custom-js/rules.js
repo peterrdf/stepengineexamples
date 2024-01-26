@@ -20,7 +20,7 @@ printRuleSets = () => {
   if (embeddedMode()) {
     return;
   }
-
+  
   const container = $(`${RULES_CONTAINER} .rules-container`)
   container.empty()
 

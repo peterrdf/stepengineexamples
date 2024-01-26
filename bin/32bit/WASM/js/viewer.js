@@ -91,7 +91,6 @@ var Viewer = function () {
   /*
    * Textures
    */
-  this._hasTexures = false
   this._defaultTexture = null
   this._textures = {}
 
@@ -1293,6 +1292,60 @@ var Viewer = function () {
    */
 
   /*
+   * Cleanup
+   */
+  Viewer.prototype.deleteBuffers = function () {
+    console.info('deleteBuffers - BEGIN')
+
+    let count = 0
+
+    for (let i = 0; i < g_instances.length; i++) {
+      if (g_instances[i].BBVBO) {
+        gl.deleteBuffer(g_instances[i].BBVBO)
+        count++
+      }
+    }
+
+    for (let i = 0; i < g_geometries.length; i++) {
+      let geometry = g_geometries[i]
+
+      if (geometry.VBO) {
+        gl.deleteBuffer(geometry.VBO)
+        count++
+      }
+
+      for (let j = 0; j < geometry.conceptualFaces.length; j++) {
+        if (geometry.conceptualFaces[j].IBO) {
+          gl.deleteBuffer(geometry.conceptualFaces[j].IBO)
+          count++
+        }
+
+        if (geometry.conceptualFacesPolygons[j].IBO) {
+          gl.deleteBuffer(geometry.conceptualFacesPolygons[j].IBO)
+          count++
+        }
+
+        if (geometry.conceptualFaces[j].IBOLines) {
+          gl.deleteBuffer(geometry.conceptualFaces[j].IBOLines)
+          count++
+        }
+
+        if (geometry.conceptualFaces[j].IBOPoints) {
+          gl.deleteBuffer(geometry.conceptualFaces[j].IBOPoints)
+          count++
+        }
+      } // for (let j = ...
+    } // for (let i = ...
+
+    if (this._gridVBO) {
+      gl.deleteBuffer(this._gridVBO)
+      count++
+    }
+
+    console.info('deleteBuffers - END: ' + count)
+  }
+
+  /*
    * Load
    */
   Viewer.prototype.loadInstances = function () {
@@ -1313,6 +1366,11 @@ var Viewer = function () {
 
         if (!geometry.vertices) {
           console.error('Unknown data model.')
+          continue
+        }
+
+        if (geometry.VBO) {
+          // Already loaded
           continue
         }
 
@@ -1500,8 +1558,8 @@ var Viewer = function () {
       this.drawConceptualFaces(true, g_instances, g_geometries)
       this.drawConceptualFaces(false, g_instances, g_geometries)
       this.drawConceptualFacesPolygons(g_instances, g_geometries)
-      this.drawLines(g_instances, g_geometries)      
-      this.drawPoints()
+      this.drawLines(g_instances, g_geometries)    
+      this.drawPoints(g_instances, g_geometries)
       this.drawSelectedInstances()
       this.drawPickedInstance()
     } else {
@@ -1628,7 +1686,7 @@ var Viewer = function () {
     )
     gl.enableVertexAttribArray(this._shaderProgram.aVertexNormal)
 
-    if (this._hasTexures) {
+    if (geometry.vertexSizeInBytes === 32) {
       gl.vertexAttribPointer(
         this._shaderProgram.aTextureCoord,
         2,
@@ -2083,12 +2141,12 @@ var Viewer = function () {
   /**
    * Points
    */
-  Viewer.prototype.drawPoints = function () {
+  Viewer.prototype.drawPoints = function (instances, geometries) {
     if (!this._viewPoints) {
       return
     }
 
-    if (g_instances.length === 0) {
+    if ((instances.length === 0) || (geometries.length === 0)) {
       return
     }
 
@@ -2104,18 +2162,18 @@ var Viewer = function () {
     gl.uniform3f(this._shaderProgram.uMaterialEmissiveColor, 0.0, 0.0, 0.0)
 
     try {
-      for (let i = 0; i < g_instances.length; i++) {
-        if (!g_instances[i].visible) {
+      for (let i = 0; i < instances.length; i++) {
+        if (!instances[i].visible) {
           continue
         }
 
-        for (let g = 0; g < g_instances[i].geometry.length; g++) {
-          let geometry = g_geometries[g_instances[i].geometry[g]]
+        for (let g = 0; g < instances[i].geometry.length; g++) {
+          let geometry = geometries[instances[i].geometry[g]]
           if (!geometry.conceptualFaces) {
             continue
           }
 
-          this.applyTransformationMatrix(g_instances[i].matrix[g])
+          this.applyTransformationMatrix(instances[i].matrix[g])
 
           if (!this.setVBO(geometry)) {
             console.error('Internal error!')

@@ -132,7 +132,7 @@
             }
             else {
                 if (vUseBinnPhongModel > 0.5) {
-                    vec3 ambientLightWeighting = vec3(0.4, 0.4, 0.4);
+                    vec3 ambientLightWeighting = vec3(0.25, 0.25, 0.15);
 
                     vec3 lightDirection = normalize(uPointLightingLocation - vPosition.xyz);
                     vec3 normal = normalize(vTransformedNormal);
@@ -305,7 +305,8 @@
     </footer>
 
     <!-- hidden input -->            
-    <input id="load_ifc_file" type="file" accept=".ifc, .ifx, .ifcOWL, .ttl, .stp, .bin, .dxf, .dae, .zae, .obj" onclick="this.value = null;" onchange="loadFile(this.files[0]);" style="display:none;" />
+    <input id="load_ifc_file" type="file" accept=".ifc, .ifx, .ifcOWL, .ttl, .stp, .bin, .dxf, .dae, .zae, .obj, .gml, citygml, .xml, .json" 
+           onclick="this.value = null;" onchange="loadFile(this.files[0]);" style="display:none;" />
 
     <!-- modal content for Checker Report -->
     <div class="modal fade" id="reg-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
