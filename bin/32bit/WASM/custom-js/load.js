@@ -16,7 +16,7 @@ function embeddedMode() {
 
 function getFileExtension(file) {
   if (file && file.length > 4) {
-    return file.substr(file.length - 3, 3).toLowerCase()
+    return file.split('.').pop();
   }
 
   return null
@@ -58,7 +58,7 @@ function addContent(fileName, fileExtension, fileContent) {
     Module.loadSTEP(true, !embeddedMode(), SCALE_AND_CENTER)
   }
 
-  FS.unlink('/data/' + 'input.ifc')
+  FS.unlink('/data/' + 'input.ifc')  
 
   loadInstances(false)
 
