@@ -52,7 +52,7 @@ function addContent(fileName, fileExtension, fileContent) {
     (fileExtension == 'citygml') ||
     (fileExtension == 'xml') ||
     (fileExtension == 'json')) {
-    console.log('gis')//.gml, citygml, .xml, .json
+    Module.loadGIS(fileName, true, !embeddedMode(), SCALE_AND_CENTER)
   }
   else {
     Module.loadSTEP(true, !embeddedMode(), SCALE_AND_CENTER)
