@@ -24,6 +24,9 @@ function getFileExtension(file) {
 
 function addContent(fileName, fileExtension, fileContent) {
   console.log('addContent BEGIN: ' + fileName)
+
+  // UI Cleanup
+  resetFields()
   
   // Cache
   let instances = [...g_instances]
@@ -95,8 +98,9 @@ function loadContent(fileName, fileExtension, fileContent) {
   // WebGL Cleanup
   g_viewer.deleteBuffers()
 
+  // Data Cleanup
   g_instances = []
-  g_geometries = []
+  g_geometries = [] 
 
   addContent(fileName, fileExtension, fileContent)
 }
