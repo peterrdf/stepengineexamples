@@ -88,7 +88,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>IFCEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>../Debug/miniExample-C++_32bit.exe</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\Debug/HelloHouse.pdb</ProgramDatabaseFile>
@@ -132,7 +132,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>IFCEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>../Release/miniExample-C++_32bit.exe</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ProgramDatabaseFile>.\Release/HelloHouse.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
