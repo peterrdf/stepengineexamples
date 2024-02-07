@@ -8,21 +8,6 @@
 #include "CityGML2IFCDlg.h"
 #include "afxdialogex.h"
 
-#include "engine.h"
-#include "ifcengine.h"
-#include "gisengine.h"
-
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
-
-#include <string>
-#include <bitset>
-#include <algorithm>
-#include <iostream>
-#include <fstream>
-#include <time.h>
-using namespace std;
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -72,6 +57,7 @@ END_MESSAGE_MAP()
 
 CCityGML2IFCDlg::CCityGML2IFCDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CITYGML2IFC_DIALOG, pParent)
+	, m_iModel(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -190,12 +176,61 @@ void CCityGML2IFCDlg::SetFormatSettings(int64_t iModel)
 	SetBehavior(iModel, 2048 + 4096, 2048 + 4096);
 }
 
+void CCityGML2IFCDlg::CreateBuildingRecursive(OwlInstance iInstance)
+{
+	ASSERT(iInstance != 0);
+
+	RdfProperty iProperty = GetInstancePropertyByIterator(iInstance, 0);
+	while (iProperty != 0)
+	{
+		if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
+		{
+			int64_t iValuesCount = 0;
+			OwlInstance* piValues = nullptr;
+			GetObjectProperty(iInstance, iProperty, &piValues, &iValuesCount);
+
+			for (int64_t iValue = 0; iValue < iValuesCount; iValue++)
+			{
+				if (piValues[iValue] != 0)
+				{
+					if (GetInstanceGeometryClass(piValues[iValue]) &&
+						GetBoundingBox(piValues[iValue], nullptr, nullptr))
+					{
+						OwlClass iInstanceClass = GetInstanceClass(piValues[iValue]);
+						ASSERT(iInstanceClass != 0);
+
+						if (iInstanceClass == GetClassByName(m_iModel, "BoundaryRepresentation"))
+						{
+							TRACE(L"\nBoundaryRepresentation");
+						}
+						else
+						{
+							wchar_t* szClassName = nullptr;
+							GetNameOfClassW(iInstanceClass, &szClassName);
+
+							TRACE(L"\n%s", szClassName);
+						}
+					} // if (GetInstanceGeometryClass(piValues[iValue]) && ...
+					else
+					{
+						CreateBuildingRecursive(piValues[iValue]);
+					}
+				} // if (piValues[iValue] != 0)
+			} // for (int64_t iValue = ...
+		} // if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
+
+		iProperty = GetInstancePropertyByIterator(iInstance, iProperty);
+	}
+}
+
 void CCityGML2IFCDlg::OnBnClickedOk()
 {
-	OwlModel iModel = CreateModel();
-	ASSERT(iModel != 0);
+	ASSERT(m_iModel == 0);
 
-	SetFormatSettings(iModel);
+	m_iModel = CreateModel();
+	ASSERT(m_iModel != 0);
+
+	SetFormatSettings(m_iModel);
 
 	wchar_t szAppPath[_MAX_PATH];
 	::GetModuleFileName(::GetModuleHandle(nullptr), szAppPath, sizeof(szAppPath));
@@ -207,9 +242,29 @@ void CCityGML2IFCDlg::OnBnClickedOk()
 
 	SetGISOptionsW(strRootFolder.c_str(), true, LogCallbackImpl);
 
-	ImportGISModelW(iModel, L"D:\\Temp\\gisengine in\\FZKHouseLoD2.gml");
+	ImportGISModelW(m_iModel, L"D:\\Temp\\gisengine in\\FZKHouseLoD2.gml");
 
-	CloseModel(iModel);
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	OwlClass iBuildingTypeClass = GetClassByName(m_iModel, "class:BuildingType");
+	ASSERT(iBuildingTypeClass != 0);
+
+	OwlInstance iInstance = GetInstancesByIterator(m_iModel, 0);
+	while (iInstance != 0)
+	{
+		OwlClass iInstanceClass = GetInstanceClass(iInstance);
+		ASSERT(iInstanceClass != 0);
+
+		if ((iInstanceClass == iBuildingTypeClass) || IsClassAncestor(iInstanceClass, iBuildingTypeClass))
+		{
+			CreateBuildingRecursive(iInstance);			
+		}
+
+		iInstance = GetInstancesByIterator(m_iModel, iInstance);
+	}
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+	CloseModel(m_iModel);
+	m_iModel = 0;
 
 	// TODO: Add your control notification handler code here
 	CDialogEx::OnOK();

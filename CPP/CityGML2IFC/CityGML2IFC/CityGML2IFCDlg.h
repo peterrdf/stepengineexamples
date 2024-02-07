@@ -4,14 +4,34 @@
 
 #pragma once
 
+#include "engine.h"
+#include "ifcengine.h"
+#include "gisengine.h"
+
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+
+#include <string>
+#include <bitset>
+#include <algorithm>
+#include <iostream>
+#include <fstream>
+#include <time.h>
+#include <map>
+using namespace std;
 
 // CCityGML2IFCDlg dialog
 class CCityGML2IFCDlg : public CDialogEx
 {
 
+private: // Members
+
+	OwlModel m_iModel;
+
 protected: // Methods
 
 	void SetFormatSettings(int64_t iModel);
+	void CreateBuildingRecursive(OwlInstance iInstance);
 
 // Construction
 public:
