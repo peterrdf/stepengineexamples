@@ -53,8 +53,8 @@ void    createIfcPolylineShape(double p0x, double p0y, double p1x, double p1y);
 //
 
 
-int		buildShapeRepresentationInstance(polygon2DStruct * pPolygon, double depth);
-int		buildShapeRepresentationInstance(double p0x, double p0y, double p1x, double p1y);
+int_t		buildShapeRepresentationInstance(polygon2DStruct * pPolygon, double depth);
+int_t		buildShapeRepresentationInstance(double p0x, double p0y, double p1x, double p1y);
 
 
 //
@@ -64,8 +64,8 @@ int		buildShapeRepresentationInstance(double p0x, double p0y, double p1x, double
 //
 
 
-int		buildArbitraryClosedProfileDefInstance(polygon2DStruct * pPolygon);
-int		buildCartesianPointInstance(double x, double y);
-int		buildExtrudedAreaSolidInstance(polygon2DStruct * pPolygon, double depth);
-int		buildPolylineInstance(polygon2DStruct * pPolygon);
-int		buildPolylineInstance(double p0x, double p0y, double p1x, double p1y);
+int_t		buildArbitraryClosedProfileDefInstance(polygon2DStruct * pPolygon);
+int_t		buildCartesianPointInstance(double x, double y);
+int_t		buildExtrudedAreaSolidInstance(polygon2DStruct * pPolygon, double depth);
+int_t		buildPolylineInstance(polygon2DStruct * pPolygon);
+int_t		buildPolylineInstance(double p0x, double p0y, double p1x, double p1y);

@@ -32,13 +32,13 @@
 //
 
 
-int		buildPropertySet(char * name, int ** aggrHasProperties);
-int		buildPropertySingleValue(char * name, char * description, bool nominalValue);
-int		buildPropertySingleValue(char * name, char * description, bool nominalValue, char * typePath);
-int		buildPropertySingleValue(char * name, char * description, double nominalValue);
-int		buildPropertySingleValue(char * name, char * description, double nominalValue, char * typePath);
-int		buildPropertySingleValue(char * name, char * description, char * nominalValue);
-int		buildPropertySingleValue(char * name, char * description, char * nominalValue, char * typePath);
+int_t		buildPropertySet(char * name, int_t ** aggrHasProperties);
+int_t		buildPropertySingleValue(char * name, char * description, bool nominalValue);
+int_t		buildPropertySingleValue(char * name, char * description, bool nominalValue, char * typePath);
+int_t		buildPropertySingleValue(char * name, char * description, double nominalValue);
+int_t		buildPropertySingleValue(char * name, char * description, double nominalValue, char * typePath);
+int_t		buildPropertySingleValue(char * name, char * description, char * nominalValue);
+int_t		buildPropertySingleValue(char * name, char * description, char * nominalValue, char * typePath);
 
 
 //
@@ -48,10 +48,10 @@ int		buildPropertySingleValue(char * name, char * description, char * nominalVal
 //
 
 
-int		buildElementQuantity(char * name, int ** aggrQuantities);
-int		buildQuantityLength(char * name, char * description, double length);
-int		buildQuantityArea(char * name, char * description, double area);
-int		buildQuantityVolume(char * name, char * description, double volume);
+int_t		buildElementQuantity(char * name, int_t ** aggrQuantities);
+int_t		buildQuantityLength(char * name, char * description, double length);
+int_t		buildQuantityArea(char * name, char * description, double area);
+int_t		buildQuantityVolume(char * name, char * description, double volume);
 
 
 //
@@ -61,13 +61,13 @@ int		buildQuantityVolume(char * name, char * description, double volume);
 //
 
 
-int		buildPset_WallCommon();
-int		buildBaseQuantities_Wall(double width, double length, double height, double openingArea, double linearConversionFactor);
-int		buildBaseQuantities_WallStandardCase(double width, double length, double height, double openingArea, double linearConversionFactor);
-int		buildBaseQuantities_Opening(double depth, double height, double width);
-int		buildPset_DoorCommon();
-int		buildPset_WindowCommon();
-int		buildBaseQuantities_Window(double height, double width);
+int_t		buildPset_WallCommon();
+int_t		buildBaseQuantities_Wall(double width, double length, double height, double openingArea, double linearConversionFactor);
+int_t		buildBaseQuantities_WallStandardCase(double width, double length, double height, double openingArea, double linearConversionFactor);
+int_t		buildBaseQuantities_Opening(double depth, double height, double width);
+int_t		buildPset_DoorCommon();
+int_t		buildPset_WindowCommon();
+int_t		buildBaseQuantities_Window(double height, double width);
 
 
 //
@@ -77,4 +77,4 @@ int		buildBaseQuantities_Window(double height, double width);
 //
 
 
-int		buildRelDefinesByProperties(int relatedObject, int relatingPropertyDefinition);
+int_t		buildRelDefinesByProperties(int_t relatedObject, int_t relatingPropertyDefinition);

@@ -17,15 +17,15 @@
 ////////////////////////////////////////////////////////////////////////
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include "baseIfc.h"
 
-int     model = 0,
+int_t     model = 0,
         timeStamp;
 
-int     * aggrRelatedElements;
+int_t     * aggrRelatedElements;
 
-int     ifcApplicationInstance,
+int_t     ifcApplicationInstance,
         ifcBuildingInstance,
         ifcBuildingInstancePlacement,
         ifcBuildingStoreyInstance,
@@ -44,7 +44,7 @@ int     ifcApplicationInstance,
         ifcUnitAssignmentInstance;
 
 
-int	    createEmptyIfcFile(wchar_t * ifcSchemaName, bool objectsWillBeAdded, char * lengthUnitConversion)
+int_t	    createEmptyIfcFile(wchar_t * ifcSchemaName, bool objectsWillBeAdded, char * lengthUnitConversion)
 {
     transformationMatrixStruct    matrix;
 	
@@ -144,7 +144,7 @@ void	identityPoint(point3DStruct * pPoint)
 	pPoint->z = 0;
 }
 
-int		* getTimeStamp()
+int_t		* getTimeStamp()
 {
 	timeStamp = time(0);
 
@@ -180,7 +180,7 @@ char * getString64FromGuid(const GUID *pGuid, char * buf )
 {
     unsigned long   num[6];
     char            str[6][5];
-    int             i, n;
+    int_t             i, n;
 
     //
     // Creation of six 32 Bit integers from the components of the GUID structure
@@ -206,10 +206,10 @@ char * getString64FromGuid(const GUID *pGuid, char * buf )
     return buf;
 }
 
-BOOL cv_to_64(const unsigned long number, char *code, int len)
+BOOL cv_to_64(const unsigned long number, char *code, int_t len)
 {
     unsigned long   act;
-    int             iDigit, nDigits;
+    int_t             iDigit, nDigits;
     char            result[5];
 
     if (len > 5)
@@ -219,7 +219,7 @@ BOOL cv_to_64(const unsigned long number, char *code, int len)
     nDigits = len - 1;
 
     for (iDigit = 0; iDigit < nDigits; iDigit++) {
-        result[nDigits - iDigit - 1] = cConversionTable64[(int) (act % 64)];
+        result[nDigits - iDigit - 1] = cConversionTable64[(int_t) (act % 64)];
         act /= 64;
     }
     result[len - 1] = '\0';
@@ -239,7 +239,7 @@ BOOL cv_to_64(const unsigned long number, char *code, int len)
 //
 
 
-int		getApplicationInstance()
+int_t		getApplicationInstance()
 {
 	if	(!ifcApplicationInstance) {
 		ifcApplicationInstance = sdaiCreateInstanceBN(model, "IFCAPPLICATION");
@@ -255,7 +255,7 @@ int		getApplicationInstance()
 	return	ifcApplicationInstance;
 }
 
-int		getOrganizationInstance()
+int_t		getOrganizationInstance()
 {
 	if	(!ifcOrganizationInstance) {
 		ifcOrganizationInstance = sdaiCreateInstanceBN(model, "IFCORGANIZATION");
@@ -269,7 +269,7 @@ int		getOrganizationInstance()
 	return	ifcOrganizationInstance;
 }
 
-int		getOwnerHistoryInstance()
+int_t		getOwnerHistoryInstance()
 {
 	if	(!ifcBuildOwnerHistoryInstance) {
 		ifcBuildOwnerHistoryInstance = sdaiCreateInstanceBN(model, "IFCOWNERHISTORY");
@@ -285,7 +285,7 @@ int		getOwnerHistoryInstance()
 	return	ifcBuildOwnerHistoryInstance;
 }
 
-int		getPersonAndOrganizationInstance()
+int_t		getPersonAndOrganizationInstance()
 {
 	if	(!ifcPersonAndOrganizationInstance) {
 		ifcPersonAndOrganizationInstance = sdaiCreateInstanceBN(model, "IFCPERSONANDORGANIZATION");
@@ -299,7 +299,7 @@ int		getPersonAndOrganizationInstance()
 	return	ifcPersonAndOrganizationInstance;
 }
 
-int		getPersonInstance()
+int_t		getPersonInstance()
 {
 	if	(!ifcPersonInstance) {
 		ifcPersonInstance = sdaiCreateInstanceBN(model, "IFCPERSON");
@@ -321,9 +321,9 @@ int		getPersonInstance()
 //
 
 
-int		buildAxis2Placement3DInstance(transformationMatrixStruct * pMatrix)
+int_t		buildAxis2Placement3DInstance(transformationMatrixStruct * pMatrix)
 {
-	int		ifcAxis2Placement3DInstance;
+	int_t		ifcAxis2Placement3DInstance;
 
 	ifcAxis2Placement3DInstance = sdaiCreateInstanceBN(model, "IFCAXIS2PLACEMENT3D");
 
@@ -336,9 +336,9 @@ int		buildAxis2Placement3DInstance(transformationMatrixStruct * pMatrix)
 	return	ifcAxis2Placement3DInstance;
 }
 
-int		buildCartesianPointInstance(point3DStruct * pPoint)
+int_t		buildCartesianPointInstance(point3DStruct * pPoint)
 {
-	int		ifcCartesianPointInstance, * aggrCoordinates;
+	int_t		ifcCartesianPointInstance, * aggrCoordinates;
 
 	ifcCartesianPointInstance = sdaiCreateInstanceBN(model, "IFCCARTESIANPOINT");
 
@@ -352,9 +352,9 @@ int		buildCartesianPointInstance(point3DStruct * pPoint)
 	return	ifcCartesianPointInstance;
 }
 
-int		buildDirectionInstance(point3DStruct * pPoint)
+int_t		buildDirectionInstance(point3DStruct * pPoint)
 {
-	int		ifcDirectionInstance, * aggrDirectionRatios;
+	int_t		ifcDirectionInstance, * aggrDirectionRatios;
 	double	_null = 0, _one = 1;
 
 	ifcDirectionInstance = sdaiCreateInstanceBN(model, "IFCDIRECTION");
@@ -369,9 +369,9 @@ int		buildDirectionInstance(point3DStruct * pPoint)
 	return	ifcDirectionInstance;
 }
 
-int		buildLocalPlacementInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo)
+int_t		buildLocalPlacementInstance(transformationMatrixStruct * pMatrix, int_t ifcPlacementRelativeTo)
 {
-	int		ifcLocalPlacementInstance;
+	int_t		ifcLocalPlacementInstance;
 
 	ifcLocalPlacementInstance = sdaiCreateInstanceBN(model, "IFCLOCALPLACEMENT");
 
@@ -393,7 +393,7 @@ int		buildLocalPlacementInstance(transformationMatrixStruct * pMatrix, int ifcPl
 //
 
 
-int		getConversionBasedUnitInstance()
+int_t		getConversionBasedUnitInstance()
 {
 	if	(!ifcConversionBasedUnitInstance) {
 		ifcConversionBasedUnitInstance = sdaiCreateInstanceBN(model, "IFCCONVERSIONBASEDUNIT");
@@ -409,9 +409,9 @@ int		getConversionBasedUnitInstance()
 	return	ifcConversionBasedUnitInstance;
 }
 
-int		getDimensionalExponentsInstance()
+int_t		getDimensionalExponentsInstance()
 {
-	int		LengthExponent = 0,
+	int_t		LengthExponent = 0,
 			MassExponent = 0,
 			TimeExponent = 0,
 			ElectricCurrentExponent = 0,
@@ -436,9 +436,9 @@ int		getDimensionalExponentsInstance()
 	return	ifcDimensionalExponentsInstance;
 }
 
-int		buildMeasureWithUnitInstance()
+int_t		buildMeasureWithUnitInstance()
 {
-	int		ifcMeasureWithUnitInstance;
+	int_t		ifcMeasureWithUnitInstance;
 	void	* valueComponentADB;
 	double	valueComponent= 0.01745;
 
@@ -455,13 +455,13 @@ int		buildMeasureWithUnitInstance()
 	return	ifcMeasureWithUnitInstance;
 }
 
-int		buildSIUnitInstance(char * UnitType, char * Prefix, char * Name)
+int_t		buildSIUnitInstance(char * UnitType, char * Prefix, char * Name)
 {
-	int		ifcSIUnitInstance;
+	int_t		ifcSIUnitInstance;
 
 	ifcSIUnitInstance = sdaiCreateInstanceBN(model, "IFCSIUNIT");
 
-	sdaiPutAttrBN(ifcSIUnitInstance, "Dimensions", sdaiINTEGER, NULL);
+	sdaiPutAttrBN(ifcSIUnitInstance, "Dimensions", sdaiINTEGER, (void*)nullptr);
 	sdaiPutAttrBN(ifcSIUnitInstance, "UnitType", sdaiENUM, UnitType);
 	if (Prefix) {
 		sdaiPutAttrBN(ifcSIUnitInstance, "Prefix", sdaiENUM, Prefix);
@@ -473,9 +473,9 @@ int		buildSIUnitInstance(char * UnitType, char * Prefix, char * Name)
 	return	ifcSIUnitInstance;
 }
 
-int		getUnitAssignmentInstance(char * lengthUnitConversion)
+int_t		getUnitAssignmentInstance(char * lengthUnitConversion)
 {
-	int		* aggrUnits;
+	int_t		* aggrUnits;
 
 	if	(!ifcUnitAssignmentInstance) {
 		ifcUnitAssignmentInstance = sdaiCreateInstanceBN(model, "IFCUNITASSIGNMENT");
@@ -505,11 +505,11 @@ int		getUnitAssignmentInstance(char * lengthUnitConversion)
 //
 
 
-int		buildRelAggregatesInstance(char * name, char * description, int ifcRelatingObjectInstance, int ifcRelatedObjectInstance)
+int_t		buildRelAggregatesInstance(char * name, char * description, int_t ifcRelatingObjectInstance, int_t ifcRelatedObjectInstance)
 {
 	ASSERT(ifcRelatingObjectInstance  &&  ifcRelatedObjectInstance);
 
-	int		ifcRelAggregatesInstance, * aggrRelatedObjects;
+	int_t		ifcRelAggregatesInstance, * aggrRelatedObjects;
 
 	ifcRelAggregatesInstance = sdaiCreateInstanceBN(model, "IFCRELAGGREGATES");
 
@@ -526,11 +526,11 @@ int		buildRelAggregatesInstance(char * name, char * description, int ifcRelating
 	return	ifcRelAggregatesInstance;
 }
 
-int		buildRelContainedInSpatialStructureInstance(char * name, char * description, int ifcRelatingStructureInstance, int ** aggrRelatedElements)
+int_t		buildRelContainedInSpatialStructureInstance(char * name, char * description, int_t ifcRelatingStructureInstance, int_t ** aggrRelatedElements)
 {
 	ASSERT(ifcRelatingStructureInstance);
 
-	int		ifcRelContainedInSpatialStructureInstance;
+	int_t		ifcRelContainedInSpatialStructureInstance;
 
 	ifcRelContainedInSpatialStructureInstance = sdaiCreateInstanceBN(model, "IFCRELCONTAINEDINSPATIALSTRUCTURE");
 
@@ -554,11 +554,11 @@ int		buildRelContainedInSpatialStructureInstance(char * name, char * description
 //
 
 
-int		buildBuildingInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcBuildingInstancePlacement)
+int_t		buildBuildingInstance(transformationMatrixStruct * pMatrix, int_t ifcPlacementRelativeTo, int_t * ifcBuildingInstancePlacement)
 {
 	ASSERT(ifcPlacementRelativeTo);
 
-	int		ifcBuildingInstance;
+	int_t		ifcBuildingInstance;
 
 	ifcBuildingInstance = sdaiCreateInstanceBN(model, "IFCBUILDING");
 
@@ -578,11 +578,11 @@ int		buildBuildingInstance(transformationMatrixStruct * pMatrix, int ifcPlacemen
 	return	ifcBuildingInstance;
 }
 
-int		buildBuildingStoreyInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcBuildingStoreyInstancePlacement)
+int_t		buildBuildingStoreyInstance(transformationMatrixStruct * pMatrix, int_t ifcPlacementRelativeTo, int_t * ifcBuildingStoreyInstancePlacement)
 {
 	ASSERT(ifcPlacementRelativeTo);
 
-	int		ifcBuildingStoreyInstance;
+	int_t		ifcBuildingStoreyInstance;
 	double	elevation = 0;
 
 	ifcBuildingStoreyInstance = sdaiCreateInstanceBN(model, "IFCBUILDINGSTOREY");
@@ -602,9 +602,9 @@ int		buildBuildingStoreyInstance(transformationMatrixStruct * pMatrix, int ifcPl
 	return	ifcBuildingStoreyInstance;
 }
 
-int		getProjectInstance(char * lengthUnitConversion)
+int_t		getProjectInstance(char * lengthUnitConversion)
 {
-    int * aggrRepresentationContexts = NULL;
+    int_t * aggrRepresentationContexts = NULL;
 
 	if	(! ifcProjectInstance) {
 		ifcProjectInstance = sdaiCreateInstanceBN(model, "IFCPROJECT");
@@ -623,11 +623,11 @@ int		getProjectInstance(char * lengthUnitConversion)
 	return	ifcProjectInstance;
 }
 
-int		buildSiteInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcSiteInstancePlacement)
+int_t		buildSiteInstance(transformationMatrixStruct * pMatrix, int_t ifcPlacementRelativeTo, int_t * ifcSiteInstancePlacement)
 {
 	ASSERT(ifcPlacementRelativeTo == NULL);
 
-	int		ifcSiteInstance, * aggrRefLatitude, * aggrRefLongitude,
+	int_t		ifcSiteInstance, * aggrRefLatitude, * aggrRefLongitude,
 			refLat_x = 24, refLat_y = 28, refLat_z = 0, refLong_x = 54, refLong_y = 25, refLong_z = 0;
 
 	ifcSiteInstance = sdaiCreateInstanceBN(model, "IFCSITE");
@@ -667,12 +667,12 @@ int		buildSiteInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRel
 //
 
 
-int     getWorldCoordinateSystemInstance()
+int_t     getWorldCoordinateSystemInstance()
 {
     point3DStruct   point;
 
     identityPoint(&point);
-	int ifcWorldCoordinateSystemInstance = sdaiCreateInstanceBN(model, "IFCAXIS2PLACEMENT3D");
+	int_t ifcWorldCoordinateSystemInstance = sdaiCreateInstanceBN(model, "IFCAXIS2PLACEMENT3D");
     sdaiPutAttrBN(ifcWorldCoordinateSystemInstance, "Location", sdaiINSTANCE, (void*) buildCartesianPointInstance(&point));
 
 	ASSERT(ifcWorldCoordinateSystemInstance);
@@ -680,11 +680,11 @@ int     getWorldCoordinateSystemInstance()
 	return  ifcWorldCoordinateSystemInstance;
 }
 
-int     getGeometricRepresentationContextInstance()
+int_t     getGeometricRepresentationContextInstance()
 {
     if  (! ifcGeometricRepresentationContextInstance) {
         double  precision = 0.00001;
-        int     coordinateSpaceDimension = 3;
+        int_t     coordinateSpaceDimension = 3;
 
 		ifcGeometricRepresentationContextInstance = sdaiCreateInstanceBN(model, "IFCGEOMETRICREPRESENTATIONCONTEXT");
 
@@ -715,10 +715,10 @@ int     getGeometricRepresentationContextInstance()
 //
 
 
-int		buildPostalAddress()
+int_t		buildPostalAddress()
 {
     if  (! ifcPostalAddressInstance) {
-        int     * addressLines;
+        int_t     * addressLines;
 
 		ifcPostalAddressInstance = sdaiCreateInstanceBN(model, "IFCPOSTALADDRESS");
 

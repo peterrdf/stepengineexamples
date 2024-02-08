@@ -44,13 +44,13 @@ typedef struct POINT3DSTRUCT {
 	double			x;
 	double			y;
 	double			z;
-    int             ifcCartesianPointInstance;
+    int_t             ifcCartesianPointInstance;
 }	point3DStruct;
 
 
 void	identityMatrix(transformationMatrixStruct * pMatrix);
 void	identityPoint(point3DStruct * pPoint);
-int		* getTimeStamp();
+int_t		* getTimeStamp();
 
 
 //
@@ -65,10 +65,10 @@ static const char *cConversionTable64 =
 
 char * CreateCompressedGuidString();
 char * getString64FromGuid(const GUID *pGuid, char * buf);
-BOOL cv_to_64(const unsigned long number, char *code, int len);
+BOOL cv_to_64(const unsigned long number, char *code, int_t len);
 
 
-int	    createEmptyIfcFile(wchar_t * ifcSchemaName, bool objectsWillBeAdded, char * lengthUnitConversion);
+int_t	    createEmptyIfcFile(wchar_t * ifcSchemaName, bool objectsWillBeAdded, char * lengthUnitConversion);
 bool    saveIfcFile(wchar_t * ifcFileName);
 bool    saveIfcFileAsXml(wchar_t * ifcFileName);
 
@@ -80,11 +80,11 @@ bool    saveIfcFileAsXml(wchar_t * ifcFileName);
 //
 
 
-int		getApplicationInstance();
-int		getOrganizationInstance();
-int		getOwnerHistoryInstance();
-int		getPersonAndOrganizationInstance();
-int		getPersonInstance();
+int_t		getApplicationInstance();
+int_t		getOrganizationInstance();
+int_t		getOwnerHistoryInstance();
+int_t		getPersonAndOrganizationInstance();
+int_t		getPersonInstance();
 
 
 //
@@ -94,10 +94,10 @@ int		getPersonInstance();
 //
 
 
-int		buildAxis2Placement3DInstance(transformationMatrixStruct * pMatrix);
-int		buildCartesianPointInstance(point3DStruct * pPoint);
-int		buildDirectionInstance(point3DStruct * pPoint);
-int		buildLocalPlacementInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo);
+int_t		buildAxis2Placement3DInstance(transformationMatrixStruct * pMatrix);
+int_t		buildCartesianPointInstance(point3DStruct * pPoint);
+int_t		buildDirectionInstance(point3DStruct * pPoint);
+int_t		buildLocalPlacementInstance(transformationMatrixStruct * pMatrix, int_t ifcPlacementRelativeTo);
 
 
 //
@@ -107,11 +107,11 @@ int		buildLocalPlacementInstance(transformationMatrixStruct * pMatrix, int ifcPl
 //
 
 
-int		getConversionBasedUnitInstance();
-int		getDimensionalExponentsInstance();
-int		buildMeasureWithUnitInstance();
-int		buildSIUnitInstance(char * UnitType, char * Prefix, char * Name);
-int		getUnitAssignmentInstance(char * lengthUnitConversion);
+int_t		getConversionBasedUnitInstance();
+int_t		getDimensionalExponentsInstance();
+int_t		buildMeasureWithUnitInstance();
+int_t		buildSIUnitInstance(char * UnitType, char * Prefix, char * Name);
+int_t		getUnitAssignmentInstance(char * lengthUnitConversion);
 
 	
 //
@@ -121,8 +121,8 @@ int		getUnitAssignmentInstance(char * lengthUnitConversion);
 //
 
 
-int		buildRelAggregatesInstance(char * name, char * description, int ifcRelatingObjectInstance, int ifcRelatedObjectInstance);
-int		buildRelContainedInSpatialStructureInstance(char * name, char * description, int ifcRelatingStructureInstance, int ** aggrRelatedElements);
+int_t		buildRelAggregatesInstance(char * name, char * description, int_t ifcRelatingObjectInstance, int_t ifcRelatedObjectInstance);
+int_t		buildRelContainedInSpatialStructureInstance(char * name, char * description, int_t ifcRelatingStructureInstance, int_t ** aggrRelatedElements);
 
 
 //
@@ -132,10 +132,10 @@ int		buildRelContainedInSpatialStructureInstance(char * name, char * description
 //
 
 
-int		buildBuildingInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcBuildingInstancePlacement);
-int		buildBuildingStoreyInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcBuildingStoreyInstancePlacement);
-int		getProjectInstance(char * lengthUnitConversion);
-int		buildSiteInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcSiteInstancePlacement);
+int_t		buildBuildingInstance(transformationMatrixStruct * pMatrix, int_t ifcPlacementRelativeTo, int_t * ifcBuildingInstancePlacement);
+int_t		buildBuildingStoreyInstance(transformationMatrixStruct * pMatrix, int_t ifcPlacementRelativeTo, int_t * ifcBuildingStoreyInstancePlacement);
+int_t		getProjectInstance(char * lengthUnitConversion);
+int_t		buildSiteInstance(transformationMatrixStruct * pMatrix, int_t ifcPlacementRelativeTo, int_t * ifcSiteInstancePlacement);
 
 
 //
@@ -145,8 +145,8 @@ int		buildSiteInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRel
 //
 
 
-int     getWorldCoordinateSystemInstance();
-int     getGeometricRepresentationContextInstance();
+int_t     getWorldCoordinateSystemInstance();
+int_t     getGeometricRepresentationContextInstance();
 
 
 //
@@ -156,4 +156,4 @@ int     getGeometricRepresentationContextInstance();
 //
 
 
-int		buildPostalAddress();
+int_t		buildPostalAddress();

@@ -17,11 +17,11 @@
 ////////////////////////////////////////////////////////////////////////
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include "baseIfc.h"
 #include "propertiesIfc.h"
 
-extern  int     model;
+extern  int_t     model;
 
 
 //
@@ -31,9 +31,9 @@ extern  int     model;
 //
 
 
-int		buildPropertySet(char * name, int ** aggrHasProperties)
+int_t		buildPropertySet(char * name, int_t ** aggrHasProperties)
 {
-	int		ifcPropertySetInstance;
+	int_t		ifcPropertySetInstance;
 
 	ifcPropertySetInstance = sdaiCreateInstanceBN(model, "IFCPROPERTYSET");
 
@@ -48,14 +48,14 @@ int		buildPropertySet(char * name, int ** aggrHasProperties)
 	return	ifcPropertySetInstance;
 }
 
-int		buildPropertySingleValue(char * name, char * description, bool nominalValue)
+int_t		buildPropertySingleValue(char * name, char * description, bool nominalValue)
 {
 	return	buildPropertySingleValue(name, description, nominalValue, "IFCBOOLEAN");
 }
 
-int		buildPropertySingleValue(char * name, char * description, bool nominalValue, char * typePath)
+int_t		buildPropertySingleValue(char * name, char * description, bool nominalValue, char * typePath)
 {
-	int		ifcPropertySingleValueInstance;
+	int_t		ifcPropertySingleValueInstance;
     void    * nominalValueADB;
     char    bTrue[2] = "T", bFalse[2] = "F"; 
 
@@ -77,14 +77,14 @@ int		buildPropertySingleValue(char * name, char * description, bool nominalValue
 	return	ifcPropertySingleValueInstance;
 }
 
-int		buildPropertySingleValue(char * name, char * description, double nominalValue)
+int_t		buildPropertySingleValue(char * name, char * description, double nominalValue)
 {
 	return	buildPropertySingleValue(name, description, nominalValue, "IFCREAL");
 }
 
-int		buildPropertySingleValue(char * name, char * description, double nominalValue, char * typePath)
+int_t		buildPropertySingleValue(char * name, char * description, double nominalValue, char * typePath)
 {
-	int		ifcPropertySingleValueInstance;
+	int_t		ifcPropertySingleValueInstance;
     void    * nominalValueADB;
 
 	ifcPropertySingleValueInstance = sdaiCreateInstanceBN(model, "IFCPROPERTYSINGLEVALUE");
@@ -92,7 +92,7 @@ int		buildPropertySingleValue(char * name, char * description, double nominalVal
 	sdaiPutAttrBN(ifcPropertySingleValueInstance, "Name", sdaiSTRING, name);
 	sdaiPutAttrBN(ifcPropertySingleValueInstance, "Description", sdaiSTRING, description);
 
-	nominalValueADB = sdaiCreateADB(sdaiREAL, (int *) &nominalValue);
+	nominalValueADB = sdaiCreateADB(sdaiREAL, (int_t *) &nominalValue);
 	sdaiPutADBTypePath(nominalValueADB, 1, typePath); 
 	sdaiPutAttrBN(ifcPropertySingleValueInstance, "NominalValue", sdaiADB, (void*) nominalValueADB);
 
@@ -102,14 +102,14 @@ int		buildPropertySingleValue(char * name, char * description, double nominalVal
 }
 
 
-int		buildPropertySingleValue(char * name, char * description, char * nominalValue)
+int_t		buildPropertySingleValue(char * name, char * description, char * nominalValue)
 {
 	return	buildPropertySingleValue(name, description, nominalValue, "IFCTEXT");
 }
 
-int		buildPropertySingleValue(char * name, char * description, char * nominalValue, char * typePath)
+int_t		buildPropertySingleValue(char * name, char * description, char * nominalValue, char * typePath)
 {
-	int		ifcPropertySingleValueInstance;
+	int_t		ifcPropertySingleValueInstance;
     void    * nominalValueADB;
 
 	ifcPropertySingleValueInstance = sdaiCreateInstanceBN(model, "IFCPROPERTYSINGLEVALUE");
@@ -134,9 +134,9 @@ int		buildPropertySingleValue(char * name, char * description, char * nominalVal
 //
 
 
-int		buildElementQuantity(char * name, int ** aggrQuantities)
+int_t		buildElementQuantity(char * name, int_t ** aggrQuantities)
 {
-	int		ifcElementQuantityInstance;
+	int_t		ifcElementQuantityInstance;
 
 	ifcElementQuantityInstance = sdaiCreateInstanceBN(model, "IFCELEMENTQUANTITY");
 
@@ -151,9 +151,9 @@ int		buildElementQuantity(char * name, int ** aggrQuantities)
 	return	ifcElementQuantityInstance;
 }
 
-int		buildQuantityLength(char * name, char * description, double length)
+int_t		buildQuantityLength(char * name, char * description, double length)
 {
-	int		ifcQuantityLengthInstance;
+	int_t		ifcQuantityLengthInstance;
 
 	ifcQuantityLengthInstance = sdaiCreateInstanceBN(model, "IFCQUANTITYLENGTH");
 
@@ -166,9 +166,9 @@ int		buildQuantityLength(char * name, char * description, double length)
 	return	ifcQuantityLengthInstance;
 }
 
-int		buildQuantityArea(char * name, char * description, double area)
+int_t		buildQuantityArea(char * name, char * description, double area)
 {
-	int		ifcQuantityAreaInstance;
+	int_t		ifcQuantityAreaInstance;
 
 	ifcQuantityAreaInstance = sdaiCreateInstanceBN(model, "IFCQUANTITYAREA");
 
@@ -181,9 +181,9 @@ int		buildQuantityArea(char * name, char * description, double area)
 	return	ifcQuantityAreaInstance;
 }
 
-int		buildQuantityVolume(char * name, char * description, double volume)
+int_t		buildQuantityVolume(char * name, char * description, double volume)
 {
-	int		ifcQuantityVolumeInstance;
+	int_t		ifcQuantityVolumeInstance;
 
 	ifcQuantityVolumeInstance = sdaiCreateInstanceBN(model, "IFCQUANTITYVOLUME");
 
@@ -204,9 +204,9 @@ int		buildQuantityVolume(char * name, char * description, double volume)
 //
 
 
-int		buildPset_WallCommon()
+int_t		buildPset_WallCommon()
 {
-    int     ifcPropertySetInstance, * aggrHasProperties;
+    int_t     ifcPropertySetInstance, * aggrHasProperties;
     
     ifcPropertySetInstance = buildPropertySet("Pset_WallCommon", &aggrHasProperties);
 
@@ -226,9 +226,9 @@ int		buildPset_WallCommon()
 	return	ifcPropertySetInstance;
 }
 
-int		buildBaseQuantities_Wall(double width, double length, double height, double openingArea, double linearConversionFactor)
+int_t		buildBaseQuantities_Wall(double width, double length, double height, double openingArea, double linearConversionFactor)
 {
-    int     ifcElementQuantityInstance, * aggrQuantities;
+    int_t     ifcElementQuantityInstance, * aggrQuantities;
 
     double  grossSideArea = (length / linearConversionFactor) * (height / linearConversionFactor),
             netSideArea = grossSideArea - openingArea;
@@ -247,9 +247,9 @@ int		buildBaseQuantities_Wall(double width, double length, double height, double
 	return	ifcElementQuantityInstance;
 }
 
-int		buildBaseQuantities_WallStandardCase(double width, double length, double height, double openingArea, double linearConversionFactor)
+int_t		buildBaseQuantities_WallStandardCase(double width, double length, double height, double openingArea, double linearConversionFactor)
 {
-    int     ifcElementQuantityInstance, * aggrQuantities;
+    int_t     ifcElementQuantityInstance, * aggrQuantities;
 
     double  grossSideArea = (length / linearConversionFactor) * (height / linearConversionFactor),
             netSideArea = grossSideArea - openingArea;
@@ -270,9 +270,9 @@ int		buildBaseQuantities_WallStandardCase(double width, double length, double he
 	return	ifcElementQuantityInstance;
 }
 
-int		buildBaseQuantities_Opening(double depth, double height, double width)
+int_t		buildBaseQuantities_Opening(double depth, double height, double width)
 {
-    int     ifcElementQuantityInstance, * aggrQuantities;
+    int_t     ifcElementQuantityInstance, * aggrQuantities;
     
     ifcElementQuantityInstance = buildElementQuantity("BaseQuantities", &aggrQuantities);
 
@@ -285,9 +285,9 @@ int		buildBaseQuantities_Opening(double depth, double height, double width)
 	return	ifcElementQuantityInstance;
 }
 
-int		buildPset_DoorCommon()
+int_t		buildPset_DoorCommon()
 {
-    int     ifcPropertySetInstance, * aggrHasProperties;
+    int_t     ifcPropertySetInstance, * aggrHasProperties;
     
     ifcPropertySetInstance = buildPropertySet("Pset_DoorCommon", &aggrHasProperties);
 //??????????????????????????????
@@ -307,9 +307,9 @@ int		buildPset_DoorCommon()
 	return	ifcPropertySetInstance;
 }
 
-int		buildPset_WindowCommon()
+int_t		buildPset_WindowCommon()
 {
-    int     ifcPropertySetInstance, * aggrHasProperties;
+    int_t     ifcPropertySetInstance, * aggrHasProperties;
     
     ifcPropertySetInstance = buildPropertySet("Pset_WindowCommon", &aggrHasProperties);
 
@@ -328,9 +328,9 @@ int		buildPset_WindowCommon()
 	return	ifcPropertySetInstance;
 }
 
-int		buildBaseQuantities_Window(double height, double width)
+int_t		buildBaseQuantities_Window(double height, double width)
 {
-    int     ifcElementQuantityInstance, * aggrQuantities;
+    int_t     ifcElementQuantityInstance, * aggrQuantities;
     
     ifcElementQuantityInstance = buildElementQuantity("BaseQuantities", &aggrQuantities);
 
@@ -350,9 +350,9 @@ int		buildBaseQuantities_Window(double height, double width)
 //
 
 
-int		buildRelDefinesByProperties(int relatedObject, int relatingPropertyDefinition)
+int_t		buildRelDefinesByProperties(int_t relatedObject, int_t relatingPropertyDefinition)
 {
-	int		ifcRelDefinesByPropertiesInstance, * aggrRelatedObjects;
+	int_t		ifcRelDefinesByPropertiesInstance, * aggrRelatedObjects;
 
 	ifcRelDefinesByPropertiesInstance = sdaiCreateInstanceBN(model, "IFCRELDEFINESBYPROPERTIES");
 

@@ -8,6 +8,8 @@
 #include "CityGML2IFCDlg.h"
 #include "afxdialogex.h"
 
+#include "baseIfc.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -57,7 +59,7 @@ END_MESSAGE_MAP()
 
 CCityGML2IFCDlg::CCityGML2IFCDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CITYGML2IFC_DIALOG, pParent)
-	, m_iModel(0)
+	, m_iOwlModel(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -199,7 +201,7 @@ void CCityGML2IFCDlg::CreateBuildingRecursive(OwlInstance iInstance)
 						OwlClass iInstanceClass = GetInstanceClass(piValues[iValue]);
 						ASSERT(iInstanceClass != 0);
 
-						if (iInstanceClass == GetClassByName(m_iModel, "BoundaryRepresentation"))
+						if (iInstanceClass == GetClassByName(m_iOwlModel, "BoundaryRepresentation"))
 						{
 							TRACE(L"\nBoundaryRepresentation");
 						}
@@ -225,12 +227,12 @@ void CCityGML2IFCDlg::CreateBuildingRecursive(OwlInstance iInstance)
 
 void CCityGML2IFCDlg::OnBnClickedOk()
 {
-	ASSERT(m_iModel == 0);
+	ASSERT(m_iOwlModel == 0);
 
-	m_iModel = CreateModel();
-	ASSERT(m_iModel != 0);
+	m_iOwlModel = CreateModel();
+	ASSERT(m_iOwlModel != 0);
 
-	SetFormatSettings(m_iModel);
+	SetFormatSettings(m_iOwlModel);
 
 	wchar_t szAppPath[_MAX_PATH];
 	::GetModuleFileName(::GetModuleHandle(nullptr), szAppPath, sizeof(szAppPath));
@@ -242,13 +244,19 @@ void CCityGML2IFCDlg::OnBnClickedOk()
 
 	SetGISOptionsW(strRootFolder.c_str(), true, LogCallbackImpl);
 
-	ImportGISModelW(m_iModel, L"D:\\Temp\\gisengine in\\FZKHouseLoD2.gml");
+	wstring strInputFile = L"D:\\Temp\\gisengine in\\FZKHouseLoD2.gml";
+	wstring strOutputFile = strInputFile;
+	strOutputFile += L".ifc";
+
+	ImportGISModelW(m_iOwlModel, strInputFile.c_str());
 
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	OwlClass iBuildingTypeClass = GetClassByName(m_iModel, "class:BuildingType");
+	int_t iIfcModel = createEmptyIfcFile(L"IFC4", true, "MILLI");
+	 
+	OwlClass iBuildingTypeClass = GetClassByName(m_iOwlModel, "class:BuildingType");
 	ASSERT(iBuildingTypeClass != 0);
 
-	OwlInstance iInstance = GetInstancesByIterator(m_iModel, 0);
+	OwlInstance iInstance = GetInstancesByIterator(m_iOwlModel, 0);
 	while (iInstance != 0)
 	{
 		OwlClass iInstanceClass = GetInstanceClass(iInstance);
@@ -259,12 +267,78 @@ void CCityGML2IFCDlg::OnBnClickedOk()
 			CreateBuildingRecursive(iInstance);			
 		}
 
-		iInstance = GetInstancesByIterator(m_iModel, iInstance);
+		iInstance = GetInstancesByIterator(m_iOwlModel, iInstance);
 	}
+
+	CloseModel(m_iOwlModel);
+	m_iOwlModel = 0;
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-	CloseModel(m_iModel);
-	m_iModel = 0;
+	//
+	//  Update header
+	//
+
+	char    description[512], timeStamp[512];
+	time_t  t;
+	struct tm* tInfo;
+
+	time(&t);
+	tInfo = localtime(&t);
+
+	if (true)//view == COORDINATIONVIEW) {
+		//if (m_Quantities.GetCheck()) {
+			memcpy(description, "ViewDefinition [CoordinationView, QuantityTakeOffAddOnView]", sizeof("ViewDefinition [CoordinationView, QuantityTakeOffAddOnView]"));
+		//}
+		/*else {
+			memcpy(description, "ViewDefinition [CoordinationView]", sizeof("ViewDefinition [CoordinationView]"));
+		}*/
+	/*}
+	else {
+		ASSERT(view == PRESENTATIONVIEW);
+		if (m_Quantities.GetCheck()) {
+			memcpy(description, "ViewDefinition [PresentationView, QuantityTakeOffAddOnView]", sizeof("ViewDefinition [PresentationView, QuantityTakeOffAddOnView]"));
+		}
+		else {
+			memcpy(description, "ViewDefinition [PresentationView]", sizeof("ViewDefinition [PresentationView]"));
+		}
+	}*/
+
+	/*int i = 0, j = 0;
+	while (ifcFileName[i]) {
+		if (ifcFileName[i++] == '\\') {
+			j = i;
+		}
+	}*/
+
+	_itoa(1900 + tInfo->tm_year, &timeStamp[0], 10);
+	_itoa(100 + 1 + tInfo->tm_mon, &timeStamp[4], 10);
+	_itoa(100 + tInfo->tm_mday, &timeStamp[7], 10);
+	timeStamp[4] = '-';
+	timeStamp[7] = '-';
+	_itoa(100 + tInfo->tm_hour, &timeStamp[10], 10);
+	_itoa(100 + tInfo->tm_min, &timeStamp[13], 10);
+	_itoa(100 + tInfo->tm_sec, &timeStamp[16], 10);
+	timeStamp[10] = 'T';
+	timeStamp[13] = ':';
+	timeStamp[16] = ':';
+	timeStamp[19] = 0;
+
+	SetSPFFHeader(
+		iIfcModel,
+		(const char*)description,                        //  description
+		"2;1",                              //  implementationLevel
+		(const char*) nullptr,//&ifcFileName[j],                    //  name
+		(const char*)&timeStamp[0],                      //  timeStamp
+		"Architect",                        //  author
+		"Building Designer Office",         //  organization
+		"IFC Engine DLL version 1.03 beta", //  preprocessorVersion
+		"IFC Engine DLL version 1.03 beta", //  originatingSystem
+		"The authorising person",           //  authorization
+		"IFC4"                              //  fileSchema
+	);
+
+	saveIfcFile((wchar_t*)strOutputFile.c_str());
+	sdaiCloseModel(iIfcModel);	
 
 	// TODO: Add your control notification handler code here
 	CDialogEx::OnOK();

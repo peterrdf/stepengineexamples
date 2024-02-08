@@ -52,4 +52,4 @@ void    createIfcBRepShape(shellStruct * pShell);
 //
 
 
-int		buildShapeRepresentationInstance(shellStruct * pShell);
+int_t		buildShapeRepresentationInstance(shellStruct * pShell);

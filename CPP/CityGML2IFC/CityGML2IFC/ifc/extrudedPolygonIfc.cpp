@@ -17,12 +17,12 @@
 ////////////////////////////////////////////////////////////////////////
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include "extrudedPolygonIfc.h"
 
-extern  int     model;
+extern  int_t     model;
 
-extern  int     * aggrRelatedElements,
+extern  int_t     * aggrRelatedElements,
                 * aggrRepresentations;
 
 
@@ -48,9 +48,9 @@ void    createIfcPolylineShape(double p0x, double p0y, double p1x, double p1y)
 //
 
 
-int		buildShapeRepresentationInstance(polygon2DStruct * pPolygon, double depth)
+int_t		buildShapeRepresentationInstance(polygon2DStruct * pPolygon, double depth)
 {
-	int		ifcShapeRepresentationInstance, * aggrItems;
+	int_t		ifcShapeRepresentationInstance, * aggrItems;
 
 	ifcShapeRepresentationInstance = sdaiCreateInstanceBN(model, "IFCSHAPEREPRESENTATION");
 
@@ -66,9 +66,9 @@ int		buildShapeRepresentationInstance(polygon2DStruct * pPolygon, double depth)
 	return	ifcShapeRepresentationInstance;
 }
 
-int		buildShapeRepresentationInstance(double p0x, double p0y, double p1x, double p1y)
+int_t		buildShapeRepresentationInstance(double p0x, double p0y, double p1x, double p1y)
 {
-	int		ifcShapeRepresentationInstance, * aggrItems;
+	int_t		ifcShapeRepresentationInstance, * aggrItems;
 
 	ifcShapeRepresentationInstance = sdaiCreateInstanceBN(model, "IFCSHAPEREPRESENTATION");
 
@@ -92,9 +92,9 @@ int		buildShapeRepresentationInstance(double p0x, double p0y, double p1x, double
 //
 
 
-int		buildArbitraryClosedProfileDefInstance(polygon2DStruct * pPolygon)
+int_t		buildArbitraryClosedProfileDefInstance(polygon2DStruct * pPolygon)
 {
-	int		ifcArbitraryClosedProfileDefInstance;
+	int_t		ifcArbitraryClosedProfileDefInstance;
 
 	ifcArbitraryClosedProfileDefInstance = sdaiCreateInstanceBN(model, "IFCARBITRARYCLOSEDPROFILEDEF");
 
@@ -106,9 +106,9 @@ int		buildArbitraryClosedProfileDefInstance(polygon2DStruct * pPolygon)
 	return	ifcArbitraryClosedProfileDefInstance;
 }
 
-int		buildCartesianPointInstance(double x, double y)
+int_t		buildCartesianPointInstance(double x, double y)
 {
-	int		ifcCartesianPointInstance, * aggrCoordinates;
+	int_t		ifcCartesianPointInstance, * aggrCoordinates;
 
 	ifcCartesianPointInstance = sdaiCreateInstanceBN(model, "IFCCARTESIANPOINT");
 
@@ -121,10 +121,10 @@ int		buildCartesianPointInstance(double x, double y)
 	return	ifcCartesianPointInstance;
 }
 
-int		buildExtrudedAreaSolidInstance(polygon2DStruct * pPolygon, double depth)
+int_t		buildExtrudedAreaSolidInstance(polygon2DStruct * pPolygon, double depth)
 {
 	transformationMatrixStruct  matrix;
-	int		ifcExtrudedAreaSolidInstance;
+	int_t		ifcExtrudedAreaSolidInstance;
 
 	identityMatrix(&matrix);
 
@@ -140,9 +140,9 @@ int		buildExtrudedAreaSolidInstance(polygon2DStruct * pPolygon, double depth)
 	return	ifcExtrudedAreaSolidInstance;
 }
 
-int		buildPolylineInstance(polygon2DStruct * pPolygon)
+int_t		buildPolylineInstance(polygon2DStruct * pPolygon)
 {
-	int				ifcPolylineInstance, * aggrPoints;
+	int_t				ifcPolylineInstance, * aggrPoints;
 	vector2DStruct	* pVector = pPolygon->pVector;
 
 	ifcPolylineInstance = sdaiCreateInstanceBN(model, "IFCPOLYLINE");
@@ -162,9 +162,9 @@ int		buildPolylineInstance(polygon2DStruct * pPolygon)
 	return	ifcPolylineInstance;
 }
 
-int		buildPolylineInstance(double p0x, double p0y, double p1x, double p1y)
+int_t		buildPolylineInstance(double p0x, double p0y, double p1x, double p1y)
 {
-	int		ifcPolylineInstance, * aggrPoints;
+	int_t		ifcPolylineInstance, * aggrPoints;
 
 	ifcPolylineInstance = sdaiCreateInstanceBN(model, "IFCPOLYLINE");
 

@@ -26,7 +26,7 @@ class CCityGML2IFCDlg : public CDialogEx
 
 private: // Members
 
-	OwlModel m_iModel;
+	OwlModel m_iOwlModel;
 
 protected: // Methods
 

@@ -35,8 +35,8 @@ void    createIfcBoundingBoxShape(double width, double thickness, double height,
 //
 
 
-int		buildBoundingBoxInstance(double width, double thickness, double height);
-int		buildShapeRepresentationInstance(double width, double thickness, double height, char * representationIdentifier);
+int_t		buildBoundingBoxInstance(double width, double thickness, double height);
+int_t		buildShapeRepresentationInstance(double width, double thickness, double height, char * representationIdentifier);
 
 
 //
@@ -46,5 +46,5 @@ int		buildShapeRepresentationInstance(double width, double thickness, double hei
 //
 
 
-int		buildCartesianPointInstance(double x, double y, double z);
+int_t		buildCartesianPointInstance(double x, double y, double z);
 

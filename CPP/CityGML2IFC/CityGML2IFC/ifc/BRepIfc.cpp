@@ -18,12 +18,12 @@
 
  
 
-#include "stdafx.h"
+#include "pch.h"
 #include "BRepIfc.h"
 
-extern  int     model;
+extern  int_t     model;
 
-extern  int     * aggrRelatedElements,
+extern  int_t     * aggrRelatedElements,
                 * aggrRepresentations;
 
 
@@ -42,9 +42,9 @@ void    createIfcBRepShape(shellStruct * pShell)
 //
 
 
-int		buildShapeRepresentationInstance(shellStruct * pShell)
+int_t		buildShapeRepresentationInstance(shellStruct * pShell)
 {
-	int		ifcShapeRepresentationInstance, * aggrItems;
+	int_t		ifcShapeRepresentationInstance, * aggrItems;
 
 	ifcShapeRepresentationInstance = sdaiCreateInstanceBN(model, "IFCSHAPEREPRESENTATION");
 
@@ -56,14 +56,14 @@ int		buildShapeRepresentationInstance(shellStruct * pShell)
 
     while  (pShell) {
         POLYGON3DSTRUCT   * pPolygon = pShell->pPolygon;
-        int     ifcFacetedBrepInstance, ifcClosedShellInstance, * aggrCfsFaces;
+        int_t     ifcFacetedBrepInstance, ifcClosedShellInstance, * aggrCfsFaces;
 
 	    ifcClosedShellInstance = sdaiCreateInstanceBN(model, "IFCCLOSEDSHELL");
 	    aggrCfsFaces = sdaiCreateAggrBN(ifcClosedShellInstance, "CfsFaces");
 
         while  (pPolygon) {
             VECTOR3DSTRUCT  * pVector = pPolygon->pVector;
-	        int		ifcPolyLoopInstance, * aggrPolygon,
+	        int_t		ifcPolyLoopInstance, * aggrPolygon,
                     ifcFaceOuterBoundInstance,
                     ifcFaceInstance, * aggrBounds;
 
@@ -95,7 +95,7 @@ int		buildShapeRepresentationInstance(shellStruct * pShell)
 	        sdaiAppend(aggrCfsFaces, sdaiINSTANCE, (void *) ifcFaceInstance);
 
             if  (pPolygon->pOpeningVector) {
-	            int		ifcFaceBoundInstance;
+	            int_t		ifcFaceBoundInstance;
 
                 pVector = pPolygon->pOpeningVector;
 

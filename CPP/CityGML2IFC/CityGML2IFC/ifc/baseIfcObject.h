@@ -32,34 +32,34 @@ typedef struct POINT2DLISTSTRUCT {
 }	point2DListStruct;
 
 
-int		createIfcWall(char * pWallName, transformationMatrixStruct matrix);
-int		createIfcWall(char * pWallName, double xOffset, double yOffset, double zOffset);
-int		createIfcWallStandardCase(char * pWallName, double xOffset, double yOffset, double zOffset);
-int		createIfcOpeningElement(char * pOpeningElementName, double xOffset, double yOffset, double zOffset, bool representation);
-int		createIfcOpeningElement(char * pOpeningElementName,
+int_t		createIfcWall(char * pWallName, transformationMatrixStruct matrix);
+int_t		createIfcWall(char * pWallName, double xOffset, double yOffset, double zOffset);
+int_t		createIfcWallStandardCase(char * pWallName, double xOffset, double yOffset, double zOffset);
+int_t		createIfcOpeningElement(char * pOpeningElementName, double xOffset, double yOffset, double zOffset, bool representation);
+int_t		createIfcOpeningElement(char * pOpeningElementName,
                                 double xRefDirection, double yRefDirection, double zRefDirection,
                                 double xAxis, double yAxis, double zAxis,
                                 double xOffset, double yOffset, double zOffset,
                                 bool representation);
-int		createIfcDoor(char * pDoorName, double xOffset, double yOffset, double zOffset, bool insideOpening, double overallHeight, double overallWidth);
-int		createIfcDoor(char * pDoorName,
+int_t		createIfcDoor(char * pDoorName, double xOffset, double yOffset, double zOffset, bool insideOpening, double overallHeight, double overallWidth);
+int_t		createIfcDoor(char * pDoorName,
                       double xRefDirection, double yRefDirection, double zRefDirection,
                       double xAxis, double yAxis, double zAxis,
                       double xOffset, double yOffset, double zOffset,
                       bool insideOpening,
                       double overallHeight,
                       double overallWidth);
-int		createIfcWindow(char * pWindowName, double xOffset, double yOffset, double zOffset, bool insideOpening, double overallHeight, double overallWidth);
-int		createIfcWindow(char * pWindowName,
+int_t		createIfcWindow(char * pWindowName, double xOffset, double yOffset, double zOffset, bool insideOpening, double overallHeight, double overallWidth);
+int_t		createIfcWindow(char * pWindowName,
                         double xRefDirection, double yRefDirection, double zRefDirection,
                         double xAxis, double yAxis, double zAxis,
                         double xOffset, double yOffset, double zOffset,
                         bool insideOpening,
                         double overallHeight,
                         double overallWidth);
-int		createIfcSpace(char * pSpaceName, transformationMatrixStruct matrix);
-int		createIfcRoof(char * pRoofName, transformationMatrixStruct matrix);
-int		createIfcSlab(char * pSlabName, transformationMatrixStruct matrix);
+int_t		createIfcSpace(char * pSpaceName, transformationMatrixStruct matrix);
+int_t		createIfcRoof(char * pRoofName, transformationMatrixStruct matrix);
+int_t		createIfcSlab(char * pSlabName, transformationMatrixStruct matrix);
 
 
 //
@@ -69,7 +69,7 @@ int		createIfcSlab(char * pSlabName, transformationMatrixStruct matrix);
 //
 
 
-int		buildProductDefinitionShapeInstance();
+int_t		buildProductDefinitionShapeInstance();
 
 
 //
@@ -79,14 +79,14 @@ int		buildProductDefinitionShapeInstance();
 //
 
 
-int		buildWallInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcWallInstancePlacement, char * pWallName);
-int		buildWallStandardCaseInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcWallInstancePlacement, char * pWallName);
-int		buildOpeningElementInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcOpeningElementInstancePlacement, char * pOpeningElementName, bool representation);
-int		buildDoorInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcDoorInstancePlacement, char * pDoorName, double overallHeight, double overallWidth);
-int		buildWindowInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcWindowInstancePlacement, char * pWindowName, double overallHeight, double overallWidth);
-int		buildSpaceInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcSpaceInstancePlacement, char * pSpaceName);
-int		buildRoofInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcRoofInstancePlacement, char * pRoofName);
-int		buildSlabInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcSlabInstancePlacement, char * pSlabName);
+int_t		buildWallInstance(transformationMatrixStruct * pMatrix, int_t ifcPlacementRelativeTo, int_t * ifcWallInstancePlacement, char * pWallName);
+int_t		buildWallStandardCaseInstance(transformationMatrixStruct * pMatrix, int_t ifcPlacementRelativeTo, int_t * ifcWallInstancePlacement, char * pWallName);
+int_t		buildOpeningElementInstance(transformationMatrixStruct * pMatrix, int_t ifcPlacementRelativeTo, int_t * ifcOpeningElementInstancePlacement, char * pOpeningElementName, bool representation);
+int_t		buildDoorInstance(transformationMatrixStruct * pMatrix, int_t ifcPlacementRelativeTo, int_t * ifcDoorInstancePlacement, char * pDoorName, double overallHeight, double overallWidth);
+int_t		buildWindowInstance(transformationMatrixStruct * pMatrix, int_t ifcPlacementRelativeTo, int_t * ifcWindowInstancePlacement, char * pWindowName, double overallHeight, double overallWidth);
+int_t		buildSpaceInstance(transformationMatrixStruct * pMatrix, int_t ifcPlacementRelativeTo, int_t * ifcSpaceInstancePlacement, char * pSpaceName);
+int_t		buildRoofInstance(transformationMatrixStruct * pMatrix, int_t ifcPlacementRelativeTo, int_t * ifcRoofInstancePlacement, char * pRoofName);
+int_t		buildSlabInstance(transformationMatrixStruct * pMatrix, int_t ifcPlacementRelativeTo, int_t * ifcSlabInstancePlacement, char * pSlabName);
 
 
 //
@@ -96,8 +96,8 @@ int		buildSlabInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRel
 //
 
 
-int		buildRelVoidsElementInstance(int ifcBuildingElementInstance, int ifcOpeningElementInstance);
-int     buildRelFillsElementInstance(int ifcOpeningElementInstance, int ifcBuildingElementInstance);
+int_t		buildRelVoidsElementInstance(int_t ifcBuildingElementInstance, int_t ifcOpeningElementInstance);
+int_t     buildRelFillsElementInstance(int_t ifcOpeningElementInstance, int_t ifcBuildingElementInstance);
 
 
 //
@@ -107,11 +107,11 @@ int     buildRelFillsElementInstance(int ifcOpeningElementInstance, int ifcBuild
 //
 
 
-int		buildRelAssociatesMaterial(int ifcBuildingElementInstance, double thickness);
-int     buildMaterialLayerSetUsage(double thickness);
-int     buildMaterialLayerSet(double thickness);
-int     buildMaterialLayer(double thickness);
-int     buildMaterial();
+int_t		buildRelAssociatesMaterial(int_t ifcBuildingElementInstance, double thickness);
+int_t     buildMaterialLayerSetUsage(double thickness);
+int_t     buildMaterialLayerSet(double thickness);
+int_t     buildMaterialLayer(double thickness);
+int_t     buildMaterial();
 
 
 //
@@ -121,13 +121,13 @@ int     buildMaterial();
 //
 
 
-int		buildRelSpaceBoundaryInstance(int ifcRelatingSpaceInstance, int ifcRelatedBuildingElementInstance, char * pSpaceBoundaryName, char * pSpaceBoundaryDescription, transformationMatrixStruct * pMatrix, point2DListStruct * pPoints);
-int		buildRelSpaceBoundary1stLevelInstance(int ifcRelatingSpaceInstance, int ifcRelatedBuildingElementInstance, char * pSpaceBoundaryName, char * pSpaceBoundaryDescription, transformationMatrixStruct * pMatrix, point2DListStruct * pPoints, int parentBoundary);
-int		buildRelSpaceBoundary2ndLevelInstance(int ifcRelatingSpaceInstance, int ifcRelatedBuildingElementInstance, char * pSpaceBoundaryName, char * pSpaceBoundaryDescription, transformationMatrixStruct * pMatrix, point2DListStruct * pPoints, int parentBoundary, int correspondingBoundary);
-int		buildConnectionSurfaceGeometryInstance(transformationMatrixStruct * pMatrix, point2DListStruct * pPoints);
-int		buildCurveBoundedPlaneInstance(transformationMatrixStruct * pMatrix, point2DListStruct * pPoints);
-int		buildPlaneInstance(transformationMatrixStruct * pMatrix);
-int		build2DCompositeCurveInstance(point2DListStruct * pPoints);
-int		buildCompositeCurveSegmentInstance(point2DListStruct * pPoints);
-int		buildPolylineInstance(point2DListStruct * pPoints);
-int		buildCartesianPointInstance(point2DListStruct * pPoint2D);
+int_t		buildRelSpaceBoundaryInstance(int_t ifcRelatingSpaceInstance, int_t ifcRelatedBuildingElementInstance, char * pSpaceBoundaryName, char * pSpaceBoundaryDescription, transformationMatrixStruct * pMatrix, point2DListStruct * pPoints);
+int_t		buildRelSpaceBoundary1stLevelInstance(int_t ifcRelatingSpaceInstance, int_t ifcRelatedBuildingElementInstance, char * pSpaceBoundaryName, char * pSpaceBoundaryDescription, transformationMatrixStruct * pMatrix, point2DListStruct * pPoints, int_t parentBoundary);
+int_t		buildRelSpaceBoundary2ndLevelInstance(int_t ifcRelatingSpaceInstance, int_t ifcRelatedBuildingElementInstance, char * pSpaceBoundaryName, char * pSpaceBoundaryDescription, transformationMatrixStruct * pMatrix, point2DListStruct * pPoints, int_t parentBoundary, int_t correspondingBoundary);
+int_t		buildConnectionSurfaceGeometryInstance(transformationMatrixStruct * pMatrix, point2DListStruct * pPoints);
+int_t		buildCurveBoundedPlaneInstance(transformationMatrixStruct * pMatrix, point2DListStruct * pPoints);
+int_t		buildPlaneInstance(transformationMatrixStruct * pMatrix);
+int_t		build2DCompositeCurveInstance(point2DListStruct * pPoints);
+int_t		buildCompositeCurveSegmentInstance(point2DListStruct * pPoints);
+int_t		buildPolylineInstance(point2DListStruct * pPoints);
+int_t		buildCartesianPointInstance(point2DListStruct * pPoint2D);
