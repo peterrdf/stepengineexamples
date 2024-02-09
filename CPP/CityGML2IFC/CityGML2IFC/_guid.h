@@ -66,6 +66,7 @@ public: // Methods
 
 private: // Methods
 
+    // IFC base64 encoding
     static const bool createGlobalIdFromGuid(const GUID* pGuid, char* szGlobalId)
     {
         szGlobalId[0] = '\0';
@@ -102,29 +103,27 @@ private: // Methods
     }
 
     // IFC base64 encoding
-    static bool number2IFCBase64(const unsigned long lNumber, char* szCode, int_t iLength)
+    static bool number2IFCBase64(unsigned long lNumber, char* szCode, int_t iLength)
     {
         assert(szCode);
 
         if (iLength > 5)
         {
             return false;
-        }            
-
-        unsigned long lAct = lNumber;
+        }
 
         char szResult[5];
         int_t iDigitsCount = iLength - 1;
         for (int_t iDigit = 0; iDigit < iDigitsCount; iDigit++)
         {
-            szResult[iDigitsCount - iDigit - 1] = base64_chars[lAct % 64];
+            szResult[iDigitsCount - iDigit - 1] = base64_chars[lNumber % 64];
 
-            lAct /= 64;
+            lNumber /= 64;
         }
 
         szResult[iLength - 1] = '\0';
 
-        if (lAct != 0)
+        if (lNumber != 0)
         {
             return false;
         }           
