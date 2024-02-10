@@ -12,11 +12,12 @@
 #endif
 
 // ************************************************************************************************
-typedef unsigned char BYTE;
 static const std::string base64_chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_$";
 
+// ************************************************************************************************
 class _guid
 {
+    typedef unsigned char BYTE;
 
 public: // Methods
 

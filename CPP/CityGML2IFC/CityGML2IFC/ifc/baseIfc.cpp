@@ -74,18 +74,18 @@ int_t	    createEmptyIfcFile(wchar_t * ifcSchemaName, bool objectsWillBeAdded, c
 		ifcProjectInstance = getProjectInstance(lengthUnitConversion);
 		ifcSiteInstance = buildSiteInstance(&matrix, NULL, &ifcSiteInstancePlacement);
 		ifcBuildingInstance = buildBuildingInstance(&matrix, ifcSiteInstancePlacement, &ifcBuildingInstancePlacement);
-		ifcBuildingStoreyInstance = buildBuildingStoreyInstance(&matrix, ifcBuildingInstancePlacement, &ifcBuildingStoreyInstancePlacement);
+		//ifcBuildingStoreyInstance = buildBuildingStoreyInstance(&matrix, ifcBuildingInstancePlacement, &ifcBuildingStoreyInstancePlacement);
 
 		//
 		//		Build relations
 		//
-		buildRelAggregatesInstance("BuildingContainer", "BuildingContainer for BuildigStories", ifcBuildingInstance, ifcBuildingStoreyInstance);
+		//buildRelAggregatesInstance("BuildingContainer", "BuildingContainer for BuildigStories", ifcBuildingInstance, ifcBuildingStoreyInstance);
 		buildRelAggregatesInstance("SiteContainer", "SiteContainer For Buildings", ifcSiteInstance, ifcBuildingInstance);
 		buildRelAggregatesInstance("ProjectContainer", "ProjectContainer for Sites", ifcProjectInstance, ifcSiteInstance);
 
-        if  (objectsWillBeAdded) {
+        /*if  (objectsWillBeAdded) {
 		    buildRelContainedInSpatialStructureInstance("BuildingStoreyContainer", "BuildingStoreyContainer for Building Elements", ifcBuildingStoreyInstance, &aggrRelatedElements);
-        }
+        }*/
 
         return  model;
     } else {
