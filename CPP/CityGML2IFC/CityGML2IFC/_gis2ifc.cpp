@@ -131,7 +131,7 @@ _exporter_base::_exporter_base(_gis2ifc* pSite)
 	}
 }
 
-int_t _exporter_base::getPersonInstance()
+SdaiInstance _exporter_base::getPersonInstance()
 {
 	if (m_iPersonInstance == 0) 
 	{
@@ -145,7 +145,7 @@ int_t _exporter_base::getPersonInstance()
 	return	m_iPersonInstance;
 }
 
-int_t _exporter_base::getOrganizationInstance()
+SdaiInstance _exporter_base::getOrganizationInstance()
 {
 	if (m_iOrganizationInstance == 0) 
 	{
@@ -159,7 +159,7 @@ int_t _exporter_base::getOrganizationInstance()
 	return	m_iOrganizationInstance;
 }
 
-int_t _exporter_base::getPersonAndOrganizationInstance()
+SdaiInstance _exporter_base::getPersonAndOrganizationInstance()
 {
 	if (m_iPersonAndOrganizationInstance == 0) 
 	{
@@ -173,7 +173,7 @@ int_t _exporter_base::getPersonAndOrganizationInstance()
 	return	m_iPersonAndOrganizationInstance;
 }
 
-int_t _exporter_base::getApplicationInstance()
+SdaiInstance _exporter_base::getApplicationInstance()
 {
 	if (m_iApplicationInstance == 0)
 	{
@@ -189,7 +189,7 @@ int_t _exporter_base::getApplicationInstance()
 	return	m_iApplicationInstance;
 }
 
-int_t _exporter_base::getOwnerHistoryInstance()
+SdaiInstance _exporter_base::getOwnerHistoryInstance()
 {
 	if (m_iOwnerHistoryInstance == 0)
 	{
@@ -207,7 +207,7 @@ int_t _exporter_base::getOwnerHistoryInstance()
 	return	m_iOwnerHistoryInstance;
 }
 
-int_t _exporter_base::getDimensionalExponentsInstance()
+SdaiInstance _exporter_base::getDimensionalExponentsInstance()
 {
 	if (m_iDimensionalExponentsInstance == 0)
 	{
@@ -234,7 +234,7 @@ int_t _exporter_base::getDimensionalExponentsInstance()
 	return	m_iDimensionalExponentsInstance;
 }
 
-int_t _exporter_base::getConversionBasedUnitInstance()
+SdaiInstance _exporter_base::getConversionBasedUnitInstance()
 {
 	if (m_iConversionBasedUnitInstance == 0)
 	{
@@ -250,7 +250,7 @@ int_t _exporter_base::getConversionBasedUnitInstance()
 	return	m_iConversionBasedUnitInstance;
 }
 
-int_t _exporter_base::getUnitAssignmentInstance()
+SdaiInstance _exporter_base::getUnitAssignmentInstance()
 {
 	if (m_iUnitAssignmentInstance == 0)
 	{
@@ -274,7 +274,7 @@ int_t _exporter_base::getUnitAssignmentInstance()
 	return	m_iUnitAssignmentInstance;
 }
 
-int_t _exporter_base::getWorldCoordinateSystemInstance()
+SdaiInstance _exporter_base::getWorldCoordinateSystemInstance()
 {
 	if (m_iWorldCoordinateSystemInstance == 0)
 	{
@@ -287,7 +287,7 @@ int_t _exporter_base::getWorldCoordinateSystemInstance()
 	return m_iWorldCoordinateSystemInstance;
 }
 
-int_t _exporter_base::getGeometricRepresentationContextInstance()
+SdaiInstance _exporter_base::getGeometricRepresentationContextInstance()
 {
 	if (m_iGeometricRepresentationContextInstance == 0)
 	{
@@ -307,7 +307,7 @@ int_t _exporter_base::getGeometricRepresentationContextInstance()
 	return  m_iGeometricRepresentationContextInstance;
 }
 
-int_t _exporter_base::getProjectInstance()
+SdaiInstance _exporter_base::getProjectInstance()
 {
 	if (m_iProjectInstance == 0) 
 	{
@@ -342,12 +342,15 @@ void _exporter_base::createIfcModel(const wchar_t* szSchemaName)
 	m_iIfcModel = sdaiCreateModelBNUnicode(1, NULL, szSchemaName);
 	assert(m_iIfcModel != 0);
 
-	/*ifcProjectInstance = getProjectInstance(lengthUnitConversion);
-	ifcSiteInstance = buildSiteInstance(&matrix, NULL, &ifcSiteInstancePlacement);
-	ifcBuildingInstance = buildBuildingInstance(&matrix, ifcSiteInstancePlacement, &ifcBuildingInstancePlacement);*/
+	_matrix matrix;
+	SdaiInstance iSiteInstancePlacement = 0;
+	SdaiInstance iSiteInstance = buildSiteInstance(&matrix, iSiteInstancePlacement);
+	assert(iSiteInstancePlacement != 0);
+
+	/*ifcBuildingInstance = buildBuildingInstance(&matrix, ifcSiteInstancePlacement, &ifcBuildingInstancePlacement);*/
 }
 
-int_t _exporter_base::buildSIUnitInstance(const char* szUnitType, const char* szPrefix, const char* szName)
+SdaiInstance _exporter_base::buildSIUnitInstance(const char* szUnitType, const char* szPrefix, const char* szName)
 {
 	assert(szUnitType != nullptr);
 	assert(szName != nullptr);
@@ -366,7 +369,7 @@ int_t _exporter_base::buildSIUnitInstance(const char* szUnitType, const char* sz
 	return iSIUnitInstance;
 }
 
-int_t _exporter_base::buildMeasureWithUnitInstance()
+SdaiInstance _exporter_base::buildMeasureWithUnitInstance()
 {
 	double	dValueComponent = 0.01745; //#tbd
 	SdaiADB pValueComponentADB = sdaiCreateADB(sdaiREAL, &dValueComponent);
@@ -382,7 +385,7 @@ int_t _exporter_base::buildMeasureWithUnitInstance()
 	return iMeasureWithUnitInstance;
 }
 
-int_t _exporter_base::buildDirectionInstance(double dX, double dY, double dZ)
+SdaiInstance _exporter_base::buildDirectionInstance(double dX, double dY, double dZ)
 {
 	SdaiInstance iDirectionInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCDIRECTION");
 	assert(iDirectionInstance != 0);
@@ -397,7 +400,7 @@ int_t _exporter_base::buildDirectionInstance(double dX, double dY, double dZ)
 	return iDirectionInstance;
 }
 
-int_t _exporter_base::buildCartesianPointInstance(double dX, double dY, double dZ)
+SdaiInstance _exporter_base::buildCartesianPointInstance(double dX, double dY, double dZ)
 {
 	SdaiInstance iCartesianPointInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCCARTESIANPOINT");
 	assert(iCartesianPointInstance != 0);
@@ -410,6 +413,95 @@ int_t _exporter_base::buildCartesianPointInstance(double dX, double dY, double d
 	sdaiAppend(pCoordinates, sdaiREAL, &dZ);
 
 	return iCartesianPointInstance;
+}
+
+SdaiInstance _exporter_base::buildSiteInstance(_matrix* pMatrix, SdaiInstance& iSiteInstancePlacement)
+{
+	assert(pMatrix != nullptr);
+
+	SdaiInstance iSiteInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSITE");
+	assert(iSiteInstance != 0);
+
+	sdaiPutAttrBN(iSiteInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iSiteInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+	sdaiPutAttrBN(iSiteInstance, "Name", sdaiSTRING, "Default Site"); //#tbd
+	sdaiPutAttrBN(iSiteInstance, "Description", sdaiSTRING, "Description of Default Site"); //#tbd
+
+	iSiteInstancePlacement = buildLocalPlacementInstance(pMatrix, 0);
+	assert(iSiteInstancePlacement != 0);
+
+	sdaiPutAttrBN(iSiteInstance, "ObjectPlacement", sdaiINSTANCE, (void*)iSiteInstancePlacement);
+	sdaiPutAttrBN(iSiteInstance, "CompositionType", sdaiENUM, "ELEMENT");
+
+	SdaiAggr pRefLatitude = sdaiCreateAggrBN(iSiteInstance, "RefLatitude");
+	assert(pRefLatitude != 0);
+
+	int_t refLat_x = 24, refLat_y = 28, refLat_z = 0; //#tbd
+	sdaiAppend(pRefLatitude, sdaiINTEGER, &refLat_x);
+	sdaiAppend(pRefLatitude, sdaiINTEGER, &refLat_y);
+	sdaiAppend(pRefLatitude, sdaiINTEGER, &refLat_z);
+
+	SdaiAggr pRefLongitude = sdaiCreateAggrBN(iSiteInstance, "RefLongitude");
+	assert(pRefLongitude != 0);
+
+	int_t refLong_x = 54, refLong_y = 25, refLong_z = 0; //#tbd
+	sdaiAppend(pRefLongitude, sdaiINTEGER, &refLong_x);
+	sdaiAppend(pRefLongitude, sdaiINTEGER, &refLong_y);
+	sdaiAppend(pRefLongitude, sdaiINTEGER, &refLong_z);
+
+	double dRefElevation = 10;  //#tbd
+	sdaiPutAttrBN(iSiteInstance, "RefElevation", sdaiREAL, &dRefElevation);
+
+	return	iSiteInstance;
+}
+
+SdaiInstance _exporter_base::buildLocalPlacementInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo)
+{
+	SdaiInstance iLocalPlacementInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCLOCALPLACEMENT");
+	assert(iLocalPlacementInstance != 0);
+
+	if (iPlacementRelativeTo != 0) 
+	{
+		sdaiPutAttrBN(iLocalPlacementInstance, "PlacementRelTo", sdaiINSTANCE, (void*)iPlacementRelativeTo);
+	}
+	sdaiPutAttrBN(iLocalPlacementInstance, "RelativePlacement", sdaiINSTANCE, (void*)buildAxis2Placement3DInstance(pMatrix));
+
+	return iLocalPlacementInstance;
+}
+
+SdaiInstance _exporter_base::buildAxis2Placement3DInstance(_matrix* pMatrix)
+{
+	SdaiInstance iAxis2Placement3DInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCAXIS2PLACEMENT3D");
+	assert(iAxis2Placement3DInstance != 0);
+
+	sdaiPutAttrBN(iAxis2Placement3DInstance, "Location", sdaiINSTANCE, (void*)buildCartesianPointInstance(pMatrix->_41, pMatrix->_42, pMatrix->_43));
+	sdaiPutAttrBN(iAxis2Placement3DInstance, "Axis", sdaiINSTANCE, (void*)buildDirectionInstance(pMatrix->_31, pMatrix->_32, pMatrix->_33));
+	sdaiPutAttrBN(iAxis2Placement3DInstance, "RefDirection", sdaiINSTANCE, (void*)buildDirectionInstance(pMatrix->_11, pMatrix->_12, pMatrix->_13));
+
+	return iAxis2Placement3DInstance;
+}
+
+SdaiInstance _exporter_base::buildBuildingInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo, SdaiInstance& iBuildingInstancePlacement)
+{
+	assert(pMatrix != nullptr);
+	assert(iPlacementRelativeTo != 0);
+
+	SdaiInstance iBuildingInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCBUILDING");
+	assert(iBuildingInstance != 0);
+
+	sdaiPutAttrBN(iBuildingInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iBuildingInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+	sdaiPutAttrBN(iBuildingInstance, "Name", sdaiSTRING, "Default Building"); //#tbd
+	sdaiPutAttrBN(iBuildingInstance, "Description", sdaiSTRING, "Description of Default Building"); //#tbd
+
+	iBuildingInstancePlacement = buildLocalPlacementInstance(pMatrix, iPlacementRelativeTo);
+	assert(iBuildingInstancePlacement != 0);
+
+	sdaiPutAttrBN(iBuildingInstance, "ObjectPlacement", sdaiINSTANCE, (void*)iBuildingInstancePlacement);
+	sdaiPutAttrBN(iBuildingInstance, "CompositionType", sdaiENUM, "ELEMENT");
+	//sdaiPutAttrBN(iBuildingInstance, "BuildingAddress", sdaiINSTANCE, (void*)buildPostalAddress()); //#tbd
+
+	return iBuildingInstance;
 }
 
 // ************************************************************************************************

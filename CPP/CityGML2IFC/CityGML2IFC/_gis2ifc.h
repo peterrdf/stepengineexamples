@@ -55,28 +55,62 @@ private: // Methods
 class _point3d 
 {
 
-private: // Members
+public: // Members
 
-	double m_dX;
-	double m_dY;
-	double m_dZ;
+	double X;
+	double Y;
+	double Z;
 
-	SdaiInstance m_iCartesianPointInstance;
+	SdaiInstance CartesianPointInstance;
 
 public: // Methods
 
 	_point3d()
-		: m_dX(0.)
-		, m_dY(0.)
-		, m_dZ(0.)
-		, m_iCartesianPointInstance(0)
+		: X(0.)
+		, Y(0.)
+		, Z(0.)
+		, CartesianPointInstance(0)
+	{}
+};
+
+// ************************************************************************************************
+class _matrix
+{
+
+public: // Members
+
+	double _11;
+	double _12;
+	double _13;
+	double _21;
+	double _22;
+	double _23;
+	double _31;
+	double _32;
+	double _33;
+	double _41;
+	double _42;
+	double _43;
+
+public: // Methods
+
+	_matrix::_matrix()
+		: _11(1.)
+		, _12(0.)
+		, _13(0.)
+		, _21(0.)
+		, _22(1.)
+		, _23(0.)
+		, _31(0.)
+		, _32(0.)
+		, _33(1.)
+		, _41(0.)
+		, _42(0.)
+		, _43(0.)
 	{}
 
-	double& X() { return m_dX; }
-	double& Y() { return m_dY; }
-	double& Z() { return m_dZ; }
-
-	SdaiInstance& cartesianPointInstance() { return m_iCartesianPointInstance; }
+	_matrix::~_matrix()
+	{}
 };
 
 // ************************************************************************************************
@@ -108,28 +142,31 @@ public: // Methods
 
 	virtual void execute(const wstring& strOuputFile) = 0;
 
-	int_t getIfcModel() const { return m_iIfcModel; }
-
-	int_t getPersonInstance();
-	int_t getOrganizationInstance();
-	int_t getPersonAndOrganizationInstance();
-	int_t getApplicationInstance();
-	int_t getOwnerHistoryInstance();
-	int_t getDimensionalExponentsInstance();
-	int_t getConversionBasedUnitInstance();
-	int_t getUnitAssignmentInstance();
-	int_t getWorldCoordinateSystemInstance();
-	int_t getGeometricRepresentationContextInstance();
-	int_t getProjectInstance();	
+	SdaiModel getIfcModel() const { return m_iIfcModel; }
+	SdaiInstance getPersonInstance();
+	SdaiInstance getOrganizationInstance();
+	SdaiInstance getPersonAndOrganizationInstance();
+	SdaiInstance getApplicationInstance();
+	SdaiInstance getOwnerHistoryInstance();
+	SdaiInstance getDimensionalExponentsInstance();
+	SdaiInstance getConversionBasedUnitInstance();
+	SdaiInstance getUnitAssignmentInstance();
+	SdaiInstance getWorldCoordinateSystemInstance();
+	SdaiInstance getGeometricRepresentationContextInstance();
+	SdaiInstance getProjectInstance();
 
 protected: // Methods
 
 	void createIfcModel(const wchar_t* szSchemaName);
 
-	int_t buildSIUnitInstance(const char* szUnitType, const char* szPrefix, const char* szName);
-	int_t buildMeasureWithUnitInstance();
-	int_t buildDirectionInstance(double dX, double dY, double dZ);
-	int_t buildCartesianPointInstance(double dX, double dY, double dZ);
+	SdaiInstance buildSIUnitInstance(const char* szUnitType, const char* szPrefix, const char* szName);
+	SdaiInstance buildMeasureWithUnitInstance();
+	SdaiInstance buildDirectionInstance(double dX, double dY, double dZ);
+	SdaiInstance buildCartesianPointInstance(double dX, double dY, double dZ);
+	SdaiInstance buildSiteInstance(_matrix* pMatrix, SdaiInstance& iSiteInstancePlacement);
+	SdaiInstance buildLocalPlacementInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo);
+	SdaiInstance buildAxis2Placement3DInstance(_matrix* pMatrix);
+	SdaiInstance buildBuildingInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo, SdaiInstance& iBuildingInstancePlacement);
 };
 
 // ************************************************************************************************
