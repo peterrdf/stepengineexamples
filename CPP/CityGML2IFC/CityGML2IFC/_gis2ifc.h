@@ -142,6 +142,7 @@ public: // Methods
 
 	virtual void execute(const wstring& strOuputFile) = 0;
 
+	_gis2ifc* getSite() const { return m_pSite; }
 	SdaiModel getIfcModel() const { return m_iIfcModel; }
 	SdaiInstance getPersonInstance();
 	SdaiInstance getOrganizationInstance();
@@ -158,6 +159,7 @@ public: // Methods
 protected: // Methods
 
 	void createIfcModel(const wchar_t* szSchemaName);
+	void saveIfcFile(const wchar_t* szFileName);
 
 	SdaiInstance buildSIUnitInstance(const char* szUnitType, const char* szPrefix, const char* szName);
 	SdaiInstance buildMeasureWithUnitInstance();
@@ -165,8 +167,13 @@ protected: // Methods
 	SdaiInstance buildCartesianPointInstance(double dX, double dY, double dZ);
 	SdaiInstance buildSiteInstance(_matrix* pMatrix, SdaiInstance& iSiteInstancePlacement);
 	SdaiInstance buildLocalPlacementInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo);
-	SdaiInstance buildAxis2Placement3DInstance(_matrix* pMatrix);
+	SdaiInstance buildAxis2Placement3DInstance(_matrix* pMatrix);	
 	SdaiInstance buildBuildingInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo, SdaiInstance& iBuildingInstancePlacement);
+	SdaiInstance buildRelAggregatesInstance(
+		const char* szName, 
+		const char* szDescription, 
+		SdaiInstance iRelatingObjectInstance, 
+		const vector<SdaiInstance>& vecRelatedObjectInstances);
 };
 
 // ************************************************************************************************
@@ -184,4 +191,5 @@ public: // Methods
 
 private: // Methods
 
+	void CreateBuildingRecursive(OwlInstance iInstance);
 };

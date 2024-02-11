@@ -231,15 +231,6 @@ void CCityGML2IFCDlg::CreateBuildingRecursive(OwlInstance iInstance)
 
 void CCityGML2IFCDlg::OnBnClickedOk()
 {
-	/*ASSERT(m_iOwlModel == 0);
-
-	m_iOwlModel = CreateModel();
-	ASSERT(m_iOwlModel != 0);
-
-	SetFormatSettings(m_iOwlModel);*/
-
-	
-
 	wchar_t szAppPath[_MAX_PATH];
 	::GetModuleFileName(::GetModuleHandle(nullptr), szAppPath, sizeof(szAppPath));
 
@@ -248,43 +239,12 @@ void CCityGML2IFCDlg::OnBnClickedOk()
 	wstring strRootFolder = pthRootFolder.wstring();
 	strRootFolder += L"\\";
 
-	//SetGISOptionsW(strRootFolder.c_str(), true, LogCallbackImpl);
-
 	wstring strInputFile = L"D:\\Temp\\gisengine in\\FZKHouseLoD2.gml";
 	wstring strOutputFile = strInputFile;
 	strOutputFile += L".ifc";
 
 	_gis2ifc exporter(strRootFolder, LogCallbackImpl);
 	exporter.execute(strInputFile, strOutputFile);
-
-	string guid = _guid::createGlobalId();
-	TRACE("");
-
-	//ImportGISModelW(m_iOwlModel, strInputFile.c_str());
-
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	/*int_t iIfcModel = createEmptyIfcFile(L"IFC4", true, "MILLI");
-	 
-	OwlClass iBuildingTypeClass = GetClassByName(m_iOwlModel, "class:BuildingType");
-	ASSERT(iBuildingTypeClass != 0);
-
-	OwlInstance iInstance = GetInstancesByIterator(m_iOwlModel, 0);
-	while (iInstance != 0)
-	{
-		OwlClass iInstanceClass = GetInstanceClass(iInstance);
-		ASSERT(iInstanceClass != 0);
-
-		if ((iInstanceClass == iBuildingTypeClass) || IsClassAncestor(iInstanceClass, iBuildingTypeClass))
-		{
-			CreateBuildingRecursive(iInstance);			
-		}
-
-		iInstance = GetInstancesByIterator(m_iOwlModel, iInstance);
-	}
-
-	CloseModel(m_iOwlModel);
-	m_iOwlModel = 0;*/
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	//
 	//  Update header

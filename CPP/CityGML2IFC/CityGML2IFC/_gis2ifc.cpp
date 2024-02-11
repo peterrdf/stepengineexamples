@@ -342,12 +342,66 @@ void _exporter_base::createIfcModel(const wchar_t* szSchemaName)
 	m_iIfcModel = sdaiCreateModelBNUnicode(1, NULL, szSchemaName);
 	assert(m_iIfcModel != 0);
 
-	_matrix matrix;
-	SdaiInstance iSiteInstancePlacement = 0;
-	SdaiInstance iSiteInstance = buildSiteInstance(&matrix, iSiteInstancePlacement);
-	assert(iSiteInstancePlacement != 0);
+	//#tbd
+	char    description[512], timeStamp[512];
+	time_t  t;
+	struct tm* tInfo;
 
-	/*ifcBuildingInstance = buildBuildingInstance(&matrix, ifcSiteInstancePlacement, &ifcBuildingInstancePlacement);*/
+	time(&t);
+	tInfo = localtime(&t);
+
+	if (true)//view == COORDINATIONVIEW) {
+		//if (m_Quantities.GetCheck()) {
+		memcpy(description, "ViewDefinition [CoordinationView, QuantityTakeOffAddOnView]", sizeof("ViewDefinition [CoordinationView, QuantityTakeOffAddOnView]"));
+	//}
+	/*else {
+		memcpy(description, "ViewDefinition [CoordinationView]", sizeof("ViewDefinition [CoordinationView]"));
+	}*/
+	/*}
+	else {
+		ASSERT(view == PRESENTATIONVIEW);
+		if (m_Quantities.GetCheck()) {
+			memcpy(description, "ViewDefinition [PresentationView, QuantityTakeOffAddOnView]", sizeof("ViewDefinition [PresentationView, QuantityTakeOffAddOnView]"));
+		}
+		else {
+			memcpy(description, "ViewDefinition [PresentationView]", sizeof("ViewDefinition [PresentationView]"));
+		}
+	}*/
+
+	_itoa(1900 + tInfo->tm_year, &timeStamp[0], 10);
+	_itoa(100 + 1 + tInfo->tm_mon, &timeStamp[4], 10);
+	_itoa(100 + tInfo->tm_mday, &timeStamp[7], 10);
+	timeStamp[4] = '-';
+	timeStamp[7] = '-';
+	_itoa(100 + tInfo->tm_hour, &timeStamp[10], 10);
+	_itoa(100 + tInfo->tm_min, &timeStamp[13], 10);
+	_itoa(100 + tInfo->tm_sec, &timeStamp[16], 10);
+	timeStamp[10] = 'T';
+	timeStamp[13] = ':';
+	timeStamp[16] = ':';
+	timeStamp[19] = 0;
+
+	SetSPFFHeader(
+		m_iIfcModel,
+		(const char*)description,           //  description //#tbd
+		"2;1",                              //  implementationLevel //#tbd
+		(const char*)nullptr,	            //  name //#tbd
+		(const char*)&timeStamp[0],         //  timeStamp //#tbd
+		"Architect",                        //  author //#tbd
+		"Building Designer Office",         //  organization //#tbd
+		"IFC Engine DLL version 1.03 beta", //  preprocessorVersion //#tbd
+		"IFC Engine DLL version 1.03 beta", //  originatingSystem //#tbd
+		"The authorising person",           //  authorization //#tbd
+		CW2A(szSchemaName)                  //  fileSchema //#tbd
+	);
+}
+
+void _exporter_base::saveIfcFile(const wchar_t* szFileName)
+{
+	assert(szFileName != nullptr);
+	assert(m_iIfcModel != 0);
+
+	sdaiSaveModelBNUnicode(m_iIfcModel, szFileName);
 }
 
 SdaiInstance _exporter_base::buildSIUnitInstance(const char* szUnitType, const char* szPrefix, const char* szName)
@@ -504,6 +558,35 @@ SdaiInstance _exporter_base::buildBuildingInstance(_matrix* pMatrix, SdaiInstanc
 	return iBuildingInstance;
 }
 
+SdaiInstance _exporter_base::buildRelAggregatesInstance(
+	const char* szName, 
+	const char* szDescription, 
+	SdaiInstance iRelatingObjectInstance, 
+	const vector<SdaiInstance>& vecRelatedObjectInstances)
+{
+	assert(iRelatingObjectInstance != 0);
+	assert(!vecRelatedObjectInstances.empty());
+
+	SdaiInstance iRelAggregatesInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCRELAGGREGATES");
+	assert(iRelAggregatesInstance != 0);
+
+	sdaiPutAttrBN(iRelAggregatesInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iRelAggregatesInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+	sdaiPutAttrBN(iRelAggregatesInstance, "Name", sdaiSTRING, szName);
+	sdaiPutAttrBN(iRelAggregatesInstance, "Description", sdaiSTRING, szDescription);
+	sdaiPutAttrBN(iRelAggregatesInstance, "RelatingObject", sdaiINSTANCE, (void*)iRelatingObjectInstance);
+
+	SdaiAggr pRelatedObjects = sdaiCreateAggrBN(iRelAggregatesInstance, "RelatedObjects");
+	assert(pRelatedObjects != 0);
+
+	for (auto iRelatedObjectInstance : vecRelatedObjectInstances)
+	{
+		sdaiAppend(pRelatedObjects, sdaiINSTANCE, (void*)iRelatedObjectInstance);
+	}
+
+	return iRelAggregatesInstance;
+}
+
 // ************************************************************************************************
 _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	: _exporter_base(pSite)
@@ -517,5 +600,79 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	assert(!strOuputFile.empty());
 
 	createIfcModel(L"IFC4");
+
+	_matrix matrix;
+	SdaiInstance iSiteInstancePlacement = 0;
+	SdaiInstance iSiteInstance = buildSiteInstance(&matrix, iSiteInstancePlacement);
+	assert(iSiteInstancePlacement != 0);
+
+	buildRelAggregatesInstance("ProjectContainer", "ProjectContainer for Sites", getProjectInstance(), vector<SdaiInstance>{iSiteInstance});
+
+	OwlClass iBuildingTypeClass = GetClassByName(getSite()->getOwlModel(), "class:BuildingType");
+	ASSERT(iBuildingTypeClass != 0);
+
+	OwlInstance iInstance = GetInstancesByIterator(getSite()->getOwlModel(), 0);
+	while (iInstance != 0)
+	{
+		OwlClass iInstanceClass = GetInstanceClass(iInstance);
+		ASSERT(iInstanceClass != 0);
+
+		if ((iInstanceClass == iBuildingTypeClass) || IsClassAncestor(iInstanceClass, iBuildingTypeClass))
+		{
+			CreateBuildingRecursive(iInstance);
+		}
+
+		iInstance = GetInstancesByIterator(getSite()->getOwlModel(), iInstance);
+	}
+
+	/*ifcBuildingInstance = buildBuildingInstance(&matrix, ifcSiteInstancePlacement, &ifcBuildingInstancePlacement);*/
+
+	saveIfcFile(strOuputFile.c_str());
 }
 
+void _citygml_exporter::CreateBuildingRecursive(OwlInstance iInstance)
+{
+	ASSERT(iInstance != 0);
+
+	RdfProperty iProperty = GetInstancePropertyByIterator(iInstance, 0);
+	while (iProperty != 0)
+	{
+		if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
+		{
+			int64_t iValuesCount = 0;
+			OwlInstance* piValues = nullptr;
+			GetObjectProperty(iInstance, iProperty, &piValues, &iValuesCount);
+
+			for (int64_t iValue = 0; iValue < iValuesCount; iValue++)
+			{
+				if (piValues[iValue] != 0)
+				{
+					if (GetInstanceGeometryClass(piValues[iValue]) &&
+						GetBoundingBox(piValues[iValue], nullptr, nullptr))
+					{
+						OwlClass iInstanceClass = GetInstanceClass(piValues[iValue]);
+						ASSERT(iInstanceClass != 0);
+
+						if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "BoundaryRepresentation"))
+						{
+							TRACE(L"\nBoundaryRepresentation");
+						}
+						else
+						{
+							wchar_t* szClassName = nullptr;
+							GetNameOfClassW(iInstanceClass, &szClassName);
+
+							TRACE(L"\n%s", szClassName);
+						}
+					} // if (GetInstanceGeometryClass(piValues[iValue]) && ...
+					else
+					{
+						CreateBuildingRecursive(piValues[iValue]);
+					}
+				} // if (piValues[iValue] != 0)
+			} // for (int64_t iValue = ...
+		} // if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
+
+		iProperty = GetInstancePropertyByIterator(iInstance, iProperty);
+	}
+}
