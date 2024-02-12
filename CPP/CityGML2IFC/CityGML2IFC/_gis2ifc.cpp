@@ -611,6 +611,8 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	OwlClass iBuildingTypeClass = GetClassByName(getSite()->getOwlModel(), "class:BuildingType");
 	ASSERT(iBuildingTypeClass != 0);
 
+	vector<SdaiInstance> vecBuildings;
+
 	OwlInstance iInstance = GetInstancesByIterator(getSite()->getOwlModel(), 0);
 	while (iInstance != 0)
 	{
@@ -620,12 +622,17 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 		if ((iInstanceClass == iBuildingTypeClass) || IsClassAncestor(iInstanceClass, iBuildingTypeClass))
 		{
 			CreateBuildingRecursive(iInstance);
+
+			SdaiInstance iBuildingInstancePlacement = 0;
+			SdaiInstance iBuildingInstance = buildBuildingInstance(&matrix, iSiteInstancePlacement, iBuildingInstancePlacement);
+
+			vecBuildings.push_back(iBuildingInstance);
 		}
 
 		iInstance = GetInstancesByIterator(getSite()->getOwlModel(), iInstance);
 	}
 
-	/*ifcBuildingInstance = buildBuildingInstance(&matrix, ifcSiteInstancePlacement, &ifcBuildingInstancePlacement);*/
+	buildRelAggregatesInstance("SiteContainer", "SiteContainer For Buildings", iSiteInstance, vecBuildings);
 
 	saveIfcFile(strOuputFile.c_str());
 }
