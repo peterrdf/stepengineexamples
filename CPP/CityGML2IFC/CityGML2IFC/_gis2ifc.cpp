@@ -337,7 +337,7 @@ void _exporter_base::createIfcModel(const wchar_t* szSchemaName)
 	{
 		sdaiCloseModel(m_iIfcModel);
 		m_iIfcModel = 0;
-	}
+	}	
 
 	m_iIfcModel = sdaiCreateModelBNUnicode(1, NULL, szSchemaName);
 	assert(m_iIfcModel != 0);
@@ -590,7 +590,13 @@ SdaiInstance _exporter_base::buildRelAggregatesInstance(
 // ************************************************************************************************
 _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	: _exporter_base(pSite)
-{}
+	, m_iBuildingTypeClass(0)
+	, m_mapBuildings()
+	, m_mapGeometries()
+{
+	m_iBuildingTypeClass = GetClassByName(getSite()->getOwlModel(), "class:BuildingType");
+	assert(m_iBuildingTypeClass != 0);
+}
 
 /*virtual*/ _citygml_exporter::~_citygml_exporter()
 {}
@@ -599,47 +605,78 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 {
 	assert(!strOuputFile.empty());
 
+	m_mapBuildings.clear();
+	m_mapGeometries.clear();
+
 	createIfcModel(L"IFC4");
 
-	_matrix matrix;
+	_matrix mtxIdentity;
 	SdaiInstance iSiteInstancePlacement = 0;
-	SdaiInstance iSiteInstance = buildSiteInstance(&matrix, iSiteInstancePlacement);
+	SdaiInstance iSiteInstance = buildSiteInstance(&mtxIdentity, iSiteInstancePlacement);
 	assert(iSiteInstancePlacement != 0);
 
 	buildRelAggregatesInstance("ProjectContainer", "ProjectContainer for Sites", getProjectInstance(), vector<SdaiInstance>{iSiteInstance});
 
-	OwlClass iBuildingTypeClass = GetClassByName(getSite()->getOwlModel(), "class:BuildingType");
-	ASSERT(iBuildingTypeClass != 0);
-
-	vector<SdaiInstance> vecBuildings;
-
-	OwlInstance iInstance = GetInstancesByIterator(getSite()->getOwlModel(), 0);
-	while (iInstance != 0)
-	{
-		OwlClass iInstanceClass = GetInstanceClass(iInstance);
-		ASSERT(iInstanceClass != 0);
-
-		if ((iInstanceClass == iBuildingTypeClass) || IsClassAncestor(iInstanceClass, iBuildingTypeClass))
-		{
-			CreateBuildingRecursive(iInstance);
-
-			SdaiInstance iBuildingInstancePlacement = 0;
-			SdaiInstance iBuildingInstance = buildBuildingInstance(&matrix, iSiteInstancePlacement, iBuildingInstancePlacement);
-
-			vecBuildings.push_back(iBuildingInstance);
-		}
-
-		iInstance = GetInstancesByIterator(getSite()->getOwlModel(), iInstance);
-	}
-
-	buildRelAggregatesInstance("SiteContainer", "SiteContainer For Buildings", iSiteInstance, vecBuildings);
+	createBuildings(iSiteInstance, iSiteInstancePlacement);
 
 	saveIfcFile(strOuputFile.c_str());
 }
 
-void _citygml_exporter::CreateBuildingRecursive(OwlInstance iInstance)
+void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance iSiteInstancePlacement)
 {
-	ASSERT(iInstance != 0);
+	assert(iSiteInstance != 0);
+	assert(iSiteInstancePlacement != 0);
+
+	OwlClass iSchemasClass = GetClassByName(getSite()->getOwlModel(), "class:Schemas");
+	assert(iSchemasClass != 0);
+
+	OwlInstance iInstance = GetInstancesByIterator(getSite()->getOwlModel(), 0);
+	while (iInstance != 0)
+	{
+		if (GetInstanceInverseReferencesByIterator(iInstance, 0) == 0)
+		{
+			OwlClass iInstanceClass = GetInstanceClass(iInstance);
+			assert(iInstanceClass != 0);
+
+			if (iInstanceClass != iSchemasClass)
+			{
+				if ((iInstanceClass == m_iBuildingTypeClass) || IsClassAncestor(iInstanceClass, m_iBuildingTypeClass))
+				{
+					if (m_mapBuildings.find(iInstance) == m_mapBuildings.end())
+					{
+						m_mapBuildings[iInstanceClass] = 0;
+					}
+				}
+				else
+				{
+					createBuildingsRecursive(iInstance);
+				}
+			}
+		} // if (GetInstanceInverseReferencesByIterator(iInstance, 0) == 0)
+
+		iInstance = GetInstancesByIterator(getSite()->getOwlModel(), iInstance);
+	} // while (iInstance != 0)
+
+	_matrix mtxIdentity;
+	vector<SdaiInstance> vecBuildingInstances;
+	if (!m_mapBuildings.empty())
+	{
+		for (auto itBuilding : m_mapBuildings)
+		{
+			SdaiInstance iBuildingInstancePlacement = 0;
+			SdaiInstance iBuildingInstance = buildBuildingInstance(&mtxIdentity, iSiteInstancePlacement, iBuildingInstancePlacement);
+			assert(iBuildingInstance != 0);
+
+			vecBuildingInstances.push_back(iBuildingInstance);
+		}
+	} // if (!m_mapBuildings.empty())
+
+	buildRelAggregatesInstance("SiteContainer", "SiteContainer For Buildings", iSiteInstance, vecBuildingInstances);
+}
+
+void _citygml_exporter::createBuildingsRecursive(OwlInstance iInstance)
+{
+	assert(iInstance != 0);
 
 	RdfProperty iProperty = GetInstancePropertyByIterator(iInstance, 0);
 	while (iProperty != 0)
@@ -652,34 +689,28 @@ void _citygml_exporter::CreateBuildingRecursive(OwlInstance iInstance)
 
 			for (int64_t iValue = 0; iValue < iValuesCount; iValue++)
 			{
-				if (piValues[iValue] != 0)
+				if (piValues[iValue] == 0)
 				{
-					if (GetInstanceGeometryClass(piValues[iValue]) &&
-						GetBoundingBox(piValues[iValue], nullptr, nullptr))
-					{
-						OwlClass iInstanceClass = GetInstanceClass(piValues[iValue]);
-						ASSERT(iInstanceClass != 0);
+					continue;
+				}
+					
+				OwlClass iInstanceClass = GetInstanceClass(piValues[iValue]);
+				assert(iInstanceClass != 0);
 
-						if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "BoundaryRepresentation"))
-						{
-							TRACE(L"\nBoundaryRepresentation");
-						}
-						else
-						{
-							wchar_t* szClassName = nullptr;
-							GetNameOfClassW(iInstanceClass, &szClassName);
-
-							TRACE(L"\n%s", szClassName);
-						}
-					} // if (GetInstanceGeometryClass(piValues[iValue]) && ...
-					else
+				if ((iInstanceClass == m_iBuildingTypeClass) || IsClassAncestor(iInstanceClass, m_iBuildingTypeClass))
+				{
+					if (m_mapBuildings.find(piValues[iValue]) == m_mapBuildings.end())
 					{
-						CreateBuildingRecursive(piValues[iValue]);
+						m_mapBuildings[piValues[iValue]] = 0;
 					}
-				} // if (piValues[iValue] != 0)
+				}
+				else
+				{
+					createBuildingsRecursive(piValues[iValue]);
+				}
 			} // for (int64_t iValue = ...
 		} // if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
 
 		iProperty = GetInstancePropertyByIterator(iInstance, iProperty);
-	}
+	} // while (iProperty != 0)
 }
