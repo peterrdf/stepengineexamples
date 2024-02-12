@@ -183,7 +183,7 @@ class _citygml_exporter : public _exporter_base
 private: // Members
 
 	OwlClass m_iBuildingTypeClass;
-	map<OwlInstance, SdaiInstance> m_mapBuildings;
+	map<OwlInstance, vector<OwlInstance>> m_mapBuildings;
 	map<OwlInstance, SdaiInstance> m_mapGeometries;
 
 public: // Methods
@@ -197,4 +197,6 @@ protected:  // Methods
 
 	void createBuildings(SdaiInstance iSiteInstance, SdaiInstance iSiteInstancePlacement);
 	void createBuildingsRecursive(OwlInstance iInstance);
+	void searchForBuildingGeometry(OwlInstance iBuildingInstance, OwlInstance iInstance);
+	void createBuildingGeometryRecursive(OwlInstance iInstance);
 };
