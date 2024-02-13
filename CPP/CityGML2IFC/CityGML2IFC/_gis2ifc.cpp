@@ -488,7 +488,7 @@ SdaiInstance _exporter_base::buildSiteInstance(_matrix* pMatrix, SdaiInstance& i
 	sdaiPutAttrBN(iSiteInstance, "CompositionType", sdaiENUM, "ELEMENT");
 
 	SdaiAggr pRefLatitude = sdaiCreateAggrBN(iSiteInstance, "RefLatitude");
-	assert(pRefLatitude != 0);
+	assert(pRefLatitude != nullptr);
 
 	int_t refLat_x = 24, refLat_y = 28, refLat_z = 0; //#tbd
 	sdaiAppend(pRefLatitude, sdaiINTEGER, &refLat_x);
@@ -496,7 +496,7 @@ SdaiInstance _exporter_base::buildSiteInstance(_matrix* pMatrix, SdaiInstance& i
 	sdaiAppend(pRefLatitude, sdaiINTEGER, &refLat_z);
 
 	SdaiAggr pRefLongitude = sdaiCreateAggrBN(iSiteInstance, "RefLongitude");
-	assert(pRefLongitude != 0);
+	assert(pRefLongitude != nullptr);
 
 	int_t refLong_x = 54, refLong_y = 25, refLong_z = 0; //#tbd
 	sdaiAppend(pRefLongitude, sdaiINTEGER, &refLong_x);
@@ -577,7 +577,7 @@ SdaiInstance _exporter_base::buildRelAggregatesInstance(
 	sdaiPutAttrBN(iRelAggregatesInstance, "RelatingObject", sdaiINSTANCE, (void*)iRelatingObjectInstance);
 
 	SdaiAggr pRelatedObjects = sdaiCreateAggrBN(iRelAggregatesInstance, "RelatedObjects");
-	assert(pRelatedObjects != 0);
+	assert(pRelatedObjects != nullptr);
 
 	for (auto iRelatedObjectInstance : vecRelatedObjectInstances)
 	{
@@ -816,13 +816,44 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 					(void**)&pdValue,
 					&iVerticesCount);
 
+				vector<SdaiInstance> vecOuterPolygons;
+				vector<SdaiInstance> vecInnerPolygons;
+				vector<int64_t> vecPolygonIndices;
 				map<int64_t, SdaiInstance> mapIndex2Instance;
 				for (int64_t iIndex = 0; iIndex < iIndicesCount; iIndex++)
 				{
 					if (piIndices[iIndex] < 0)
 					{
+						SdaiInstance iPolyLoopInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCPOLYLOOP");
+						assert(iPolyLoopInstance != 0);
+
+						SdaiAggr pPolygon = sdaiCreateAggrBN(iPolyLoopInstance, "Polygon");
+						assert(pPolygon != nullptr);
+
+						for (auto iIndex : vecPolygonIndices)
+						{
+							assert(mapIndex2Instance.find(iIndex) != mapIndex2Instance.end());
+
+							sdaiAppend(pPolygon, sdaiINSTANCE, (void*)mapIndex2Instance.at(iIndex));
+						}						
+
+						if (piIndices[iIndex] == -1)
+						{
+							vecOuterPolygons.push_back(iPolyLoopInstance);
+						}
+						else
+						{
+							assert(piIndices[iIndex] == -2);
+
+							vecInnerPolygons.push_back(iPolyLoopInstance);
+						}
+
+						vecPolygonIndices.clear();
+
 						continue;
-					}
+					} // if (piIndices[iIndex] < 0)
+
+					vecPolygonIndices.push_back(piIndices[iIndex]);
 
 					if (mapIndex2Instance.find(piIndices[iIndex]) == mapIndex2Instance.end())
 					{
@@ -832,6 +863,42 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 							pdValue[(piIndices[iIndex] * 3) + 2]);
 					}
 				} // for (int64_t iIndex = ...
+
+				assert(vecPolygonIndices.empty());
+				assert(!vecOuterPolygons.empty() || vecInnerPolygons.empty());
+
+				SdaiInstance iClosedShellInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCCLOSEDSHELL");
+				assert(iClosedShellInstance != 0);
+
+				SdaiAggr pCfsFaces = sdaiCreateAggrBN(iClosedShellInstance, "CfsFaces");
+				assert(pCfsFaces != nullptr);
+
+				vecGeometryInstances.push_back(iClosedShellInstance);
+
+				if (!vecOuterPolygons.empty())
+				{
+					for (auto iOuterPolygon : vecOuterPolygons)
+					{						
+						SdaiInstance iFaceOuterBoundInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACEOUTERBOUND");
+						assert(iFaceOuterBoundInstance != 0);
+
+						sdaiPutAttrBN(iFaceOuterBoundInstance, "Bound", sdaiINSTANCE, (void*)iOuterPolygon);
+						sdaiPutAttrBN(iFaceOuterBoundInstance, "Orientation", sdaiENUM, "T");
+
+						SdaiInstance iFaceInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACE");
+						assert(iFaceInstance != 0);
+
+						SdaiAggr pBounds = sdaiCreateAggrBN(iFaceInstance, "Bounds");
+						sdaiAppend(pBounds, sdaiINSTANCE, (void*)iFaceOuterBoundInstance);
+
+						sdaiAppend(pCfsFaces, sdaiINSTANCE, (void*)iFaceInstance);
+					}
+				} // if (!vecOuterPolygons.empty())
+
+				if (!vecInnerPolygons.empty())
+				{
+					assert(false);
+				} // if (!vecInnerPolygons.empty())
 
 				TRACE(L"");
 			}
