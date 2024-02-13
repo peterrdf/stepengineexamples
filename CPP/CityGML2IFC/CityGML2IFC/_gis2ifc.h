@@ -198,5 +198,5 @@ protected:  // Methods
 	void createBuildings(SdaiInstance iSiteInstance, SdaiInstance iSiteInstancePlacement);
 	void createBuildingsRecursive(OwlInstance iInstance);
 	void searchForBuildingGeometry(OwlInstance iBuildingInstance, OwlInstance iInstance);
-	void createBuildingGeometryRecursive(OwlInstance iInstance);
+	void createGeometry(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 };

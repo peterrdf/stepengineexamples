@@ -668,15 +668,22 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 		
 	_matrix mtxIdentity;
 	vector<SdaiInstance> vecBuildingInstances;
-	for (auto itBuilding : m_mapBuildings)
+	for (auto& itBuilding : m_mapBuildings)
 	{
-		searchForBuildingGeometry(itBuilding.first, itBuilding.first);
-
 		SdaiInstance iBuildingInstancePlacement = 0;
 		SdaiInstance iBuildingInstance = buildBuildingInstance(&mtxIdentity, iSiteInstancePlacement, iBuildingInstancePlacement);
 		assert(iBuildingInstance != 0);
 
 		vecBuildingInstances.push_back(iBuildingInstance);
+
+		searchForBuildingGeometry(itBuilding.first, itBuilding.first);
+
+		vector<SdaiInstance> vecBuildingGeometryInstances;
+		for (auto iOwlInstance : itBuilding.second)
+		{
+			createGeometry(iOwlInstance, vecBuildingGeometryInstances);
+		}
+		buildRelAggregatesInstance("BuildingContainer", "BuildingContainer for Geometry", iBuildingInstance, vecBuildingGeometryInstances); //#tbd
 	} // for (auto itBuilding : ...
 
 	buildRelAggregatesInstance("SiteContainer", "SiteContainer For Buildings", iSiteInstance, vecBuildingInstances);
@@ -767,7 +774,80 @@ void _citygml_exporter::searchForBuildingGeometry(OwlInstance iBuildingInstance,
 	} // while (iProperty != 0)
 }
 
-void _citygml_exporter::createBuildingGeometryRecursive(OwlInstance iInstance)
+void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
 {
 	assert(iInstance != 0);
+
+	OwlClass iInstanceClass = GetInstanceClass(iInstance);
+	assert(iInstanceClass != 0);
+
+	if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:MultiSurfaceType"))
+	{
+		OwlInstance* piInstances = nullptr;
+		int64_t iInstancesCount = 0;
+		GetObjectProperty(
+			iInstance,
+			GetPropertyByName(getSite()->getOwlModel(), "objects"),
+			&piInstances,
+			&iInstancesCount);
+
+		for (int64_t iInstanceIndex = 0; iInstanceIndex < iInstancesCount; iInstanceIndex++)
+		{
+			OwlClass iChildInstanceClass = GetInstanceClass(piInstances[iInstanceIndex]);
+			assert(iChildInstanceClass != 0);
+
+			if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "BoundaryRepresentation"))
+			{
+				// Indices
+				int64_t* piIndices = nullptr;
+				int64_t iIndicesCount = 0;
+				GetDatatypeProperty(
+					piInstances[iInstanceIndex],
+					GetPropertyByName(getSite()->getOwlModel(), "indices"),
+					(void**)&piIndices,
+					&iIndicesCount);
+
+				// Vertices
+				double* pdValue = nullptr;
+				int64_t iVerticesCount = 0;
+				GetDatatypeProperty(
+					piInstances[iInstanceIndex],
+					GetPropertyByName(getSite()->getOwlModel(), "vertices"),
+					(void**)&pdValue,
+					&iVerticesCount);
+
+				map<int64_t, SdaiInstance> mapIndex2Instance;
+				for (int64_t iIndex = 0; iIndex < iIndicesCount; iIndex++)
+				{
+					if (piIndices[iIndex] < 0)
+					{
+						continue;
+					}
+
+					if (mapIndex2Instance.find(piIndices[iIndex]) == mapIndex2Instance.end())
+					{
+						mapIndex2Instance[piIndices[iIndex]] = buildCartesianPointInstance(
+							pdValue[(piIndices[iIndex] * 3) + 0], 
+							pdValue[(piIndices[iIndex] * 3) + 1], 
+							pdValue[(piIndices[iIndex] * 3) + 2]);
+					}
+				} // for (int64_t iIndex = ...
+
+				TRACE(L"");
+			}
+			else
+			{
+				assert(false);
+			}
+		} // for (int64_t iInstanceIndex = ...
+	}
+	else
+	{
+		wchar_t* szClassName = nullptr;
+		GetNameOfClassW(iInstanceClass, &szClassName);
+
+		TRACE(L"\n%s", szClassName);
+
+		//assert(false);
+	}
 }
