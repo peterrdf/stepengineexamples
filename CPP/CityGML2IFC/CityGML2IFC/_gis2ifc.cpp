@@ -865,15 +865,13 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 				} // for (int64_t iIndex = ...
 
 				assert(vecPolygonIndices.empty());
-				assert(!vecOuterPolygons.empty() || vecInnerPolygons.empty());
+				assert(!vecOuterPolygons.empty() || !vecInnerPolygons.empty());
 
 				SdaiInstance iClosedShellInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCCLOSEDSHELL");
 				assert(iClosedShellInstance != 0);
 
 				SdaiAggr pCfsFaces = sdaiCreateAggrBN(iClosedShellInstance, "CfsFaces");
 				assert(pCfsFaces != nullptr);
-
-				vecGeometryInstances.push_back(iClosedShellInstance);
 
 				if (!vecOuterPolygons.empty())
 				{
@@ -900,7 +898,24 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 					assert(false);
 				} // if (!vecInnerPolygons.empty())
 
-				TRACE(L"");
+				SdaiInstance iFacetedBrepInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACETEDBREP");
+				assert(iFacetedBrepInstance != 0);
+
+				sdaiPutAttrBN(iFacetedBrepInstance, "Outer", sdaiINSTANCE, (void*)iClosedShellInstance);				
+
+				SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCSHAPEREPRESENTATION");
+				assert(iShapeRepresentationInstance != 0);
+
+				SdaiAggr pItems = sdaiCreateAggrBN(iShapeRepresentationInstance, "Items");
+				assert(pItems != 0);
+
+				sdaiAppend(pItems, sdaiINSTANCE, (void*)iFacetedBrepInstance);
+
+				sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationIdentifier", sdaiSTRING, "Body");
+				sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationType", sdaiSTRING, "Brep");
+				sdaiPutAttrBN(iShapeRepresentationInstance, "ContextOfItems", sdaiINSTANCE, (void*)getGeometricRepresentationContextInstance());
+
+				vecGeometryInstances.push_back(iShapeRepresentationInstance);
 			}
 			else
 			{
