@@ -323,6 +323,46 @@ function loadNavigatorInstances() {
 
 function clearFields() { }
 
+// Emscripten/Docker
+function readFileFileSystem(file, callback) {
+  var rawFile = new XMLHttpRequest();
+  rawFile.open("GET", file);
+  rawFile.setRequestHeader("Content-Type", "text/xml");
+  rawFile.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+  rawFile.setRequestHeader("Access-Control-Allow-Origin", "*");
+  rawFile.onreadystatechange = function () {
+    if (rawFile.readyState === 4 && rawFile.status === 200) {
+      callback(rawFile.responseText);
+    }
+  }
+  rawFile.send();
+}
+
+// Emscripten/Docker
+function loadFileByPath(file) {
+  resetFields()
+
+  readFileFileSystem(`${file}`, function (fileContent) {
+    try {
+      var fileExtension = getFileExtension(file)
+      if (fileExtension === 'zae') {
+        try {
+          loadZAE(file.name, fileContent)
+        }
+        catch (e) {
+          console.error(e)
+        }
+      }
+      else {
+        loadContent(file.name, fileExtension, fileContent)
+      }
+    }
+    catch (e) {
+      console.error(e);
+    }
+  });
+}
+
 function readFileByUri(file, callback) {
   try {
     var rawFile = new XMLHttpRequest() 

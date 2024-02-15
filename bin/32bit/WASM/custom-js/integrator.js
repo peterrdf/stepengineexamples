@@ -21,13 +21,23 @@ if (embeddedMode()) {
       try {
         event = JSON.parse(e.data);
       }
-      catch {
-
+      catch (ex) {
+        console.error(ex);
       }
 
       if (event) {
         switch (event.type) {
           case 'loadFile': {
+            loadFile(event.file);
+          }
+            break;
+
+          case 'loadFileByPath': {
+            loadFileByPath(event.file);
+          }
+            break;
+
+          case 'loadFileByUri': {
             loadFileByUri(event.file);
           }
             break;
