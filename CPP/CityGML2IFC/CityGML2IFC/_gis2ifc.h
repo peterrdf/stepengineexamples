@@ -169,11 +169,17 @@ protected: // Methods
 	SdaiInstance buildLocalPlacementInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo);
 	SdaiInstance buildAxis2Placement3DInstance(_matrix* pMatrix);	
 	SdaiInstance buildBuildingInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo, SdaiInstance& iBuildingInstancePlacement);
+	SdaiInstance buildBuildingStoreyInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo, SdaiInstance& iBuildingStoreyInstancePlacement);
 	SdaiInstance buildRelAggregatesInstance(
 		const char* szName, 
 		const char* szDescription, 
 		SdaiInstance iRelatingObjectInstance, 
-		const vector<SdaiInstance>& vecRelatedObjectInstances);
+		const vector<SdaiInstance>& vecRelatedObjects);
+	SdaiInstance buildRelContainedInSpatialStructureInstance(
+		const char* szName,
+		const char* szDescription,
+		SdaiInstance iRelatingStructureInstance,
+		const vector<SdaiInstance>& vecRelatedElements);
 };
 
 // ************************************************************************************************

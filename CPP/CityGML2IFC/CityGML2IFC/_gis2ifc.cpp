@@ -558,14 +558,39 @@ SdaiInstance _exporter_base::buildBuildingInstance(_matrix* pMatrix, SdaiInstanc
 	return iBuildingInstance;
 }
 
+SdaiInstance _exporter_base::buildBuildingStoreyInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo, SdaiInstance& iBuildingStoreyInstancePlacement)
+{
+	assert(pMatrix != nullptr);
+	assert(iPlacementRelativeTo != 0);
+
+	SdaiInstance iBuildingStoreyInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCBUILDINGSTOREY");
+	assert(iBuildingStoreyInstance != 0);
+
+	sdaiPutAttrBN(iBuildingStoreyInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iBuildingStoreyInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+	sdaiPutAttrBN(iBuildingStoreyInstance, "Name", sdaiSTRING, "Default Building Storey");
+	sdaiPutAttrBN(iBuildingStoreyInstance, "Description", sdaiSTRING, "Description of Default Building Storey");
+
+	iBuildingStoreyInstancePlacement = buildLocalPlacementInstance(pMatrix, iPlacementRelativeTo);
+	assert(iBuildingStoreyInstancePlacement != 0);
+
+	sdaiPutAttrBN(iBuildingStoreyInstance, "ObjectPlacement", sdaiINSTANCE, (void*)iBuildingStoreyInstancePlacement);
+	sdaiPutAttrBN(iBuildingStoreyInstance, "CompositionType", sdaiENUM, "ELEMENT");
+
+	double dElevation = 0;
+	sdaiPutAttrBN(iBuildingStoreyInstance, "Elevation", sdaiREAL, &dElevation);
+
+	return iBuildingStoreyInstance;
+}
+
 SdaiInstance _exporter_base::buildRelAggregatesInstance(
 	const char* szName, 
 	const char* szDescription, 
 	SdaiInstance iRelatingObjectInstance, 
-	const vector<SdaiInstance>& vecRelatedObjectInstances)
+	const vector<SdaiInstance>& vecRelatedObjects)
 {
 	assert(iRelatingObjectInstance != 0);
-	assert(!vecRelatedObjectInstances.empty());
+	assert(!vecRelatedObjects.empty());
 
 	SdaiInstance iRelAggregatesInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCRELAGGREGATES");
 	assert(iRelAggregatesInstance != 0);
@@ -579,12 +604,41 @@ SdaiInstance _exporter_base::buildRelAggregatesInstance(
 	SdaiAggr pRelatedObjects = sdaiCreateAggrBN(iRelAggregatesInstance, "RelatedObjects");
 	assert(pRelatedObjects != nullptr);
 
-	for (auto iRelatedObjectInstance : vecRelatedObjectInstances)
+	for (auto iRelatedObject : vecRelatedObjects)
 	{
-		sdaiAppend(pRelatedObjects, sdaiINSTANCE, (void*)iRelatedObjectInstance);
+		sdaiAppend(pRelatedObjects, sdaiINSTANCE, (void*)iRelatedObject);
 	}
 
 	return iRelAggregatesInstance;
+}
+
+SdaiInstance _exporter_base::buildRelContainedInSpatialStructureInstance(
+	const char* szName,
+	const char* szDescription,
+	SdaiInstance iRelatingStructureInstance,
+	const vector<SdaiInstance>& vecRelatedElements)
+{
+	assert(iRelatingStructureInstance != 0);
+	assert(!vecRelatedElements.empty());
+
+	SdaiInstance iRelContainedInSpatialStructureInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCRELCONTAINEDINSPATIALSTRUCTURE");
+	assert(iRelContainedInSpatialStructureInstance != 0);
+
+	sdaiPutAttrBN(iRelContainedInSpatialStructureInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iRelContainedInSpatialStructureInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+	sdaiPutAttrBN(iRelContainedInSpatialStructureInstance, "Name", sdaiSTRING, szName);
+	sdaiPutAttrBN(iRelContainedInSpatialStructureInstance, "Description", sdaiSTRING, szDescription);
+	sdaiPutAttrBN(iRelContainedInSpatialStructureInstance, "RelatingStructure", sdaiINSTANCE, (void*)iRelatingStructureInstance);
+
+	SdaiAggr pRelatedElements = sdaiCreateAggrBN(iRelContainedInSpatialStructureInstance, "RelatedElements");
+	assert(pRelatedElements != nullptr);
+
+	for (auto iRelatedElement : vecRelatedElements)
+	{
+		sdaiAppend(pRelatedElements, sdaiINSTANCE, (void*)iRelatedElement);
+	}
+
+	return iRelContainedInSpatialStructureInstance;
 }
 
 // ************************************************************************************************
@@ -615,7 +669,11 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	SdaiInstance iSiteInstance = buildSiteInstance(&mtxIdentity, iSiteInstancePlacement);
 	assert(iSiteInstancePlacement != 0);
 
-	buildRelAggregatesInstance("ProjectContainer", "ProjectContainer for Sites", getProjectInstance(), vector<SdaiInstance>{iSiteInstance});
+	buildRelAggregatesInstance(
+		"ProjectContainer", 
+		"ProjectContainer for Sites", 
+		getProjectInstance(), 
+		vector<SdaiInstance>{iSiteInstance});
 
 	createBuildings(iSiteInstance, iSiteInstancePlacement);
 
@@ -678,15 +736,34 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 
 		searchForBuildingGeometry(itBuilding.first, itBuilding.first);
 
+		SdaiInstance iBuildingStoreyInstancePlacement = 0;
+		SdaiInstance iBuildingStoreyInstance = buildBuildingStoreyInstance(&mtxIdentity, iBuildingInstancePlacement, iBuildingStoreyInstancePlacement);
+		assert(iBuildingStoreyInstance != 0);
+
+		buildRelAggregatesInstance(
+			"BuildingContainer", 
+			"BuildingContainer for BuildigStories", 
+			iBuildingInstance, 
+			vector<SdaiInstance>{ iBuildingStoreyInstance });
+
 		vector<SdaiInstance> vecBuildingGeometryInstances;
 		for (auto iOwlInstance : itBuilding.second)
 		{
 			createGeometry(iOwlInstance, vecBuildingGeometryInstances);
 		}
-		buildRelAggregatesInstance("BuildingContainer", "BuildingContainer for Geometry", iBuildingInstance, vecBuildingGeometryInstances); //#tbd
+
+		buildRelContainedInSpatialStructureInstance(
+			"BuildingStoreyContainer", 
+			"BuildingStoreyContainer for Building Elements", 
+			iBuildingStoreyInstance, 
+			vecBuildingGeometryInstances);
 	} // for (auto itBuilding : ...
 
-	buildRelAggregatesInstance("SiteContainer", "SiteContainer For Buildings", iSiteInstance, vecBuildingInstances);
+	buildRelAggregatesInstance(
+		"SiteContainer", 
+		"SiteContainer For Buildings", 
+		iSiteInstance, 
+		vecBuildingInstances);
 }
 
 void _citygml_exporter::createBuildingsRecursive(OwlInstance iInstance)
