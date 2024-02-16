@@ -568,8 +568,8 @@ SdaiInstance _exporter_base::buildBuildingStoreyInstance(_matrix* pMatrix, SdaiI
 
 	sdaiPutAttrBN(iBuildingStoreyInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
 	sdaiPutAttrBN(iBuildingStoreyInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
-	sdaiPutAttrBN(iBuildingStoreyInstance, "Name", sdaiSTRING, "Default Building Storey");
-	sdaiPutAttrBN(iBuildingStoreyInstance, "Description", sdaiSTRING, "Description of Default Building Storey");
+	sdaiPutAttrBN(iBuildingStoreyInstance, "Name", sdaiSTRING, "Default Building Storey"); //#tbd
+	sdaiPutAttrBN(iBuildingStoreyInstance, "Description", sdaiSTRING, "Description of Default Building Storey"); //#tbd
 
 	iBuildingStoreyInstancePlacement = buildLocalPlacementInstance(pMatrix, iPlacementRelativeTo);
 	assert(iBuildingStoreyInstancePlacement != 0);
