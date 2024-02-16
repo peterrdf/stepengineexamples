@@ -583,6 +583,24 @@ SdaiInstance _exporter_base::buildBuildingStoreyInstance(_matrix* pMatrix, SdaiI
 	return iBuildingStoreyInstance;
 }
 
+SdaiInstance _exporter_base::buildProductDefinitionShapeInstance(const vector<SdaiInstance>& vecRepresentations)
+{
+	assert(!vecRepresentations.empty());
+
+	SdaiInstance iProductDefinitionShapeInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPRODUCTDEFINITIONSHAPE");
+	assert(iProductDefinitionShapeInstance != 0);
+
+	SdaiAggr pRepresentations = sdaiCreateAggrBN(iProductDefinitionShapeInstance, "Representations");
+	assert(pRepresentations != nullptr);
+
+	for (auto iRepresentation : vecRepresentations)
+	{
+		sdaiAppend(pRepresentations, sdaiINSTANCE, (void*)iRepresentation);
+	}
+
+	return iProductDefinitionShapeInstance;
+}
+
 SdaiInstance _exporter_base::buildRelAggregatesInstance(
 	const char* szName, 
 	const char* szDescription, 
@@ -639,6 +657,33 @@ SdaiInstance _exporter_base::buildRelContainedInSpatialStructureInstance(
 	}
 
 	return iRelContainedInSpatialStructureInstance;
+}
+
+SdaiInstance _exporter_base::buildBuildingElementInstance(
+	const char* szName,
+	_matrix* pMatrix,
+	SdaiInstance iPlacementRelativeTo,
+	SdaiInstance& iBuildingElementInstancePlacement,
+	const vector<SdaiInstance>& vecRepresentations)
+{
+	assert(pMatrix != nullptr);
+	assert(iPlacementRelativeTo != 0);
+	assert(!vecRepresentations.empty());
+
+	SdaiInstance iBuildingElementInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCBUILDINGELEMENT");
+
+	sdaiPutAttrBN(iBuildingElementInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iBuildingElementInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+	sdaiPutAttrBN(iBuildingElementInstance, "Name", sdaiSTRING, szName);
+	sdaiPutAttrBN(iBuildingElementInstance, "Description", sdaiSTRING, "Description of Building Element"); //#tbd
+
+	iBuildingElementInstancePlacement = buildLocalPlacementInstance(pMatrix, iPlacementRelativeTo);
+	assert(iBuildingElementInstancePlacement != 0);
+
+	sdaiPutAttrBN(iBuildingElementInstance, "ObjectPlacement", sdaiINSTANCE, (void*)iBuildingElementInstancePlacement);
+	sdaiPutAttrBN(iBuildingElementInstance, "Representation", sdaiINSTANCE, (void*)buildProductDefinitionShapeInstance(vecRepresentations));
+
+	return iBuildingElementInstance;
 }
 
 // ************************************************************************************************
@@ -752,11 +797,21 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 			createGeometry(iOwlInstance, vecBuildingGeometryInstances);
 		}
 
+		SdaiInstance iBuildingElementInstancePlacement = 0;
+		SdaiInstance iBuildingElementInstance = buildBuildingElementInstance(
+			"Container for Geometry",
+			&mtxIdentity,
+			iBuildingInstancePlacement,
+			iBuildingElementInstancePlacement,
+			vecBuildingGeometryInstances
+		);
+		assert(iBuildingElementInstance != 0);
+
 		buildRelContainedInSpatialStructureInstance(
 			"BuildingStoreyContainer", 
 			"BuildingStoreyContainer for Building Elements", 
 			iBuildingStoreyInstance, 
-			vecBuildingGeometryInstances);
+			vector<SdaiInstance>{ iBuildingElementInstance });
 	} // for (auto itBuilding : ...
 
 	buildRelAggregatesInstance(
