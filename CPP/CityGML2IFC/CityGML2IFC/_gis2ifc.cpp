@@ -988,11 +988,15 @@ void _citygml_exporter::createMultiSurface(OwlInstance iInstance, vector<SdaiIns
 		OwlClass iChildInstanceClass = GetInstanceClass(piInstances[iInstanceIndex]);
 		assert(iChildInstanceClass != 0);
 
-		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "BoundaryRepresentation"))
+		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:CompositeSurfaceType"))
+		{
+			createCompositeSurface(piInstances[iInstanceIndex], vecGeometryInstances);
+		}
+		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "BoundaryRepresentation"))
 		{
 			createBoundaryRepresentation(piInstances[iInstanceIndex], vecGeometryInstances);			
 		}
-		else
+		else 
 		{
 			//#log
 			wchar_t* szClassName = nullptr;
@@ -1026,6 +1030,10 @@ void _citygml_exporter::createCompositeSurface(OwlInstance iInstance, vector<Sda
 		{
 			createSurfaceMember(piInstances[iInstanceIndex], vecGeometryInstances);
 		}
+		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "BoundaryRepresentation"))
+		{
+			createBoundaryRepresentation(piInstances[iInstanceIndex], vecGeometryInstances);
+		}
 		else
 		{
 			//#log
@@ -1056,7 +1064,11 @@ void _citygml_exporter::createSurfaceMember(OwlInstance iInstance, vector<SdaiIn
 		OwlClass iChildInstanceClass = GetInstanceClass(piInstances[iInstanceIndex]);
 		assert(iChildInstanceClass != 0);
 
-		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "BoundaryRepresentation"))
+		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:CompositeSurfaceType"))
+		{
+			createCompositeSurface(piInstances[iInstanceIndex], vecGeometryInstances);
+		}
+		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "BoundaryRepresentation"))
 		{
 			createBoundaryRepresentation(piInstances[iInstanceIndex], vecGeometryInstances);
 		}
@@ -1174,7 +1186,22 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 
 	if (!vecInnerPolygons.empty())
 	{
-		assert(false);
+		for (auto iInnerPolygon : vecInnerPolygons)
+		{
+			SdaiInstance iFaceBoundInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACEBOUND");
+			assert(iFaceBoundInstance != 0);
+
+			sdaiPutAttrBN(iFaceBoundInstance, "Bound", sdaiINSTANCE, (void*)iInnerPolygon);
+			sdaiPutAttrBN(iFaceBoundInstance, "Orientation", sdaiENUM, "T");
+
+			SdaiInstance iFaceInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACE");
+			assert(iFaceInstance != 0);
+
+			SdaiAggr pBounds = sdaiCreateAggrBN(iFaceInstance, "Bounds");
+			sdaiAppend(pBounds, sdaiINSTANCE, (void*)iFaceBoundInstance);
+
+			sdaiAppend(pCfsFaces, sdaiINSTANCE, (void*)iFaceInstance);
+		}		
 	} // if (!vecInnerPolygons.empty())
 
 	SdaiInstance iFacetedBrepInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACETEDBREP");

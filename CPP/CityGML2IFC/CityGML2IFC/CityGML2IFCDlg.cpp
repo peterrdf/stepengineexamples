@@ -176,7 +176,9 @@ void CCityGML2IFCDlg::OnBnClickedOk()
 	strRootFolder += L"\\";
 
 	//wstring strInputFile = L"D:\\Temp\\gisengine in\\FZKHouseLoD2.gml";
-	wstring strInputFile = L"D:\\Temp\\gisengine in\\a_00_10_Lod2.gml";
+	wstring strInputFile = L"D:\\Temp\\gisengine in\\FZKHouseLoD3.gml";
+	//wstring strInputFile = L"D:\\Temp\\gisengine in\\a_00_10_Lod2.gml";
+	
 	wstring strOutputFile = strInputFile;
 	strOutputFile += L".ifc";
 
