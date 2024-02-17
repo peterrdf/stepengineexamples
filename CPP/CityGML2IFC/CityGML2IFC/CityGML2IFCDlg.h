@@ -26,12 +26,7 @@ class CCityGML2IFCDlg : public CDialogEx
 
 private: // Members
 
-	OwlModel m_iOwlModel;
-
 protected: // Methods
-
-	void SetFormatSettings(int64_t iModel);
-	void CreateBuildingRecursive(OwlInstance iInstance);
 
 // Construction
 public:
