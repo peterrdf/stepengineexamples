@@ -917,12 +917,17 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	{
 		createMultiSurface(iInstance, vecGeometryInstances);
 	}
+	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:SolidType"))
+	{
+		createSolid(iInstance, vecGeometryInstances);
+	}
 	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "Point3D"))
 	{
 		createPoint3D(iInstance, vecGeometryInstances);
 	}
 	else
 	{
+		//#log
 		wchar_t* szClassName = nullptr;
 		GetNameOfClassW(iInstanceClass, &szClassName);
 
@@ -930,6 +935,40 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 
 		assert(false);
 	}
+}
+
+void _citygml_exporter::createSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
+{
+	assert(iInstance != 0);
+
+	OwlInstance* piInstances = nullptr;
+	int64_t iInstancesCount = 0;
+	GetObjectProperty(
+		iInstance,
+		GetPropertyByName(getSite()->getOwlModel(), "objects"),
+		&piInstances,
+		&iInstancesCount);
+
+	for (int64_t iInstanceIndex = 0; iInstanceIndex < iInstancesCount; iInstanceIndex++)
+	{
+		OwlClass iChildInstanceClass = GetInstanceClass(piInstances[iInstanceIndex]);
+		assert(iChildInstanceClass != 0);
+
+		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:CompositeSurfaceType"))
+		{
+			createCompositeSurface(piInstances[iInstanceIndex], vecGeometryInstances);
+		}
+		else
+		{
+			//#log
+			wchar_t* szClassName = nullptr;
+			GetNameOfClassW(iChildInstanceClass, &szClassName);
+
+			TRACE(L"\n%s", szClassName);
+
+			assert(false);
+		}
+	} // for (int64_t iInstanceIndex = ...
 }
 
 void _citygml_exporter::createMultiSurface(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
@@ -951,130 +990,211 @@ void _citygml_exporter::createMultiSurface(OwlInstance iInstance, vector<SdaiIns
 
 		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "BoundaryRepresentation"))
 		{
-			// Indices
-			int64_t* piIndices = nullptr;
-			int64_t iIndicesCount = 0;
-			GetDatatypeProperty(
-				piInstances[iInstanceIndex],
-				GetPropertyByName(getSite()->getOwlModel(), "indices"),
-				(void**)&piIndices,
-				&iIndicesCount);
-
-			// Vertices
-			double* pdValue = nullptr;
-			int64_t iVerticesCount = 0;
-			GetDatatypeProperty(
-				piInstances[iInstanceIndex],
-				GetPropertyByName(getSite()->getOwlModel(), "vertices"),
-				(void**)&pdValue,
-				&iVerticesCount);
-
-			vector<SdaiInstance> vecOuterPolygons;
-			vector<SdaiInstance> vecInnerPolygons;
-			vector<int64_t> vecPolygonIndices;
-			map<int64_t, SdaiInstance> mapIndex2Instance;
-			for (int64_t iIndex = 0; iIndex < iIndicesCount; iIndex++)
-			{
-				if (piIndices[iIndex] < 0)
-				{
-					SdaiInstance iPolyLoopInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCPOLYLOOP");
-					assert(iPolyLoopInstance != 0);
-
-					SdaiAggr pPolygon = sdaiCreateAggrBN(iPolyLoopInstance, "Polygon");
-					assert(pPolygon != nullptr);
-
-					for (auto iIndex : vecPolygonIndices)
-					{
-						assert(mapIndex2Instance.find(iIndex) != mapIndex2Instance.end());
-
-						sdaiAppend(pPolygon, sdaiINSTANCE, (void*)mapIndex2Instance.at(iIndex));
-					}
-
-					if (piIndices[iIndex] == -1)
-					{
-						vecOuterPolygons.push_back(iPolyLoopInstance);
-					}
-					else
-					{
-						assert(piIndices[iIndex] == -2);
-
-						vecInnerPolygons.push_back(iPolyLoopInstance);
-					}
-
-					vecPolygonIndices.clear();
-
-					continue;
-				} // if (piIndices[iIndex] < 0)
-
-				vecPolygonIndices.push_back(piIndices[iIndex]);
-
-				if (mapIndex2Instance.find(piIndices[iIndex]) == mapIndex2Instance.end())
-				{
-					mapIndex2Instance[piIndices[iIndex]] = buildCartesianPointInstance(
-						pdValue[(piIndices[iIndex] * 3) + 0],
-						pdValue[(piIndices[iIndex] * 3) + 1],
-						pdValue[(piIndices[iIndex] * 3) + 2]);
-				}
-			} // for (int64_t iIndex = ...
-
-			assert(vecPolygonIndices.empty());
-			assert(!vecOuterPolygons.empty() || !vecInnerPolygons.empty());
-
-			SdaiInstance iClosedShellInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCCLOSEDSHELL");
-			assert(iClosedShellInstance != 0);
-
-			SdaiAggr pCfsFaces = sdaiCreateAggrBN(iClosedShellInstance, "CfsFaces");
-			assert(pCfsFaces != nullptr);
-
-			if (!vecOuterPolygons.empty())
-			{
-				for (auto iOuterPolygon : vecOuterPolygons)
-				{
-					SdaiInstance iFaceOuterBoundInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACEOUTERBOUND");
-					assert(iFaceOuterBoundInstance != 0);
-
-					sdaiPutAttrBN(iFaceOuterBoundInstance, "Bound", sdaiINSTANCE, (void*)iOuterPolygon);
-					sdaiPutAttrBN(iFaceOuterBoundInstance, "Orientation", sdaiENUM, "T");
-
-					SdaiInstance iFaceInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACE");
-					assert(iFaceInstance != 0);
-
-					SdaiAggr pBounds = sdaiCreateAggrBN(iFaceInstance, "Bounds");
-					sdaiAppend(pBounds, sdaiINSTANCE, (void*)iFaceOuterBoundInstance);
-
-					sdaiAppend(pCfsFaces, sdaiINSTANCE, (void*)iFaceInstance);
-				}
-			} // if (!vecOuterPolygons.empty())
-
-			if (!vecInnerPolygons.empty())
-			{
-				assert(false);
-			} // if (!vecInnerPolygons.empty())
-
-			SdaiInstance iFacetedBrepInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACETEDBREP");
-			assert(iFacetedBrepInstance != 0);
-
-			sdaiPutAttrBN(iFacetedBrepInstance, "Outer", sdaiINSTANCE, (void*)iClosedShellInstance);
-
-			SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCSHAPEREPRESENTATION");
-			assert(iShapeRepresentationInstance != 0);
-
-			SdaiAggr pItems = sdaiCreateAggrBN(iShapeRepresentationInstance, "Items");
-			assert(pItems != 0);
-
-			sdaiAppend(pItems, sdaiINSTANCE, (void*)iFacetedBrepInstance);
-
-			sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationIdentifier", sdaiSTRING, "Body");
-			sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationType", sdaiSTRING, "Brep");
-			sdaiPutAttrBN(iShapeRepresentationInstance, "ContextOfItems", sdaiINSTANCE, (void*)getGeometricRepresentationContextInstance());
-
-			vecGeometryInstances.push_back(iShapeRepresentationInstance);
+			createBoundaryRepresentation(piInstances[iInstanceIndex], vecGeometryInstances);			
 		}
 		else
 		{
+			//#log
+			wchar_t* szClassName = nullptr;
+			GetNameOfClassW(iChildInstanceClass, &szClassName);
+
+			TRACE(L"\n%s", szClassName);
+
 			assert(false);
 		}
 	} // for (int64_t iInstanceIndex = ...
+}
+
+void _citygml_exporter::createCompositeSurface(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
+{
+	assert(iInstance != 0);
+
+	OwlInstance* piInstances = nullptr;
+	int64_t iInstancesCount = 0;
+	GetObjectProperty(
+		iInstance,
+		GetPropertyByName(getSite()->getOwlModel(), "objects"),
+		&piInstances,
+		&iInstancesCount);
+
+	for (int64_t iInstanceIndex = 0; iInstanceIndex < iInstancesCount; iInstanceIndex++)
+	{
+		OwlClass iChildInstanceClass = GetInstanceClass(piInstances[iInstanceIndex]);
+		assert(iChildInstanceClass != 0);
+
+		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:SurfacePropertyType"))
+		{
+			createSurfaceMember(piInstances[iInstanceIndex], vecGeometryInstances);
+		}
+		else
+		{
+			//#log
+			wchar_t* szClassName = nullptr;
+			GetNameOfClassW(iChildInstanceClass, &szClassName);
+
+			TRACE(L"\n%s", szClassName);
+
+			assert(false);
+		}
+	} // for (int64_t iInstanceIndex = ...
+}
+
+void _citygml_exporter::createSurfaceMember(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
+{
+	assert(iInstance != 0);
+
+	OwlInstance* piInstances = nullptr;
+	int64_t iInstancesCount = 0;
+	GetObjectProperty(
+		iInstance,
+		GetPropertyByName(getSite()->getOwlModel(), "objects"),
+		&piInstances,
+		&iInstancesCount);
+
+	for (int64_t iInstanceIndex = 0; iInstanceIndex < iInstancesCount; iInstanceIndex++)
+	{
+		OwlClass iChildInstanceClass = GetInstanceClass(piInstances[iInstanceIndex]);
+		assert(iChildInstanceClass != 0);
+
+		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "BoundaryRepresentation"))
+		{
+			createBoundaryRepresentation(piInstances[iInstanceIndex], vecGeometryInstances);
+		}
+		else
+		{
+			//#log
+			wchar_t* szClassName = nullptr;
+			GetNameOfClassW(iChildInstanceClass, &szClassName);
+
+			TRACE(L"\n%s", szClassName);
+
+			assert(false);
+		}
+	} // for (int64_t iInstanceIndex = ...
+}
+
+void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
+{
+	assert(iInstance != 0);
+
+	// Indices
+	int64_t* piIndices = nullptr;
+	int64_t iIndicesCount = 0;
+	GetDatatypeProperty(
+		iInstance,
+		GetPropertyByName(getSite()->getOwlModel(), "indices"),
+		(void**)&piIndices,
+		&iIndicesCount);
+
+	// Vertices
+	double* pdValue = nullptr;
+	int64_t iVerticesCount = 0;
+	GetDatatypeProperty(
+		iInstance,
+		GetPropertyByName(getSite()->getOwlModel(), "vertices"),
+		(void**)&pdValue,
+		&iVerticesCount);
+
+	vector<SdaiInstance> vecOuterPolygons;
+	vector<SdaiInstance> vecInnerPolygons;
+	vector<int64_t> vecPolygonIndices;
+	map<int64_t, SdaiInstance> mapIndex2Instance;
+	for (int64_t iIndex = 0; iIndex < iIndicesCount; iIndex++)
+	{
+		if (piIndices[iIndex] < 0)
+		{
+			SdaiInstance iPolyLoopInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCPOLYLOOP");
+			assert(iPolyLoopInstance != 0);
+
+			SdaiAggr pPolygon = sdaiCreateAggrBN(iPolyLoopInstance, "Polygon");
+			assert(pPolygon != nullptr);
+
+			for (auto iIndex : vecPolygonIndices)
+			{
+				assert(mapIndex2Instance.find(iIndex) != mapIndex2Instance.end());
+
+				sdaiAppend(pPolygon, sdaiINSTANCE, (void*)mapIndex2Instance.at(iIndex));
+			}
+
+			if (piIndices[iIndex] == -1)
+			{
+				vecOuterPolygons.push_back(iPolyLoopInstance);
+			}
+			else
+			{
+				assert(piIndices[iIndex] == -2);
+
+				vecInnerPolygons.push_back(iPolyLoopInstance);
+			}
+
+			vecPolygonIndices.clear();
+
+			continue;
+		} // if (piIndices[iIndex] < 0)
+
+		vecPolygonIndices.push_back(piIndices[iIndex]);
+
+		if (mapIndex2Instance.find(piIndices[iIndex]) == mapIndex2Instance.end())
+		{
+			mapIndex2Instance[piIndices[iIndex]] = buildCartesianPointInstance(
+				pdValue[(piIndices[iIndex] * 3) + 0],
+				pdValue[(piIndices[iIndex] * 3) + 1],
+				pdValue[(piIndices[iIndex] * 3) + 2]);
+		}
+	} // for (int64_t iIndex = ...
+
+	assert(vecPolygonIndices.empty());
+	assert(!vecOuterPolygons.empty() || !vecInnerPolygons.empty());
+
+	SdaiInstance iClosedShellInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCCLOSEDSHELL");
+	assert(iClosedShellInstance != 0);
+
+	SdaiAggr pCfsFaces = sdaiCreateAggrBN(iClosedShellInstance, "CfsFaces");
+	assert(pCfsFaces != nullptr);
+
+	if (!vecOuterPolygons.empty())
+	{
+		for (auto iOuterPolygon : vecOuterPolygons)
+		{
+			SdaiInstance iFaceOuterBoundInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACEOUTERBOUND");
+			assert(iFaceOuterBoundInstance != 0);
+
+			sdaiPutAttrBN(iFaceOuterBoundInstance, "Bound", sdaiINSTANCE, (void*)iOuterPolygon);
+			sdaiPutAttrBN(iFaceOuterBoundInstance, "Orientation", sdaiENUM, "T");
+
+			SdaiInstance iFaceInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACE");
+			assert(iFaceInstance != 0);
+
+			SdaiAggr pBounds = sdaiCreateAggrBN(iFaceInstance, "Bounds");
+			sdaiAppend(pBounds, sdaiINSTANCE, (void*)iFaceOuterBoundInstance);
+
+			sdaiAppend(pCfsFaces, sdaiINSTANCE, (void*)iFaceInstance);
+		}
+	} // if (!vecOuterPolygons.empty())
+
+	if (!vecInnerPolygons.empty())
+	{
+		assert(false);
+	} // if (!vecInnerPolygons.empty())
+
+	SdaiInstance iFacetedBrepInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACETEDBREP");
+	assert(iFacetedBrepInstance != 0);
+
+	sdaiPutAttrBN(iFacetedBrepInstance, "Outer", sdaiINSTANCE, (void*)iClosedShellInstance);
+
+	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCSHAPEREPRESENTATION");
+	assert(iShapeRepresentationInstance != 0);
+
+	SdaiAggr pItems = sdaiCreateAggrBN(iShapeRepresentationInstance, "Items");
+	assert(pItems != 0);
+
+	sdaiAppend(pItems, sdaiINSTANCE, (void*)iFacetedBrepInstance);
+
+	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationIdentifier", sdaiSTRING, "Body");
+	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationType", sdaiSTRING, "Brep");
+	sdaiPutAttrBN(iShapeRepresentationInstance, "ContextOfItems", sdaiINSTANCE, (void*)getGeometricRepresentationContextInstance());
+
+	vecGeometryInstances.push_back(iShapeRepresentationInstance);
 }
 
 void _citygml_exporter::createPoint3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)

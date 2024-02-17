@@ -212,6 +212,10 @@ protected:  // Methods
 	void createBuildingsRecursive(OwlInstance iInstance);
 	void searchForBuildingGeometry(OwlInstance iBuildingInstance, OwlInstance iInstance);
 	void createGeometry(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
+	void createSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createMultiSurface(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
+	void createCompositeSurface(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
+	void createSurfaceMember(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);	
+	void createBoundaryRepresentation(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createPoint3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 };
