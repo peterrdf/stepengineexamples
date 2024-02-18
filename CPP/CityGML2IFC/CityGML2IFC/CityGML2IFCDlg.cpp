@@ -24,8 +24,35 @@ void STDCALL LogCallbackImpl(enumLogEvent enLogEvent, const char* szEvent)
 	TRACE(L"\n%d: %S", (int)enLogEvent, szEvent);
 }
 
-// CAboutDlg dialog used for App About
+void CCityGML2IFCDlg::ExportFile(const wstring& strInputFile)
+{
+	assert(!m_strRootFolder.empty());
+	assert(!strInputFile.empty());
 
+	wstring strOutputFile = strInputFile;
+	strOutputFile += L".ifc";
+
+	_gis2ifc exporter(m_strRootFolder, LogCallbackImpl);
+	exporter.execute(strInputFile, strOutputFile);
+}
+
+void CCityGML2IFCDlg::ExportFiles(const fs::path& pthInputFolder)
+{
+	for (const auto& entry : fs::directory_iterator(pthInputFolder))
+	{
+		if (fs::is_directory(entry))
+		{
+			ExportFiles(entry.path());
+
+			continue;
+		}
+
+		ExportFile(entry.path());
+	}
+}
+
+// ************************************************************************************************
+// CAboutDlg dialog used for App About
 class CAboutDlg : public CDialogEx
 {
 public:
@@ -56,13 +83,11 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
-
+// ************************************************************************************************
 // CCityGML2IFCDlg dialog
-
-
-
 CCityGML2IFCDlg::CCityGML2IFCDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CITYGML2IFC_DIALOG, pParent)
+	, m_strRootFolder(L"")
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -79,9 +104,8 @@ BEGIN_MESSAGE_MAP(CCityGML2IFCDlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CCityGML2IFCDlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
-
+// ************************************************************************************************
 // CCityGML2IFCDlg message handlers
-
 BOOL CCityGML2IFCDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -172,18 +196,19 @@ void CCityGML2IFCDlg::OnBnClickedOk()
 
 	fs::path pthExe = szAppPath;
 	auto pthRootFolder = pthExe.parent_path();
-	wstring strRootFolder = pthRootFolder.wstring();
-	strRootFolder += L"\\";
+	m_strRootFolder = pthRootFolder.wstring();
+	m_strRootFolder += L"\\";
 
-	//wstring strInputFile = L"D:\\Temp\\gisengine in\\FZKHouseLoD2.gml";
-	wstring strInputFile = L"D:\\Temp\\gisengine in\\FZKHouseLoD3.gml";
-	//wstring strInputFile = L"D:\\Temp\\gisengine in\\a_00_10_Lod2.gml";
-	
-	wstring strOutputFile = strInputFile;
-	strOutputFile += L".ifc";
+	/*{
+		wstring strInputFile = L"D:\\Temp\\gisengine in\\libCityGML\\b1_lod2_cs_w_sem.gml";
+		ExportFile(strInputFile);
+	}*/	
 
-	_gis2ifc exporter(strRootFolder, LogCallbackImpl);
-	exporter.execute(strInputFile, strOutputFile);
+	/* TEST */
+	{
+		wstring strInputFolder = L"D:\\Temp\\gisengine in";
+		ExportFiles(strInputFolder);
+	}
 
 	// TODO: Add your control notification handler code here
 	CDialogEx::OnOK();

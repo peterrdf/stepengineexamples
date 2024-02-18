@@ -925,6 +925,10 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	{
 		createSolid(iInstance, vecGeometryInstances);
 	}
+	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:CompositeSolidType"))
+	{
+		createCompositeSolid(iInstance, vecGeometryInstances);
+	}
 	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "Point3D"))
 	{
 		//createPoint3D(iInstance, vecGeometryInstances); //#todo
@@ -932,6 +936,10 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "Point3DSet"))
 	{
 		//createPoint3DSet(iInstance, vecGeometryInstances); //#todo
+	}
+	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "PolyLine3D"))
+	{
+		//createPolyLine3D(iInstance, vecGeometryInstances); //#todo
 	}
 	else 
 	{
@@ -962,9 +970,56 @@ void _citygml_exporter::createSolid(OwlInstance iInstance, vector<SdaiInstance>&
 		OwlClass iChildInstanceClass = GetInstanceClass(piInstances[iInstanceIndex]);
 		assert(iChildInstanceClass != 0);
 
-		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:CompositeSurfaceType"))
+		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:SolidType"))
+		{
+			createSolid(iInstance, vecGeometryInstances);
+		}
+		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:CompositeSurfaceType"))
 		{
 			createCompositeSurface(piInstances[iInstanceIndex], vecGeometryInstances);
+		}
+		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:ShellType"))
+		{
+			createMultiSurface(piInstances[iInstanceIndex], vecGeometryInstances);
+		}
+		else
+		{
+			//#log
+			wchar_t* szClassName = nullptr;
+			GetNameOfClassW(iChildInstanceClass, &szClassName);
+
+			TRACE(L"\n%s", szClassName);
+
+			assert(false);
+		}
+	} // for (int64_t iInstanceIndex = ...
+}
+
+void _citygml_exporter::createCompositeSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
+{
+	createMultiSolid(iInstance, vecGeometryInstances);
+}
+
+void _citygml_exporter::createMultiSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
+{
+	assert(iInstance != 0);
+
+	OwlInstance* piInstances = nullptr;
+	int64_t iInstancesCount = 0;
+	GetObjectProperty(
+		iInstance,
+		GetPropertyByName(getSite()->getOwlModel(), "objects"),
+		&piInstances,
+		&iInstancesCount);
+
+	for (int64_t iInstanceIndex = 0; iInstanceIndex < iInstancesCount; iInstanceIndex++)
+	{
+		OwlClass iChildInstanceClass = GetInstanceClass(piInstances[iInstanceIndex]);
+		assert(iChildInstanceClass != 0);
+
+		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:SolidType"))
+		{
+			createSolid(piInstances[iInstanceIndex], vecGeometryInstances);
 		}
 		else
 		{
@@ -1000,6 +1055,10 @@ void _citygml_exporter::createMultiSurface(OwlInstance iInstance, vector<SdaiIns
 		{
 			createCompositeSurface(piInstances[iInstanceIndex], vecGeometryInstances);
 		}
+		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:SurfacePropertyType"))
+		{
+			createSurfaceMember(piInstances[iInstanceIndex], vecGeometryInstances);
+		}
 		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "BoundaryRepresentation"))
 		{
 			createBoundaryRepresentation(piInstances[iInstanceIndex], vecGeometryInstances);			
@@ -1034,7 +1093,15 @@ void _citygml_exporter::createCompositeSurface(OwlInstance iInstance, vector<Sda
 		OwlClass iChildInstanceClass = GetInstanceClass(piInstances[iInstanceIndex]);
 		assert(iChildInstanceClass != 0);
 
-		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:SurfacePropertyType"))
+		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:CompositeSurfaceType"))
+		{
+			createCompositeSurface(piInstances[iInstanceIndex], vecGeometryInstances);
+		}
+		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:OrientableSurfaceType"))
+		{
+			//createOrientableSurface(iInstance, vecGeometryInstances); //#todo
+		}
+		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:SurfacePropertyType"))
 		{
 			createSurfaceMember(piInstances[iInstanceIndex], vecGeometryInstances);
 		}

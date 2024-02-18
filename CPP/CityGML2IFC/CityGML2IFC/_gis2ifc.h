@@ -213,6 +213,8 @@ protected:  // Methods
 	void searchForBuildingGeometry(OwlInstance iBuildingInstance, OwlInstance iInstance);
 	void createGeometry(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
+	void createCompositeSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
+	void createMultiSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createMultiSurface(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createCompositeSurface(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createSurfaceMember(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);	

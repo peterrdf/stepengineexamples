@@ -26,7 +26,12 @@ class CCityGML2IFCDlg : public CDialogEx
 
 private: // Members
 
+	wstring m_strRootFolder;
+
 protected: // Methods
+	
+	void ExportFile(const wstring& strInputFile);
+	void ExportFiles(const fs::path& pthInputFolder);
 
 // Construction
 public:
