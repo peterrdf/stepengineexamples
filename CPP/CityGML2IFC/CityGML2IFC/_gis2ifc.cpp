@@ -694,7 +694,6 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	, m_mapGeometries()
 {
 	m_iBuildingTypeClass = GetClassByName(getSite()->getOwlModel(), "class:BuildingType");
-	assert(m_iBuildingTypeClass != 0);
 }
 
 /*virtual*/ _citygml_exporter::~_citygml_exporter()
@@ -706,6 +705,11 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 
 	m_mapBuildings.clear();
 	m_mapGeometries.clear();
+
+	if (m_iBuildingTypeClass == 0)
+	{
+		return; //#tbd
+	}
 
 	createIfcModel(L"IFC4");
 
@@ -923,9 +927,13 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	}
 	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "Point3D"))
 	{
-		createPoint3D(iInstance, vecGeometryInstances);
+		//createPoint3D(iInstance, vecGeometryInstances); //#todo
 	}
-	else
+	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "Point3DSet"))
+	{
+		//createPoint3DSet(iInstance, vecGeometryInstances); //#todo
+	}
+	else 
 	{
 		//#log
 		wchar_t* szClassName = nullptr;
