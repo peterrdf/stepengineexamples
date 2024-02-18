@@ -45,7 +45,7 @@ void _gis2ifc::execute(const wstring& strInputFile, const wstring& strOuputFile)
 		if (IsCityGML(m_iOwlModel))
 		{
 			_citygml_exporter exporter(this);
-			exporter.execute(strOuputFile);
+			exporter.execute(iRootInstance, strOuputFile);
 		}
 		else
 		{
@@ -350,6 +350,7 @@ void _exporter_base::createIfcModel(const wchar_t* szSchemaName)
 	time(&t);
 	tInfo = localtime(&t);
 
+	//#tbd
 	if (true)//view == COORDINATIONVIEW) {
 		//if (m_Quantities.GetCheck()) {
 		memcpy(description, "ViewDefinition [CoordinationView, QuantityTakeOffAddOnView]", sizeof("ViewDefinition [CoordinationView, QuantityTakeOffAddOnView]"));
@@ -469,7 +470,11 @@ SdaiInstance _exporter_base::buildCartesianPointInstance(double dX, double dY, d
 	return iCartesianPointInstance;
 }
 
-SdaiInstance _exporter_base::buildSiteInstance(_matrix* pMatrix, SdaiInstance& iSiteInstancePlacement)
+SdaiInstance _exporter_base::buildSiteInstance(
+	const char* szName,
+	const char* szDescription,
+	_matrix* pMatrix, 
+	SdaiInstance& iSiteInstancePlacement)
 {
 	assert(pMatrix != nullptr);
 
@@ -478,8 +483,8 @@ SdaiInstance _exporter_base::buildSiteInstance(_matrix* pMatrix, SdaiInstance& i
 
 	sdaiPutAttrBN(iSiteInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
 	sdaiPutAttrBN(iSiteInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
-	sdaiPutAttrBN(iSiteInstance, "Name", sdaiSTRING, "Default Site"); //#tbd
-	sdaiPutAttrBN(iSiteInstance, "Description", sdaiSTRING, "Description of Default Site"); //#tbd
+	sdaiPutAttrBN(iSiteInstance, "Name", sdaiSTRING, szName);
+	sdaiPutAttrBN(iSiteInstance, "Description", sdaiSTRING, szDescription);
 
 	iSiteInstancePlacement = buildLocalPlacementInstance(pMatrix, 0);
 	assert(iSiteInstancePlacement != 0);
@@ -708,8 +713,9 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 /*virtual*/ _citygml_exporter::~_citygml_exporter()
 {}
 
-/*virtual*/ void _citygml_exporter::execute(const wstring& strOuputFile)
+/*virtual*/ void _citygml_exporter::execute(OwlInstance iRootInstance, const wstring& strOuputFile)
 {
+	assert(iRootInstance != 0);
 	assert(!strOuputFile.empty());
 
 	m_mapBuildings.clear();
@@ -722,9 +728,22 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 
 	createIfcModel(L"IFC4");
 
+	string strTag = getTag(iRootInstance);
+
+	OwlClass iInstanceClass = GetInstanceClass(iRootInstance);
+	assert(iInstanceClass != 0);
+
+	char* szClassName = nullptr;
+	GetNameOfClass(iInstanceClass, &szClassName);
+	assert(szClassName != nullptr);
+
 	_matrix mtxIdentity;
 	SdaiInstance iSiteInstancePlacement = 0;
-	SdaiInstance iSiteInstance = buildSiteInstance(&mtxIdentity, iSiteInstancePlacement);
+	SdaiInstance iSiteInstance = buildSiteInstance(
+		strTag.c_str(),
+		szClassName,
+		&mtxIdentity, 
+		iSiteInstancePlacement);
 	assert(iSiteInstancePlacement != 0);
 
 	buildRelAggregatesInstance(

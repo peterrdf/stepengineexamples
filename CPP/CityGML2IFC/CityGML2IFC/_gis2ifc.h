@@ -140,7 +140,7 @@ public: // Methods
 	_exporter_base(_gis2ifc* pSite);
 	virtual ~_exporter_base();
 
-	virtual void execute(const wstring& strOuputFile) = 0;
+	virtual void execute(OwlInstance iRootInstance, const wstring& strOuputFile) = 0;
 
 	_gis2ifc* getSite() const { return m_pSite; }
 	SdaiModel getIfcModel() const { return m_iIfcModel; }
@@ -165,7 +165,11 @@ protected: // Methods
 	SdaiInstance buildMeasureWithUnitInstance();
 	SdaiInstance buildDirectionInstance(double dX, double dY, double dZ);
 	SdaiInstance buildCartesianPointInstance(double dX, double dY, double dZ);
-	SdaiInstance buildSiteInstance(_matrix* pMatrix, SdaiInstance& iSiteInstancePlacement);
+	SdaiInstance buildSiteInstance(
+		const char* szName,
+		const char* szDescription,
+		_matrix* pMatrix, 
+		SdaiInstance& iSiteInstancePlacement);
 	SdaiInstance buildLocalPlacementInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo);
 	SdaiInstance buildAxis2Placement3DInstance(_matrix* pMatrix);	
 	SdaiInstance buildBuildingInstance(
@@ -210,7 +214,7 @@ public: // Methods
 	_citygml_exporter(_gis2ifc* pSite);
 	virtual ~_citygml_exporter();
 
-	virtual void execute(const wstring& strOuputFile) override;
+	virtual void execute(OwlInstance iRootInstance, const wstring& strOuputFile) override;
 
 protected:  // Methods
 
