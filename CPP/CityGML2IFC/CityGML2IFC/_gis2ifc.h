@@ -156,7 +156,7 @@ public: // Methods
 	SdaiInstance getGeometricRepresentationContextInstance();
 	SdaiInstance getProjectInstance();
 
-protected: // Methods
+protected: // Methods	
 
 	void createIfcModel(const wchar_t* szSchemaName);
 	void saveIfcFile(const wchar_t* szFileName);
@@ -168,7 +168,12 @@ protected: // Methods
 	SdaiInstance buildSiteInstance(_matrix* pMatrix, SdaiInstance& iSiteInstancePlacement);
 	SdaiInstance buildLocalPlacementInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo);
 	SdaiInstance buildAxis2Placement3DInstance(_matrix* pMatrix);	
-	SdaiInstance buildBuildingInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo, SdaiInstance& iBuildingInstancePlacement);
+	SdaiInstance buildBuildingInstance(
+		const char* szName,
+		const char* szDescription,
+		_matrix* pMatrix, 
+		SdaiInstance iPlacementRelativeTo, 
+		SdaiInstance& iBuildingInstancePlacement);
 	SdaiInstance buildBuildingStoreyInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo, SdaiInstance& iBuildingStoreyInstancePlacement);	
 	SdaiInstance buildProductDefinitionShapeInstance(const vector<SdaiInstance>& vecRepresentations);
 	SdaiInstance buildRelAggregatesInstance(
@@ -186,7 +191,7 @@ protected: // Methods
 		_matrix* pMatrix,
 		SdaiInstance iPlacementRelativeTo,
 		SdaiInstance& iBuildingElementInstancePlacement,
-		const vector<SdaiInstance>& vecRepresentations);
+		const vector<SdaiInstance>& vecRepresentations);	
 };
 
 // ************************************************************************************************
@@ -196,6 +201,7 @@ class _citygml_exporter : public _exporter_base
 private: // Members
 
 	OwlClass m_iBuildingTypeClass;
+	RdfProperty m_iTagProperty;
 	map<OwlInstance, vector<OwlInstance>> m_mapBuildings;
 	map<OwlInstance, SdaiInstance> m_mapGeometries;
 
@@ -220,4 +226,6 @@ protected:  // Methods
 	void createSurfaceMember(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);	
 	void createBoundaryRepresentation(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createPoint3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
+
+	string getTag(OwlInstance iInstance) const;
 };

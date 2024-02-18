@@ -535,7 +535,12 @@ SdaiInstance _exporter_base::buildAxis2Placement3DInstance(_matrix* pMatrix)
 	return iAxis2Placement3DInstance;
 }
 
-SdaiInstance _exporter_base::buildBuildingInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo, SdaiInstance& iBuildingInstancePlacement)
+SdaiInstance _exporter_base::buildBuildingInstance(
+	const char* szName,
+	const char* szDescription,
+	_matrix* pMatrix,
+	SdaiInstance iPlacementRelativeTo,
+	SdaiInstance& iBuildingInstancePlacement)
 {
 	assert(pMatrix != nullptr);
 	assert(iPlacementRelativeTo != 0);
@@ -545,8 +550,8 @@ SdaiInstance _exporter_base::buildBuildingInstance(_matrix* pMatrix, SdaiInstanc
 
 	sdaiPutAttrBN(iBuildingInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
 	sdaiPutAttrBN(iBuildingInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
-	sdaiPutAttrBN(iBuildingInstance, "Name", sdaiSTRING, "Default Building"); //#tbd
-	sdaiPutAttrBN(iBuildingInstance, "Description", sdaiSTRING, "Description of Default Building"); //#tbd
+	sdaiPutAttrBN(iBuildingInstance, "Name", sdaiSTRING, szName);
+	sdaiPutAttrBN(iBuildingInstance, "Description", sdaiSTRING, szDescription);
 
 	iBuildingInstancePlacement = buildLocalPlacementInstance(pMatrix, iPlacementRelativeTo);
 	assert(iBuildingInstancePlacement != 0);
@@ -690,10 +695,14 @@ SdaiInstance _exporter_base::buildBuildingElementInstance(
 _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	: _exporter_base(pSite)
 	, m_iBuildingTypeClass(0)
+	, m_iTagProperty(0)
 	, m_mapBuildings()
 	, m_mapGeometries()
 {
 	m_iBuildingTypeClass = GetClassByName(getSite()->getOwlModel(), "class:BuildingType");
+
+	m_iTagProperty = GetPropertyByName(getSite()->getOwlModel(), "tag");
+	assert(m_iTagProperty);
 }
 
 /*virtual*/ _citygml_exporter::~_citygml_exporter()
@@ -777,8 +786,22 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 	vector<SdaiInstance> vecBuildingInstances;
 	for (auto& itBuilding : m_mapBuildings)
 	{
+		string strTag = getTag(itBuilding.first);
+
+		OwlClass iInstanceClass = GetInstanceClass(itBuilding.first);
+		assert(iInstanceClass != 0);
+
+		char* szClassName = nullptr;
+		GetNameOfClass(iInstanceClass, &szClassName);
+		assert(szClassName != nullptr);
+
 		SdaiInstance iBuildingInstancePlacement = 0;
-		SdaiInstance iBuildingInstance = buildBuildingInstance(&mtxIdentity, iSiteInstancePlacement, iBuildingInstancePlacement);
+		SdaiInstance iBuildingInstance = buildBuildingInstance(
+			strTag.c_str(),
+			szClassName,
+			&mtxIdentity, 
+			iSiteInstancePlacement, 
+			iBuildingInstancePlacement);
 		assert(iBuildingInstance != 0);
 
 		vecBuildingInstances.push_back(iBuildingInstance);
@@ -1320,4 +1343,21 @@ void _citygml_exporter::createPoint3D(OwlInstance iInstance, vector<SdaiInstance
 	assert(iCartesianPointInstance != 0);
 
 	vecGeometryInstances.push_back(iCartesianPointInstance);
+}
+
+string _citygml_exporter::getTag(OwlInstance iInstance) const
+{
+	assert(iInstance != 0);
+
+	SetCharacterSerialization(getSite()->getOwlModel(), 0, 0, false);
+
+	wchar_t** szValue = nullptr;
+	int64_t iValuesCount = 0;
+	GetDatatypeProperty(iInstance, m_iTagProperty, (void**)&szValue, &iValuesCount);
+
+	assert(iValuesCount == 1);
+
+	SetCharacterSerialization(getSite()->getOwlModel(), 0, 0, true);
+
+	return (LPCSTR)CW2A(szValue[0]);
 }
