@@ -1397,12 +1397,12 @@ void _citygml_exporter::createPoint3DSet(OwlInstance iInstance, vector<SdaiInsta
 	SdaiAggr pItems = sdaiCreateAggrBN(iShapeRepresentationInstance, "Items");
 	assert(pItems != 0);
 
-	for (int64_t iValue = 0; iValue < iValuesCount; iValue++)
+	for (int64_t iValue = 0; iValue < iValuesCount; iValue += 3)
 	{
 		SdaiInstance iCartesianPointInstance = buildCartesianPointInstance(
-			pdValue[0],
-			pdValue[1],
-			pdValue[2]);
+			pdValue[(iValue * 3) + 0],
+			pdValue[(iValue * 3) + 1],
+			pdValue[(iValue * 3) + 2]);
 		assert(iCartesianPointInstance != 0);
 
 		sdaiAppend(pItems, sdaiINSTANCE, (void*)iCartesianPointInstance);
