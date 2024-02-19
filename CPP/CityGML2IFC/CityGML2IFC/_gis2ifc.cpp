@@ -981,8 +981,7 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	}
 	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "PolyLine3D"))
 	{
-		assert(false);
-		//createPolyLine3D(iInstance, vecGeometryInstances); //#todo
+		createPolyLine3D(iInstance, vecGeometryInstances);
 	}
 	else 
 	{
@@ -1400,9 +1399,9 @@ void _citygml_exporter::createPoint3DSet(OwlInstance iInstance, vector<SdaiInsta
 	for (int64_t iValue = 0; iValue < iValuesCount; iValue += 3)
 	{
 		SdaiInstance iCartesianPointInstance = buildCartesianPointInstance(
-			pdValue[(iValue * 3) + 0],
-			pdValue[(iValue * 3) + 1],
-			pdValue[(iValue * 3) + 2]);
+			pdValue[iValue + 0],
+			pdValue[iValue + 1],
+			pdValue[iValue + 2]);
 		assert(iCartesianPointInstance != 0);
 
 		sdaiAppend(pItems, sdaiINSTANCE, (void*)iCartesianPointInstance);
@@ -1410,6 +1409,52 @@ void _citygml_exporter::createPoint3DSet(OwlInstance iInstance, vector<SdaiInsta
 
 	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationIdentifier", sdaiSTRING, "Body");
 	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationType", sdaiSTRING, "PointCloud");
+	sdaiPutAttrBN(iShapeRepresentationInstance, "ContextOfItems", sdaiINSTANCE, (void*)getGeometricRepresentationContextInstance());
+
+	vecGeometryInstances.push_back(iShapeRepresentationInstance);
+}
+
+void _citygml_exporter::createPolyLine3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
+{
+	assert(iInstance != 0);
+
+	int64_t iValuesCount = 0;
+	double* pdValue = nullptr;
+	GetDatatypeProperty(
+		iInstance,
+		GetPropertyByName(getSite()->getOwlModel(), "points"),
+		(void**)&pdValue,
+		&iValuesCount);
+
+	assert(iValuesCount >= 6);
+
+	SdaiInstance iPolyLineInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCPOLYLINE");
+	assert(iPolyLineInstance != 0);
+
+	SdaiAggr pPoints = sdaiCreateAggrBN(iPolyLineInstance, "Points");
+	assert(pPoints != nullptr);
+
+	for (int64_t iValue = 0; iValue < iValuesCount; iValue += 3)
+	{
+		SdaiInstance iCartesianPointInstance = buildCartesianPointInstance(
+			pdValue[iValue + 0],
+			pdValue[iValue + 1],
+			pdValue[iValue + 2]);
+		assert(iCartesianPointInstance != 0);
+
+		sdaiAppend(pPoints, sdaiINSTANCE, (void*)iCartesianPointInstance);
+	} // for (int64_t iValue = ...
+
+	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCSHAPEREPRESENTATION");
+	assert(iShapeRepresentationInstance != 0);
+
+	SdaiAggr pItems = sdaiCreateAggrBN(iShapeRepresentationInstance, "Items");
+	assert(pItems != 0);
+
+	sdaiAppend(pItems, sdaiINSTANCE, (void*)iPolyLineInstance);
+
+	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationIdentifier", sdaiSTRING, "Body");
+	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationType", sdaiSTRING, "Curve3D");
 	sdaiPutAttrBN(iShapeRepresentationInstance, "ContextOfItems", sdaiINSTANCE, (void*)getGeometricRepresentationContextInstance());
 
 	vecGeometryInstances.push_back(iShapeRepresentationInstance);
