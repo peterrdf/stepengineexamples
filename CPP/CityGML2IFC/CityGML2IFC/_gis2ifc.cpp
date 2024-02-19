@@ -973,7 +973,7 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	}
 	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "Point3D"))
 	{
-		//createPoint3D(iInstance, vecGeometryInstances); //#todo
+		createPoint3D(iInstance, vecGeometryInstances);
 	}
 	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "Point3DSet"))
 	{
@@ -1361,7 +1361,19 @@ void _citygml_exporter::createPoint3D(OwlInstance iInstance, vector<SdaiInstance
 		pdValue[2]);
 	assert(iCartesianPointInstance != 0);
 
-	vecGeometryInstances.push_back(iCartesianPointInstance);
+	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCSHAPEREPRESENTATION");
+	assert(iShapeRepresentationInstance != 0);
+
+	SdaiAggr pItems = sdaiCreateAggrBN(iShapeRepresentationInstance, "Items");
+	assert(pItems != 0);
+
+	sdaiAppend(pItems, sdaiINSTANCE, (void*)iCartesianPointInstance);
+
+	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationIdentifier", sdaiSTRING, "Body");
+	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationType", sdaiSTRING, "PointCloud");
+	sdaiPutAttrBN(iShapeRepresentationInstance, "ContextOfItems", sdaiINSTANCE, (void*)getGeometricRepresentationContextInstance());
+
+	vecGeometryInstances.push_back(iShapeRepresentationInstance);
 }
 
 string _citygml_exporter::getTag(OwlInstance iInstance) const

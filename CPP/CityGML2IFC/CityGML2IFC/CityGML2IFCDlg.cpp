@@ -200,7 +200,8 @@ void CCityGML2IFCDlg::OnBnClickedOk()
 	m_strRootFolder += L"\\";
 
 	{
-		wstring strInputFile = L"D:\\Temp\\gisengine in\\libCityGML\\b1_lod2_cs_w_sem.gml";
+		//wstring strInputFile = L"D:\\Temp\\gisengine in\\libCityGML\\b1_lod2_cs_w_sem.gml";
+		wstring strInputFile = L"D:\\Temp\\gisengine in\\geo.data.linz.gv.at\\a_00_10_Lod2.gml";
 		ExportFile(strInputFile);
 	}
 
