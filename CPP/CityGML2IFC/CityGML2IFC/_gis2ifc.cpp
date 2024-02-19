@@ -977,10 +977,11 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	}
 	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "Point3DSet"))
 	{
-		//createPoint3DSet(iInstance, vecGeometryInstances); //#todo
+		createPoint3DSet(iInstance, vecGeometryInstances);
 	}
 	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "PolyLine3D"))
 	{
+		assert(false);
 		//createPolyLine3D(iInstance, vecGeometryInstances); //#todo
 	}
 	else 
@@ -1368,6 +1369,44 @@ void _citygml_exporter::createPoint3D(OwlInstance iInstance, vector<SdaiInstance
 	assert(pItems != 0);
 
 	sdaiAppend(pItems, sdaiINSTANCE, (void*)iCartesianPointInstance);
+
+	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationIdentifier", sdaiSTRING, "Body");
+	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationType", sdaiSTRING, "PointCloud");
+	sdaiPutAttrBN(iShapeRepresentationInstance, "ContextOfItems", sdaiINSTANCE, (void*)getGeometricRepresentationContextInstance());
+
+	vecGeometryInstances.push_back(iShapeRepresentationInstance);
+}
+
+void _citygml_exporter::createPoint3DSet(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
+{
+	assert(iInstance != 0);
+
+	int64_t iValuesCount = 0;
+	double* pdValue = nullptr;
+	GetDatatypeProperty(
+		iInstance,
+		GetPropertyByName(getSite()->getOwlModel(), "points"),
+		(void**)&pdValue,
+		&iValuesCount);
+
+	assert(iValuesCount >= 3);
+
+	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCSHAPEREPRESENTATION");
+	assert(iShapeRepresentationInstance != 0);
+
+	SdaiAggr pItems = sdaiCreateAggrBN(iShapeRepresentationInstance, "Items");
+	assert(pItems != 0);
+
+	for (int64_t iValue = 0; iValue < iValuesCount; iValue++)
+	{
+		SdaiInstance iCartesianPointInstance = buildCartesianPointInstance(
+			pdValue[0],
+			pdValue[1],
+			pdValue[2]);
+		assert(iCartesianPointInstance != 0);
+
+		sdaiAppend(pItems, sdaiINSTANCE, (void*)iCartesianPointInstance);
+	} // for (int64_t iValue = ...
 
 	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationIdentifier", sdaiSTRING, "Body");
 	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationType", sdaiSTRING, "PointCloud");

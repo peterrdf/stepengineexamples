@@ -230,6 +230,7 @@ protected:  // Methods
 	void createSurfaceMember(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);	
 	void createBoundaryRepresentation(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createPoint3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
+	void createPoint3DSet(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 
 	string getTag(OwlInstance iInstance) const;
 };
