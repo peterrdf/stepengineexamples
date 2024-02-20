@@ -704,12 +704,12 @@ SdaiInstance _exporter_base::buildBuildingElementInstance(
 // ************************************************************************************************
 _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	: _exporter_base(pSite)
-	, m_iBuildingTypeClass(0)
+	, m_iBuildingClass(0)
 	, m_iTagProperty(0)
 	, m_mapBuildings()
 	, m_mapGeometries()
 {
-	m_iBuildingTypeClass = GetClassByName(getSite()->getOwlModel(), "class:BuildingType");
+	m_iBuildingClass = GetClassByName(getSite()->getOwlModel(), "class:Building");
 
 	m_iTagProperty = GetPropertyByName(getSite()->getOwlModel(), "tag");
 	assert(m_iTagProperty);
@@ -726,7 +726,7 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	m_mapBuildings.clear();
 	m_mapGeometries.clear();
 
-	if (m_iBuildingTypeClass == 0)
+	if (m_iBuildingClass == 0)
 	{
 		return; //#tbd
 	}
@@ -780,7 +780,7 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 
 			if (iInstanceClass != iSchemasClass)
 			{
-				if ((iInstanceClass == m_iBuildingTypeClass) || IsClassAncestor(iInstanceClass, m_iBuildingTypeClass))
+				if ((iInstanceClass == m_iBuildingClass) || IsClassAncestor(iInstanceClass, m_iBuildingClass))
 				{
 					if (m_mapBuildings.find(iInstance) == m_mapBuildings.end())
 					{
@@ -848,6 +848,12 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 			createGeometry(iOwlInstance, vecBuildingGeometryInstances);
 		}
 
+		if (vecBuildingGeometryInstances.empty())
+		{
+			// There is no Geometry
+			continue;
+		}
+
 		SdaiInstance iBuildingElementInstancePlacement = 0;
 		SdaiInstance iBuildingElementInstance = buildBuildingElementInstance(
 			"Container for Geometry",
@@ -895,7 +901,7 @@ void _citygml_exporter::createBuildingsRecursive(OwlInstance iInstance)
 				OwlClass iInstanceClass = GetInstanceClass(piValues[iValue]);
 				assert(iInstanceClass != 0);
 
-				if ((iInstanceClass == m_iBuildingTypeClass) || IsClassAncestor(iInstanceClass, m_iBuildingTypeClass))
+				if ((iInstanceClass == m_iBuildingClass) || IsClassAncestor(iInstanceClass, m_iBuildingClass))
 				{
 					if (m_mapBuildings.find(piValues[iValue]) == m_mapBuildings.end())
 					{
@@ -975,6 +981,10 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:CompositeSolidType"))
 	{
 		createCompositeSolid(iInstance, vecGeometryInstances);
+	}
+	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "BoundaryRepresentation"))
+	{
+		createBoundaryRepresentation(iInstance, vecGeometryInstances);
 	}
 	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "Point3D"))
 	{

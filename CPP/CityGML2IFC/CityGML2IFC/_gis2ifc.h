@@ -204,7 +204,7 @@ class _citygml_exporter : public _exporter_base
 
 private: // Members
 
-	OwlClass m_iBuildingTypeClass;
+	OwlClass m_iBuildingClass;
 	RdfProperty m_iTagProperty;
 	map<OwlInstance, vector<OwlInstance>> m_mapBuildings;
 	map<OwlInstance, SdaiInstance> m_mapGeometries;
