@@ -197,9 +197,13 @@ protected: // Methods
 		SdaiInstance& iBuildingElementInstancePlacement,
 		const vector<SdaiInstance>& vecRepresentations);
 
-	SdaiInstance buildPropertySet(char* szName, SdaiAggr& iHasProperties);
-	SdaiInstance buildPropertySingleValue(char* szName, char* szDescription, char* szNominalValue, char* szTypePath);
+	SdaiInstance buildPropertySet(char* szName, SdaiAggr& pHasProperties);
 	SdaiInstance buildRelDefinesByProperties(SdaiInstance iRelatedObject, SdaiInstance iRelatingPropertyDefinition);
+	SdaiInstance buildPropertySingleValue(
+		const char* szName, 
+		const char* szDescription,
+		const char* szNominalValue,
+		const char* szTypePath);
 };
 
 // ************************************************************************************************
@@ -236,6 +240,8 @@ protected:  // Methods
 	void createPoint3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createPoint3DSet(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createPolyLine3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
+
+	void createAttributes(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance);
 
 	string getTag(OwlInstance iInstance) const;
 };

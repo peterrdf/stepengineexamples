@@ -701,36 +701,19 @@ SdaiInstance _exporter_base::buildBuildingElementInstance(
 	return iBuildingElementInstance;
 }
 
-SdaiInstance _exporter_base::buildPropertySet(char* szName, SdaiAggr& iHasProperties)
+SdaiInstance _exporter_base::buildPropertySet(char* szName, SdaiAggr& pHasProperties)
 {
 	SdaiInstance iPropertySetInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPROPERTYSET");
 	assert(iPropertySetInstance != 0);
 
 	sdaiPutAttrBN(iPropertySetInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
 	sdaiPutAttrBN(iPropertySetInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
-	sdaiPutAttrBN(iPropertySetInstance, "Name", sdaiSTRING, iPropertySetInstance);
+	sdaiPutAttrBN(iPropertySetInstance, "Name", sdaiSTRING, szName);
 
-	iHasProperties = sdaiCreateAggrBN(iPropertySetInstance, "HasProperties");
-	assert(iHasProperties != 0);
+	pHasProperties = sdaiCreateAggrBN(iPropertySetInstance, "HasProperties");
+	assert(pHasProperties != nullptr);
 
 	return iPropertySetInstance;
-}
-
-SdaiInstance _exporter_base::buildPropertySingleValue(char* szName, char* szDescription, char* szNominalValue, char* szTypePath)
-{
-	SdaiInstance iPropertySingleValueInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPROPERTYSINGLEVALUE");
-	assert(iPropertySingleValueInstance != 0);
-
-	sdaiPutAttrBN(iPropertySingleValueInstance, "Name", sdaiSTRING, szName);
-	sdaiPutAttrBN(iPropertySingleValueInstance, "Description", sdaiSTRING, szDescription);
-
-	SdaiADB pNominalValueADB = sdaiCreateADB(sdaiSTRING, szNominalValue);
-	assert(pNominalValueADB != nullptr);
-
-	sdaiPutADBTypePath(pNominalValueADB, 1, szTypePath);
-	sdaiPutAttrBN(iPropertySingleValueInstance, "NominalValue", sdaiADB, (void*)pNominalValueADB);
-
-	return iPropertySingleValueInstance;
 }
 
 SdaiInstance _exporter_base::buildRelDefinesByProperties(SdaiInstance iRelatedObject, SdaiInstance iRelatingPropertyDefinition)
@@ -751,6 +734,27 @@ SdaiInstance _exporter_base::buildRelDefinesByProperties(SdaiInstance iRelatedOb
 	sdaiPutAttrBN(iRelDefinesByPropertiesInstance, "RelatingPropertyDefinition", sdaiINSTANCE, (void*)iRelatingPropertyDefinition);
 
 	return iRelDefinesByPropertiesInstance;
+}
+
+SdaiInstance _exporter_base::buildPropertySingleValue(
+	const char* szName,
+	const char* szDescription,
+	const char* szNominalValue,
+	const char* szTypePath)
+{
+	SdaiInstance iPropertySingleValueInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPROPERTYSINGLEVALUE");
+	assert(iPropertySingleValueInstance != 0);
+
+	sdaiPutAttrBN(iPropertySingleValueInstance, "Name", sdaiSTRING, szName);
+	sdaiPutAttrBN(iPropertySingleValueInstance, "Description", sdaiSTRING, szDescription);
+
+	SdaiADB pNominalValueADB = sdaiCreateADB(sdaiSTRING, szNominalValue);
+	assert(pNominalValueADB != nullptr);
+
+	sdaiPutADBTypePath(pNominalValueADB, 1, szTypePath);
+	sdaiPutAttrBN(iPropertySingleValueInstance, "NominalValue", sdaiADB, (void*)pNominalValueADB);
+
+	return iPropertySingleValueInstance;
 }
 
 // ************************************************************************************************
@@ -802,6 +806,8 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 		&mtxIdentity, 
 		iSiteInstancePlacement);
 	assert(iSiteInstancePlacement != 0);
+
+	createAttributes(iRootInstance, iSiteInstance);
 
 	buildRelAggregatesInstance(
 		"ProjectContainer", 
@@ -881,6 +887,8 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 		assert(iBuildingInstance != 0);
 
 		vecBuildingInstances.push_back(iBuildingInstance);
+
+		createAttributes(itBuilding.first, iBuildingInstance);
 
 		searchForBuildingGeometry(itBuilding.first, itBuilding.first);
 
@@ -1525,6 +1533,60 @@ void _citygml_exporter::createPolyLine3D(OwlInstance iInstance, vector<SdaiInsta
 	sdaiPutAttrBN(iShapeRepresentationInstance, "ContextOfItems", sdaiINSTANCE, (void*)getGeometricRepresentationContextInstance());
 
 	vecGeometryInstances.push_back(iShapeRepresentationInstance);
+}
+
+void _citygml_exporter::createAttributes(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance)
+{
+	assert(iOwlInstance != 0);
+	assert(iSdaiInstance != 0);
+
+	map<string, wstring> mapAttributes;
+
+	RdfProperty iPropertyInstance = GetInstancePropertyByIterator(iOwlInstance, 0);
+	while (iPropertyInstance != 0)
+	{
+		char* szPropertyName = nullptr;
+		GetNameOfProperty(iPropertyInstance, &szPropertyName);
+
+		// Skip Attributes
+		string strPropertyName = szPropertyName;
+		if (strPropertyName.find("attr:") == 0)
+		{
+			assert(GetPropertyType(iPropertyInstance) == DATATYPEPROPERTY_TYPE_WCHAR_T_ARRAY);
+
+			wchar_t** szValue = nullptr;
+			int64_t iValuesCount = 0;
+			GetDatatypeProperty(iOwlInstance, iPropertyInstance, (void**)&szValue, &iValuesCount);
+
+			assert(iValuesCount == 1);
+
+			mapAttributes[szPropertyName] = szValue[0];
+		} // attr:
+
+		iPropertyInstance = GetInstancePropertyByIterator(iOwlInstance, iPropertyInstance);
+	} // while (iPropertyInstance != 0)
+
+	if (mapAttributes.empty())
+	{
+		return;
+	}
+
+	SdaiAggr pHasProperties = nullptr;
+	SdaiInstance iPropertySetInstance = buildPropertySet("Attributes", pHasProperties);
+
+	for (auto itAttribute : mapAttributes)
+	{
+		SdaiInstance iPropertySingleValueInstance = buildPropertySingleValue(
+			itAttribute.first.c_str(),
+			"attribute",
+			CW2A(itAttribute.second.c_str()),
+			"IFCTEXT");
+		assert(iPropertySingleValueInstance != 0);
+
+		sdaiAppend(pHasProperties, sdaiINSTANCE, (void*)iPropertySingleValueInstance);
+	}
+
+	buildRelDefinesByProperties(iSdaiInstance, iPropertySetInstance);
 }
 
 string _citygml_exporter::getTag(OwlInstance iInstance) const

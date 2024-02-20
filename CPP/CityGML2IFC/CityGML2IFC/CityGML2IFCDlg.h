@@ -65,4 +65,5 @@ public:
 	CString m_strInputFile;
 	afx_msg void OnBnClickedButtonInputFile();
 	CEdit m_edtProgress;
+	afx_msg void OnBnClickedButtonClose();
 };

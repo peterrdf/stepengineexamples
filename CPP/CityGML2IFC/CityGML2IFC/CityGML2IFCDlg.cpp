@@ -155,6 +155,7 @@ BEGIN_MESSAGE_MAP(CCityGML2IFCDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDOK, &CCityGML2IFCDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_BUTTON_INPUT_FILE, &CCityGML2IFCDlg::OnBnClickedButtonInputFile)
+	ON_BN_CLICKED(IDC_BUTTON_CLOSE, &CCityGML2IFCDlg::OnBnClickedButtonClose)
 END_MESSAGE_MAP()
 
 // ************************************************************************************************
@@ -283,4 +284,9 @@ void CCityGML2IFCDlg::OnBnClickedButtonInputFile()
 	m_strInputFile = dlgFile.GetPathName();
 
 	UpdateData(FALSE);
+}
+
+void CCityGML2IFCDlg::OnBnClickedButtonClose()
+{
+	PostQuitMessage(0);
 }
