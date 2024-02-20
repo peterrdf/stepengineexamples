@@ -199,17 +199,16 @@ void CCityGML2IFCDlg::OnBnClickedOk()
 	m_strRootFolder = pthRootFolder.wstring();
 	m_strRootFolder += L"\\";
 
-	{
-		//wstring strInputFile = L"D:\\Temp\\gisengine in\\libCityGML\\b1_lod2_cs_w_sem.gml";
-		wstring strInputFile = L"D:\\Temp\\gisengine in\\geo.data.linz.gv.at\\a_00_10_Lod2.gml";
+	/*{
+		wstring strInputFile = L"D:\\Temp\\gisengine in\\InfraGMLTest\\DenHaag_01.xml";
 		ExportFile(strInputFile);
-	}
+	}*/
 
 	/* TEST */
-	/*{
+	{
 		wstring strInputFolder = L"D:\\Temp\\gisengine in";
 		ExportFiles(strInputFolder);
-	}*/	
+	}	
 
 	// TODO: Add your control notification handler code here
 	CDialogEx::OnOK();

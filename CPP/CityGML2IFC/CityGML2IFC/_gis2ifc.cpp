@@ -47,6 +47,11 @@ void _gis2ifc::execute(const wstring& strInputFile, const wstring& strOuputFile)
 			_citygml_exporter exporter(this);
 			exporter.execute(iRootInstance, strOuputFile);
 		}
+		else if (IsCityJSON(m_iOwlModel))
+		{
+			_cityjson_exporter exporter(this);
+			exporter.execute(iRootInstance, strOuputFile);
+		}
 		else
 		{
 			logErr("Not supported format.");
@@ -1476,3 +1481,11 @@ string _citygml_exporter::getTag(OwlInstance iInstance) const
 
 	return (LPCSTR)CW2A(szValue[0]);
 }
+
+// ************************************************************************************************
+_cityjson_exporter::_cityjson_exporter(_gis2ifc* pSite)
+	: _citygml_exporter(pSite)
+{}
+
+/*virtual*/ _cityjson_exporter::~_cityjson_exporter()
+{}

@@ -235,3 +235,12 @@ protected:  // Methods
 
 	string getTag(OwlInstance iInstance) const;
 };
+
+// ************************************************************************************************
+class _cityjson_exporter : public _citygml_exporter
+{
+public: // Methods
+
+	_cityjson_exporter(_gis2ifc* pSite);
+	virtual ~_cityjson_exporter();
+};
