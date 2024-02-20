@@ -195,7 +195,11 @@ protected: // Methods
 		_matrix* pMatrix,
 		SdaiInstance iPlacementRelativeTo,
 		SdaiInstance& iBuildingElementInstancePlacement,
-		const vector<SdaiInstance>& vecRepresentations);	
+		const vector<SdaiInstance>& vecRepresentations);
+
+	SdaiInstance buildPropertySet(char* szName, SdaiAggr& iHasProperties);
+	SdaiInstance buildPropertySingleValue(char* szName, char* szDescription, char* szNominalValue, char* szTypePath);
+	SdaiInstance buildRelDefinesByProperties(SdaiInstance iRelatedObject, SdaiInstance iRelatingPropertyDefinition);
 };
 
 // ************************************************************************************************

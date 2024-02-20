@@ -701,6 +701,58 @@ SdaiInstance _exporter_base::buildBuildingElementInstance(
 	return iBuildingElementInstance;
 }
 
+SdaiInstance _exporter_base::buildPropertySet(char* szName, SdaiAggr& iHasProperties)
+{
+	SdaiInstance iPropertySetInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPROPERTYSET");
+	assert(iPropertySetInstance != 0);
+
+	sdaiPutAttrBN(iPropertySetInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iPropertySetInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+	sdaiPutAttrBN(iPropertySetInstance, "Name", sdaiSTRING, iPropertySetInstance);
+
+	iHasProperties = sdaiCreateAggrBN(iPropertySetInstance, "HasProperties");
+	assert(iHasProperties != 0);
+
+	return iPropertySetInstance;
+}
+
+SdaiInstance _exporter_base::buildPropertySingleValue(char* szName, char* szDescription, char* szNominalValue, char* szTypePath)
+{
+	SdaiInstance iPropertySingleValueInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPROPERTYSINGLEVALUE");
+	assert(iPropertySingleValueInstance != 0);
+
+	sdaiPutAttrBN(iPropertySingleValueInstance, "Name", sdaiSTRING, szName);
+	sdaiPutAttrBN(iPropertySingleValueInstance, "Description", sdaiSTRING, szDescription);
+
+	SdaiADB pNominalValueADB = sdaiCreateADB(sdaiSTRING, szNominalValue);
+	assert(pNominalValueADB != nullptr);
+
+	sdaiPutADBTypePath(pNominalValueADB, 1, szTypePath);
+	sdaiPutAttrBN(iPropertySingleValueInstance, "NominalValue", sdaiADB, (void*)pNominalValueADB);
+
+	return iPropertySingleValueInstance;
+}
+
+SdaiInstance _exporter_base::buildRelDefinesByProperties(SdaiInstance iRelatedObject, SdaiInstance iRelatingPropertyDefinition)
+{
+	assert(iRelatedObject != 0);
+	assert(iRelatingPropertyDefinition != 0);
+
+	SdaiInstance iRelDefinesByPropertiesInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCRELDEFINESBYPROPERTIES");
+	assert(iRelDefinesByPropertiesInstance != 0);
+
+	sdaiPutAttrBN(iRelDefinesByPropertiesInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iRelDefinesByPropertiesInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+
+	SdaiAggr pRelatedObjects = sdaiCreateAggrBN(iRelDefinesByPropertiesInstance, "RelatedObjects");
+	assert(pRelatedObjects != 0);
+
+	sdaiAppend(pRelatedObjects, sdaiINSTANCE, (void*)iRelatedObject);
+	sdaiPutAttrBN(iRelDefinesByPropertiesInstance, "RelatingPropertyDefinition", sdaiINSTANCE, (void*)iRelatingPropertyDefinition);
+
+	return iRelDefinesByPropertiesInstance;
+}
+
 // ************************************************************************************************
 _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	: _exporter_base(pSite)
