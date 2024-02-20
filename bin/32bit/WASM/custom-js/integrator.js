@@ -41,6 +41,28 @@ if (embeddedMode()) {
             loadFileByUri(event.file);
           }
             break;
+
+          case 'loadFileContent': {
+            loadContent(event.name, event.fileExtension, event.content);
+
+            let completedEvent = {
+              'type': 'loadContent',
+              'name': event.name
+            };
+            e.source.postMessage(JSON.stringify(completedEvent), '*');
+          }
+            break;
+
+          case 'addFileContent': {
+            addContent(event.name, event.fileExtension, event.content);
+
+            let completedEvent = {
+              'type': 'loadContent',
+              'name': event.name
+            };
+            e.source.postMessage(JSON.stringify(completedEvent), '*');
+          }
+            break;
         }
       }
     }
