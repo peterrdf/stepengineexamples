@@ -26,16 +26,20 @@ class CCityGML2IFCDlg : public CDialogEx
 
 private: // Members
 
+	CWinThread* m_pThread;
+
 	wstring m_strRootFolder;
 
 protected: // Methods
 	
+	static UINT ThreadProc(LPVOID pParam);
 	void ExportFile(const wstring& strInputFile);
 	void ExportFiles(const fs::path& pthInputFolder);
 
 // Construction
 public:
 	CCityGML2IFCDlg(CWnd* pParent = nullptr);	// standard constructor
+	~CCityGML2IFCDlg();
 
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
@@ -58,4 +62,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedOk();
+	CString m_strInputFile;
+	afx_msg void OnBnClickedButtonInputFile();
+	CEdit m_edtProgress;
 };

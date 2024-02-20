@@ -18,10 +18,48 @@
 #endif
 
 // ************************************************************************************************
+static TCHAR SUPPORTED_FILES[] = _T("CityGML Files (*.gml;*citygml)|*.gml;*citygml|\
+CityJSON Files (*.city.json)|*.city.json|\
+All Files (*.*)|*.*||");
+
+// ************************************************************************************************
+static CCityGML2IFCDlg* g_pMainDialog = nullptr;
+
+// ************************************************************************************************
 void STDCALL LogCallbackImpl(enumLogEvent enLogEvent, const char* szEvent)
 {
-	//#todo - progress dlg
 	TRACE(L"\n%d: %S", (int)enLogEvent, szEvent);
+
+	ASSERT(g_pMainDialog != nullptr);
+
+	string strEntry =
+		enLogEvent == enumLogEvent::info ? "Information: " :
+		enLogEvent == enumLogEvent::warning ? "Warning: " :
+		enLogEvent == enumLogEvent::error ? "Error: " : "Unknown: ";
+	strEntry += szEvent;
+	strEntry += "\r\n";
+
+	int iLength = g_pMainDialog->m_edtProgress.GetWindowTextLength();
+	g_pMainDialog->m_edtProgress.SetSel(iLength, iLength);
+	g_pMainDialog->m_edtProgress.ReplaceSel(CA2W(strEntry.c_str()));
+}
+
+// ************************************************************************************************
+/*static*/ UINT CCityGML2IFCDlg::ThreadProc(LPVOID pParam)
+{
+	auto pDialog = (CCityGML2IFCDlg*)pParam;
+	ASSERT(pDialog != nullptr);
+
+	if (!pDialog->m_strInputFile.IsEmpty())
+	{
+		pDialog->ExportFile((LPCTSTR)pDialog->m_strInputFile);
+	}
+
+	LogCallbackImpl(enumLogEvent::info, "Done.");
+
+	::EnableWindow(pDialog->GetDlgItem(IDOK)->GetSafeHwnd(), TRUE);
+
+	return 0;
 }
 
 void CCityGML2IFCDlg::ExportFile(const wstring& strInputFile)
@@ -87,14 +125,28 @@ END_MESSAGE_MAP()
 // CCityGML2IFCDlg dialog
 CCityGML2IFCDlg::CCityGML2IFCDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CITYGML2IFC_DIALOG, pParent)
+	, m_pThread(nullptr)
 	, m_strRootFolder(L"")
+	, m_strInputFile(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+
+	g_pMainDialog = this;
+}
+
+CCityGML2IFCDlg::~CCityGML2IFCDlg()
+{
+	if (m_pThread != nullptr)
+	{
+		delete m_pThread;
+	}
 }
 
 void CCityGML2IFCDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_EDIT_INPUT_FILE, m_strInputFile);
+	DDX_Control(pDX, IDC_EDIT_PROGRESS, m_edtProgress);
 }
 
 BEGIN_MESSAGE_MAP(CCityGML2IFCDlg, CDialogEx)
@@ -102,6 +154,7 @@ BEGIN_MESSAGE_MAP(CCityGML2IFCDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDOK, &CCityGML2IFCDlg::OnBnClickedOk)
+	ON_BN_CLICKED(IDC_BUTTON_INPUT_FILE, &CCityGML2IFCDlg::OnBnClickedButtonInputFile)
 END_MESSAGE_MAP()
 
 // ************************************************************************************************
@@ -191,6 +244,10 @@ HCURSOR CCityGML2IFCDlg::OnQueryDragIcon()
 
 void CCityGML2IFCDlg::OnBnClickedOk()
 {
+	LogCallbackImpl(enumLogEvent::info, "Exporting...");
+
+	::EnableWindow(GetDlgItem(IDOK)->GetSafeHwnd(), FALSE);	
+
 	wchar_t szAppPath[_MAX_PATH];
 	::GetModuleFileName(::GetModuleHandle(nullptr), szAppPath, sizeof(szAppPath));
 
@@ -199,17 +256,31 @@ void CCityGML2IFCDlg::OnBnClickedOk()
 	m_strRootFolder = pthRootFolder.wstring();
 	m_strRootFolder += L"\\";
 
+	m_pThread = ::AfxBeginThread(ThreadProc, this);
+	m_pThread->m_bAutoDelete = FALSE;
+
+	/* TEST 1 */
 	/*{
 		wstring strInputFile = L"D:\\Temp\\gisengine in\\InfraGMLTest\\DenHaag_01.xml";
 		ExportFile(strInputFile);
 	}*/
 
-	/* TEST */
-	{
+	/* TEST 2 */
+	/*{
 		wstring strInputFolder = L"D:\\Temp\\gisengine in";
 		ExportFiles(strInputFolder);
-	}	
+	}*/
+}
 
-	// TODO: Add your control notification handler code here
-	CDialogEx::OnOK();
+void CCityGML2IFCDlg::OnBnClickedButtonInputFile()
+{
+	CFileDialog dlgFile(TRUE, nullptr, _T(""), OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY, SUPPORTED_FILES);
+	if (dlgFile.DoModal() != IDOK)
+	{
+		return;
+	}
+
+	m_strInputFile = dlgFile.GetPathName();
+
+	UpdateData(FALSE);
 }
