@@ -158,9 +158,11 @@ public: // Methods
 
 protected: // Methods	
 
+	/* Model */
 	void createIfcModel(const wchar_t* szSchemaName);
 	void saveIfcFile(const wchar_t* szFileName);
 
+	/* Geometry */
 	SdaiInstance buildSIUnitInstance(const char* szUnitType, const char* szPrefix, const char* szName);
 	SdaiInstance buildMeasureWithUnitInstance();
 	SdaiInstance buildDirectionInstance(double dX, double dY, double dZ);
@@ -197,6 +199,7 @@ protected: // Methods
 		SdaiInstance& iBuildingElementInstancePlacement,
 		const vector<SdaiInstance>& vecRepresentations);
 
+	/* Properties */
 	SdaiInstance buildPropertySet(char* szName, SdaiAggr& pHasProperties);
 	SdaiInstance buildRelDefinesByProperties(SdaiInstance iRelatedObject, SdaiInstance iRelatingPropertyDefinition);
 	SdaiInstance buildPropertySingleValue(
@@ -204,6 +207,13 @@ protected: // Methods
 		const char* szDescription,
 		const char* szNominalValue,
 		const char* szTypePath);
+
+	/* Materials */
+	SdaiInstance buildMaterial();
+	SdaiInstance buildMaterialLayer(double dThickness);
+	SdaiInstance buildMaterialLayerSet(double dThickness);
+	SdaiInstance buildMaterialLayerSetUsage(double dThickness);
+	SdaiInstance buildRelAssociatesMaterial(SdaiInstance iBuildingElementInstance, double dThickness);
 };
 
 // ************************************************************************************************

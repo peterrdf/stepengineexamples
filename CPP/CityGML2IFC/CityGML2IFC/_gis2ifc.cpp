@@ -686,6 +686,7 @@ SdaiInstance _exporter_base::buildBuildingElementInstance(
 	assert(!vecRepresentations.empty());
 
 	SdaiInstance iBuildingElementInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCBUILDINGELEMENT");
+	assert(iBuildingElementInstance != 0);
 
 	sdaiPutAttrBN(iBuildingElementInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
 	sdaiPutAttrBN(iBuildingElementInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
@@ -755,6 +756,74 @@ SdaiInstance _exporter_base::buildPropertySingleValue(
 	sdaiPutAttrBN(iPropertySingleValueInstance, "NominalValue", sdaiADB, (void*)pNominalValueADB);
 
 	return iPropertySingleValueInstance;
+}
+
+SdaiInstance _exporter_base::buildMaterial()
+{
+	SdaiInstance iMaterialInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCMATERIAL");
+	assert(iMaterialInstance != 0);
+
+	sdaiPutAttrBN(iMaterialInstance, "Name", sdaiSTRING, (void*)"Material");
+
+	return  iMaterialInstance;
+}
+
+SdaiInstance _exporter_base::buildMaterialLayer(double dThickness)
+{
+	SdaiInstance iMaterialLayerInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCMATERIALLAYER");
+	assert(iMaterialLayerInstance != 0);
+
+	sdaiPutAttrBN(iMaterialLayerInstance, "Material", sdaiINSTANCE, (void*)buildMaterial());
+	sdaiPutAttrBN(iMaterialLayerInstance, "LayerThickness", sdaiREAL, &dThickness);
+
+	return  iMaterialLayerInstance;
+}
+
+SdaiInstance _exporter_base::buildMaterialLayerSet(double dThickness)
+{
+	SdaiInstance iMaterialLayerSetInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCMATERIALLAYERSET");
+	assert(iMaterialLayerSetInstance != 0);
+
+	SdaiAggr pMaterialLayers = sdaiCreateAggrBN(iMaterialLayerSetInstance, "MaterialLayers");
+	assert(pMaterialLayers != nullptr);
+
+	sdaiAppend(pMaterialLayers, sdaiINSTANCE, (void*)buildMaterialLayer(dThickness));
+
+	return  iMaterialLayerSetInstance;
+}
+
+SdaiInstance _exporter_base::buildMaterialLayerSetUsage(double dThickness)
+{
+	double  dOffsetFromReferenceLine = -dThickness / 2.;
+
+	SdaiInstance iMaterialLayerSetUsageInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCMATERIALLAYERSETUSAGE");
+	assert(iMaterialLayerSetUsageInstance != 0);
+
+	sdaiPutAttrBN(iMaterialLayerSetUsageInstance, "ForLayerSet", sdaiINSTANCE, (void*)buildMaterialLayerSet(dThickness));
+	sdaiPutAttrBN(iMaterialLayerSetUsageInstance, "LayerSetDirection", sdaiENUM, "AXIS2");
+	sdaiPutAttrBN(iMaterialLayerSetUsageInstance, "DirectionSense", sdaiENUM, "POSITIVE");
+	sdaiPutAttrBN(iMaterialLayerSetUsageInstance, "OffsetFromReferenceLine", sdaiREAL, &dOffsetFromReferenceLine);
+
+	return  iMaterialLayerSetUsageInstance;
+}
+
+SdaiInstance _exporter_base::buildRelAssociatesMaterial(SdaiInstance iBuildingElementInstance, double dThickness)
+{
+	assert(iBuildingElementInstance != 0);
+
+	SdaiInstance iRelAssociatesMaterialInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCRELASSOCIATESMATERIAL");
+	assert(iRelAssociatesMaterialInstance != 0);
+
+	sdaiPutAttrBN(iRelAssociatesMaterialInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iRelAssociatesMaterialInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+
+	SdaiAggr pRelatedObjects = sdaiCreateAggrBN(iRelAssociatesMaterialInstance, "RelatedObjects");
+	assert(pRelatedObjects != nullptr);
+
+	sdaiAppend(pRelatedObjects, sdaiINSTANCE, (void*)iBuildingElementInstance);
+	sdaiPutAttrBN(iRelAssociatesMaterialInstance, "RelatingMaterial", sdaiINSTANCE, (void*)buildMaterialLayerSetUsage(dThickness));
+
+	return	iRelAssociatesMaterialInstance;
 }
 
 // ************************************************************************************************
