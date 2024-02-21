@@ -797,7 +797,7 @@ SdaiInstance _exporter_base::buildMaterialLayer(double dThickness)
 	sdaiPutAttrBN(iMaterialLayerInstance, "Material", sdaiINSTANCE, (void*)buildMaterial());
 	sdaiPutAttrBN(iMaterialLayerInstance, "LayerThickness", sdaiREAL, &dThickness);
 
-	return  iMaterialLayerInstance;
+	return iMaterialLayerInstance;
 }
 
 SdaiInstance _exporter_base::buildMaterialLayerSet(double dThickness)
@@ -810,12 +810,12 @@ SdaiInstance _exporter_base::buildMaterialLayerSet(double dThickness)
 
 	sdaiAppend(pMaterialLayers, sdaiINSTANCE, (void*)buildMaterialLayer(dThickness));
 
-	return  iMaterialLayerSetInstance;
+	return iMaterialLayerSetInstance;
 }
 
 SdaiInstance _exporter_base::buildMaterialLayerSetUsage(double dThickness)
 {
-	double  dOffsetFromReferenceLine = -dThickness / 2.;
+	double dOffsetFromReferenceLine = -dThickness / 2.;
 
 	SdaiInstance iMaterialLayerSetUsageInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCMATERIALLAYERSETUSAGE");
 	assert(iMaterialLayerSetUsageInstance != 0);
@@ -825,7 +825,7 @@ SdaiInstance _exporter_base::buildMaterialLayerSetUsage(double dThickness)
 	sdaiPutAttrBN(iMaterialLayerSetUsageInstance, "DirectionSense", sdaiENUM, "POSITIVE");
 	sdaiPutAttrBN(iMaterialLayerSetUsageInstance, "OffsetFromReferenceLine", sdaiREAL, &dOffsetFromReferenceLine);
 
-	return  iMaterialLayerSetUsageInstance;
+	return iMaterialLayerSetUsageInstance;
 }
 
 SdaiInstance _exporter_base::buildRelAssociatesMaterial(SdaiInstance iBuildingElementInstance, double dThickness)
@@ -844,7 +844,7 @@ SdaiInstance _exporter_base::buildRelAssociatesMaterial(SdaiInstance iBuildingEl
 	sdaiAppend(pRelatedObjects, sdaiINSTANCE, (void*)iBuildingElementInstance);
 	sdaiPutAttrBN(iRelAssociatesMaterialInstance, "RelatingMaterial", sdaiINSTANCE, (void*)buildMaterialLayerSetUsage(dThickness));
 
-	return	iRelAssociatesMaterialInstance;
+	return iRelAssociatesMaterialInstance;
 }
 
 // ************************************************************************************************
