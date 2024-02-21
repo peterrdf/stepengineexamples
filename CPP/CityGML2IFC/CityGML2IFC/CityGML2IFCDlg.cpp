@@ -257,6 +257,12 @@ void CCityGML2IFCDlg::OnBnClickedOk()
 	m_strRootFolder = pthRootFolder.wstring();
 	m_strRootFolder += L"\\";
 
+	if (m_pThread != nullptr)
+	{
+		delete m_pThread;
+		m_pThread = nullptr;
+	}
+
 	m_pThread = ::AfxBeginThread(ThreadProc, this);
 	m_pThread->m_bAutoDelete = FALSE;
 

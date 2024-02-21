@@ -59,7 +59,7 @@ void _gis2ifc::execute(const wstring& strInputFile, const wstring& strOuputFile)
 	} // if (iRootInstance != 0)
 	else
 	{
-		logErr("Import failed.");
+		logErr("Not supported format.");
 	}
 }
 
@@ -737,7 +737,7 @@ SdaiInstance _exporter_base::buildRelDefinesByProperties(SdaiInstance iRelatedOb
 	return iRelDefinesByPropertiesInstance;
 }
 
-SdaiInstance _exporter_base::buildPropertySingleValue(
+SdaiInstance _exporter_base::buildPropertySingleValueText(
 	const char* szName,
 	const char* szDescription,
 	const char* szNominalValue,
@@ -750,6 +750,27 @@ SdaiInstance _exporter_base::buildPropertySingleValue(
 	sdaiPutAttrBN(iPropertySingleValueInstance, "Description", sdaiSTRING, szDescription);
 
 	SdaiADB pNominalValueADB = sdaiCreateADB(sdaiSTRING, szNominalValue);
+	assert(pNominalValueADB != nullptr);
+
+	sdaiPutADBTypePath(pNominalValueADB, 1, szTypePath);
+	sdaiPutAttrBN(iPropertySingleValueInstance, "NominalValue", sdaiADB, (void*)pNominalValueADB);
+
+	return iPropertySingleValueInstance;
+}
+
+SdaiInstance _exporter_base::buildPropertySingleValueReal(
+	const char* szName,
+	const char* szDescription,
+	double dNominalValue,
+	const char* szTypePath)
+{
+	SdaiInstance iPropertySingleValueInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPROPERTYSINGLEVALUE");
+	assert(iPropertySingleValueInstance != 0);
+
+	sdaiPutAttrBN(iPropertySingleValueInstance, "Name", sdaiSTRING, szName);
+	sdaiPutAttrBN(iPropertySingleValueInstance, "Description", sdaiSTRING, szDescription);
+
+	SdaiADB pNominalValueADB = sdaiCreateADB(sdaiREAL, (void*)&dNominalValue);
 	assert(pNominalValueADB != nullptr);
 
 	sdaiPutADBTypePath(pNominalValueADB, 1, szTypePath);
@@ -1609,7 +1630,7 @@ void _citygml_exporter::createAttributes(OwlInstance iOwlInstance, SdaiInstance 
 	assert(iOwlInstance != 0);
 	assert(iSdaiInstance != 0);
 
-	map<string, wstring> mapAttributes;
+	map<string, SdaiInstance> mapProperties;
 
 	RdfProperty iPropertyInstance = GetInstancePropertyByIterator(iOwlInstance, 0);
 	while (iPropertyInstance != 0)
@@ -1617,10 +1638,59 @@ void _citygml_exporter::createAttributes(OwlInstance iOwlInstance, SdaiInstance 
 		char* szPropertyName = nullptr;
 		GetNameOfProperty(iPropertyInstance, &szPropertyName);
 
-		// Skip Attributes
 		string strPropertyName = szPropertyName;
-		if (strPropertyName.find("attr:") == 0)
+		
+		if (strPropertyName.find("prop:") == 0)
 		{
+			// Properties
+			switch (GetPropertyType(iPropertyInstance))
+			{
+				case DATATYPEPROPERTY_TYPE_DOUBLE:
+				{
+					double* pdValue = nullptr;
+					int64_t iValuesCount = 0;
+					GetDatatypeProperty(iOwlInstance, iPropertyInstance, (void**)&pdValue, &iValuesCount);
+
+					assert(iValuesCount == 1);
+
+					mapProperties[szPropertyName] = buildPropertySingleValueReal(
+						strPropertyName.c_str(),
+						"attribute",
+						pdValue[0],
+						"IFCREAL");
+				}
+				break;
+
+				case DATATYPEPROPERTY_TYPE_WCHAR_T_ARRAY:
+				{
+					wchar_t** szValue = nullptr;
+					int64_t iValuesCount = 0;
+					GetDatatypeProperty(iOwlInstance, iPropertyInstance, (void**)&szValue, &iValuesCount);
+
+					mapProperties[szPropertyName] = buildPropertySingleValueText(
+						strPropertyName.c_str(),
+						"attribute",
+						CW2A(szValue[0]),
+						"IFCTEXT");
+				}
+				break;
+
+				case OBJECTTYPEPROPERTY_TYPE:
+				{
+					//#todo
+				}
+				break;
+
+				default:
+				{
+					assert(false);
+				}
+				break;
+			} // switch (GetPropertyType(iPropertyInstance))
+		} // prop:
+		else if (strPropertyName.find("attr:") == 0)
+		{
+			// Attributes
 			assert(GetPropertyType(iPropertyInstance) == DATATYPEPROPERTY_TYPE_WCHAR_T_ARRAY);
 
 			wchar_t** szValue = nullptr;
@@ -1629,13 +1699,17 @@ void _citygml_exporter::createAttributes(OwlInstance iOwlInstance, SdaiInstance 
 
 			assert(iValuesCount == 1);
 
-			mapAttributes[szPropertyName] = szValue[0];
+			mapProperties[szPropertyName] = buildPropertySingleValueText(
+				strPropertyName.c_str(),
+				"attribute",
+				CW2A(szValue[0]),
+				"IFCTEXT");
 		} // attr:
 
 		iPropertyInstance = GetInstancePropertyByIterator(iOwlInstance, iPropertyInstance);
 	} // while (iPropertyInstance != 0)
 
-	if (mapAttributes.empty())
+	if (mapProperties.empty())
 	{
 		return;
 	}
@@ -1643,16 +1717,9 @@ void _citygml_exporter::createAttributes(OwlInstance iOwlInstance, SdaiInstance 
 	SdaiAggr pHasProperties = nullptr;
 	SdaiInstance iPropertySetInstance = buildPropertySet("Attributes", pHasProperties);
 
-	for (auto itAttribute : mapAttributes)
+	for (auto itProperty : mapProperties)
 	{
-		SdaiInstance iPropertySingleValueInstance = buildPropertySingleValue(
-			itAttribute.first.c_str(),
-			"attribute",
-			CW2A(itAttribute.second.c_str()),
-			"IFCTEXT");
-		assert(iPropertySingleValueInstance != 0);
-
-		sdaiAppend(pHasProperties, sdaiINSTANCE, (void*)iPropertySingleValueInstance);
+		sdaiAppend(pHasProperties, sdaiINSTANCE, (void*)itProperty.second);
 	}
 
 	buildRelDefinesByProperties(iSdaiInstance, iPropertySetInstance);

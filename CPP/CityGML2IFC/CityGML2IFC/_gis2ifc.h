@@ -202,10 +202,15 @@ protected: // Methods
 	/* Properties */
 	SdaiInstance buildPropertySet(char* szName, SdaiAggr& pHasProperties);
 	SdaiInstance buildRelDefinesByProperties(SdaiInstance iRelatedObject, SdaiInstance iRelatingPropertyDefinition);
-	SdaiInstance buildPropertySingleValue(
+	SdaiInstance buildPropertySingleValueText(
 		const char* szName, 
 		const char* szDescription,
 		const char* szNominalValue,
+		const char* szTypePath);
+	SdaiInstance buildPropertySingleValueReal(
+		const char* szName,
+		const char* szDescription,
+		double dNominalValue,
 		const char* szTypePath);
 
 	/* Materials */
