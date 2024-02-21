@@ -199,6 +199,13 @@ protected: // Methods
 		SdaiInstance& iBuildingElementInstancePlacement,
 		const vector<SdaiInstance>& vecRepresentations);
 
+	/* Style */
+	SdaiInstance buildStyledItemInstance();
+	SdaiInstance buildPresentationStyleAssignmentInstance();
+	SdaiInstance buildSurfaceStyleInstance();
+	SdaiInstance buildSurfaceStyleRenderingInstance();
+	SdaiInstance buildColorRgbInstance();
+
 	/* Properties */
 	SdaiInstance buildPropertySet(char* szName, SdaiAggr& pHasProperties);
 	SdaiInstance buildRelDefinesByProperties(SdaiInstance iRelatedObject, SdaiInstance iRelatingPropertyDefinition);

@@ -702,6 +702,143 @@ SdaiInstance _exporter_base::buildBuildingElementInstance(
 	return iBuildingElementInstance;
 }
 
+SdaiInstance _exporter_base::buildStyledItemInstance()
+{
+	SdaiInstance iStyledItemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSTYLEDITEM");
+	assert(iStyledItemInstance != 0);
+
+	sdaiPutAttrBN(iStyledItemInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iStyledItemInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+
+	SdaiAggr pStyles = sdaiCreateAggrBN(iStyledItemInstance, "Styles");
+	assert(pStyles != nullptr);
+
+	SdaiInstance iPresentationStyleAssignmentInstance = buildPresentationStyleAssignmentInstance();
+	sdaiAppend(pStyles, sdaiINSTANCE, (void*)iPresentationStyleAssignmentInstance);
+
+	pStyles = sdaiCreateAggrBN(iPresentationStyleAssignmentInstance, "Styles");
+	assert(pStyles != nullptr);
+
+	SdaiInstance iSurfaceStyleInstance = buildSurfaceStyleInstance();
+	sdaiPutAttrBN(iSurfaceStyleInstance, "Side", sdaiENUM, "BOTH");
+	sdaiAppend(pStyles, sdaiINSTANCE, (void*)iSurfaceStyleInstance);	
+
+	pStyles = sdaiCreateAggrBN(iSurfaceStyleInstance, "Styles");
+	assert(pStyles != nullptr);
+
+	SdaiInstance iSurfaceStyleRenderingInstance = buildSurfaceStyleRenderingInstance();
+	sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "ReflectanceMethod", sdaiENUM, "NOTDEFINED");
+	sdaiAppend(pStyles, sdaiINSTANCE, (void*)iSurfaceStyleRenderingInstance);
+
+	SdaiInstance iColorRgbInstance = buildColorRgbInstance();
+
+	double dR = 0.;
+	sdaiPutAttrBN(iColorRgbInstance, "Red", sdaiREAL, &dR);
+
+	double dG = 0.;
+	sdaiPutAttrBN(iColorRgbInstance, "Green", sdaiREAL, &dG);
+
+	double dB = 1.;
+	sdaiPutAttrBN(iColorRgbInstance, "Blue", sdaiREAL, &dB);
+	
+	sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "SurfaceColour", sdaiINSTANCE, (void*)iColorRgbInstance);
+
+	double dTransparency = 0.;
+	sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "Transparency", sdaiREAL, &dTransparency);
+
+	// DiffuseColour
+	{
+		SdaiInstance iColourOrFactorInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCCOLOURORFACTOR");
+		assert(iColourOrFactorInstance != 0);
+
+		double dValueComponent = 1.;
+		SdaiADB pValueComponentADB = sdaiCreateADB(sdaiREAL, &dValueComponent);
+		assert(pValueComponentADB != nullptr);
+
+		sdaiPutADBTypePath(pValueComponentADB, 1, "IFCNORMALISEDRATIOMEASURE");
+		sdaiPutAttrBN(iColourOrFactorInstance, "ValueComponent", sdaiADB, (void*)pValueComponentADB);
+
+		sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "DiffuseColour", sdaiADB, (void*)iColourOrFactorInstance);
+	}
+
+	// ReflectionColour
+	{
+		SdaiInstance iColourOrFactorInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCCOLOURORFACTOR");
+		assert(iColourOrFactorInstance != 0);
+
+		double dValueComponent = 1.;
+		SdaiADB pValueComponentADB = sdaiCreateADB(sdaiREAL, &dValueComponent);
+		assert(pValueComponentADB != nullptr);
+
+		sdaiPutADBTypePath(pValueComponentADB, 1, "IFCNORMALISEDRATIOMEASURE");
+		sdaiPutAttrBN(iColourOrFactorInstance, "ValueComponent", sdaiADB, (void*)pValueComponentADB);
+
+		sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "ReflectionColour", sdaiADB, (void*)iColourOrFactorInstance);
+	}
+
+	// SpecularColour
+	{
+		SdaiInstance iColourOrFactorInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCCOLOURORFACTOR");
+		assert(iColourOrFactorInstance != 0);
+
+		double dValueComponent = 1.;
+		SdaiADB pValueComponentADB = sdaiCreateADB(sdaiREAL, &dValueComponent);
+		assert(pValueComponentADB != nullptr);
+
+		sdaiPutADBTypePath(pValueComponentADB, 1, "IFCNORMALISEDRATIOMEASURE");
+		sdaiPutAttrBN(iColourOrFactorInstance, "ValueComponent", sdaiADB, (void*)pValueComponentADB);
+
+		sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "SpecularColour", sdaiADB, (void*)iColourOrFactorInstance);
+	}
+
+	return iStyledItemInstance;
+}
+
+SdaiInstance _exporter_base::buildPresentationStyleAssignmentInstance()
+{
+	SdaiInstance iPresentationStyleAssignmentInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPRESENTATIONSTYLEASSIGNMENT");
+	assert(iPresentationStyleAssignmentInstance != 0);
+
+	sdaiPutAttrBN(iPresentationStyleAssignmentInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iPresentationStyleAssignmentInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+
+	return iPresentationStyleAssignmentInstance;
+}
+
+SdaiInstance _exporter_base::buildSurfaceStyleInstance()
+{
+	SdaiInstance iSurfaceStyleInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSURFACESTYLE");
+	assert(iSurfaceStyleInstance != 0);
+
+	sdaiPutAttrBN(iSurfaceStyleInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iSurfaceStyleInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+
+	return iSurfaceStyleInstance;
+}
+
+SdaiInstance _exporter_base::buildSurfaceStyleRenderingInstance()
+{
+	SdaiInstance iSurfaceStyleRenderingInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSURFACESTYLERENDERING");
+	assert(iSurfaceStyleRenderingInstance != 0);
+
+	sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+
+	return iSurfaceStyleRenderingInstance;
+}
+
+SdaiInstance _exporter_base::buildColorRgbInstance()
+{
+	SdaiInstance iColorRgbInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCCOLOURRGB");
+	assert(iColorRgbInstance != 0);
+
+	sdaiPutAttrBN(iColorRgbInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iColorRgbInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+	sdaiPutAttrBN(iColorRgbInstance, "Name", sdaiSTRING, "Color");
+
+	return iColorRgbInstance;
+}
+
 SdaiInstance _exporter_base::buildPropertySet(char* szName, SdaiAggr& pHasProperties)
 {
 	SdaiInstance iPropertySetInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPROPERTYSET");
@@ -1490,6 +1627,9 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 	assert(iFacetedBrepInstance != 0);
 
 	sdaiPutAttrBN(iFacetedBrepInstance, "Outer", sdaiINSTANCE, (void*)iClosedShellInstance);
+
+	SdaiInstance iStyledItemInstance = buildStyledItemInstance();
+	sdaiPutAttrBN(iFacetedBrepInstance, "StyledByItem", sdaiINSTANCE, (void*)iStyledItemInstance);
 
 	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCSHAPEREPRESENTATION");
 	assert(iShapeRepresentationInstance != 0);
