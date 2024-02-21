@@ -702,8 +702,10 @@ SdaiInstance _exporter_base::buildBuildingElementInstance(
 	return iBuildingElementInstance;
 }
 
-SdaiInstance _exporter_base::buildStyledItemInstance()
+SdaiInstance _exporter_base::buildStyledItemInstance(SdaiInstance iInstance)
 {
+	assert(iInstance != 0);
+
 	SdaiInstance iStyledItemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSTYLEDITEM");
 	assert(iStyledItemInstance != 0);
 
@@ -790,6 +792,8 @@ SdaiInstance _exporter_base::buildStyledItemInstance()
 
 		sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "SpecularColour", sdaiADB, (void*)iColourOrFactorInstance);
 	}
+
+	sdaiPutAttrBN(iStyledItemInstance, "Item", sdaiINSTANCE, (void*)iInstance);
 
 	return iStyledItemInstance;
 }
@@ -1628,8 +1632,7 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 
 	sdaiPutAttrBN(iFacetedBrepInstance, "Outer", sdaiINSTANCE, (void*)iClosedShellInstance);
 
-	SdaiInstance iStyledItemInstance = buildStyledItemInstance();
-	sdaiPutAttrBN(iFacetedBrepInstance, "StyledByItem", sdaiINSTANCE, (void*)iStyledItemInstance);
+	buildStyledItemInstance(iFacetedBrepInstance);	
 
 	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCSHAPEREPRESENTATION");
 	assert(iShapeRepresentationInstance != 0);

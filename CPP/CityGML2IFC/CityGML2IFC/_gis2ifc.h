@@ -200,7 +200,7 @@ protected: // Methods
 		const vector<SdaiInstance>& vecRepresentations);
 
 	/* Style */
-	SdaiInstance buildStyledItemInstance();
+	SdaiInstance buildStyledItemInstance(SdaiInstance iInstance);
 	SdaiInstance buildPresentationStyleAssignmentInstance();
 	SdaiInstance buildSurfaceStyleInstance();
 	SdaiInstance buildSurfaceStyleRenderingInstance();
