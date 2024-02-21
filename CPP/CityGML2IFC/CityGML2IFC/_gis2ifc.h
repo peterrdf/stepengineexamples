@@ -256,7 +256,7 @@ protected:  // Methods
 	void createPoint3DSet(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createPolyLine3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 
-	void createAttributes(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance);
+	void createProperties(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance);
 
 	string getTag(OwlInstance iInstance) const;
 };

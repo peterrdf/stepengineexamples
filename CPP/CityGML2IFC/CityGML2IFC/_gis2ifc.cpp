@@ -897,7 +897,7 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 		iSiteInstancePlacement);
 	assert(iSiteInstancePlacement != 0);
 
-	createAttributes(iRootInstance, iSiteInstance);
+	createProperties(iRootInstance, iSiteInstance);
 
 	buildRelAggregatesInstance(
 		"ProjectContainer", 
@@ -978,7 +978,7 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 
 		vecBuildingInstances.push_back(iBuildingInstance);
 
-		createAttributes(itBuilding.first, iBuildingInstance);
+		createProperties(itBuilding.first, iBuildingInstance);
 
 		searchForBuildingGeometry(itBuilding.first, itBuilding.first);
 
@@ -1625,7 +1625,7 @@ void _citygml_exporter::createPolyLine3D(OwlInstance iInstance, vector<SdaiInsta
 	vecGeometryInstances.push_back(iShapeRepresentationInstance);
 }
 
-void _citygml_exporter::createAttributes(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance)
+void _citygml_exporter::createProperties(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance)
 {
 	assert(iOwlInstance != 0);
 	assert(iSdaiInstance != 0);
@@ -1715,7 +1715,7 @@ void _citygml_exporter::createAttributes(OwlInstance iOwlInstance, SdaiInstance 
 	}
 
 	SdaiAggr pHasProperties = nullptr;
-	SdaiInstance iPropertySetInstance = buildPropertySet("Attributes", pHasProperties);
+	SdaiInstance iPropertySetInstance = buildPropertySet("Attributes & Properties", pHasProperties);
 
 	for (auto itProperty : mapProperties)
 	{
