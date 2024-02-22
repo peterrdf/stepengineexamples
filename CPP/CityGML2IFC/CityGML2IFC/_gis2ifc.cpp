@@ -711,7 +711,7 @@ void _exporter_base::createStyledItemInstance(OwlInstance iOwlInstance, SdaiInst
 	assert(iOwlInstance != 0);
 	assert(iSdaiInstance != 0);
 
-	// Material
+	// material
 	OwlInstance* piMaterials = nullptr;
 	int64_t iMaterialsCount = 0;
 	GetObjectProperty(
@@ -722,18 +722,94 @@ void _exporter_base::createStyledItemInstance(OwlInstance iOwlInstance, SdaiInst
 
 	assert(iMaterialsCount == 1);
 
-	if (!hasObjectProperty(piMaterials[0], "textures"))
-	{
-		string strTag = getTag(piMaterials[0]);
-		if (strTag == "Default Material")
-		{
-			return;
-		}
-	}
-	else
+	OwlInstance iMaterialInstance = piMaterials[0];
+
+	if (hasObjectProperty(iMaterialInstance, "textures"))
 	{
 		m_pSite->logWarn("Textures are not supported.");
+
+		return;
 	}
+
+	string strTag = getTag(iMaterialInstance);
+	if (strTag == "Default Material")
+	{
+		return;
+	}
+
+	// color
+	OwlInstance* piInstances = nullptr;
+	int64_t iInstancesCount = 0;
+	GetObjectProperty(
+		iMaterialInstance,
+		GetPropertyByName(getSite()->getOwlModel(), "color"),
+		&piInstances,
+		&iInstancesCount);
+
+	assert(iInstancesCount == 1);
+
+	OwlInstance iColorInstance = piInstances[0];
+
+	// transparency
+	double* pdValues = nullptr;
+	int64_t iValuesCount = 0;
+	GetDatatypeProperty(
+		iColorInstance,
+		GetPropertyByName(getSite()->getOwlModel(), "transparency"),
+		(void**)&pdValues,
+		&iValuesCount);
+
+	double dTransparency = 0.1;
+	if (iValuesCount == 1)
+	{
+		dTransparency = pdValues[0];
+	}
+
+	// diffuse
+	piInstances = nullptr;
+	iInstancesCount = 0;
+	GetObjectProperty(
+		iColorInstance,
+		GetPropertyByName(getSite()->getOwlModel(), "diffuse"),
+		&piInstances,
+		&iInstancesCount);
+
+	assert(iInstancesCount == 1);
+
+	OwlInstance iDiffuseColorComponentInstance = piInstances[0];
+
+	// R
+	double* pdRValue = nullptr;
+	iValuesCount = 0;
+	GetDatatypeProperty(
+		iDiffuseColorComponentInstance,
+		GetPropertyByName(getSite()->getOwlModel(), "R"),
+		(void**)&pdRValue,
+		&iValuesCount);
+
+	assert(iValuesCount == 1);
+
+	// G
+	double* pdGValue = nullptr;
+	iValuesCount = 0;
+	GetDatatypeProperty(
+		iDiffuseColorComponentInstance,
+		GetPropertyByName(getSite()->getOwlModel(), "G"),
+		(void**)&pdGValue,
+		&iValuesCount);
+
+	assert(iValuesCount == 1);
+
+	// B
+	double* pdBValue = nullptr;
+	iValuesCount = 0;
+	GetDatatypeProperty(
+		iDiffuseColorComponentInstance,
+		GetPropertyByName(getSite()->getOwlModel(), "B"),
+		(void**)&pdBValue,
+		&iValuesCount);
+
+	assert(iValuesCount == 1);
 
 	SdaiInstance iStyledItemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSTYLEDITEM");
 	assert(iStyledItemInstance != 0);
@@ -762,65 +838,12 @@ void _exporter_base::createStyledItemInstance(OwlInstance iOwlInstance, SdaiInst
 	sdaiAppend(pStyles, sdaiINSTANCE, (void*)iSurfaceStyleRenderingInstance);
 
 	SdaiInstance iColorRgbInstance = buildColorRgbInstance();
-
-	double dR = 0.;
-	sdaiPutAttrBN(iColorRgbInstance, "Red", sdaiREAL, &dR);
-
-	double dG = 0.;
-	sdaiPutAttrBN(iColorRgbInstance, "Green", sdaiREAL, &dG);
-
-	double dB = 1.;
-	sdaiPutAttrBN(iColorRgbInstance, "Blue", sdaiREAL, &dB);
+	sdaiPutAttrBN(iColorRgbInstance, "Red", sdaiREAL, &pdRValue[0]);
+	sdaiPutAttrBN(iColorRgbInstance, "Green", sdaiREAL, &pdGValue[0]);
+	sdaiPutAttrBN(iColorRgbInstance, "Blue", sdaiREAL, &pdBValue[0]);
 	
 	sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "SurfaceColour", sdaiINSTANCE, (void*)iColorRgbInstance);
-
-	double dTransparency = 0.;
 	sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "Transparency", sdaiREAL, &dTransparency);
-
-	// DiffuseColour
-	{
-		SdaiInstance iColourOrFactorInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCCOLOURORFACTOR");
-		assert(iColourOrFactorInstance != 0);
-
-		double dValueComponent = 1.;
-		SdaiADB pValueComponentADB = sdaiCreateADB(sdaiREAL, &dValueComponent);
-		assert(pValueComponentADB != nullptr);
-
-		sdaiPutADBTypePath(pValueComponentADB, 1, "IFCNORMALISEDRATIOMEASURE");
-		sdaiPutAttrBN(iColourOrFactorInstance, "ValueComponent", sdaiADB, (void*)pValueComponentADB);
-
-		sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "DiffuseColour", sdaiADB, (void*)iColourOrFactorInstance);
-	}
-
-	// ReflectionColour
-	{
-		SdaiInstance iColourOrFactorInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCCOLOURORFACTOR");
-		assert(iColourOrFactorInstance != 0);
-
-		double dValueComponent = 1.;
-		SdaiADB pValueComponentADB = sdaiCreateADB(sdaiREAL, &dValueComponent);
-		assert(pValueComponentADB != nullptr);
-
-		sdaiPutADBTypePath(pValueComponentADB, 1, "IFCNORMALISEDRATIOMEASURE");
-		sdaiPutAttrBN(iColourOrFactorInstance, "ValueComponent", sdaiADB, (void*)pValueComponentADB);
-
-		sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "ReflectionColour", sdaiADB, (void*)iColourOrFactorInstance);
-	}
-
-	// SpecularColour
-	{
-		SdaiInstance iColourOrFactorInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCCOLOURORFACTOR");
-		assert(iColourOrFactorInstance != 0);
-
-		double dValueComponent = 1.;
-		SdaiADB pValueComponentADB = sdaiCreateADB(sdaiREAL, &dValueComponent);
-		assert(pValueComponentADB != nullptr);
-
-		sdaiPutADBTypePath(pValueComponentADB, 1, "IFCNORMALISEDRATIOMEASURE");
-		sdaiPutAttrBN(iColourOrFactorInstance, "ValueComponent", sdaiADB, (void*)pValueComponentADB);
-
-		sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "SpecularColour", sdaiADB, (void*)iColourOrFactorInstance);
-	}
 
 	sdaiPutAttrBN(iStyledItemInstance, "Item", sdaiINSTANCE, (void*)iSdaiInstance);
 }
