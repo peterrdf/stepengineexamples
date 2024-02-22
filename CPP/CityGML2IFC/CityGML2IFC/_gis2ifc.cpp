@@ -1924,7 +1924,7 @@ void _citygml_exporter::createProperties(OwlInstance iOwlInstance, SdaiInstance 
 
 				default:
 				{
-					assert(false);
+					//#todo
 				}
 				break;
 			} // switch (GetPropertyType(iPropertyInstance))
