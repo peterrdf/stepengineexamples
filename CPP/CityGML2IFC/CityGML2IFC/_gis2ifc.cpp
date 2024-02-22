@@ -759,7 +759,7 @@ void _exporter_base::createStyledItemInstance(OwlInstance iOwlInstance, SdaiInst
 		(void**)&pdValues,
 		&iValuesCount);
 
-	double dTransparency = 0.1;
+	double dTransparency = 0.;
 	if (iValuesCount == 1)
 	{
 		dTransparency = pdValues[0];
