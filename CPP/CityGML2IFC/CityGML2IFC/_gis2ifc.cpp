@@ -109,6 +109,7 @@ void _gis2ifc::setFormatSettings(OwlModel iOwlModel)
 // ************************************************************************************************
 _exporter_base::_exporter_base(_gis2ifc* pSite)
 	: m_pSite(pSite)
+	, m_iTagProperty(0)
 	, m_iIfcModel(0)	
 	, m_iSiteInstance(0)
 	, m_iPersonInstance(0)
@@ -125,6 +126,9 @@ _exporter_base::_exporter_base(_gis2ifc* pSite)
 	
 {
 	assert(m_pSite != nullptr);
+
+	m_iTagProperty = GetPropertyByName(getSite()->getOwlModel(), "tag");
+	assert(m_iTagProperty);
 }
 
 /*virtual*/ _exporter_base::~_exporter_base()
@@ -702,9 +706,34 @@ SdaiInstance _exporter_base::buildBuildingElementInstance(
 	return iBuildingElementInstance;
 }
 
-SdaiInstance _exporter_base::buildStyledItemInstance(SdaiInstance iInstance)
+void _exporter_base::createStyledItemInstance(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance)
 {
-	assert(iInstance != 0);
+	assert(iOwlInstance != 0);
+	assert(iSdaiInstance != 0);
+
+	// Material
+	OwlInstance* piMaterials = nullptr;
+	int64_t iMaterialsCount = 0;
+	GetObjectProperty(
+		iOwlInstance,
+		GetPropertyByName(getSite()->getOwlModel(), "material"),
+		&piMaterials,
+		&iMaterialsCount);
+
+	assert(iMaterialsCount == 1);
+
+	if (!hasObjectProperty(piMaterials[0], "textures"))
+	{
+		string strTag = getTag(piMaterials[0]);
+		if (strTag == "Default Material")
+		{
+			return;
+		}
+	}
+	else
+	{
+		m_pSite->logWarn("Textures are not supported.");
+	}
 
 	SdaiInstance iStyledItemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSTYLEDITEM");
 	assert(iStyledItemInstance != 0);
@@ -793,9 +822,7 @@ SdaiInstance _exporter_base::buildStyledItemInstance(SdaiInstance iInstance)
 		sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "SpecularColour", sdaiADB, (void*)iColourOrFactorInstance);
 	}
 
-	sdaiPutAttrBN(iStyledItemInstance, "Item", sdaiINSTANCE, (void*)iInstance);
-
-	return iStyledItemInstance;
+	sdaiPutAttrBN(iStyledItemInstance, "Item", sdaiINSTANCE, (void*)iSdaiInstance);
 }
 
 SdaiInstance _exporter_base::buildPresentationStyleAssignmentInstance()
@@ -988,18 +1015,66 @@ SdaiInstance _exporter_base::buildRelAssociatesMaterial(SdaiInstance iBuildingEl
 	return iRelAssociatesMaterialInstance;
 }
 
+string _exporter_base::getTag(OwlInstance iInstance) const
+{
+	assert(iInstance != 0);
+
+	SetCharacterSerialization(getSite()->getOwlModel(), 0, 0, false);
+
+	wchar_t** szValue = nullptr;
+	int64_t iValuesCount = 0;
+	GetDatatypeProperty(iInstance, m_iTagProperty, (void**)&szValue, &iValuesCount);
+
+	assert(iValuesCount == 1);
+
+	SetCharacterSerialization(getSite()->getOwlModel(), 0, 0, true);
+
+	return (LPCSTR)CW2A(szValue[0]);
+}
+
+OwlInstance* _exporter_base::getObjectProperty(OwlInstance iInstance, const string& strPropertyName, int64_t& iInstancesCount) const
+{
+	assert(iInstance != 0);
+	assert(!strPropertyName.empty());
+
+	iInstancesCount = 0;
+
+	RdfProperty iProperty = GetPropertyByName(getSite()->getOwlModel(), strPropertyName.c_str());
+	if (iProperty == 0)
+	{
+		return nullptr;
+	}
+
+	OwlInstance* piInstances = nullptr;
+	GetObjectProperty(
+		iInstance,
+		iProperty,
+		&piInstances,
+		&iInstancesCount);
+
+	if (iInstancesCount == 0)
+	{
+		return nullptr;
+	}
+
+	return piInstances;
+}
+
+bool _exporter_base::hasObjectProperty(OwlInstance iInstance, const string& strPropertyName)
+{
+	int64_t iInstancesCount = 0;
+
+	return getObjectProperty(iInstance, strPropertyName, iInstancesCount) != nullptr;
+}
+
 // ************************************************************************************************
 _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	: _exporter_base(pSite)
-	, m_iBuildingClass(0)
-	, m_iTagProperty(0)
+	, m_iBuildingClass(0)	
 	, m_mapBuildings()
 	, m_mapGeometries()
 {
 	m_iBuildingClass = GetClassByName(getSite()->getOwlModel(), "class:Building");
-
-	m_iTagProperty = GetPropertyByName(getSite()->getOwlModel(), "tag");
-	assert(m_iTagProperty);
 }
 
 /*virtual*/ _citygml_exporter::~_citygml_exporter()
@@ -1632,7 +1707,7 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 
 	sdaiPutAttrBN(iFacetedBrepInstance, "Outer", sdaiINSTANCE, (void*)iClosedShellInstance);
 
-	buildStyledItemInstance(iFacetedBrepInstance);	
+	createStyledItemInstance(iInstance, iFacetedBrepInstance);
 
 	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCSHAPEREPRESENTATION");
 	assert(iShapeRepresentationInstance != 0);
@@ -1866,23 +1941,6 @@ void _citygml_exporter::createProperties(OwlInstance iOwlInstance, SdaiInstance 
 	}
 
 	buildRelDefinesByProperties(iSdaiInstance, iPropertySetInstance);
-}
-
-string _citygml_exporter::getTag(OwlInstance iInstance) const
-{
-	assert(iInstance != 0);
-
-	SetCharacterSerialization(getSite()->getOwlModel(), 0, 0, false);
-
-	wchar_t** szValue = nullptr;
-	int64_t iValuesCount = 0;
-	GetDatatypeProperty(iInstance, m_iTagProperty, (void**)&szValue, &iValuesCount);
-
-	assert(iValuesCount == 1);
-
-	SetCharacterSerialization(getSite()->getOwlModel(), 0, 0, true);
-
-	return (LPCSTR)CW2A(szValue[0]);
 }
 
 // ************************************************************************************************

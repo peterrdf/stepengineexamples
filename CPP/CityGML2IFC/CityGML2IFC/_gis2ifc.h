@@ -121,6 +121,8 @@ private: // Members
 
 	_gis2ifc* m_pSite;
 
+	RdfProperty m_iTagProperty;
+
 	SdaiModel m_iIfcModel;	
 	SdaiInstance m_iSiteInstance;
 	SdaiInstance m_iPersonInstance;
@@ -200,7 +202,7 @@ protected: // Methods
 		const vector<SdaiInstance>& vecRepresentations);
 
 	/* Style */
-	SdaiInstance buildStyledItemInstance(SdaiInstance iInstance);
+	void createStyledItemInstance(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance);
 	SdaiInstance buildPresentationStyleAssignmentInstance();
 	SdaiInstance buildSurfaceStyleInstance();
 	SdaiInstance buildSurfaceStyleRenderingInstance();
@@ -226,6 +228,11 @@ protected: // Methods
 	SdaiInstance buildMaterialLayerSet(double dThickness);
 	SdaiInstance buildMaterialLayerSetUsage(double dThickness);
 	SdaiInstance buildRelAssociatesMaterial(SdaiInstance iBuildingElementInstance, double dThickness);
+
+	/* Helpers */
+	string getTag(OwlInstance iInstance) const;
+	OwlInstance* getObjectProperty(OwlInstance iInstance, const string& strPropertyName, int64_t& iInstancesCount) const;
+	bool hasObjectProperty(OwlInstance iInstance, const string& strPropertyName);
 };
 
 // ************************************************************************************************
@@ -234,8 +241,7 @@ class _citygml_exporter : public _exporter_base
 
 private: // Members
 
-	OwlClass m_iBuildingClass;
-	RdfProperty m_iTagProperty;
+	OwlClass m_iBuildingClass;	
 	map<OwlInstance, vector<OwlInstance>> m_mapBuildings;
 	map<OwlInstance, SdaiInstance> m_mapGeometries;
 
@@ -264,8 +270,6 @@ protected:  // Methods
 	void createPolyLine3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 
 	void createProperties(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance);
-
-	string getTag(OwlInstance iInstance) const;
 };
 
 // ************************************************************************************************
