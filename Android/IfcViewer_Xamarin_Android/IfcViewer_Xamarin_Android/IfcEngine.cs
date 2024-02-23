@@ -1,5 +1,7 @@
+using Java.Util.Functions;
 using System;
-using System.Runtime.InteropServices;using static IfcEngine.x86_64;
+using System.Runtime.InteropServices;using static Android.Renderscripts.Sampler;
+using static IfcEngine.x86_64;
 namespace IfcEngine
 {
     class x86_64
@@ -1362,9 +1364,16 @@ namespace IfcEngine
 
         //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetADBType")]
+        public static long sdaiGetADBType(ref long ADB)
+        {
+            if (_x86)
+            {
+                int iADB = (int)ADB;
+                return x86.sdaiGetADBType(ref iADB);
+            }
 
-        public static extern long sdaiGetADBType(ref long ADB);
+            return x64.sdaiGetADBType(ref ADB);
+        }
 
 
 
@@ -1378,9 +1387,16 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetADBTypePath")]
+        public static IntPtr sdaiGetADBTypePath(ref long ADB, long typeNameNumber)
+        {
+            if (_x86)
+            {
+                int iADB = (int)ADB;
+                return x86.sdaiGetADBTypePath(ref iADB, (int)typeNameNumber);
+            }
 
-        public static extern IntPtr sdaiGetADBTypePath(ref long ADB, long typeNameNumber);
+            return x64.sdaiGetADBTypePath(ref ADB, typeNameNumber);
+        }
 
 
 
@@ -1394,9 +1410,18 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetADBTypePathx")]
-
-        public static extern void sdaiGetADBTypePathx(ref long ADB, long typeNameNumber, out IntPtr path);
+        public static void sdaiGetADBTypePathx(ref long ADB, long typeNameNumber, out IntPtr path)
+        {
+            if (_x86)
+            {
+                int iADB = (int)ADB;
+                x86.sdaiGetADBTypePathx(ref iADB, (int)typeNameNumber, out path);
+            }
+            else
+            {
+                x64.sdaiGetADBTypePathx(ref ADB, typeNameNumber, out path);
+            }            
+        }
 
 
 
@@ -1410,65 +1435,123 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetADBValue")]
-
-        public static extern void sdaiGetADBValue(ref long ADB, long valueType, out long value);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetADBValue")]
-
-        public static extern void sdaiGetADBValue(ref long ADB, long valueType, out double value);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetADBValue")]
-
-        public static extern void sdaiGetADBValue(ref long ADB, long valueType, out IntPtr value);
+        public static void sdaiGetADBValue(ref long ADB, long valueType, out long value)
+        {
+            if (_x86)
+            {
+                int iADB = (int)ADB;
+                x86.sdaiGetADBValue(ref iADB, (int)valueType, out int iValue);
+                value = iValue;
+            }
+            else
+            {
+                x64.sdaiGetADBValue(ref ADB, valueType, out value);
+            }            
+        }
 
 
 
-		//
-
-		//		engiGetAggrElement                          (http://rdf.bg/ifcdoc/CS64/engiGetAggrElement.html)
-
-		//
-
-		//	...
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrElement")]
-
-        public static extern long engiGetAggrElement(long aggregate, long elementIndex, long valueType, out long value);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrElement")]
-
-        public static extern long engiGetAggrElement(long aggregate, long elementIndex, long valueType, out double value);
+        public static void sdaiGetADBValue(ref long ADB, long valueType, out double value)
+        {
+            if (_x86)
+            {
+                int iADB = (int)ADB;
+                x86.sdaiGetADBValue(ref iADB, (int)valueType, out double dValue);
+                value = dValue;
+            }
+            else
+            {
+                x64.sdaiGetADBValue(ref ADB, valueType, out value);
+            }
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrElement")]
+        public static void sdaiGetADBValue(ref long ADB, long valueType, out IntPtr value)
+        {
+            if (_x86)
+            {
+                int iADB = (int)ADB;
+                x86.sdaiGetADBValue(ref iADB, (int)valueType, out value);
+            }
+            else
+            {
+                x64.sdaiGetADBValue(ref ADB, valueType, out value);
+            }
+        }
 
-        public static extern long engiGetAggrElement(long aggregate, long elementIndex, long valueType, out IntPtr value);
+
+
+        //
+
+        //		engiGetAggrElement                          (http://rdf.bg/ifcdoc/CS64/engiGetAggrElement.html)
+
+        //
+
+        //	...
+
+        //
+
+        public static long engiGetAggrElement(long aggregate, long elementIndex, long valueType, out long value)
+        {
+            if (_x86)
+            {
+                long lResult = x86.engiGetAggrElement((int)aggregate, (int)elementIndex, (int)valueType, out int iValue);
+                value = iValue;
+                return lResult;
+            }
+
+            return x64.engiGetAggrElement(aggregate, elementIndex, valueType, out value);
+        }
 
 
 
-		//
+        public static long engiGetAggrElement(long aggregate, long elementIndex, long valueType, out double value)
+        {
+            if (_x86)
+            {
+                long lResult = x86.engiGetAggrElement((int)aggregate, (int)elementIndex, (int)valueType, out double dValue);
+                value = dValue;
+                return lResult;
+            }
 
-		//		engiGetAggrType                             (http://rdf.bg/ifcdoc/CS64/engiGetAggrType.html)
+            return x64.engiGetAggrElement(aggregate, elementIndex, valueType, out value);
+        }
 
-		//
 
-		//	...
 
-		//
+        public static long engiGetAggrElement(long aggregate, long elementIndex, long valueType, out IntPtr value)
+        {
+            if (_x86)
+            {
+                return x86.engiGetAggrElement((int)aggregate, (int)elementIndex, (int)valueType, out value);
+            }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrType")]
+            return x64.engiGetAggrElement(aggregate, elementIndex, valueType, out value);
+        }
 
-        public static extern void engiGetAggrType(long aggregate, out long aggragateType);
+
+
+        //
+
+        //		engiGetAggrType                             (http://rdf.bg/ifcdoc/CS64/engiGetAggrType.html)
+
+        //
+
+        //	...
+
+        //
+
+        public static void engiGetAggrType(long aggregate, out long aggragateType)
+        {
+            if (_x86)
+            {
+                x86.engiGetAggrType((int)aggregate, out int iAggragateType);
+                aggragateType = iAggragateType;
+            }
+
+            x64.engiGetAggrType(aggregate, out aggragateType);
+        }
 
 
 
@@ -1482,37 +1565,65 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrTypex")]
+        public static void engiGetAggrTypex(long aggregate, out long aggragateType)
+        {
+            if (_x86)
+            {
+                x86.engiGetAggrTypex((int)aggregate, out int iAggragateType);
+                aggragateType = iAggragateType;
+            }
 
-        public static extern void engiGetAggrTypex(long aggregate, out long aggragateType);
-
-
-
-		//
-
-		//		sdaiGetAttr                                 (http://rdf.bg/ifcdoc/CS64/sdaiGetAttr.html)
-
-		//
-
-		//	...
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAttr")]
-
-        public static extern long sdaiGetAttr(long instance, long attribute, long valueType, out long value);
+            x64.engiGetAggrTypex(aggregate, out aggragateType);
+        }
 
 
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAttr")]
+        //		sdaiGetAttr                                 (http://rdf.bg/ifcdoc/CS64/sdaiGetAttr.html)
 
-        public static extern long sdaiGetAttr(long instance, long attribute, long valueType, out double value);
+        //
+
+        //	...
+
+        //
+
+        public static long sdaiGetAttr(long instance, long attribute, long valueType, out long value)
+        {
+            if (_x86)
+            {
+                long lResult = x86.sdaiGetAttr((int)instance, (int)attribute, (int)valueType, out int iValue);
+                value = iValue;
+                return lResult;
+            }
+
+            return x64.sdaiGetAttr(instance, attribute, valueType, out value);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAttr")]
+        public static long sdaiGetAttr(long instance, long attribute, long valueType, out double value)
+        {
+            if (_x86)
+            {
+                long lResult = x86.sdaiGetAttr((int)instance, (int)attribute, (int)valueType, out double dValue);
+                value = dValue;
+                return lResult;
+            }
 
-        public static extern long sdaiGetAttr(long instance, long attribute, long valueType, out IntPtr value);
+            return x64.sdaiGetAttr(instance, attribute, valueType, out value);
+        }
+
+
+
+        public static long sdaiGetAttr(long instance, long attribute, long valueType, out IntPtr value)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetAttr((int)instance, (int)attribute, (int)valueType, out value);
+            }
+
+            return x64.sdaiGetAttr(instance, attribute, valueType, out value);
+        }
 
 
 
@@ -1526,39 +1637,83 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAttrBN")]
+        public static long sdaiGetAttrBN(long instance, string attributeName, long valueType, out long value)
+        {
+            if (_x86)
+            {
+                long lResult = x86.sdaiGetAttrBN((int)instance, attributeName, (int)valueType, out int iValue);
+                value = iValue;
+                return lResult;
+            }
 
-        public static extern long sdaiGetAttrBN(long instance, string attributeName, long valueType, out long value);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAttrBN")]
-
-        public static extern long sdaiGetAttrBN(long instance, string attributeName, long valueType, out double value);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAttrBN")]
-
-        public static extern long sdaiGetAttrBN(long instance, string attributeName, long valueType, out IntPtr value);
+            return x64.sdaiGetAttrBN(instance, attributeName, valueType, out value);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAttrBN")]
+        public static long sdaiGetAttrBN(long instance, string attributeName, long valueType, out double value)
+        {
+            if (_x86)
+            {
+                long lResult = x86.sdaiGetAttrBN((int)instance, attributeName, (int)valueType, out double dValue);
+                value = dValue;
+                return lResult;
+            }
 
-        public static extern long sdaiGetAttrBN(long instance, byte[] attributeName, long valueType, out long value);
+            return x64.sdaiGetAttrBN(instance, attributeName, valueType, out value);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAttrBN")]
+        public static long sdaiGetAttrBN(long instance, string attributeName, long valueType, out IntPtr value)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetAttrBN((int)instance, attributeName, (int)valueType, out value);
+            }
 
-        public static extern long sdaiGetAttrBN(long instance, byte[] attributeName, long valueType, out double value);
+            return x64.sdaiGetAttrBN(instance, attributeName, valueType, out value);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAttrBN")]
+        public static long sdaiGetAttrBN(long instance, byte[] attributeName, long valueType, out long value)
+        {
+            if (_x86)
+            {
+                long lResult = x86.sdaiGetAttrBN((int)instance, attributeName, (int)valueType, out int iValue);
+                value = iValue;
+                return lResult;
+            }
 
-        public static extern long sdaiGetAttrBN(long instance, byte[] attributeName, long valueType, out IntPtr value);
+            return x64.sdaiGetAttrBN(instance, attributeName, valueType, out value);
+        }
+
+
+
+        public static long sdaiGetAttrBN(long instance, byte[] attributeName, long valueType, out double value)
+        {
+            if (_x86)
+            {
+                long lResult = x86.sdaiGetAttrBN((int)instance, attributeName, (int)valueType, out double dValue);
+                value = dValue;
+                return lResult;
+            }
+
+            return x64.sdaiGetAttrBN(instance, attributeName, valueType, out value);
+        }
+
+
+
+        public static long sdaiGetAttrBN(long instance, byte[] attributeName, long valueType, out IntPtr value)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetAttrBN((int)instance, attributeName, (int)valueType, out value);
+            }
+
+            return x64.sdaiGetAttrBN(instance, attributeName, valueType, out value);
+        }
 
 
 
@@ -1572,31 +1727,43 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAttrBNUnicode")]
+        public static long sdaiGetAttrBNUnicode(long instance, string attributeName, string buffer, long bufferLength)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetAttrBNUnicode((int)instance, attributeName, buffer, (int)bufferLength);
+            }
 
-        public static extern long sdaiGetAttrBNUnicode(long instance, string attributeName, string buffer, long bufferLength);
+            return x64.sdaiGetAttrBNUnicode(instance, attributeName, buffer, bufferLength);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAttrBNUnicode")]
+        public static long sdaiGetAttrBNUnicode(long instance, byte[] attributeName, byte[] buffer, long bufferLength)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetAttrBNUnicode((int)instance, attributeName, buffer, (int)bufferLength);
+            }
 
-        public static extern long sdaiGetAttrBNUnicode(long instance, byte[] attributeName, byte[] buffer, long bufferLength);
+            return x64.sdaiGetAttrBNUnicode(instance, attributeName, buffer, bufferLength);
+        }
 
 
 
-		//
+        //
 
-		//		sdaiGetStringAttrBN                         (http://rdf.bg/ifcdoc/CS64/sdaiGetStringAttrBN.html)
+        //		sdaiGetStringAttrBN                         (http://rdf.bg/ifcdoc/CS64/sdaiGetStringAttrBN.html)
 
-		//
+        //
 
-		//	This function is a specific version of sdaiGetAttrBN(..), where the valueType is sdaiSTRING.
+        //	This function is a specific version of sdaiGetAttrBN(..), where the valueType is sdaiSTRING.
 
-		//	This call can be usefull in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
+        //	This call can be usefull in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
 
-		//	this function is useless for languages as C, C++, C#, JAVA, VB.NET, Delphi and similar as they are able to map sdaiGetAttrBN(..) directly.
+        //	this function is useless for languages as C, C++, C#, JAVA, VB.NET, Delphi and similar as they are able to map sdaiGetAttrBN(..) directly.
 
-		//
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetStringAttrBN")]
 
