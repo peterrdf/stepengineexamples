@@ -2209,61 +2209,113 @@ namespace IfcEngine
 
         //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiPrepend")]
-
-        public static extern void sdaiPrepend(long list, long valueType, out long value);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiPrepend")]
-
-        public static extern void sdaiPrepend(long list, long valueType, out double value);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiPrepend")]
-
-        public static extern void sdaiPrepend(long list, long valueType, out IntPtr value);
+        public static void sdaiPrepend(long list, long valueType, out long value)
+        {
+            if (_x86)
+            {
+                x86.sdaiPrepend((int)list, (int)valueType, out int iValue);
+                value = iValue;
+            }
+            else
+            {
+                x64.sdaiPrepend(list, valueType, out value);
+            }
+        }
 
 
 
-		//
-
-		//		sdaiAppend                                  (http://rdf.bg/ifcdoc/CS64/sdaiAppend.html)
-
-		//
-
-		//	...
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiAppend")]
-
-        public static extern void sdaiAppend(long list, long valueType, out long value);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiAppend")]
-
-        public static extern void sdaiAppend(long list, long valueType, out double value);
+        public static void sdaiPrepend(long list, long valueType, out double value)
+        {
+            if (_x86)
+            {
+                x86.sdaiPrepend((int)list, (int)valueType, out double dValue);
+                value = dValue;
+            }
+            else
+            {
+                x64.sdaiPrepend(list, valueType, out value);
+            }
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiAppend")]
+        public static void sdaiPrepend(long list, long valueType, out IntPtr value)
+        {
+            if (_x86)
+            {
+                x86.sdaiPrepend((int)list, (int)valueType, out value);
+            }
+            else
+            {
+                x64.sdaiPrepend(list, valueType, out value);
+            }
+        }
 
-        public static extern void sdaiAppend(long list, long valueType, out IntPtr value);
+
+
+        //
+
+        //		sdaiAppend                                  (http://rdf.bg/ifcdoc/CS64/sdaiAppend.html)
+
+        //
+
+        //	...
+
+        //
+
+        public static void sdaiAppend(long list, long valueType, out long value)
+        {
+            if (_x86)
+            {
+                x86.sdaiAppend((int)list, (int)valueType, out int iValue);
+                value = iValue;
+            }
+            else
+            {
+                x64.sdaiAppend(list, valueType, out value);
+            }            
+        }
 
 
 
-		//
+        public static void sdaiAppend(long list, long valueType, out double value)
+        {
+            if (_x86)
+            {
+                x86.sdaiAppend((int)list, (int)valueType, out double dValue);
+                value = dValue;
+            }
+            else
+            {
+                x64.sdaiAppend(list, valueType, out value);
+            }
+        }
 
-		//		engiAppend                                  (http://rdf.bg/ifcdoc/CS64/engiAppend.html)
 
-		//
 
-		//	...
+        public static void sdaiAppend(long list, long valueType, out IntPtr value)
+        {
+            if (_x86)
+            {
+                x86.sdaiAppend((int)list, (int)valueType, out value);
+            }
+            else
+            {
+                x64.sdaiAppend(list, valueType, out value);
+            }
+        }
 
-		//
+
+
+        //
+
+        //		engiAppend                                  (http://rdf.bg/ifcdoc/CS64/engiAppend.html)
+
+        //
+
+        //	...
+
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "engiAppend")]
 
