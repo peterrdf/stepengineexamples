@@ -3,7 +3,10 @@ using System.Runtime.InteropServices;using static IfcEngine.x86_64;
 namespace IfcEngine
 {
     class x86_64
-    {
+    {
+
+        #region Constants
+
         public const long flagbit0 = 1;           // 2^^0    0000.0000..0000.0001
         public const long flagbit1 = 2;           // 2^^1    0000.0000..0000.0010
         public const long flagbit2 = 4;           // 2^^2    0000.0000..0000.0100
@@ -19,35 +22,50 @@ namespace IfcEngine
         public const long flagbit12 = 4096;       // 2^^12   0001.0000..0000.0000
         public const long flagbit13 = 8192;       // 2^^13   0010.0000..0000.0000
         public const long flagbit14 = 16384;      // 2^^14   0100.0000..0000.0000
-        public const long flagbit15 = 32768;      // 2^^15   1000.0000..0000.0000
-		public const long flagbit24 = 16777216;
-		public const long flagbit25 = 33554432;
-		public const long flagbit26 = 67108864;
-		public const long flagbit27 = 134217728;
-
-		public const long sdaiADB           = 1;
-        public const long sdaiAGGR          = sdaiADB + 1;
-        public const long sdaiBINARY        = sdaiAGGR + 1;
-        public const long sdaiBOOLEAN       = sdaiBINARY + 1;
-        public const long sdaiENUM          = sdaiBOOLEAN + 1;
-        public const long sdaiINSTANCE      = sdaiENUM + 1;
-        public const long sdaiINTEGER       = sdaiINSTANCE + 1;
-        public const long sdaiLOGICAL       = sdaiINTEGER + 1;
-        public const long sdaiREAL          = sdaiLOGICAL + 1;
-        public const long sdaiSTRING        = sdaiREAL + 1;
-        public const long sdaiUNICODE       = sdaiSTRING + 1;
+        public const long flagbit15 = 32768;      // 2^^15   1000.0000..0000.0000
+
+        public const long flagbit24 = 16777216;
+
+        public const long flagbit25 = 33554432;
+
+        public const long flagbit26 = 67108864;
+
+        public const long flagbit27 = 134217728;
+
+
+
+        public const long sdaiADB = 1;
+        public const long sdaiAGGR = sdaiADB + 1;
+        public const long sdaiBINARY = sdaiAGGR + 1;
+        public const long sdaiBOOLEAN = sdaiBINARY + 1;
+        public const long sdaiENUM = sdaiBOOLEAN + 1;
+        public const long sdaiINSTANCE = sdaiENUM + 1;
+        public const long sdaiINTEGER = sdaiINSTANCE + 1;
+        public const long sdaiLOGICAL = sdaiINTEGER + 1;
+        public const long sdaiREAL = sdaiLOGICAL + 1;
+        public const long sdaiSTRING = sdaiREAL + 1;
+        public const long sdaiUNICODE = sdaiSTRING + 1;
         public const long sdaiEXPRESSSTRING = sdaiUNICODE + 1;
-        public const long engiGLOBALID      = sdaiEXPRESSSTRING + 1;
+        public const long engiGLOBALID = sdaiEXPRESSSTRING + 1;
 
-        public const long OBJECTPROPERTY_TYPE             = 1;
-        public const long DATATYPEPROPERTY_TYPE_BOOLEAN   = 2;
-        public const long DATATYPEPROPERTY_TYPE_CHAR      = 3;
-        public const long DATATYPEPROPERTY_TYPE_INTEGER   = 4;
-        public const long DATATYPEPROPERTY_TYPE_DOUBLE    = 5;
+        public const long OBJECTPROPERTY_TYPE = 1;
+        public const long DATATYPEPROPERTY_TYPE_BOOLEAN = 2;
+        public const long DATATYPEPROPERTY_TYPE_CHAR = 3;
+        public const long DATATYPEPROPERTY_TYPE_INTEGER = 4;
+        public const long DATATYPEPROPERTY_TYPE_DOUBLE = 5;
 
-        public const string IFCEngineDLL = @"libifcengine.so";        //
-        //  Architecture
-        //
+        public const string IFCEngineDLL = @"libifcengine.so";
+
+
+
+        #endregion // Constants
+
+        //
+
+        //  Architecture
+
+        //
+
         private static bool _x86 = IntPtr.Size == 4;
         //
         //  File IO API Calls
@@ -57,53 +75,136 @@ namespace IfcEngine
         public delegate long ReadCallBackFunction(IntPtr value);
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate void WriteCallBackFunction(IntPtr value, long size);
+        public delegate void WriteCallBackFunction(IntPtr value, long size);
+
+
+
+        //
+
+        //		sdaiCreateModelBN                           (http://rdf.bg/ifcdoc/CS64/sdaiCreateModelBN.html)
+
+        //
+
+        //	This function creates and empty model (we expect with a schema file given).
+
+        //	Attributes repository and fileName will be ignored, they are their because of backward compatibility.
+
+        //	A handle to the model will be returned, or 0 in case something went wrong.
+
+        //
+
+        public static long sdaiCreateModelBN(long repository, string fileName, string schemaName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiCreateModelBN((int)repository, fileName, schemaName);
+            }
+
+            return x64.sdaiCreateModelBN(repository, fileName, schemaName);
+        }
 
-		//
-		//		sdaiCreateModelBN                           (http://rdf.bg/ifcdoc/CS64/sdaiCreateModelBN.html)
-		//
-		//	This function creates and empty model (we expect with a schema file given).
-		//	Attributes repository and fileName will be ignored, they are their because of backward compatibility.
-		//	A handle to the model will be returned, or 0 in case something went wrong.
-		//
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateModelBN")]
-        public static extern long sdaiCreateModelBN(long repository, string fileName, string schemaName);
+        public static long sdaiCreateModelBN(long repository, string fileName, byte[] schemaName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiCreateModelBN((int)repository, fileName, schemaName);
+            }
+
+            return x64.sdaiCreateModelBN(repository, fileName, schemaName);
+        }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateModelBN")]
-        public static extern long sdaiCreateModelBN(long repository, string fileName, byte[] schemaName);
+        public static long sdaiCreateModelBN(long repository, byte[] fileName, string schemaName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiCreateModelBN((int)repository, fileName, schemaName);
+            }
+
+            return x64.sdaiCreateModelBN(repository, fileName, schemaName);
+        }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateModelBN")]
-        public static extern long sdaiCreateModelBN(long repository, byte[] fileName, string schemaName);
+        public static long sdaiCreateModelBN(long repository, byte[] fileName, byte[] schemaName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiCreateModelBN((int)repository, fileName, schemaName);
+            }
+
+            return x64.sdaiCreateModelBN(repository, fileName, schemaName);
+        }
+
+
+
+        //
+
+        //		sdaiCreateModelBNUnicode                    (http://rdf.bg/ifcdoc/CS64/sdaiCreateModelBNUnicode.html)
+
+        //
+
+        //	This function creates and empty model (we expect with a schema file given).
+
+        //	Attributes repository and fileName will be ignored, they are their because of backward compatibility.
+
+        //	A handle to the model will be returned, or 0 in case something went wrong.
+
+        //
+
+        public static long sdaiCreateModelBNUnicode(long repository, string fileName, string schemaName)
+        {
+            if (_x86)
+            {
+                x86.sdaiCreateModelBNUnicode((int)repository, fileName, schemaName);
+            }
+
+            return x64.sdaiCreateModelBNUnicode(repository, fileName, schemaName);
+        }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateModelBN")]
-        public static extern long sdaiCreateModelBN(long repository, byte[] fileName, byte[] schemaName);
+        public static long sdaiCreateModelBNUnicode(long repository, string fileName, byte[] schemaName)
+        {
+            if (_x86)
+            {
+                x86.sdaiCreateModelBNUnicode((int)repository, fileName, schemaName);
+            }
+
+            return x64.sdaiCreateModelBNUnicode(repository, fileName, schemaName);
+        }
 
-		//
-		//		sdaiCreateModelBNUnicode                    (http://rdf.bg/ifcdoc/CS64/sdaiCreateModelBNUnicode.html)
-		//
-		//	This function creates and empty model (we expect with a schema file given).
-		//	Attributes repository and fileName will be ignored, they are their because of backward compatibility.
-		//	A handle to the model will be returned, or 0 in case something went wrong.
-		//
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateModelBNUnicode")]
-        public static extern long sdaiCreateModelBNUnicode(long repository, string fileName, string schemaName);
+        public static long sdaiCreateModelBNUnicode(long repository, byte[] fileName, string schemaName)
+        {
+            if (_x86)
+            {
+                x86.sdaiCreateModelBNUnicode((int)repository, fileName, schemaName);
+            }
+
+            return x64.sdaiCreateModelBNUnicode(repository, fileName, schemaName);
+        }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateModelBNUnicode")]
-        public static extern long sdaiCreateModelBNUnicode(long repository, string fileName, byte[] schemaName);
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateModelBNUnicode")]
-        public static extern long sdaiCreateModelBNUnicode(long repository, byte[] fileName, string schemaName);
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateModelBNUnicode")]
-        public static extern long sdaiCreateModelBNUnicode(long repository, byte[] fileName, byte[] schemaName);
-
-		//
-		//		sdaiOpenModelBN                             (http://rdf.bg/ifcdoc/CS64/sdaiOpenModelBN.html)
-		//
-		//	This function opens the model on location fileName.
-		//	Attribute repository will be ignored, they are their because of backward compatibility.
-		//	A handle to the model will be returned, or 0 in case something went wrong.
-		//
+        public static long sdaiCreateModelBNUnicode(long repository, byte[] fileName, byte[] schemaName)
+        {
+            if (_x86)
+            {
+                x86.sdaiCreateModelBNUnicode((int)repository, fileName, schemaName);
+            }
+
+            return x64.sdaiCreateModelBNUnicode(repository, fileName, schemaName);
+        }
+
+
+
+        //
+
+        //		sdaiOpenModelBN                             (http://rdf.bg/ifcdoc/CS64/sdaiOpenModelBN.html)
+
+        //
+
+        //	This function opens the model on location fileName.
+
+        //	Attribute repository will be ignored, they are their because of backward compatibility.
+
+        //	A handle to the model will be returned, or 0 in case something went wrong.
+
+        //
+
         public static long sdaiOpenModelBN(long repository, string fileName, string schemaName)
         {
             if (_x86)
@@ -114,150 +215,461 @@ namespace IfcEngine
             return x64.sdaiOpenModelBN(repository, fileName, schemaName);
         }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiOpenModelBN")]
-        public static extern long sdaiOpenModelBN(long repository, string fileName, byte[] schemaName);
+        public static long sdaiOpenModelBN(long repository, string fileName, byte[] schemaName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiOpenModelBN((int)repository, fileName, schemaName);
+            }
+
+            return x64.sdaiOpenModelBN(repository, fileName, schemaName);
+        }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiOpenModelBN")]
-        public static extern long sdaiOpenModelBN(long repository, byte[] fileName, string schemaName);
+        public static long sdaiOpenModelBN(long repository, byte[] fileName, string schemaName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiOpenModelBN((int)repository, fileName, schemaName);
+            }
+
+            return x64.sdaiOpenModelBN(repository, fileName, schemaName);
+        }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiOpenModelBN")]
-        public static extern long sdaiOpenModelBN(long repository, byte[] fileName, byte[] schemaName);
+        public static long sdaiOpenModelBN(long repository, byte[] fileName, byte[] schemaName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiOpenModelBN((int)repository, fileName, schemaName);
+            }
+
+            return x64.sdaiOpenModelBN(repository, fileName, schemaName);
+        }
+
+
+
+        //
+
+        //		sdaiOpenModelBNUnicode                      (http://rdf.bg/ifcdoc/CS64/sdaiOpenModelBNUnicode.html)
+
+        //
+
+        //	This function opens the model on location fileName.
+
+        //	Attribute repository will be ignored, they are their because of backward compatibility.
+
+        //	A handle to the model will be returned, or 0 in case something went wrong.
+
+        //
+
+        public static long sdaiOpenModelBNUnicode(long repository, string fileName, string schemaName)
+        {
+            if (_x86)
+            {
+                x86.sdaiOpenModelBNUnicode((int)repository, fileName, schemaName);
+            }
+
+            return x64.sdaiOpenModelBNUnicode(repository, fileName, schemaName);
+        }
 
-		//
-		//		sdaiOpenModelBNUnicode                      (http://rdf.bg/ifcdoc/CS64/sdaiOpenModelBNUnicode.html)
-		//
-		//	This function opens the model on location fileName.
-		//	Attribute repository will be ignored, they are their because of backward compatibility.
-		//	A handle to the model will be returned, or 0 in case something went wrong.
-		//
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiOpenModelBNUnicode")]
-        public static extern long sdaiOpenModelBNUnicode(long repository, string fileName, string schemaName);
+        public static long sdaiOpenModelBNUnicode(long repository, string fileName, byte[] schemaName)
+        {
+            if (_x86)
+            {
+                x86.sdaiOpenModelBNUnicode((int)repository, fileName, schemaName);
+            }
+
+            return x64.sdaiOpenModelBNUnicode(repository, fileName, schemaName);
+        }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiOpenModelBNUnicode")]
-        public static extern long sdaiOpenModelBNUnicode(long repository, string fileName, byte[] schemaName);
+        public static long sdaiOpenModelBNUnicode(long repository, byte[] fileName, string schemaName)
+        {
+            if (_x86)
+            {
+                x86.sdaiOpenModelBNUnicode((int)repository, fileName, schemaName);
+            }
+
+            return x64.sdaiOpenModelBNUnicode(repository, fileName, schemaName);
+        }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiOpenModelBNUnicode")]
-        public static extern long sdaiOpenModelBNUnicode(long repository, byte[] fileName, string schemaName);
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiOpenModelBNUnicode")]
-        public static extern long sdaiOpenModelBNUnicode(long repository, byte[] fileName, byte[] schemaName);
-
-		//
-		//		engiOpenModelByStream                       (http://rdf.bg/ifcdoc/CS64/engiOpenModelByStream.html)
-		//
-		//	This function opens the model via a stream.
-		//	Attribute repository will be ignored, they are their because of backward compatibility.
-		//	A handle to the model will be returned, or 0 in case something went wrong.
-		//
-        [DllImport(IFCEngineDLL, EntryPoint = "engiOpenModelByStream")]
-        public static extern long engiOpenModelByStream(long repository, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, string schemaName);
-
-        [DllImport(IFCEngineDLL, EntryPoint = "engiOpenModelByStream")]
-        public static extern long engiOpenModelByStream(long repository, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, byte[] schemaName);
-
-		//
-		//		engiOpenModelByArray                        (http://rdf.bg/ifcdoc/CS64/engiOpenModelByArray.html)
-		//
-		//	This function opens the model via an array.
-		//	Attribute repository will be ignored, they are their because of backward compatibility.
-		//	A handle to the model will be returned, or 0 in case something went wrong.
-		//
-        [DllImport(IFCEngineDLL, EntryPoint = "engiOpenModelByArray")]
-        public static extern long engiOpenModelByArray(long repository, byte[] content, long size, string schemaName);
-
-        [DllImport(IFCEngineDLL, EntryPoint = "engiOpenModelByArray")]
-        public static extern long engiOpenModelByArray(long repository, byte[] content, long size, byte[] schemaName);
-
-		//
-		//		sdaiSaveModelBN                             (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelBN.html)
-		//
-		//	This function saves the model (char file name).
-		//
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiSaveModelBN")]
-        public static extern void sdaiSaveModelBN(long model, string fileName);
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiSaveModelBN")]
-        public static extern void sdaiSaveModelBN(long model, byte[] fileName);
-
-		//
-		//		sdaiSaveModelBNUnicode                      (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelBNUnicode.html)
-		//
-		//	This function saves the model (wchar, i.e. Unicode file name).
-		//
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiSaveModelBNUnicode")]
-        public static extern void sdaiSaveModelBNUnicode(long model, string fileName);
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiSaveModelBNUnicode")]
-        public static extern void sdaiSaveModelBNUnicode(long model, byte[] fileName);
-
-		//
-		//		engiSaveModelByStream                       (http://rdf.bg/ifcdoc/CS64/engiSaveModelByStream.html)
-		//
-		//	This function saves the model as an array.
-		//
-        [DllImport(IFCEngineDLL, EntryPoint = "engiSaveModelByStream")]
-        public static extern void engiSaveModelByStream(long model, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, long size);
-
-		//
-		//		engiSaveModelByArray                        (http://rdf.bg/ifcdoc/CS64/engiSaveModelByArray.html)
-		//
-		//	This function saves the model as an array.
-		//
-        [DllImport(IFCEngineDLL, EntryPoint = "engiSaveModelByArray")]
-        public static extern void engiSaveModelByArray(long model, byte[] content, out long size);
-
-		//
-		//		sdaiSaveModelAsXmlBN                        (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsXmlBN.html)
-		//
-		//	This function saves the model as XML according to IFC2x3's way of XML serialization (char file name).
-		//
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiSaveModelAsXmlBN")]
-        public static extern void sdaiSaveModelAsXmlBN(long model, string fileName);
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiSaveModelAsXmlBN")]
-        public static extern void sdaiSaveModelAsXmlBN(long model, byte[] fileName);
-
-		//
-		//		sdaiSaveModelAsXmlBNUnicode                 (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsXmlBNUnicode.html)
-		//
-		//	This function saves the model as XML according to IFC2x3's way of XML serialization (wchar, i.e. Unicode file name).
-		//
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiSaveModelAsXmlBNUnicode")]
-        public static extern void sdaiSaveModelAsXmlBNUnicode(long model, string fileName);
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiSaveModelAsXmlBNUnicode")]
-        public static extern void sdaiSaveModelAsXmlBNUnicode(long model, byte[] fileName);
-
-		//
-		//		sdaiSaveModelAsSimpleXmlBN                  (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsSimpleXmlBN.html)
-		//
-		//	This function saves the model as XML according to IFC4's way of XML serialization (char file name).
-		//
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiSaveModelAsSimpleXmlBN")]
-        public static extern void sdaiSaveModelAsSimpleXmlBN(long model, string fileName);
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiSaveModelAsSimpleXmlBN")]
-        public static extern void sdaiSaveModelAsSimpleXmlBN(long model, byte[] fileName);
-
-		//
-		//		sdaiSaveModelAsSimpleXmlBNUnicode           (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsSimpleXmlBNUnicode.html)
-		//
-		//	This function saves the model as XML according to IFC4's way of XML serialization (wchar, i.e. Unicode file name).
-		//
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiSaveModelAsSimpleXmlBNUnicode")]
-        public static extern void sdaiSaveModelAsSimpleXmlBNUnicode(long model, string fileName);
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiSaveModelAsSimpleXmlBNUnicode")]
-        public static extern void sdaiSaveModelAsSimpleXmlBNUnicode(long model, byte[] fileName);
-
-		//
-		//		sdaiCloseModel                              (http://rdf.bg/ifcdoc/CS64/sdaiCloseModel.html)
-		//
-		//	This function closes the model. After this call no instance handles will be available including all
-		//	handles referencing the geometry of this specific file, in default compilation the model itself will
-		//	be known in the kernel, however known to be disabled. Calls containing the model reference will be
-		//	protected from crashing when called.
-		//
+        public static long sdaiOpenModelBNUnicode(long repository, byte[] fileName, byte[] schemaName)
+        {
+            if (_x86)
+            {
+                x86.sdaiOpenModelBNUnicode((int)repository, fileName, schemaName);
+            }
+
+            return x64.sdaiOpenModelBNUnicode(repository, fileName, schemaName);
+        }
+
+
+
+        //
+
+        //		engiOpenModelByStream                       (http://rdf.bg/ifcdoc/CS64/engiOpenModelByStream.html)
+
+        //
+
+        //	This function opens the model via a stream.
+
+        //	Attribute repository will be ignored, they are their because of backward compatibility.
+
+        //	A handle to the model will be returned, or 0 in case something went wrong.
+
+        //
+
+        public static long engiOpenModelByStream(long repository, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, string schemaName)        {            if (_x86)
+            {
+                return x86.engiOpenModelByStream((int)repository, callback, schemaName);
+            }
+
+            return x64.engiOpenModelByStream(repository, callback, schemaName);
+        }
+
+
+
+        public static long engiOpenModelByStream(long repository, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, byte[] schemaName)
+        {            if (_x86)
+            {
+                return x86.engiOpenModelByStream((int)repository, callback, schemaName);
+            }
+
+            return x64.engiOpenModelByStream(repository, callback, schemaName);
+        }
+
+
+
+        //
+
+        //		engiOpenModelByArray                        (http://rdf.bg/ifcdoc/CS64/engiOpenModelByArray.html)
+
+        //
+
+        //	This function opens the model via an array.
+
+        //	Attribute repository will be ignored, they are their because of backward compatibility.
+
+        //	A handle to the model will be returned, or 0 in case something went wrong.
+
+        //
+
+        public static long engiOpenModelByArray(long repository, byte[] content, long size, string schemaName)
+        {
+            if (_x86)
+            {
+                x86.engiOpenModelByArray((int)repository, content, (int)size, schemaName);
+            }
+
+            return x64.engiOpenModelByArray(repository, content, size, schemaName);
+        }
+
+
+
+        public static long engiOpenModelByArray(long repository, byte[] content, long size, byte[] schemaName)
+        {
+            if (_x86)
+            {
+                x86.engiOpenModelByArray((int)repository, content, (int)size, schemaName);
+            }
+
+            return x64.engiOpenModelByArray(repository, content, size, schemaName);
+        }
+
+
+
+        //
+
+        //		sdaiSaveModelBN                             (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelBN.html)
+
+        //
+
+        //	This function saves the model (char file name).
+
+        //
+
+        public static void sdaiSaveModelBN(long model, string fileName)
+        {
+            if (_x86)
+            {
+                x86.sdaiSaveModelBN((int)model, fileName);
+            }
+            else
+            {
+                x64.sdaiSaveModelBN(model, fileName);
+            }
+        }
+
+
+
+        public static void sdaiSaveModelBN(long model, byte[] fileName)
+        {
+            if (_x86)
+            {
+                x86.sdaiSaveModelBN((int)model, fileName);
+            }
+            else
+            {
+                x64.sdaiSaveModelBN(model, fileName);
+            }
+        }
+
+
+
+        //
+
+        //		sdaiSaveModelBNUnicode                      (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelBNUnicode.html)
+
+        //
+
+        //	This function saves the model (wchar, i.e. Unicode file name).
+
+        //
+
+        public static void sdaiSaveModelBNUnicode(long model, string fileName)
+        {
+            if (_x86)
+            {
+                x86.sdaiSaveModelBNUnicode((int)model, fileName);
+            }
+            else
+            {
+                x64.sdaiSaveModelBNUnicode(model, fileName);
+            }
+        }
+
+
+
+        public static void sdaiSaveModelBNUnicode(long model, byte[] fileName)
+        {
+            if (_x86)
+            {
+                x86.sdaiSaveModelBNUnicode((int)model, fileName);
+            }
+            else
+            {
+                x64.sdaiSaveModelBNUnicode(model, fileName);
+            }
+        }
+
+
+
+        //
+
+        //		engiSaveModelByStream                       (http://rdf.bg/ifcdoc/CS64/engiSaveModelByStream.html)
+
+        //
+
+        //	This function saves the model as an array.
+
+        //
+
+        public static void engiSaveModelByStream(long model, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, long size)
+        {
+            if (_x86)
+            {
+                x86.engiSaveModelByStream((int)model, callback, size);
+            }
+            else
+            {
+                x64.engiSaveModelByStream(model, callback, size);
+            }
+        }
+
+
+
+        //
+
+        //		engiSaveModelByArray                        (http://rdf.bg/ifcdoc/CS64/engiSaveModelByArray.html)
+
+        //
+
+        //	This function saves the model as an array.
+
+        //
+
+        public static void engiSaveModelByArray(long model, byte[] content, out long size)
+        {
+            if (_x86)
+            {
+                x86.engiSaveModelByArray((int)model, content, out int iSize);
+
+                size = iSize;
+            }
+            else
+            {
+                x64.engiSaveModelByArray(model, content, out size);
+            }
+        }
+
+
+
+        //
+
+        //		sdaiSaveModelAsXmlBN                        (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsXmlBN.html)
+
+        //
+
+        //	This function saves the model as XML according to IFC2x3's way of XML serialization (char file name).
+
+        //
+
+        public static void sdaiSaveModelAsXmlBN(long model, string fileName)
+        {
+            if (_x86)
+            {
+                x86.sdaiSaveModelAsXmlBN((int)model, fileName);
+            }
+            else
+            {
+                x64.sdaiSaveModelAsXmlBN(model, fileName);
+            }
+        }
+
+
+
+        public static void sdaiSaveModelAsXmlBN(long model, byte[] fileName)
+        {
+            if (_x86)
+            {
+                x86.sdaiSaveModelAsXmlBN((int)model, fileName);
+            }
+            else
+            {
+                x64.sdaiSaveModelAsXmlBN(model, fileName);
+            }
+        }
+
+
+
+        //
+
+        //		sdaiSaveModelAsXmlBNUnicode                 (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsXmlBNUnicode.html)
+
+        //
+
+        //	This function saves the model as XML according to IFC2x3's way of XML serialization (wchar, i.e. Unicode file name).
+
+        //
+
+        public static void sdaiSaveModelAsXmlBNUnicode(long model, string fileName)
+        {
+            if (_x86)
+            {
+                x86.sdaiSaveModelAsXmlBNUnicode((int)model, fileName);
+            }
+            else
+            {
+                x64.sdaiSaveModelAsXmlBNUnicode(model, fileName);
+            }
+        }
+
+
+
+        public static void sdaiSaveModelAsXmlBNUnicode(long model, byte[] fileName)
+        {
+            if (_x86)
+            {
+                x86.sdaiSaveModelAsXmlBNUnicode((int)model, fileName);
+            }
+            else
+            {
+                x64.sdaiSaveModelAsXmlBNUnicode(model, fileName);
+            }
+        }
+
+
+
+        //
+
+        //		sdaiSaveModelAsSimpleXmlBN                  (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsSimpleXmlBN.html)
+
+        //
+
+        //	This function saves the model as XML according to IFC4's way of XML serialization (char file name).
+
+        //
+
+        public static void sdaiSaveModelAsSimpleXmlBN(long model, string fileName)
+        {
+            if (_x86)
+            {
+                x86.sdaiSaveModelAsSimpleXmlBN((int)model, fileName);
+            }
+            else
+            {
+                x64.sdaiSaveModelAsSimpleXmlBN(model, fileName);
+            }
+        }
+
+
+
+        public static void sdaiSaveModelAsSimpleXmlBN(long model, byte[] fileName)
+        {
+            if (_x86)
+            {
+                x86.sdaiSaveModelAsSimpleXmlBN((int)model, fileName);
+            }
+            else
+            {
+                x64.sdaiSaveModelAsSimpleXmlBN(model, fileName);
+            }
+        }
+
+
+
+        //
+
+        //		sdaiSaveModelAsSimpleXmlBNUnicode           (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsSimpleXmlBNUnicode.html)
+
+        //
+
+        //	This function saves the model as XML according to IFC4's way of XML serialization (wchar, i.e. Unicode file name).
+
+        //
+
+        public static void sdaiSaveModelAsSimpleXmlBNUnicode(long model, string fileName)
+        {
+            if (_x86)
+            {
+                x86.sdaiSaveModelAsSimpleXmlBNUnicode((int)model, fileName);
+            }
+            else
+            {
+                x64.sdaiSaveModelAsSimpleXmlBNUnicode(model, fileName);
+            }
+        }
+
+
+
+        public static void sdaiSaveModelAsSimpleXmlBNUnicode(long model, byte[] fileName)
+        {
+            if (_x86)
+            {
+                x86.sdaiSaveModelAsSimpleXmlBNUnicode((int)model, fileName);
+            }
+            else
+            {
+                x64.sdaiSaveModelAsSimpleXmlBNUnicode(model, fileName);
+            }
+        }
+
+
+
+        //
+
+        //		sdaiCloseModel                              (http://rdf.bg/ifcdoc/CS64/sdaiCloseModel.html)
+
+        //
+
+        //	This function closes the model. After this call no instance handles will be available including all
+
+        //	handles referencing the geometry of this specific file, in default compilation the model itself will
+
+        //	be known in the kernel, however known to be disabled. Calls containing the model reference will be
+
+        //	protected from crashing when called.
+
+        //
+
         public static void sdaiCloseModel(long model)
         {
             if (_x86)
@@ -272,19 +684,27 @@ namespace IfcEngine
 
 
 
-		//
+        //
 
-		//		setPrecisionDoubleExport                    (http://rdf.bg/ifcdoc/CS64/setPrecisionDoubleExport.html)
+        //		setPrecisionDoubleExport                    (http://rdf.bg/ifcdoc/CS64/setPrecisionDoubleExport.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "setPrecisionDoubleExport")]
-
-        public static extern void setPrecisionDoubleExport(long model, long precisionCap, long precisionRound, byte clean);
+        public static void setPrecisionDoubleExport(long model, long precisionCap, long precisionRound, byte clean)
+        {
+            if (_x86)
+            {
+                x86.setPrecisionDoubleExport((int)model, (int)precisionCap, (int)precisionRound, clean);
+            }
+            else
+            {
+                x64.setPrecisionDoubleExport(model, precisionCap, precisionRound, clean);
+            }
+        }
 
 
 
@@ -296,203 +716,301 @@ namespace IfcEngine
 
 
 
-		//
+        //
 
-		//		sdaiGetEntity                               (http://rdf.bg/ifcdoc/CS64/sdaiGetEntity.html)
+        //		sdaiGetEntity                               (http://rdf.bg/ifcdoc/CS64/sdaiGetEntity.html)
 
-		//
+        //
 
-		//	This call retrieves a handle to an entity based on a given entity name.
+        //	This call retrieves a handle to an entity based on a given entity name.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetEntity")]
+        public static long sdaiGetEntity(long model, string entityName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetEntity((int)model, entityName);
+            }
 
-        public static extern long sdaiGetEntity(long model, string entityName);
+            return x64.sdaiGetEntity(model, entityName);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetEntity")]
+        public static long sdaiGetEntity(long model, byte[] entityName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetEntity((int)model, entityName);
+            }
 
-        public static extern long sdaiGetEntity(long model, byte[] entityName);
+            return x64.sdaiGetEntity(model, entityName);
+        }
 
 
 
-		//
+        //
 
-		//		engiGetEntityArgument                       (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgument.html)
+        //		engiGetEntityArgument                       (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgument.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgument")]
+        public static long engiGetEntityArgument(long entity, string argumentName)
+        {
+            if (_x86)
+            {
+                return x86.engiGetEntityArgument((int)entity, argumentName);
+            }
 
-        public static extern long engiGetEntityArgument(long entity, string argumentName);
+            return x64.engiGetEntityArgument(entity, argumentName);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgument")]
+        public static long engiGetEntityArgument(long entity, byte[] argumentName)
+        {
+            if (_x86)
+            {
+                return x86.engiGetEntityArgument((int)entity, argumentName);
+            }
 
-        public static extern long engiGetEntityArgument(long entity, byte[] argumentName);
+            return x64.engiGetEntityArgument(entity, argumentName);
+        }
 
 
 
-		//
+        //
 
-		//		engiGetEntityArgumentIndex                  (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentIndex.html)
+        //		engiGetEntityArgumentIndex                  (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentIndex.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgumentIndex")]
+        public static long engiGetEntityArgumentIndex(long entity, string argumentName)
+        {
+            if (_x86)
+            {
+                return x86.engiGetEntityArgumentIndex((int)entity, argumentName);
+            }
 
-        public static extern long engiGetEntityArgumentIndex(long entity, string argumentName);
+            return x64.engiGetEntityArgumentIndex(entity, argumentName);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgumentIndex")]
+        public static long engiGetEntityArgumentIndex(long entity, byte[] argumentName)
+        {
+            if (_x86)
+            {
+                return x86.engiGetEntityArgumentIndex((int)entity, argumentName);
+            }
 
-        public static extern long engiGetEntityArgumentIndex(long entity, byte[] argumentName);
+            return x64.engiGetEntityArgumentIndex(entity, argumentName);
+        }
 
 
 
-		//
+        //
 
-		//		engiGetEntityArgumentName                   (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentName.html)
+        //		engiGetEntityArgumentName                   (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentName.html)
 
-		//
+        //
 
-		//	This call can be used to retrieve the name of the n-th argument of the given entity. Arguments of parent entities are included in the index. Both direct and inverse arguments are included.
+        //	This call can be used to retrieve the name of the n-th argument of the given entity. Arguments of parent entities are included in the index. Both direct and inverse arguments are included.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgumentName")]
+        public static void engiGetEntityArgumentName(long entity, long index, long valueType, out IntPtr argumentName)
+        {
+            if (_x86)
+            {
+                x86.engiGetEntityArgumentName((int)entity, (int)index, (int)valueType, out argumentName);
+            }
+            else
+            {
+                x64.engiGetEntityArgumentName(entity, index, valueType, out argumentName);
+            }
+        }
 
-        public static extern void engiGetEntityArgumentName(long entity, long index, long valueType, out IntPtr argumentName);
 
 
+        //
 
-		//
+        //		engiGetEntityArgumentType                   (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentType.html)
 
-		//		engiGetEntityArgumentType                   (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentType.html)
+        //
 
-		//
+        //	This call can be used to retrieve the type of the n-th argument of the given entity. In case of a select argument no relevant information is given by this call as it depends on the instance. Arguments of parent entities are included in the index. Both direct and inverse arguments are included.
 
-		//	This call can be used to retrieve the type of the n-th argument of the given entity. In case of a select argument no relevant information is given by this call as it depends on the instance. Arguments of parent entities are included in the index. Both direct and inverse arguments are included.
+        //
 
-		//
+        public static void engiGetEntityArgumentType(long entity, long index, out long argumentType)
+        {
+            if (_x86)
+            {
+                x86.engiGetEntityArgumentType((int)entity, (int)index, out int iArgumentType);
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgumentType")]
+                argumentType = iArgumentType;
+            }
+            else
+            {
+                x64.engiGetEntityArgumentType(entity, index, out argumentType);
+            }
+        }
 
-        public static extern void engiGetEntityArgumentType(long entity, long index, out long argumentType);
 
 
+        //
 
-		//
+        //		engiGetEntityCount                          (http://rdf.bg/ifcdoc/CS64/engiGetEntityCount.html)
 
-		//		engiGetEntityCount                          (http://rdf.bg/ifcdoc/CS64/engiGetEntityCount.html)
+        //
 
-		//
+        //	Returns the total number of entities within the loaded schema.
 
-		//	Returns the total number of entities within the loaded schema.
+        //
 
-		//
+        public static long engiGetEntityCount(long model)
+        {
+            if (_x86)
+            {
+                return x86.engiGetEntityCount((int)model);
+            }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityCount")]
+            return x64.engiGetEntityCount(model);
+        }
 
-        public static extern long engiGetEntityCount(long model);
 
 
+        //
 
-		//
+        //		engiGetEntityElement                        (http://rdf.bg/ifcdoc/CS64/engiGetEntityElement.html)
 
-		//		engiGetEntityElement                        (http://rdf.bg/ifcdoc/CS64/engiGetEntityElement.html)
+        //
 
-		//
+        //	This call returns a specific entity based on an index, the index needs to be 0 or higher but lower then the number of entities in the loaded schema.
 
-		//	This call returns a specific entity based on an index, the index needs to be 0 or higher but lower then the number of entities in the loaded schema.
+        //
 
-		//
+        public static long engiGetEntityElement(long model, long index)
+        {
+            if (_x86)
+            {
+                return x86.engiGetEntityElement((int)model, (int)index);
+            }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityElement")]
+            return x64.engiGetEntityElement(model, index);
+        }
 
-        public static extern long engiGetEntityElement(long model, long index);
 
 
+        //
 
-		//
+        //		sdaiGetEntityExtent                         (http://rdf.bg/ifcdoc/CS64/sdaiGetEntityExtent.html)
 
-		//		sdaiGetEntityExtent                         (http://rdf.bg/ifcdoc/CS64/sdaiGetEntityExtent.html)
+        //
 
-		//
+        //	This call retrieves an aggregation that contains all instances of the entity given.
 
-		//	This call retrieves an aggregation that contains all instances of the entity given.
+        //
 
-		//
+        public static long sdaiGetEntityExtent(long model, long entity)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetEntityExtent((int)model, (int)entity);
+            }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetEntityExtent")]
+            return x64.sdaiGetEntityExtent(model, entity);
+        }
 
-        public static extern long sdaiGetEntityExtent(long model, long entity);
 
 
+        //
 
-		//
+        //		sdaiGetEntityExtentBN                       (http://rdf.bg/ifcdoc/CS64/sdaiGetEntityExtentBN.html)
 
-		//		sdaiGetEntityExtentBN                       (http://rdf.bg/ifcdoc/CS64/sdaiGetEntityExtentBN.html)
+        //
 
-		//
+        //	This call retrieves an aggregation that contains all instances of the entity given.
 
-		//	This call retrieves an aggregation that contains all instances of the entity given.
+        //
 
-		//
+        public static long sdaiGetEntityExtentBN(long model, string entityName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetEntityExtentBN((int)model, entityName);
+            }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetEntityExtentBN")]
+            return x64.sdaiGetEntityExtentBN(model, entityName);
+        }
 
-        public static extern long sdaiGetEntityExtentBN(long model, string entityName);
 
 
+        public static long sdaiGetEntityExtentBN(long model, byte[] entityName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetEntityExtentBN((int)model, entityName);
+            }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetEntityExtentBN")]
+            return x64.sdaiGetEntityExtentBN(model, entityName);
+        }
 
-        public static extern long sdaiGetEntityExtentBN(long model, byte[] entityName);
 
 
+        //
 
-		//
+        //		engiGetEntityName                           (http://rdf.bg/ifcdoc/CS64/engiGetEntityName.html)
 
-		//		engiGetEntityName                           (http://rdf.bg/ifcdoc/CS64/engiGetEntityName.html)
+        //
 
-		//
+        //	This call can be used to get the name of the given entity.
 
-		//	This call can be used to get the name of the given entity.
+        //
 
-		//
+        public static void engiGetEntityName(long entity, long valueType, out IntPtr entityName)
+        {
+            if (_x86)
+            {
+                x86.engiGetEntityName((int)entity, (int)valueType, out entityName);
+            }
+            else
+            {
+                x64.engiGetEntityName(entity, valueType, out entityName);
+            }
+        }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityName")]
 
-        public static extern void engiGetEntityName(long entity, long valueType, out IntPtr entityName);
 
+        //
 
+        //		engiGetEntityNoArguments                    (http://rdf.bg/ifcdoc/CS64/engiGetEntityNoArguments.html)
 
-		//
+        //
 
-		//		engiGetEntityNoArguments                    (http://rdf.bg/ifcdoc/CS64/engiGetEntityNoArguments.html)
+        //	This call returns the number of arguments, this includes the arguments of its (nested) parents and inverse argumnets.
 
-		//
+        //
 
-		//	This call returns the number of arguments, this includes the arguments of its (nested) parents and inverse argumnets.
+        public static long engiGetEntityNoArguments(long entity)
+        {
+            if (_x86)
+            {
+                return x86.engiGetEntityNoArguments((int)entity);
+            }
 
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityNoArguments")]
-
-        public static extern long engiGetEntityNoArguments(long entity);
+            return x64.engiGetEntityNoArguments(entity);
+        }
 
 
 
@@ -506,25 +1024,38 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityParent")]
+        public static long engiGetEntityParent(long entity)
+        {
+            if (_x86)
+            {
+                return x86.engiGetEntityParent((int)entity);
+            }
 
-        public static extern long engiGetEntityParent(long entity);
+            return x64.engiGetEntityParent(entity);
+        }
 
 
 
-		//
+        //
 
-		//		engiGetAttrOptional                         (http://rdf.bg/ifcdoc/CS64/engiGetAttrOptional.html)
+        //		engiGetAttrOptional                         (http://rdf.bg/ifcdoc/CS64/engiGetAttrOptional.html)
 
-		//
+        //
 
-		//	This call can be used to check if an attribute is optional
+        //	This call can be used to check if an attribute is optional
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrOptional")]
+        public static long engiGetAttrOptional(ref long attribute)
+        {
+            if (_x86)
+            {
+                int iAttribute = (int)attribute;
+                return x86.engiGetAttrOptional(ref iAttribute);
+            }
 
-        public static extern long engiGetAttrOptional(ref long attribute);
+            return x64.engiGetAttrOptional(ref attribute);
+        }
 
 
 
@@ -538,31 +1069,50 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrOptionalBN")]
+        public static long engiGetAttrOptionalBN(long entity, string attributeName)
+        {
+            if (_x86)
+            {
+                return x86.engiGetAttrOptionalBN((int)entity, attributeName);
+            }
 
-        public static extern long engiGetAttrOptionalBN(long entity, string attributeName);
+            return x64.engiGetAttrOptionalBN(entity, attributeName);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrOptionalBN")]
+        public static long engiGetAttrOptionalBN(long entity, byte[] attributeName)
+        {
+            if (_x86)
+            {
+                return x86.engiGetAttrOptionalBN((int)entity, attributeName);
+            }
 
-        public static extern long engiGetAttrOptionalBN(long entity, byte[] attributeName);
+            return x64.engiGetAttrOptionalBN(entity, attributeName);
+        }
 
 
 
-		//
+        //
 
-		//		engiGetAttrInverse                          (http://rdf.bg/ifcdoc/CS64/engiGetAttrInverse.html)
+        //		engiGetAttrInverse                          (http://rdf.bg/ifcdoc/CS64/engiGetAttrInverse.html)
 
-		//
+        //
 
-		//	This call can be used to check if an attribute is an inverse relation
+        //	This call can be used to check if an attribute is an inverse relation
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrInverse")]
+        public static long engiGetAttrInverse(ref long attribute)
+        {
+            if (_x86)
+            {
+                int iAttribute = (int)attribute;
+                return x86.engiGetAttrInverse(ref iAttribute);
+            }
 
-        public static extern long engiGetAttrInverse(ref long attribute);
+            return x64.engiGetAttrInverse(ref attribute);
+        }
 
 
 
@@ -576,31 +1126,51 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrInverseBN")]
+        public static long engiGetAttrInverseBN(long entity, string attributeName)
+        {
+            if (_x86)
+            {
+                return x86.engiGetAttrInverseBN((int)entity, attributeName);
+            }
 
-        public static extern long engiGetAttrInverseBN(long entity, string attributeName);
+            return x64.engiGetAttrInverseBN(entity, attributeName);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrInverseBN")]
+        public static long engiGetAttrInverseBN(long entity, byte[] attributeName)
+        {
+            if (_x86)
+            {
+                return x86.engiGetAttrInverseBN((int)entity, attributeName);
+            }
 
-        public static extern long engiGetAttrInverseBN(long entity, byte[] attributeName);
+            return x64.engiGetAttrInverseBN(entity, attributeName);
+        }
 
 
 
-		//
+        //
 
-		//		engiGetEnumerationValue                     (http://rdf.bg/ifcdoc/CS64/engiGetEnumerationValue.html)
+        //		engiGetEnumerationValue                     (http://rdf.bg/ifcdoc/CS64/engiGetEnumerationValue.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEnumerationValue")]
-
-        public static extern void engiGetEnumerationValue(long attribute, long index, long valueType, out IntPtr enumerationValue);
+        public static void engiGetEnumerationValue(long attribute, long index, long valueType, out IntPtr enumerationValue)
+        {
+            if (_x86)
+            {
+                x86.engiGetEnumerationValue((int)attribute, (int)index, (int)valueType, out enumerationValue);
+            }
+            else
+            {
+                x64.engiGetEnumerationValue(attribute, index, valueType, out enumerationValue);
+            }            
+        }
 
 
 
@@ -614,9 +1184,27 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityProperty")]
-
-        public static extern void engiGetEntityProperty(long entity, long index, out IntPtr propertyName, out long optional, out long type, out long _array, out long set, out long list, out long bag, out long min, out long max, out long referenceEntity, out long inverse);
+        public static void engiGetEntityProperty(long entity, long index, out IntPtr propertyName, out long optional, out long type, out long _array, out long set, out long list, out long bag, out long min, out long max, out long referenceEntity, out long inverse)
+        {
+            if (_x86)
+            {
+                x86.engiGetEntityProperty((int)entity, (int)index, out propertyName, out int iOptional, out int iType, out int i_array, out int iSet, out int iList, out int iBag, out int iMin, out int iMax, out int iReferenceEntity, out int iInverse);
+                optional = iOptional;
+                type = iType;
+                _array = i_array;
+                set = iSet;
+                list = iList;
+                bag = iBag;
+                min = iMin; 
+                max = iMax; 
+                referenceEntity = iReferenceEntity; 
+                inverse = iInverse;
+            }
+            else
+            {
+                x64.engiGetEntityProperty(entity, index, out propertyName, out optional, out type, out _array, out set, out list, out bag, out min, out max, out referenceEntity, out inverse);
+            }
+        }
 
 
 
@@ -638,49 +1226,77 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetSPFFHeader")]
-
-        public static extern void SetSPFFHeader(long model, string description, string implementationLevel, string name, string timeStamp, string author, string organization, string preprocessorVersion, string originatingSystem, string authorization, string fileSchema);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "SetSPFFHeader")]
-
-        public static extern void SetSPFFHeader(long model, byte[] description, byte[] implementationLevel, byte[] name, byte[] timeStamp, byte[] author, byte[] organization, byte[] preprocessorVersion, byte[] originatingSystem, byte[] authorization, byte[] fileSchema);
-
-
-
-		//
-
-		//		SetSPFFHeaderItem                           (http://rdf.bg/ifcdoc/CS64/SetSPFFHeaderItem.html)
-
-		//
-
-		//	This call can be used to write a specific header item, the source code example is larger to show and explain how this call can be used.
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "SetSPFFHeaderItem")]
-
-        public static extern long SetSPFFHeaderItem(long model, long itemIndex, long itemSubIndex, long valueType, string value);
+        public static void SetSPFFHeader(long model, string description, string implementationLevel, string name, string timeStamp, string author, string organization, string preprocessorVersion, string originatingSystem, string authorization, string fileSchema)
+        {
+            if (_x86)
+            {
+                x86.SetSPFFHeader((int)model, description, implementationLevel, name, timeStamp, author, organization, preprocessorVersion, originatingSystem, authorization, fileSchema);
+            }
+            else
+            {
+                x64.SetSPFFHeader(model, description, implementationLevel, name, timeStamp, author, organization, preprocessorVersion, originatingSystem, authorization, fileSchema);
+            }            
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetSPFFHeaderItem")]
+        public static void SetSPFFHeader(long model, byte[] description, byte[] implementationLevel, byte[] name, byte[] timeStamp, byte[] author, byte[] organization, byte[] preprocessorVersion, byte[] originatingSystem, byte[] authorization, byte[] fileSchema)
+        {
+            if (_x86)
+            {
+                x86.SetSPFFHeader((int)model, description, implementationLevel, name, timeStamp, author, organization, preprocessorVersion, originatingSystem, authorization, fileSchema);
+            }
+            else
+            {
+                x64.SetSPFFHeader(model, description, implementationLevel, name, timeStamp, author, organization, preprocessorVersion, originatingSystem, authorization, fileSchema);
+            }
+        }
 
-        public static extern long SetSPFFHeaderItem(long model, long itemIndex, long itemSubIndex, long valueType, byte[] value);
+
+
+        //
+
+        //		SetSPFFHeaderItem                           (http://rdf.bg/ifcdoc/CS64/SetSPFFHeaderItem.html)
+
+        //
+
+        //	This call can be used to write a specific header item, the source code example is larger to show and explain how this call can be used.
+
+        //
+
+        public static long SetSPFFHeaderItem(long model, long itemIndex, long itemSubIndex, long valueType, string value)
+        {
+            if (_x86)
+            {
+                return x86.SetSPFFHeaderItem((int)model, (int)itemIndex, (int)itemSubIndex, (int)valueType, value);
+            }
+
+            return x64.SetSPFFHeaderItem(model, itemIndex, itemSubIndex, valueType, value);
+        }
 
 
 
-		//
+        public static long SetSPFFHeaderItem(long model, long itemIndex, long itemSubIndex, long valueType, byte[] value)
+        {
+            if (_x86)
+            {
+                return x86.SetSPFFHeaderItem((int)model, (int)itemIndex, (int)itemSubIndex, (int)valueType, value);
+            }
 
-		//		GetSPFFHeaderItem                           (http://rdf.bg/ifcdoc/CS64/GetSPFFHeaderItem.html)
+            return x64.SetSPFFHeaderItem(model, itemIndex, itemSubIndex, valueType, value);
+        }
 
-		//
 
-		//	This call can be used to read a specific header item, the source code example is larger to show and explain how this call can be used.
 
-		//
+        //
+
+        //		GetSPFFHeaderItem                           (http://rdf.bg/ifcdoc/CS64/GetSPFFHeaderItem.html)
+
+        //
+
+        //	This call can be used to read a specific header item, the source code example is larger to show and explain how this call can be used.
+
+        //
 
         public static long GetSPFFHeaderItem(long model, long itemIndex, long itemSubIndex, long valueType, out IntPtr value)
         {
@@ -704,15 +1320,27 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetSPFFHeaderItemUnicode")]
+        public static long GetSPFFHeaderItemUnicode(long model, long itemIndex, long itemSubIndex, string buffer, long bufferLength)
+        {
+            if (_x86)
+            {
+                return x86.GetSPFFHeaderItemUnicode((int)model, (int)itemIndex, (int)itemSubIndex, buffer, (int)bufferLength);
+            }
 
-        public static extern long GetSPFFHeaderItemUnicode(long model, long itemIndex, long itemSubIndex, string buffer, long bufferLength);
+            return x64.GetSPFFHeaderItemUnicode(model, itemIndex, itemSubIndex, buffer, bufferLength);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetSPFFHeaderItemUnicode")]
+        public static long GetSPFFHeaderItemUnicode(long model, long itemIndex, long itemSubIndex, byte[] buffer, long bufferLength)
+        {
+            if (_x86)
+            {
+                return x86.GetSPFFHeaderItemUnicode((int)model, (int)itemIndex, (int)itemSubIndex, buffer, (int)bufferLength);
+            }
 
-        public static extern long GetSPFFHeaderItemUnicode(long model, long itemIndex, long itemSubIndex, byte[] buffer, long bufferLength);
+            return x64.GetSPFFHeaderItemUnicode(model, itemIndex, itemSubIndex, buffer, bufferLength);
+        }
 
 
 
@@ -724,15 +1352,15 @@ namespace IfcEngine
 
 
 
-		//
+        //
 
-		//		sdaiGetADBType                              (http://rdf.bg/ifcdoc/CS64/sdaiGetADBType.html)
+        //		sdaiGetADBType                              (http://rdf.bg/ifcdoc/CS64/sdaiGetADBType.html)
 
-		//
+        //
 
-		//	This call can be used to get the used type within this ADB type.
+        //	This call can be used to get the used type within this ADB type.
 
-		//
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetADBType")]
 
