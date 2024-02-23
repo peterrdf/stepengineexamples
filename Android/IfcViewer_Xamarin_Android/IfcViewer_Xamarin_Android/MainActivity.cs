@@ -6,20 +6,11 @@ using Android.Views;
 using AndroidX.AppCompat.Widget;
 using AndroidX.AppCompat.App;
 using Google.Android.Material.FloatingActionButton;
-using Google.Android.Material.Snackbar;
 using System.Reflection;
 using System.Linq;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Collections.Generic;
 
-
-
-#if _WIN64
-    using int_t = System.Int64;
-#else
-    using int_t = System.Int32;
-#endif
 
 namespace IfcViewer_Xamarin_Android
 {
@@ -70,17 +61,55 @@ namespace IfcViewer_Xamarin_Android
 
             File.WriteAllText(strIfcFileFullPath, ifcContent);
 
-            long model = IfcEngine.x86_64.sdaiOpenModelBN(0, strIfcFileFullPath, null);
+            long model = IfcEngine.x86_64.sdaiOpenModelBN(0, strIfcFileFullPath, (string)null);
             Console.Out.WriteLine("sdaiOpenModelBN(): " + model);
-
-            Console.Out.WriteLine("Schema...");
 
             IfcEngine.x86_64.GetSPFFHeaderItem(model, 9, 0, IfcEngine.x86_64.sdaiSTRING, out IntPtr schema);
 
             string strSchema = Marshal.PtrToStringAuto(schema);
             Console.Out.WriteLine("Schema: " + strSchema);
 
-            //IfcEngine.x86_64.sdaiCloseModel(model);
+            IfcEngine.x86_64.sdaiCloseModel(model);
+
+            /*
+             * Embedded Schema
+             */
+            if (strSchema.IndexOf("IFC2") != -1)
+            {
+                IfcEngine.x86_64.setFilter(0, 2097152, 1048576 + 2097152 + 4194304);
+            }
+            else
+            {
+                if ((strSchema.IndexOf("IFC4x") != -1) || (strSchema.IndexOf("IFC4X") != -1))
+                {
+                    IfcEngine.x86_64.setFilter(0, 1048576 + 2097152, 1048576 + 2097152 + 4194304);
+                }
+                else
+                {
+                    if ((strSchema.IndexOf("IFC4") != -1) ||
+                        (strSchema.IndexOf("IFC2x4") != -1) ||
+                        (strSchema.IndexOf("IFC2X4") != -1))
+                    {
+                        IfcEngine.x86_64.setFilter(0, 1048576, 1048576 + 2097152 + 4194304);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+
+            model = IfcEngine.x86_64.sdaiOpenModelBN(0, strIfcFileFullPath, "");
+            Console.Out.WriteLine("sdaiOpenModelBN(): " + model);
+
+            LoadModel(model);
+
+            IfcEngine.x86_64.sdaiCloseModel(model);
+        }
+
+        private void LoadModel(long model)
+        {
+            Console.Out.WriteLine("TODO");
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
