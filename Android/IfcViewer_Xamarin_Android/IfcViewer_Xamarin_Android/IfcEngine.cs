@@ -1765,105 +1765,159 @@ namespace IfcEngine
 
         //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetStringAttrBN")]
+        public static IntPtr sdaiGetStringAttrBN(long instance, string attributeName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetStringAttrBN((int)instance, attributeName);
+            }
 
-        public static extern IntPtr sdaiGetStringAttrBN(long instance, string attributeName);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetStringAttrBN")]
-
-        public static extern IntPtr sdaiGetStringAttrBN(long instance, byte[] attributeName);
-
-
-
-		//
-
-		//		sdaiGetInstanceAttrBN                       (http://rdf.bg/ifcdoc/CS64/sdaiGetInstanceAttrBN.html)
-
-		//
-
-		//	This function is a specific version of sdaiGetAttrBN(..), where the valueType is sdaiINSTANCE.
-
-		//	This call can be usefull in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
-
-		//	this function is useless for languages as C, C++, C#, JAVA, VB.NET, Delphi and similar as they are able to map sdaiGetAttrBN(..) directly.
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetInstanceAttrBN")]
-
-        public static extern long sdaiGetInstanceAttrBN(long instance, string attributeName);
+            return x64.sdaiGetStringAttrBN(instance, attributeName);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetInstanceAttrBN")]
+        public static IntPtr sdaiGetStringAttrBN(long instance, byte[] attributeName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetStringAttrBN((int)instance, attributeName);
+            }
 
-        public static extern long sdaiGetInstanceAttrBN(long instance, byte[] attributeName);
-
-
-
-		//
-
-		//		sdaiGetAggregationAttrBN                    (http://rdf.bg/ifcdoc/CS64/sdaiGetAggregationAttrBN.html)
-
-		//
-
-		//	This function is a specific version of sdaiGetAttrBN(..), where the valueType is sdaiAGGR.
-
-		//	This call can be usefull in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
-
-		//	this function is useless for languages as C, C++, C#, JAVA, VB.NET, Delphi and similar as they are able to map sdaiGetAttrBN(..) directly.
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAggregationAttrBN")]
-
-        public static extern long sdaiGetAggregationAttrBN(long instance, string attributeName);
+            return x64.sdaiGetStringAttrBN(instance, attributeName);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAggregationAttrBN")]
+        //
 
-        public static extern long sdaiGetAggregationAttrBN(long instance, byte[] attributeName);
+        //		sdaiGetInstanceAttrBN                       (http://rdf.bg/ifcdoc/CS64/sdaiGetInstanceAttrBN.html)
 
+        //
 
+        //	This function is a specific version of sdaiGetAttrBN(..), where the valueType is sdaiINSTANCE.
 
-		//
+        //	This call can be usefull in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
 
-		//		sdaiGetAttrDefinition                       (http://rdf.bg/ifcdoc/CS64/sdaiGetAttrDefinition.html)
+        //	this function is useless for languages as C, C++, C#, JAVA, VB.NET, Delphi and similar as they are able to map sdaiGetAttrBN(..) directly.
 
-		//
+        //
 
-		//	...
+        public static long sdaiGetInstanceAttrBN(long instance, string attributeName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetInstanceAttrBN((int)instance, attributeName);
+            }
 
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAttrDefinition")]
-
-        public static extern long sdaiGetAttrDefinition(long entity, string attributeName);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAttrDefinition")]
-
-        public static extern long sdaiGetAttrDefinition(long entity, byte[] attributeName);
+            return x64.sdaiGetInstanceAttrBN(instance, attributeName);
+        }
 
 
 
-		//
+        public static long sdaiGetInstanceAttrBN(long instance, byte[] attributeName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetInstanceAttrBN((int)instance, attributeName);
+            }
 
-		//		sdaiGetInstanceType                         (http://rdf.bg/ifcdoc/CS64/sdaiGetInstanceType.html)
+            return x64.sdaiGetInstanceAttrBN(instance, attributeName);
+        }
 
-		//
 
-		//	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetInstanceType")]
+        //		sdaiGetAggregationAttrBN                    (http://rdf.bg/ifcdoc/CS64/sdaiGetAggregationAttrBN.html)
 
-        public static extern long sdaiGetInstanceType(long instance);
+        //
+
+        //	This function is a specific version of sdaiGetAttrBN(..), where the valueType is sdaiAGGR.
+
+        //	This call can be usefull in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
+
+        //	this function is useless for languages as C, C++, C#, JAVA, VB.NET, Delphi and similar as they are able to map sdaiGetAttrBN(..) directly.
+
+        //
+
+        public static long sdaiGetAggregationAttrBN(long instance, string attributeName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetAggregationAttrBN((int)instance, attributeName);
+            }
+
+            return x64.sdaiGetAggregationAttrBN(instance, attributeName);
+        }
+
+
+
+        public static long sdaiGetAggregationAttrBN(long instance, byte[] attributeName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetAggregationAttrBN((int)instance, attributeName);
+            }
+
+            return x64.sdaiGetAggregationAttrBN(instance, attributeName);
+        }
+
+
+
+        //
+
+        //		sdaiGetAttrDefinition                       (http://rdf.bg/ifcdoc/CS64/sdaiGetAttrDefinition.html)
+
+        //
+
+        //	...
+
+        //
+
+        public static long sdaiGetAttrDefinition(long entity, string attributeName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetAttrDefinition((int)entity, attributeName);
+            }
+
+            return x64.sdaiGetAttrDefinition(entity, attributeName);
+        }
+
+
+
+        public static long sdaiGetAttrDefinition(long entity, byte[] attributeName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetAttrDefinition((int)entity, attributeName);
+            }
+
+            return x64.sdaiGetAttrDefinition(entity, attributeName);
+        }
+
+
+
+        //
+
+        //		sdaiGetInstanceType                         (http://rdf.bg/ifcdoc/CS64/sdaiGetInstanceType.html)
+
+        //
+
+        //	...
+
+        //
+
+        public static long sdaiGetInstanceType(long instance)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetInstanceType((int)instance);
+            }
+
+            return x64.sdaiGetInstanceType(instance);
+        }
 
 
 
@@ -1877,41 +1931,60 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetMemberCount")]
+        public static long sdaiGetMemberCount(long aggregate)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetMemberCount((int)aggregate);
+            }
 
-        public static extern long sdaiGetMemberCount(long aggregate);
-
-
-
-		//
-
-		//		sdaiIsKindOf                                (http://rdf.bg/ifcdoc/CS64/sdaiIsKindOf.html)
-
-		//
-
-		//	...
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiIsKindOf")]
-
-        public static extern long sdaiIsKindOf(long instance, long entity);
+            return x64.sdaiGetMemberCount(aggregate);
+        }
 
 
 
-		//
+        //
 
-		//		engiGetAttrType                             (http://rdf.bg/ifcdoc/CS64/engiGetAttrType.html)
+        //		sdaiIsKindOf                                (http://rdf.bg/ifcdoc/CS64/sdaiIsKindOf.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrType")]
+        public static long sdaiIsKindOf(long instance, long entity)
+        {
+            if (_x86)
+            {
+                return x86.sdaiIsKindOf((int)instance, (int)entity);
+            }
 
-        public static extern long engiGetAttrType(long instance, ref long attribute);
+            return x64.sdaiIsKindOf(instance, entity);
+        }
+
+
+
+        //
+
+        //		engiGetAttrType                             (http://rdf.bg/ifcdoc/CS64/engiGetAttrType.html)
+
+        //
+
+        //	...
+
+        //
+
+        public static long engiGetAttrType(long instance, ref long attribute)
+        {
+            if (_x86)
+            {
+                int iAttribute = (int)attribute;
+                return x86.engiGetAttrType((int)instance, ref iAttribute);
+            }
+
+            return x64.engiGetAttrType(instance, ref attribute);
+        }
 
 
 
@@ -1925,31 +1998,49 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrTypeBN")]
+        public static long engiGetAttrTypeBN(long instance, string attributeName)
+        {
+            if (_x86)
+            {
+                return x86.engiGetAttrTypeBN((int)instance, attributeName);
+            }
 
-        public static extern long engiGetAttrTypeBN(long instance, string attributeName);
+            return x64.engiGetAttrTypeBN(instance, attributeName);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrTypeBN")]
+        public static long engiGetAttrTypeBN(long instance, byte[] attributeName)
+        {
+            if (_x86)
+            {
+                return x86.engiGetAttrTypeBN((int)instance, attributeName);
+            }
 
-        public static extern long engiGetAttrTypeBN(long instance, byte[] attributeName);
+            return x64.engiGetAttrTypeBN(instance, attributeName);
+        }
 
 
 
-		//
+        //
 
-		//		sdaiIsInstanceOf                            (http://rdf.bg/ifcdoc/CS64/sdaiIsInstanceOf.html)
+        //		sdaiIsInstanceOf                            (http://rdf.bg/ifcdoc/CS64/sdaiIsInstanceOf.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiIsInstanceOf")]
+        public static long sdaiIsInstanceOf(long instance, long entity)
+        {
+            if (_x86)
+            {
+                return x86.sdaiIsInstanceOf((int)instance, (int)entity);
+            }
 
-        public static extern long sdaiIsInstanceOf(long instance, long entity);
+            return x64.sdaiIsInstanceOf(instance, entity);
+        }
 
 
 
@@ -1963,69 +2054,106 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiIsInstanceOfBN")]
+        public static long sdaiIsInstanceOfBN(long instance, string entityName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiIsInstanceOfBN((int)instance, entityName);
+            }
 
-        public static extern long sdaiIsInstanceOfBN(long instance, string entityName);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiIsInstanceOfBN")]
-
-        public static extern long sdaiIsInstanceOfBN(long instance, byte[] entityName);
-
-
-
-		//
-
-		//		engiValidateAttr                            (http://rdf.bg/ifcdoc/CS64/engiValidateAttr.html)
-
-		//
-
-		//	...
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "engiValidateAttr")]
-
-        public static extern long engiValidateAttr(long instance, ref long attribute);
+            return x64.sdaiIsInstanceOfBN(instance, entityName);
+        }
 
 
 
-		//
+        public static long sdaiIsInstanceOfBN(long instance, byte[] entityName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiIsInstanceOfBN((int)instance, entityName);
+            }
 
-		//		engiValidateAttrBN                          (http://rdf.bg/ifcdoc/CS64/engiValidateAttrBN.html)
-
-		//
-
-		//	...
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "engiValidateAttrBN")]
-
-        public static extern long engiValidateAttrBN(long instance, string attributeName);
+            return x64.sdaiIsInstanceOfBN(instance, entityName);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiValidateAttrBN")]
+        //
 
-        public static extern long engiValidateAttrBN(long instance, byte[] attributeName);
+        //		engiValidateAttr                            (http://rdf.bg/ifcdoc/CS64/engiValidateAttr.html)
+
+        //
+
+        //	...
+
+        //
+
+        public static long engiValidateAttr(long instance, ref long attribute)
+        {
+            if (_x86)
+            {
+                int iAttribute = (int)attribute;
+                return x86.engiValidateAttr((int)instance, ref iAttribute);
+            }
+
+            return x64.engiValidateAttr(instance, ref attribute);
+        }
 
 
 
-		//
+        //
 
-		//		sdaiCreateInstanceEI                        (http://rdf.bg/ifcdoc/CS64/sdaiCreateInstanceEI.html)
+        //		engiValidateAttrBN                          (http://rdf.bg/ifcdoc/CS64/engiValidateAttrBN.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateInstanceEI")]
+        public static long engiValidateAttrBN(long instance, string attributeName)
+        {
+            if (_x86)
+            {
+                return x86.engiValidateAttrBN((int)instance, attributeName);
+            }
 
-        public static extern long sdaiCreateInstanceEI(long model, long entity, long express_id);
+            return x64.engiValidateAttrBN(instance, attributeName);
+        }
+
+
+
+        public static long engiValidateAttrBN(long instance, byte[] attributeName)
+        {
+            if (_x86)
+            {
+                return x86.engiValidateAttrBN((int)instance, attributeName);
+            }
+
+            return x64.engiValidateAttrBN(instance, attributeName);
+        }
+
+
+
+        //
+
+        //		sdaiCreateInstanceEI                        (http://rdf.bg/ifcdoc/CS64/sdaiCreateInstanceEI.html)
+
+        //
+
+        //	...
+
+        //
+
+        public static long sdaiCreateInstanceEI(long model, long entity, long express_id)
+        {
+            if (_x86)
+            {
+                return x86.sdaiCreateInstanceEI((int)model, (int)entity, (int)express_id);
+            }
+
+            return x64.sdaiCreateInstanceEI(model, entity, express_id);
+        }
 
 
 
@@ -2039,15 +2167,27 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateInstanceBNEI")]
+        public static long sdaiCreateInstanceBNEI(long model, string entityName, long express_id)
+        {
+            if (_x86)
+            {
+                return x86.sdaiCreateInstanceBNEI((int)model, entityName, (int)express_id);
+            }
 
-        public static extern long sdaiCreateInstanceBNEI(long model, string entityName, long express_id);
+            return x64.sdaiCreateInstanceBNEI(model, entityName, express_id);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateInstanceBNEI")]
+        public static long sdaiCreateInstanceBNEI(long model, byte[] entityName, long express_id)
+        {
+            if (_x86)
+            {
+                return x86.sdaiCreateInstanceBNEI((int)model, entityName, (int)express_id);
+            }
 
-        public static extern long sdaiCreateInstanceBNEI(long model, byte[] entityName, long express_id);
+            return x64.sdaiCreateInstanceBNEI(model, entityName, express_id);
+        }
 
 
 
@@ -2059,15 +2199,15 @@ namespace IfcEngine
 
 
 
-		//
+        //
 
-		//		sdaiPrepend                                 (http://rdf.bg/ifcdoc/CS64/sdaiPrepend.html)
+        //		sdaiPrepend                                 (http://rdf.bg/ifcdoc/CS64/sdaiPrepend.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "sdaiPrepend")]
 
