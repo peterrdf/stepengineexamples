@@ -2776,9 +2776,15 @@ namespace IfcEngine
 
         //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetInstanceLocalId")]
+        public static long engiGetInstanceLocalId(long instance)
+        {
+            if (_x86)
+            {
+                return x86.engiGetInstanceLocalId((int)instance);
+            }
 
-        public static extern long engiGetInstanceLocalId(long instance);
+            return x64.engiGetInstanceLocalId(instance); 
+        }
 
 
 
@@ -2792,9 +2798,16 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiTestAttr")]
+        public static long sdaiTestAttr(long instance, ref long attribute)
+        {
+            if (_x86)
+            {
+                int iAttribute = (int)attribute;
+                return x86.sdaiTestAttr((int)instance, ref iAttribute);
+            }
 
-        public static extern long sdaiTestAttr(long instance, ref long attribute);
+            return x64.sdaiTestAttr(instance, ref attribute);
+        }
 
 
 
@@ -2808,31 +2821,49 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiTestAttrBN")]
+        public static long sdaiTestAttrBN(long instance, string attributeName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiTestAttrBN((int)instance, attributeName);
+            }
 
-        public static extern long sdaiTestAttrBN(long instance, string attributeName);
+            return x64.sdaiTestAttrBN(instance, attributeName);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiTestAttrBN")]
+        public static long sdaiTestAttrBN(long instance, byte[] attributeName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiTestAttrBN((int)instance, attributeName);
+            }
 
-        public static extern long sdaiTestAttrBN(long instance, byte[] attributeName);
+            return x64.sdaiTestAttrBN(instance, attributeName);
+        }
 
 
 
-		//
+        //
 
-		//		engiGetInstanceClassInfo                    (http://rdf.bg/ifcdoc/CS64/engiGetInstanceClassInfo.html)
+        //		engiGetInstanceClassInfo                    (http://rdf.bg/ifcdoc/CS64/engiGetInstanceClassInfo.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetInstanceClassInfo")]
+        public static IntPtr engiGetInstanceClassInfo(long instance)
+        {
+            if (_x86)
+            {
+                return x86.engiGetInstanceClassInfo((int)instance);
+            }
 
-        public static extern IntPtr engiGetInstanceClassInfo(long instance);
+            return x64.engiGetInstanceClassInfo(instance);
+        }
 
 
 
@@ -2846,41 +2877,55 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetInstanceClassInfoUC")]
+        public static IntPtr engiGetInstanceClassInfoUC(long instance)
+        {
+            if (_x86)
+            {
+                return x86.engiGetInstanceClassInfoUC((int)instance);
+            }
 
-        public static extern IntPtr engiGetInstanceClassInfoUC(long instance);
-
-
-
-		//
-
-		//		engiGetInstanceClassInfoEx                  (http://rdf.bg/ifcdoc/CS64/engiGetInstanceClassInfoEx.html)
-
-		//
-
-		//	...
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetInstanceClassInfoEx")]
-
-        public static extern void engiGetInstanceClassInfoEx(long instance, out IntPtr classInfo);
+            return x64.engiGetInstanceClassInfoUC(instance);
+        }
 
 
 
-		//
+        //
 
-		//		engiGetInstanceMetaInfo                     (http://rdf.bg/ifcdoc/CS64/engiGetInstanceMetaInfo.html)
+        //		engiGetInstanceClassInfoEx                  (http://rdf.bg/ifcdoc/CS64/engiGetInstanceClassInfoEx.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
+
+        public static void engiGetInstanceClassInfoEx(long instance, out IntPtr classInfo)
+        {
+            if (_x86)
+            {
+                x86.engiGetInstanceClassInfoEx((int)instance, out classInfo);
+            }
+            else
+            {
+                x64.engiGetInstanceClassInfoEx(instance, out classInfo);
+            }
+        }
+
+
+
+        //
+
+        //		engiGetInstanceMetaInfo                     (http://rdf.bg/ifcdoc/CS64/engiGetInstanceMetaInfo.html)
+
+        //
+
+        //	...
+
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "engiGetInstanceMetaInfo")]
 
-        public static extern long engiGetInstanceMetaInfo(out long instance, out long localId, out IntPtr entityName, out IntPtr entityNameUC);
+        public static extern long engiGetInstanceMetaInfo(long instance, out long localId, out IntPtr entityName, out IntPtr entityNameUC);
 
 
 
@@ -10802,7 +10847,7 @@ namespace IfcEngine
 
         [DllImport(IFCEngineDLL, EntryPoint = "engiGetInstanceMetaInfo")]
 
-        public static extern int engiGetInstanceMetaInfo(out int instance, out int localId, out IntPtr entityName, out IntPtr entityNameUC);
+        public static extern int engiGetInstanceMetaInfo(int instance, out int localId, out IntPtr entityName, out IntPtr entityNameUC);
 
 
 
@@ -18714,7 +18759,7 @@ namespace IfcEngine
 
         [DllImport(IFCEngineDLL, EntryPoint = "engiGetInstanceMetaInfo")]
 
-        public static extern long engiGetInstanceMetaInfo(out long instance, out long localId, out IntPtr entityName, out IntPtr entityNameUC);
+        public static extern long engiGetInstanceMetaInfo(long instance, out long localId, out IntPtr entityName, out IntPtr entityNameUC);
 
 
 
