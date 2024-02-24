@@ -5159,65 +5159,89 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "ImportModel")]
+        public static long ImportModel(long model, string fileName)
+        {
+            if (_x86)
+            {
+                return x86.ImportModel(model, fileName);
+            }
 
-        public static extern long ImportModel(long model, string fileName);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "ImportModel")]
-
-        public static extern long ImportModel(long model, byte[] fileName);
-
-
-
-		//
-
-		//		ImportModelW                                (http://rdf.bg/gkdoc/CS64/ImportModelW.html)
-
-		//
-
-		//	This function imports a design tree on location fileName.
-
-		//	The design tree will be added to the given existing model.
-
-		//	The return value contains the first instance not referenced by any other instance or zero 
-
-		//	if it does not exist. In case the imported model is created with SaveInstanceTree() this instance is 
-
-		//	unique and equal to the instance used within the call SaveInstanceTree().
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "ImportModelW")]
-
-        public static extern long ImportModelW(long model, string fileName);
+            return x64.ImportModel(model, fileName);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "ImportModelW")]
+        public static long ImportModel(long model, byte[] fileName)
+        {
+            if (_x86)
+            {
+                return x86.ImportModel(model, fileName);
+            }
 
-        public static extern long ImportModelW(long model, byte[] fileName);
+            return x64.ImportModel(model, fileName);
+        }
 
 
 
-		//
+        //
 
-		//		ImportModelS                                (http://rdf.bg/gkdoc/CS64/ImportModelS.html)
+        //		ImportModelW                                (http://rdf.bg/gkdoc/CS64/ImportModelW.html)
 
-		//
+        //
 
-		//	This function imports a design tree via a stream.
+        //	This function imports a design tree on location fileName.
 
-		//	The design tree will be added to the given existing model.
+        //	The design tree will be added to the given existing model.
 
-		//	The return value contains the first instance not referenced by any other instance or zero 
+        //	The return value contains the first instance not referenced by any other instance or zero 
 
-		//	if it does not exist. In case the imported model is created with SaveInstanceTree() this instance is 
+        //	if it does not exist. In case the imported model is created with SaveInstanceTree() this instance is 
 
-		//	unique and equal to the instance used within the call SaveInstanceTree().
+        //	unique and equal to the instance used within the call SaveInstanceTree().
 
-		//
+        //
+
+        public static long ImportModelW(long model, string fileName)
+        {
+            if (_x86)
+            {
+                return x86.ImportModelW(model, fileName);
+            }
+
+            return x64.ImportModelW(model, fileName);
+        }
+
+
+
+        public static long ImportModelW(long model, byte[] fileName)
+        {
+            if (_x86)
+            {
+                return x86.ImportModelW(model, fileName);
+            }
+
+            return x64.ImportModelW(model, fileName);
+        }
+
+
+
+        //
+
+        //		ImportModelS                                (http://rdf.bg/gkdoc/CS64/ImportModelS.html)
+
+        //
+
+        //	This function imports a design tree via a stream.
+
+        //	The design tree will be added to the given existing model.
+
+        //	The return value contains the first instance not referenced by any other instance or zero 
+
+        //	if it does not exist. In case the imported model is created with SaveInstanceTree() this instance is 
+
+        //	unique and equal to the instance used within the call SaveInstanceTree().
+
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "ImportModelS")]
 
@@ -5259,49 +5283,73 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SaveInstanceTree")]
+        public static long SaveInstanceTree(long owlInstance, string fileName)
+        {
+            if (_x86)
+            {
+                return x86.SaveInstanceTree(owlInstance, fileName);
+            }
 
-        public static extern long SaveInstanceTree(long owlInstance, string fileName);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "SaveInstanceTree")]
-
-        public static extern long SaveInstanceTree(long owlInstance, byte[] fileName);
-
-
-
-		//
-
-		//		SaveInstanceTreeW                           (http://rdf.bg/gkdoc/CS64/SaveInstanceTreeW.html)
-
-		//
-
-		//	This function saves the selected instance and its dependancies on location fileName.
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "SaveInstanceTreeW")]
-
-        public static extern long SaveInstanceTreeW(long owlInstance, string fileName);
+            return x64.SaveInstanceTree(owlInstance, fileName);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SaveInstanceTreeW")]
+        public static long SaveInstanceTree(long owlInstance, byte[] fileName)
+        {
+            if (_x86)
+            {
+                return x86.SaveInstanceTree(owlInstance, fileName);
+            }
 
-        public static extern long SaveInstanceTreeW(long owlInstance, byte[] fileName);
+            return x64.SaveInstanceTree(owlInstance, fileName);
+        }
 
 
 
-		//
+        //
 
-		//		SaveInstanceTreeS                           (http://rdf.bg/gkdoc/CS64/SaveInstanceTreeS.html)
+        //		SaveInstanceTreeW                           (http://rdf.bg/gkdoc/CS64/SaveInstanceTreeW.html)
 
-		//
+        //
 
-		//	This function saves the selected instance and its dependancies in a stream.
+        //	This function saves the selected instance and its dependancies on location fileName.
 
-		//
+        //
+
+        public static long SaveInstanceTreeW(long owlInstance, string fileName)
+        {
+            if (_x86)
+            {
+                return x86.SaveInstanceTreeW(owlInstance, fileName);
+            }
+
+            return x64.SaveInstanceTreeW(owlInstance, fileName);
+        }
+
+
+
+        public static long SaveInstanceTreeW(long owlInstance, byte[] fileName)
+        {
+            if (_x86)
+            {
+                return x86.SaveInstanceTreeW(owlInstance, fileName);
+            }
+
+            return x64.SaveInstanceTreeW(owlInstance, fileName);
+        }
+
+
+
+        //
+
+        //		SaveInstanceTreeS                           (http://rdf.bg/gkdoc/CS64/SaveInstanceTreeS.html)
+
+        //
+
+        //	This function saves the selected instance and its dependancies in a stream.
+
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "SaveInstanceTreeS")]
 
@@ -5335,49 +5383,81 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SaveModel")]
-
-        public static extern long SaveModel(long model, string fileName);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "SaveModel")]
-
-        public static extern long SaveModel(long model, byte[] fileName);
-
-
-
-		//
-
-		//		SaveModelW                                  (http://rdf.bg/gkdoc/CS64/SaveModelW.html)
-
-		//
-
-		//	This function saves the current model on location fileName.
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "SaveModelW")]
-
-        public static extern long SaveModelW(long model, string fileName);
+        public static long SaveModel(long model, string fileName)
+        {
+            if (_x86)
+            {
+                return x86.SaveModel(model, fileName);
+            }
+            else
+            {
+                return x64.SaveModel(model, fileName);
+            }
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SaveModelW")]
+        public static long SaveModel(long model, byte[] fileName)
+        {
+            if (_x86)
+            {
+                return x86.SaveModel(model, fileName);
+            }
+            else
+            {
+                return x64.SaveModel(model, fileName);
+            }
+        }
 
-        public static extern long SaveModelW(long model, byte[] fileName);
+
+
+        //
+
+        //		SaveModelW                                  (http://rdf.bg/gkdoc/CS64/SaveModelW.html)
+
+        //
+
+        //	This function saves the current model on location fileName.
+
+        //
+
+        public static long SaveModelW(long model, string fileName)
+        {
+            if (_x86)
+            {
+                return x86.SaveModelW(model, fileName);
+            }
+            else
+            {
+                return x64.SaveModelW(model, fileName);
+            }
+        }
 
 
 
-		//
+        public static long SaveModelW(long model, byte[] fileName)
+        {
+            if (_x86)
+            {
+                return x86.SaveModelW(model, fileName);
+            }
+            else
+            {
+                return x64.SaveModelW(model, fileName);
+            }
+        }
 
-		//		SaveModelS                                  (http://rdf.bg/gkdoc/CS64/SaveModelS.html)
 
-		//
 
-		//	This function saves the current model in a stream.
+        //
 
-		//
+        //		SaveModelS                                  (http://rdf.bg/gkdoc/CS64/SaveModelS.html)
+
+        //
+
+        //	This function saves the current model in a stream.
+
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "SaveModelS")]
 
