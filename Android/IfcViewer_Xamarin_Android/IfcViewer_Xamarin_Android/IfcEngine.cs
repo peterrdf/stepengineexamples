@@ -2317,9 +2317,17 @@ namespace IfcEngine
 
         //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiAppend")]
-
-        public static extern void engiAppend(long list, long valueType, out IntPtr values, long card);
+        public static void engiAppend(long list, long valueType, out IntPtr values, long card)
+        {
+            if (_x86)
+            {
+                x86.engiAppend((int)list, (int)valueType, out values, (int)card);
+            }
+            else
+            {
+                x64.engiAppend(list, valueType, out values, card);
+            }
+        }
 
 
 
@@ -2333,37 +2341,66 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateADB")]
+        public static long sdaiCreateADB(long valueType, out long value)
+        {
+            if (_x86)
+            {
+                long lResult = x86.sdaiCreateADB((int)valueType, out int iValue);
+                value = iValue;
+                return lResult;
+            }
 
-        public static extern long sdaiCreateADB(long valueType, out long value);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateADB")]
-
-        public static extern long sdaiCreateADB(long valueType, out double value);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateADB")]
-
-        public static extern long sdaiCreateADB(long valueType, out IntPtr value);
+            return x64.sdaiCreateADB(valueType, out value);
+        }
 
 
 
-		//
+        public static long sdaiCreateADB(long valueType, out double value)
+        {
+            if (_x86)
+            {
+                long lResult = x86.sdaiCreateADB((int)valueType, out double dValue);
+                value = dValue;
+                return lResult;
+            }
 
-		//		sdaiCreateAggr                              (http://rdf.bg/ifcdoc/CS64/sdaiCreateAggr.html)
+            return x64.sdaiCreateADB(valueType, out value);
+        }
 
-		//
 
-		//	...
 
-		//
+        public static long sdaiCreateADB(long valueType, out IntPtr value)
+        {
+            if (_x86)
+            {
+                return x86.sdaiCreateADB((int)valueType, out value);
+            }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateAggr")]
+            return x64.sdaiCreateADB(valueType, out value);
+        }
 
-        public static extern long sdaiCreateAggr(long instance, ref long attribute);
+
+
+        //
+
+        //		sdaiCreateAggr                              (http://rdf.bg/ifcdoc/CS64/sdaiCreateAggr.html)
+
+        //
+
+        //	...
+
+        //
+
+        public static long sdaiCreateAggr(long instance, ref long attribute)
+        {
+            if (_x86)
+            {
+                int iAttribute = (int)attribute;
+                return x86.sdaiCreateAggr((int)instance, ref iAttribute);
+            }
+
+            return x64.sdaiCreateAggr(instance, ref attribute);
+        }
 
 
 
