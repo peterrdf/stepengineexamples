@@ -3769,9 +3769,17 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "owlGetModel")]
-
-        public static extern void owlGetModel(long model, out long owlModel);
+        public static void owlGetModel(long model, out long owlModel)
+        {
+            if (_x86)
+            {
+                x86.owlGetModel((int)model, out owlModel);
+            }
+            else
+            {
+                x64.owlGetModel(model, out owlModel);
+            }            
+        }
 
 
 
@@ -3785,73 +3793,111 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "owlGetInstance")]
-
-        public static extern void owlGetInstance(long model, long instance, out long owlInstance);
-
-
-
-		//
-
-		//		owlBuildInstance                            (http://rdf.bg/ifcdoc/CS64/owlBuildInstance.html)
-
-		//
-
-		//	...
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "owlBuildInstance")]
-
-        public static extern void owlBuildInstance(long model, long instance, out long owlInstance);
+        public static void owlGetInstance(long model, long instance, out long owlInstance)
+        {
+            if (_x86)
+            {
+                x86.owlGetInstance((int)model, (int)instance, out owlInstance);
+            }
+            else
+            {
+                x64.owlGetInstance(model, instance, out owlInstance);
+            }
+        }
 
 
 
-		//
+        //
 
-		//		owlBuildInstances                           (http://rdf.bg/ifcdoc/CS64/owlBuildInstances.html)
+        //		owlBuildInstance                            (http://rdf.bg/ifcdoc/CS64/owlBuildInstance.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "owlBuildInstances")]
-
-        public static extern void owlBuildInstances(long model, long instance, out long owlInstanceComplete, out long owlInstanceSolids, out long owlInstanceVoids);
-
-
-
-		//
-
-		//		owlGetMappedItem                            (http://rdf.bg/ifcdoc/CS64/owlGetMappedItem.html)
-
-		//
-
-		//	...
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "owlGetMappedItem")]
-
-        public static extern void owlGetMappedItem(long model, long instance, out long owlInstance, out double transformationMatrix);
+        public static void owlBuildInstance(long model, long instance, out long owlInstance)
+        {
+            if (_x86)
+            {
+                x86.owlBuildInstance((int)model, (int)instance, out owlInstance);
+            }
+            else
+            {
+                x64.owlBuildInstance(model, instance, out owlInstance);
+            }
+        }
 
 
 
-		//
+        //
 
-		//		getInstanceDerivedPropertiesInModelling     (http://rdf.bg/ifcdoc/CS64/getInstanceDerivedPropertiesInModelling.html)
+        //		owlBuildInstances                           (http://rdf.bg/ifcdoc/CS64/owlBuildInstances.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "getInstanceDerivedPropertiesInModelling")]
+        public static void owlBuildInstances(long model, long instance, out long owlInstanceComplete, out long owlInstanceSolids, out long owlInstanceVoids)
+        {
+            if (_x86)
+            {
+                x86.owlBuildInstances((int)model, (int)instance, out owlInstanceComplete, out owlInstanceSolids, out owlInstanceVoids);
+            }
+            else
+            {
+                x64.owlBuildInstances(model, instance, out owlInstanceComplete, out owlInstanceSolids, out owlInstanceVoids);
+            }
+        }
 
-        public static extern long getInstanceDerivedPropertiesInModelling(long model, long instance, out double height, out double width, out double thickness);
+
+
+        //
+
+        //		owlGetMappedItem                            (http://rdf.bg/ifcdoc/CS64/owlGetMappedItem.html)
+
+        //
+
+        //	...
+
+        //
+
+        public static void owlGetMappedItem(long model, long instance, out long owlInstance, out double transformationMatrix)
+        {
+            if (_x86)
+            {
+                x86.owlGetMappedItem((int)model, (int)instance, out owlInstance, out transformationMatrix);
+            }
+            else
+            {
+                x64.owlGetMappedItem(model, instance, out owlInstance, out transformationMatrix);
+            }
+        }
+
+
+
+        //
+
+        //		getInstanceDerivedPropertiesInModelling     (http://rdf.bg/ifcdoc/CS64/getInstanceDerivedPropertiesInModelling.html)
+
+        //
+
+        //	...
+
+        //
+
+        public static long getInstanceDerivedPropertiesInModelling(long model, long instance, out double height, out double width, out double thickness)
+        {
+            if (_x86)
+            {
+                return x86.getInstanceDerivedPropertiesInModelling((int)model, (int)instance, out height, out width, out thickness);
+            }
+
+            return x64.getInstanceDerivedPropertiesInModelling(model, instance, out height, out width, out thickness);
+        }
 
 
 
@@ -3865,9 +3911,15 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "getInstanceDerivedBoundingBox")]
+        public static long getInstanceDerivedBoundingBox(long model, long instance, out double Ox, out double Oy, out double Oz, out double Vx, out double Vy, out double Vz)
+        {
+            if (_x86)
+            {
+                return x86.getInstanceDerivedBoundingBox((int)model, (int)instance, out Ox, out Oy, out Oz, out Vx, out Vy, out Vz);
+            }
 
-        public static extern long getInstanceDerivedBoundingBox(long model, long instance, out double Ox, out double Oy, out double Oz, out double Vx, out double Vy, out double Vz);
+            return x64.getInstanceDerivedBoundingBox(model, instance, out Ox, out Oy, out Oz, out Vx, out Vy, out Vz);
+        }
 
 
 
@@ -3881,9 +3933,15 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "getInstanceTransformationMatrix")]
+        public static long getInstanceTransformationMatrix(long model, long instance, out double _11, out double _12, out double _13, out double _14, out double _21, out double _22, out double _23, out double _24, out double _31, out double _32, out double _33, out double _34, out double _41, out double _42, out double _43, out double _44)
+        {
+            if (_x86)
+            {
+                return x86.getInstanceTransformationMatrix((int)model, (int)instance, out _11, out _12, out _13, out _14, out _21, out _22, out _23, out _24, out _31, out _32, out _33, out _34, out _41, out _42, out _43, out _44);
+            }
 
-        public static extern long getInstanceTransformationMatrix(long model, long instance, out double _11, out double _12, out double _13, out double _14, out double _21, out double _22, out double _23, out double _24, out double _31, out double _32, out double _33, out double _34, out double _41, out double _42, out double _43, out double _44);
+            return x64.getInstanceTransformationMatrix(model, instance, out _11, out _12, out _13, out _14, out _21, out _22, out _23, out _24, out _31, out _32, out _33, out _34, out _41, out _42, out _43, out _44);
+        }
 
 
 
@@ -3897,25 +3955,37 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "getInstanceDerivedTransformationMatrix")]
+        public static long getInstanceDerivedTransformationMatrix(long model, long instance, out double _11, out double _12, out double _13, out double _14, out double _21, out double _22, out double _23, out double _24, out double _31, out double _32, out double _33, out double _34, out double _41, out double _42, out double _43, out double _44)
+        {
+            if (_x86)
+            {
+                return x86.getInstanceDerivedTransformationMatrix((int)model, (int)instance, out _11, out _12, out _13, out _14, out _21, out _22, out _23, out _24, out _31, out _32, out _33, out _34, out _41, out _42, out _43, out _44);
+            }
 
-        public static extern long getInstanceDerivedTransformationMatrix(long model, long instance, out double _11, out double _12, out double _13, out double _14, out double _21, out double _22, out double _23, out double _24, out double _31, out double _32, out double _33, out double _34, out double _41, out double _42, out double _43, out double _44);
+            return x64.getInstanceDerivedTransformationMatrix(model, instance, out _11, out _12, out _13, out _14, out _21, out _22, out _23, out _24, out _31, out _32, out _33, out _34, out _41, out _42, out _43, out _44);
+        }
 
 
 
-		//
+        //
 
-		//		internalGetBoundingBox                      (http://rdf.bg/ifcdoc/CS64/internalGetBoundingBox.html)
+        //		internalGetBoundingBox                      (http://rdf.bg/ifcdoc/CS64/internalGetBoundingBox.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "internalGetBoundingBox")]
+        public static long internalGetBoundingBox(long model, long instance)
+        {
+            if (_x86)
+            {
+                return x86.internalGetBoundingBox((int)model, (int)instance);
+            }
 
-        public static extern long internalGetBoundingBox(long model, long instance);
+            return x64.internalGetBoundingBox(model, instance);
+        }
 
 
 
@@ -3929,9 +3999,15 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "internalGetCenter")]
+        public static long internalGetCenter(long model, long instance)
+        {
+            if (_x86)
+            {
+                return x86.internalGetCenter((int)model, (int)instance);
+            }
 
-        public static extern long internalGetCenter(long model, long instance);
+            return x64.internalGetCenter(model, instance);
+        }
 
 
 
