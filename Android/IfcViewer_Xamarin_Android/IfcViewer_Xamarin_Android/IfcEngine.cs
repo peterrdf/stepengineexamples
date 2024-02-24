@@ -4669,9 +4669,15 @@ namespace IfcEngine
 
         //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetSmoothness")]
+        public static long GetSmoothness(long owlInstance, out long degree)
+        {
+            if (_x86)
+            {
+                return x86.GetSmoothness(owlInstance, out degree);
+            }
 
-        public static extern long GetSmoothness(long owlInstance, out long degree);
+            return x64.GetSmoothness(owlInstance, out degree);
+        }
 
 
 
@@ -4695,9 +4701,17 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "AddState")]
-
-        public static extern void AddState(long model, long owlInstance);
+        public static void AddState(long model, long owlInstance)
+        {
+            if (_x86)
+            {
+                x86.AddState(model, owlInstance);
+            }
+            else
+            {
+                x64.AddState(model, owlInstance);
+            }            
+        }
 
 
 
@@ -4709,9 +4723,15 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetModel")]
+        public static long GetModel(long owlInstance)
+        {
+            if (_x86)
+            {  
+                return x86.GetModel(owlInstance); 
+            }
 
-        public static extern long GetModel(long owlInstance);
+            return x64.GetModel(owlInstance);
+        }
 
 
 
@@ -4759,73 +4779,145 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "OrderedHandles")]
-
-        public static extern void OrderedHandles(long model, out long classCnt, out long propertyCnt, out long instanceCnt, long setting, long mask);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "OrderedHandles")]
-
-        public static extern void OrderedHandles(long model, out long classCnt, out long propertyCnt, IntPtr instanceCnt, long setting, long mask);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "OrderedHandles")]
-
-        public static extern void OrderedHandles(long model, out long classCnt, IntPtr propertyCnt, out long instanceCnt, long setting, long mask);
+        public static void OrderedHandles(long model, out long classCnt, out long propertyCnt, out long instanceCnt, long setting, long mask)
+        {
+            if (_x86)
+            {
+                x86.OrderedHandles(model, out classCnt, out propertyCnt, out instanceCnt, setting, mask);
+            }
+            else
+            {
+                x64.OrderedHandles(model, out classCnt, out propertyCnt, out instanceCnt, setting, mask);
+            }            
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "OrderedHandles")]
-
-        public static extern void OrderedHandles(long model, out long classCnt, IntPtr propertyCnt, IntPtr instanceCnt, long setting, long mask);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "OrderedHandles")]
-
-        public static extern void OrderedHandles(long model, IntPtr classCnt, out long propertyCnt, out long instanceCnt, long setting, long mask);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "OrderedHandles")]
-
-        public static extern void OrderedHandles(long model, IntPtr classCnt, out long propertyCnt, IntPtr instanceCnt, long setting, long mask);
+        public static void OrderedHandles(long model, out long classCnt, out long propertyCnt, IntPtr instanceCnt, long setting, long mask)
+        {
+            if (_x86)
+            {
+                x86.OrderedHandles(model, out classCnt, out propertyCnt, instanceCnt, setting, mask);
+            }
+            else
+            {
+                x64.OrderedHandles(model, out classCnt, out propertyCnt, instanceCnt, setting, mask);
+            }
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "OrderedHandles")]
+        public static void OrderedHandles(long model, out long classCnt, IntPtr propertyCnt, out long instanceCnt, long setting, long mask)
+        {
+            if (_x86)
+            {
+                x86.OrderedHandles(model, out classCnt, propertyCnt, out instanceCnt, setting, mask);
+            }
+            else
+            {
+                x64.OrderedHandles(model, out classCnt, propertyCnt, out instanceCnt, setting, mask);
+            }
+        }
 
-        public static extern void OrderedHandles(long model, IntPtr classCnt, IntPtr propertyCnt, out long instanceCnt, long setting, long mask);
+
+
+        public static void OrderedHandles(long model, out long classCnt, IntPtr propertyCnt, IntPtr instanceCnt, long setting, long mask)
+        {
+            if (_x86)
+            {
+                x86.OrderedHandles(model, out classCnt, propertyCnt, instanceCnt, setting, mask);
+            }
+            else
+            {
+                x64.OrderedHandles(model, out classCnt, propertyCnt, instanceCnt, setting, mask);
+            }
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "OrderedHandles")]
+        public static void OrderedHandles(long model, IntPtr classCnt, out long propertyCnt, out long instanceCnt, long setting, long mask)
+        {
+            if (_x86)
+            {
+                x86.OrderedHandles(model, classCnt, out propertyCnt, out instanceCnt, setting, mask);
+            }
+            else
+            {
+                x64.OrderedHandles(model, classCnt, out propertyCnt, out instanceCnt, setting, mask);
+            }
+        }
 
-        public static extern void OrderedHandles(long model, IntPtr classCnt, IntPtr propertyCnt, IntPtr instanceCnt, long setting, long mask);
+
+
+        public static void OrderedHandles(long model, IntPtr classCnt, out long propertyCnt, IntPtr instanceCnt, long setting, long mask)
+        {
+            if (_x86)
+            {
+                x86.OrderedHandles(model, classCnt, out propertyCnt, instanceCnt, setting, mask);
+            }
+            else
+            {
+                x64.OrderedHandles(model, classCnt, out propertyCnt, instanceCnt, setting, mask);
+            }
+        }
 
 
 
-		//
+        public static void OrderedHandles(long model, IntPtr classCnt, IntPtr propertyCnt, out long instanceCnt, long setting, long mask)
+        {
+            if (_x86)
+            {
+                x86.OrderedHandles(model, classCnt, propertyCnt, out instanceCnt, setting, mask);
+            }
+            else
+            {
+                x64.OrderedHandles(model, classCnt, propertyCnt, out instanceCnt, setting, mask);
+            }
+        }
 
-		//		PeelArray                                   (http://rdf.bg/gkdoc/CS64/PeelArray.html)
 
-		//
 
-		//	This function introduces functionality that is missing or complicated in some programming languages.
+        public static void OrderedHandles(long model, IntPtr classCnt, IntPtr propertyCnt, IntPtr instanceCnt, long setting, long mask)
+        {
+            if (_x86)
+            {
+                x86.OrderedHandles(model, classCnt, propertyCnt, instanceCnt, setting, mask);
+            }
+            else
+            {
+                x64.OrderedHandles(model, classCnt, propertyCnt, instanceCnt, setting, mask);
+            }
+        }
 
-		//	The attribute inValue is a reference to an array of references. The attribute outValue is a reference to the same array,
 
-		//	however a number of elements earlier or further, i.e. number of elements being attribute elementSize. Be aware that as
 
-		//	we are talking about references the offset is depending on 32 bit / 64 bit compilation.
+        //
 
-		//
+        //		PeelArray                                   (http://rdf.bg/gkdoc/CS64/PeelArray.html)
 
-        [DllImport(IFCEngineDLL, EntryPoint = "PeelArray")]
+        //
 
-        public static extern void PeelArray(ref byte[] inValue, out byte outValue, long elementSize);
+        //	This function introduces functionality that is missing or complicated in some programming languages.
+
+        //	The attribute inValue is a reference to an array of references. The attribute outValue is a reference to the same array,
+
+        //	however a number of elements earlier or further, i.e. number of elements being attribute elementSize. Be aware that as
+
+        //	we are talking about references the offset is depending on 32 bit / 64 bit compilation.
+
+        //
+
+        public static void PeelArray(ref byte[] inValue, out byte outValue, long elementSize)
+        {
+            if (_x86)
+            {
+                x86.PeelArray(ref inValue, out outValue, elementSize);
+            }
+            else
+            {
+                x64.PeelArray(ref inValue, out outValue, elementSize);
+            }
+        }
 
 
 
@@ -4839,9 +4931,15 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "CloseSession")]
+        public static long CloseSession()
+        { 
+            if (_x86)
+            { 
+                return x86.CloseSession(); 
+            }
 
-        public static extern long CloseSession();
+            return x64.CloseSession(); 
+        }
 
 
 
@@ -4855,25 +4953,41 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "CleanMemory")]
+        public static void CleanMemory()
+        {
+            if (_x86)
+            {
+                x86.CleanMemory();
+            }
+            else
+            { 
+                x64.CleanMemory(); 
+            }
+        }
 
-        public static extern void CleanMemory();
 
 
+        //
 
-		//
+        //		ClearCache                                  (http://rdf.bg/gkdoc/CS64/ClearCache.html)
 
-		//		ClearCache                                  (http://rdf.bg/gkdoc/CS64/ClearCache.html)
+        //
 
-		//
+        //		This function ..
 
-		//		This function ..
+        //
 
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "ClearCache")]
-
-        public static extern void ClearCache(long model);
+        public static void ClearCache(long model)
+        {
+            if (_x86)
+            {
+                x86.ClearCache(model);
+            }
+            else
+            {
+                x64.ClearCache(model);
+            }
+        }
 
 
 
@@ -4885,23 +4999,29 @@ namespace IfcEngine
 
 
 
-		//
+        //
 
-		//		CreateModel                                 (http://rdf.bg/gkdoc/CS64/CreateModel.html)
+        //		CreateModel                                 (http://rdf.bg/gkdoc/CS64/CreateModel.html)
 
-		//
+        //
 
-		//	This function creates and empty model.
+        //	This function creates and empty model.
 
-		//	References inside to other ontologies will be included.
+        //	References inside to other ontologies will be included.
 
-		//	A handle to the model will be returned, or 0 in case something went wrong.
+        //	A handle to the model will be returned, or 0 in case something went wrong.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "CreateModel")]
+        public static long CreateModel()
+        {
+            if (_x86)
+            {
+                return x86.CreateModel();
+            }
 
-        public static extern long CreateModel();
+            return x64.CreateModel();
+        }
 
 
 
@@ -4919,57 +5039,81 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "OpenModel")]
+        public static long OpenModel(string fileName)
+        {
+            if (_x86)
+            {
+                return x86.OpenModel(fileName);
+            }
 
-        public static extern long OpenModel(string fileName);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "OpenModel")]
-
-        public static extern long OpenModel(byte[] fileName);
-
-
-
-		//
-
-		//		OpenModelW                                  (http://rdf.bg/gkdoc/CS64/OpenModelW.html)
-
-		//
-
-		//	This function opens the model on location fileName.
-
-		//	References inside to other ontologies will be included.
-
-		//	A handle to the model will be returned, or 0 in case something went wrong.
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "OpenModelW")]
-
-        public static extern long OpenModelW(string fileName);
+            return x64.OpenModel(fileName);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "OpenModelW")]
+        public static long OpenModel(byte[] fileName)
+        {
+            if (_x86)
+            {
+                return x86.OpenModel(fileName);
+            }
 
-        public static extern long OpenModelW(byte[] fileName);
+            return x64.OpenModel(fileName);
+        }
 
 
 
-		//
+        //
 
-		//		OpenModelS                                  (http://rdf.bg/gkdoc/CS64/OpenModelS.html)
+        //		OpenModelW                                  (http://rdf.bg/gkdoc/CS64/OpenModelW.html)
 
-		//
+        //
 
-		//	This function opens the model via a stream.
+        //	This function opens the model on location fileName.
 
-		//	References inside to other ontologies will be included.
+        //	References inside to other ontologies will be included.
 
-		//	A handle to the model will be returned, or 0 in case something went wrong.
+        //	A handle to the model will be returned, or 0 in case something went wrong.
 
-		//
+        //
+
+        public static long OpenModelW(string fileName)
+        {
+            if (_x86)
+            {
+                return x86.OpenModelW(fileName);
+            }
+
+            return x64.OpenModelW(fileName);
+        }
+
+
+
+        public static long OpenModelW(byte[] fileName)
+        {
+            if (_x86)
+            {
+                return x86.OpenModelW(fileName);
+            }
+
+            return x64.OpenModelW(fileName);
+        }
+
+
+
+        //
+
+        //		OpenModelS                                  (http://rdf.bg/gkdoc/CS64/OpenModelS.html)
+
+        //
+
+        //	This function opens the model via a stream.
+
+        //	References inside to other ontologies will be included.
+
+        //	A handle to the model will be returned, or 0 in case something went wrong.
+
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "OpenModelS")]
 
