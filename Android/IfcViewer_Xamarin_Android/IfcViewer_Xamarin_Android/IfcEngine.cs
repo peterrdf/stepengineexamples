@@ -1,5 +1,8 @@
 using System;
 using System.Runtime.InteropServices;
+using static Android.Graphics.ColorSpace;
+using static Android.Icu.Text.Edits;
+using static Android.Renderscripts.Sampler;
 using static IfcEngine.x86_64;
 namespace IfcEngine
 {
@@ -3515,119 +3518,186 @@ namespace IfcEngine
 
         //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAggrByIterator")]
-
-        public static extern void sdaiPutAggrByIterator(long iterator, long valueType, out long value);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAggrByIterator")]
-
-        public static extern void sdaiPutAggrByIterator(long iterator, long valueType, out double value);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAggrByIterator")]
-
-        public static extern void sdaiPutAggrByIterator(long iterator, long valueType, out IntPtr value);
+        public static void sdaiPutAggrByIterator(long iterator, long valueType, out long value)
+        {
+            if (_x86)
+            {
+                x86.sdaiPutAggrByIterator((int)iterator, (int)valueType, out int iValue);
+                value = iValue;
+            }
+            else
+            {
+                x64.sdaiPutAggrByIterator(iterator, valueType, out value);
+            }
+        }
 
 
 
-		//
-
-		//		internalSetLink                             (http://rdf.bg/ifcdoc/CS64/internalSetLink.html)
-
-		//
-
-		//	...
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "internalSetLink")]
-
-        public static extern void internalSetLink(long instance, string attributeName, long linked_id);
+        public static void sdaiPutAggrByIterator(long iterator, long valueType, out double value)
+        {
+            if (_x86)
+            {
+                x86.sdaiPutAggrByIterator((int)iterator, (int)valueType, out value);
+            }
+            else
+            {
+                x64.sdaiPutAggrByIterator(iterator, valueType, out value);
+            }
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "internalSetLink")]
-
-        public static extern void internalSetLink(long instance, byte[] attributeName, long linked_id);
-
-
-
-		//
-
-		//		internalAddAggrLink                         (http://rdf.bg/ifcdoc/CS64/internalAddAggrLink.html)
-
-		//
-
-		//	...
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "internalAddAggrLink")]
-
-        public static extern void internalAddAggrLink(long list, long linked_id);
+        public static void sdaiPutAggrByIterator(long iterator, long valueType, out IntPtr value)
+        {
+            if (_x86)
+            {
+                x86.sdaiPutAggrByIterator((int)iterator, (int)valueType, out value);
+            }
+            else
+            {
+                x64.sdaiPutAggrByIterator(iterator, valueType, out value);
+            }
+        }
 
 
 
-		//
+        //
 
-		//		engiGetNotReferedAggr                       (http://rdf.bg/ifcdoc/CS64/engiGetNotReferedAggr.html)
+        //		internalSetLink                             (http://rdf.bg/ifcdoc/CS64/internalSetLink.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetNotReferedAggr")]
-
-        public static extern void engiGetNotReferedAggr(long model, out long value);
-
-
-
-		//
-
-		//		engiGetAttributeAggr                        (http://rdf.bg/ifcdoc/CS64/engiGetAttributeAggr.html)
-
-		//
-
-		//	...
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAttributeAggr")]
-
-        public static extern void engiGetAttributeAggr(long instance, out long value);
+        public static void internalSetLink(long instance, string attributeName, long linked_id)
+        {
+            if (_x86)
+            {
+                x86.internalSetLink((int)instance, attributeName, (int)linked_id);
+            }
+            else
+            {
+                x64.internalSetLink(instance, attributeName, linked_id);
+            }            
+        }
 
 
 
-		//
+        public static void internalSetLink(long instance, byte[] attributeName, long linked_id)
+        {
+            if (_x86)
+            {
+                x86.internalSetLink((int)instance, attributeName, (int)linked_id);
+            }
+            else
+            {
+                x64.internalSetLink(instance, attributeName, linked_id);
+            }
+        }
 
-		//		engiGetAggrUnknownElement                   (http://rdf.bg/ifcdoc/CS64/engiGetAggrUnknownElement.html)
 
-		//
 
-		//	...
+        //
 
-		//
+        //		internalAddAggrLink                         (http://rdf.bg/ifcdoc/CS64/internalAddAggrLink.html)
+
+        //
+
+        //	...
+
+        //
+
+        public static void internalAddAggrLink(long list, long linked_id)
+        {
+            if (_x86)
+            {
+                x86.internalAddAggrLink((int)list, (int)linked_id);
+            }
+            else
+            {
+                x64.internalAddAggrLink(list, linked_id);
+            }
+        }
+
+
+
+        //
+
+        //		engiGetNotReferedAggr                       (http://rdf.bg/ifcdoc/CS64/engiGetNotReferedAggr.html)
+
+        //
+
+        //	...
+
+        //
+
+        public static void engiGetNotReferedAggr(long model, out long value)
+        {
+            if (_x86)
+            {
+                x86.engiGetNotReferedAggr((int)model, out int iValue);
+                value = iValue;
+            }
+            else
+            {
+                x64.engiGetNotReferedAggr(model, out value);
+            }
+        }
+
+
+
+        //
+
+        //		engiGetAttributeAggr                        (http://rdf.bg/ifcdoc/CS64/engiGetAttributeAggr.html)
+
+        //
+
+        //	...
+
+        //
+
+        public static void engiGetAttributeAggr(long instance, out long value)
+        {
+            if (_x86)
+            {
+                x86.engiGetAttributeAggr((int)instance, out int iValue);
+                value = iValue;
+            }
+            else
+            {
+                x64.engiGetAttributeAggr(instance, out value);
+            }
+        }
+
+
+
+        //
+
+        //		engiGetAggrUnknownElement                   (http://rdf.bg/ifcdoc/CS64/engiGetAggrUnknownElement.html)
+
+        //
+
+        //	...
+
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrUnknownElement")]
 
-        public static extern void engiGetAggrUnknownElement(out long aggregate, long elementIndex, out long valueType, out long value);
+        public static extern void engiGetAggrUnknownElement(long aggregate, long elementIndex, out long valueType, out long value);
 
 
 
         [DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrUnknownElement")]
 
-        public static extern void engiGetAggrUnknownElement(out long aggregate, long elementIndex, out long valueType, out double value);
+        public static extern void engiGetAggrUnknownElement(long aggregate, long elementIndex, out long valueType, out double value);
 
 
 
         [DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrUnknownElement")]
 
-        public static extern void engiGetAggrUnknownElement(out long aggregate, long elementIndex, out long valueType, out IntPtr value);
+        public static extern void engiGetAggrUnknownElement(long aggregate, long elementIndex, out long valueType, out IntPtr value);
 
 
 
@@ -10966,19 +11036,19 @@ namespace IfcEngine
 
         [DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrUnknownElement")]
 
-        public static extern void engiGetAggrUnknownElement(out int aggregate, int elementIndex, out int valueType, out int value);
+        public static extern void engiGetAggrUnknownElement(int aggregate, int elementIndex, out int valueType, out int value);
 
 
 
         [DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrUnknownElement")]
 
-        public static extern void engiGetAggrUnknownElement(out int aggregate, int elementIndex, out int valueType, out double value);
+        public static extern void engiGetAggrUnknownElement(int aggregate, int elementIndex, out int valueType, out double value);
 
 
 
         [DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrUnknownElement")]
 
-        public static extern void engiGetAggrUnknownElement(out int aggregate, int elementIndex, out int valueType, out IntPtr value);
+        public static extern void engiGetAggrUnknownElement(int aggregate, int elementIndex, out int valueType, out IntPtr value);
 
 
 
@@ -18878,19 +18948,19 @@ namespace IfcEngine
 
         [DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrUnknownElement")]
 
-        public static extern void engiGetAggrUnknownElement(out long aggregate, long elementIndex, out long valueType, out long value);
+        public static extern void engiGetAggrUnknownElement(long aggregate, long elementIndex, out long valueType, out long value);
 
 
 
         [DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrUnknownElement")]
 
-        public static extern void engiGetAggrUnknownElement(out long aggregate, long elementIndex, out long valueType, out double value);
+        public static extern void engiGetAggrUnknownElement(long aggregate, long elementIndex, out long valueType, out double value);
 
 
 
         [DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrUnknownElement")]
 
-        public static extern void engiGetAggrUnknownElement(out long aggregate, long elementIndex, out long valueType, out IntPtr value);
+        public static extern void engiGetAggrUnknownElement(long aggregate, long elementIndex, out long valueType, out IntPtr value);
 
 
 
