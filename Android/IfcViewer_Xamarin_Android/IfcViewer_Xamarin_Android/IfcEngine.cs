@@ -3448,9 +3448,15 @@ namespace IfcEngine
 
         //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "iterateOverProperties")]
+        public static long iterateOverProperties(long entity, long index)
+        {
+            if (_x86)
+            {
+                return x86.iterateOverProperties((int)entity, (int)index);
+            }
 
-        public static extern long iterateOverProperties(long entity, long index);
+            return x64.iterateOverProperties(entity, index);
+        }
 
 
 
@@ -3464,33 +3470,53 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAggrByIterator")]
+        public static long sdaiGetAggrByIterator(long iterator, long valueType, out long value)
+        {
+            if (_x86)
+            {
+                long lResult = x86.sdaiGetAggrByIterator((int)iterator, (int)valueType, out int iValue);
+                value = iValue; 
+                return lResult;
+            }
 
-        public static extern long sdaiGetAggrByIterator(long iterator, long valueType, out long value);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAggrByIterator")]
-
-        public static extern long sdaiGetAggrByIterator(long iterator, long valueType, out double value);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAggrByIterator")]
-
-        public static extern long sdaiGetAggrByIterator(long iterator, long valueType, out IntPtr value);
+            return x64.sdaiGetAggrByIterator(iterator, valueType, out value);
+        }
 
 
 
-		//
+        public static long sdaiGetAggrByIterator(long iterator, long valueType, out double value)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetAggrByIterator((int)iterator, (int)valueType, out value);
+            }
 
-		//		sdaiPutAggrByIterator                       (http://rdf.bg/ifcdoc/CS64/sdaiPutAggrByIterator.html)
+            return x64.sdaiGetAggrByIterator(iterator, valueType, out value);
+        }
 
-		//
 
-		//	...
 
-		//
+        public static long sdaiGetAggrByIterator(long iterator, long valueType, out IntPtr value)
+        {
+            if (_x86)
+            {
+                return x86.sdaiGetAggrByIterator((int)iterator, (int)valueType, out value);
+            }
+
+            return x64.sdaiGetAggrByIterator(iterator, valueType, out value);
+        }
+
+
+
+        //
+
+        //		sdaiPutAggrByIterator                       (http://rdf.bg/ifcdoc/CS64/sdaiPutAggrByIterator.html)
+
+        //
+
+        //	...
+
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAggrByIterator")]
 
