@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using static Android.Graphics.ColorSpace;
 using static IfcEngine.x86_64;
 namespace IfcEngine
 {
@@ -2923,9 +2924,17 @@ namespace IfcEngine
 
         //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetInstanceMetaInfo")]
+        public static long engiGetInstanceMetaInfo(long instance, out long localId, out IntPtr entityName, out IntPtr entityNameUC)
+        {
+            if (_x86)
+            {
+                long lResult = x86.engiGetInstanceMetaInfo((int)instance, out int iLocalId, out entityName, out entityNameUC);
+                localId = iLocalId;
+                return lResult;
+            }
 
-        public static extern long engiGetInstanceMetaInfo(long instance, out long localId, out IntPtr entityName, out IntPtr entityNameUC);
+            return x64.engiGetInstanceMetaInfo(instance, out localId, out entityName, out entityNameUC);
+        }
 
 
 
@@ -2947,9 +2956,17 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "circleSegments")]
-
-        public static extern void circleSegments(long circles, long smallCircles);
+        public static void circleSegments(long circles, long smallCircles)
+        {
+            if (_x86)
+            {
+                x86.circleSegments((int)circles, (int)smallCircles);
+            }
+            else
+            {
+                x64.circleSegments(circles, smallCircles);
+            }
+        }
 
 
 
@@ -2963,47 +2980,75 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "setMaximumSegmentationLength")]
-
-        public static extern void setMaximumSegmentationLength(long model, double length);
-
-
-
-		//
-
-		//		getUnitConversionFactor                     (http://rdf.bg/ifcdoc/CS64/getUnitConversionFactor.html)
-
-		//
-
-		//	...
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "getUnitConversionFactor")]
-
-        public static extern double getUnitConversionFactor(long model, string unitType, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName);
+        public static void setMaximumSegmentationLength(long model, double length)
+        {
+            if (_x86)
+            {
+                x86.setMaximumSegmentationLength((int)model, (int)length);
+            }
+            else
+            {
+                x64.setMaximumSegmentationLength(model, length);
+            }
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "getUnitConversionFactor")]
+        //
 
-        public static extern double getUnitConversionFactor(long model, byte[] unitType, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName);
+        //		getUnitConversionFactor                     (http://rdf.bg/ifcdoc/CS64/getUnitConversionFactor.html)
+
+        //
+
+        //	...
+
+        //
+
+        public static double getUnitConversionFactor(long model, string unitType, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName)
+        {
+            if (_x86)
+            {
+                return x86.getUnitConversionFactor((int)model, unitType, out unitPrefix, out unitName, out SIUnitName);
+            }
+
+            return x64.getUnitConversionFactor(model, unitType, out unitPrefix, out unitName, out SIUnitName);
+        }
 
 
 
-		//
+        public static double getUnitConversionFactor(long model, byte[] unitType, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName)
+        {
+            if (_x86)
+            {
+                return x86.getUnitConversionFactor((int)model, unitType, out unitPrefix, out unitName, out SIUnitName);
+            }
 
-		//		setBRepProperties                           (http://rdf.bg/ifcdoc/CS64/setBRepProperties.html)
+            return x64.getUnitConversionFactor(model, unitType, out unitPrefix, out unitName, out SIUnitName);
+        }
 
-		//
 
-		//	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "setBRepProperties")]
+        //		setBRepProperties                           (http://rdf.bg/ifcdoc/CS64/setBRepProperties.html)
 
-        public static extern void setBRepProperties(long model, long consistencyCheck, double fraction, double epsilon, long maxVerticesSize);
+        //
+
+        //	...
+
+        //
+
+        public static void setBRepProperties(long model, long consistencyCheck, double fraction, double epsilon, long maxVerticesSize)
+        {
+            if (_x86)
+            {
+                x86.setBRepProperties((int)model, consistencyCheck, fraction, epsilon, (int)maxVerticesSize);
+            }
+            else
+            {
+                x64.setBRepProperties(model, consistencyCheck, fraction, epsilon, maxVerticesSize);
+            }            
+        }
 
 
 
@@ -3017,9 +3062,17 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "cleanMemory")]
-
-        public static extern void cleanMemory(long model, long mode);
+        public static void cleanMemory(long model, long mode)
+        {
+            if (_x86)
+            {
+                x86.cleanMemory((int)model, (int)mode);
+            }
+            else
+            {
+                x64.cleanMemory(model, mode);
+            }            
+        }
 
 
 
@@ -3033,9 +3086,15 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "internalGetP21Line")]
+        public static long internalGetP21Line(long instance)
+        {
+            if (_x86)
+            {
+                return x86.internalGetP21Line((int)instance);
+            }
 
-        public static extern long internalGetP21Line(long instance);
+            return x64.internalGetP21Line(instance);
+        }
 
 
 
@@ -3049,41 +3108,60 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "internalGetInstanceFromP21Line")]
+        public static long internalGetInstanceFromP21Line(long model, long P21Line)
+        {
+            if (_x86)
+            {
+                return x86.internalGetInstanceFromP21Line((int)model, (int)P21Line);
+            }
 
-        public static extern long internalGetInstanceFromP21Line(long model, long P21Line);
-
-
-
-		//
-
-		//		internalGetXMLID                            (http://rdf.bg/ifcdoc/CS64/internalGetXMLID.html)
-
-		//
-
-		//	...
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "internalGetXMLID")]
-
-        public static extern void internalGetXMLID(long instance, out IntPtr XMLID);
+            return x64.internalGetInstanceFromP21Line(model, P21Line);
+        }
 
 
+        //
 
-		//
+        //		internalGetXMLID                            (http://rdf.bg/ifcdoc/CS64/internalGetXMLID.html)
 
-		//		setStringUnicode                            (http://rdf.bg/ifcdoc/CS64/setStringUnicode.html)
+        //
 
-		//
+        //	...
 
-		//	...
+        //
 
-		//
+        public static void internalGetXMLID(long instance, out IntPtr XMLID)
+        {
+            if (_x86)
+            {
+                x86.internalGetXMLID((int)instance, out XMLID);
+            }
+            else
+            {
+                x64.internalGetXMLID(instance, out XMLID);
+            }
+        }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "setStringUnicode")]
 
-        public static extern long setStringUnicode(long unicode);
+
+        //
+
+        //		setStringUnicode                            (http://rdf.bg/ifcdoc/CS64/setStringUnicode.html)
+
+        //
+
+        //	...
+
+        //
+
+        public static long setStringUnicode(long unicode)
+        {
+            if (_x86)
+            {
+                return x86.setStringUnicode((int)unicode);
+            }
+
+            return x64.setStringUnicode(unicode);
+        }
 
 
 
@@ -3122,9 +3200,15 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "getFilter")]
+        public static long getFilter(long model, long mask)
+        {
+            if (_x86)
+            {
+                return x86.getFilter((int)model, (int)mask);
+            }
 
-        public static extern long getFilter(long model, long mask);
+            return x64.getFilter(model, mask);
+        }
 
 
 
