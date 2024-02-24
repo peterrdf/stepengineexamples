@@ -1,6 +1,8 @@
+using Android.Icu.Number;
 using System;
 using System.Runtime.InteropServices;
 using static Android.Graphics.ColorSpace;
+using static Android.Renderscripts.Sampler;
 using static IfcEngine.x86_64;
 namespace IfcEngine
 {
@@ -3230,9 +3232,15 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "xxxxGetEntityAndSubTypesExtent")]
+        public static long xxxxGetEntityAndSubTypesExtent(long model, long entity)
+        {
+            if (_x86)
+            {
+                return x86.xxxxGetEntityAndSubTypesExtent((int)model, (int)entity);
+            }
 
-        public static extern long xxxxGetEntityAndSubTypesExtent(long model, long entity);
+            return x64.xxxxGetEntityAndSubTypesExtent(model, entity);
+        }
 
 
 
@@ -3246,31 +3254,49 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "xxxxGetEntityAndSubTypesExtentBN")]
+        public static long xxxxGetEntityAndSubTypesExtentBN(long model, string entityName)
+        {
+            if (_x86)
+            {
+                return x86.xxxxGetEntityAndSubTypesExtentBN((int)model, entityName);
+            }
 
-        public static extern long xxxxGetEntityAndSubTypesExtentBN(long model, string entityName);
+            return x64.xxxxGetEntityAndSubTypesExtentBN(model, entityName);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "xxxxGetEntityAndSubTypesExtentBN")]
+        public static long xxxxGetEntityAndSubTypesExtentBN(long model, byte[] entityName)
+        {
+            if (_x86)
+            {
+                return x86.xxxxGetEntityAndSubTypesExtentBN((int)model, entityName);
+            }
 
-        public static extern long xxxxGetEntityAndSubTypesExtentBN(long model, byte[] entityName);
+            return x64.xxxxGetEntityAndSubTypesExtentBN(model, entityName);
+        }
 
 
 
-		//
+        //
 
-		//		xxxxGetInstancesUsing                       (http://rdf.bg/ifcdoc/CS64/xxxxGetInstancesUsing.html)
+        //		xxxxGetInstancesUsing                       (http://rdf.bg/ifcdoc/CS64/xxxxGetInstancesUsing.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "xxxxGetInstancesUsing")]
+        public static long xxxxGetInstancesUsing(long instance)
+        {
+            if (_x86)
+            {
+                return x86.xxxxGetInstancesUsing((int)instance);
+            }
 
-        public static extern long xxxxGetInstancesUsing(long instance);
+            return x64.xxxxGetInstancesUsing(instance);
+        }
 
 
 
@@ -3284,91 +3310,143 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "xxxxDeleteFromAggregation")]
+        public static long xxxxDeleteFromAggregation(long instance, out long aggregate, long elementIndex)
+        {
+            if (_x86)
+            {
+                long lResult = x86.xxxxDeleteFromAggregation((int)instance, out int iAggregate, (int)elementIndex);
+                aggregate = iAggregate;
+                return lResult;
+            }
 
-        public static extern long xxxxDeleteFromAggregation(long instance, out long aggregate, long elementIndex);
-
-
-
-		//
-
-		//		xxxxGetAttrDefinitionByValue                (http://rdf.bg/ifcdoc/CS64/xxxxGetAttrDefinitionByValue.html)
-
-		//
-
-		//	...
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "xxxxGetAttrDefinitionByValue")]
-
-        public static extern long xxxxGetAttrDefinitionByValue(long instance, out long value);
+            return x64.xxxxDeleteFromAggregation(instance, out aggregate, elementIndex);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "xxxxGetAttrDefinitionByValue")]
+        //
 
-        public static extern long xxxxGetAttrDefinitionByValue(long instance, out double value);
+        //		xxxxGetAttrDefinitionByValue                (http://rdf.bg/ifcdoc/CS64/xxxxGetAttrDefinitionByValue.html)
 
+        //
 
+        //	...
 
-        [DllImport(IFCEngineDLL, EntryPoint = "xxxxGetAttrDefinitionByValue")]
+        //
 
-        public static extern long xxxxGetAttrDefinitionByValue(long instance, out IntPtr value);
+        public static long xxxxGetAttrDefinitionByValue(long instance, out long value)
+        {
+            if (_x86)
+            {
+                long lResult = x86.xxxxGetAttrDefinitionByValue((int)instance, out int iValue);
+                value = iValue; 
+                return lResult;
+            }
 
-
-
-		//
-
-		//		xxxxGetAttrNameByIndex                      (http://rdf.bg/ifcdoc/CS64/xxxxGetAttrNameByIndex.html)
-
-		//
-
-		//	...
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "xxxxGetAttrNameByIndex")]
-
-        public static extern void xxxxGetAttrNameByIndex(long instance, long index, out IntPtr name);
+            return x64.xxxxGetAttrDefinitionByValue(instance, out value);
+        }
 
 
 
-		//
+        public static long xxxxGetAttrDefinitionByValue(long instance, out double value)
+        {
+            if (_x86)
+            {
+                return x86.xxxxGetAttrDefinitionByValue((int)instance, out value);
+            }
 
-		//		iterateOverInstances                        (http://rdf.bg/ifcdoc/CS64/iterateOverInstances.html)
-
-		//
-
-		//	This function interates over all available instances loaded in memory, it is the fastest way to find all instances.
-
-		//	Argument entity and entityName are both optional and if non-zero are filled with respectively the entity handle and entity name as char array.
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "iterateOverInstances")]
-
-        public static extern long iterateOverInstances(long model, long instance, out long entity, string entityName);
+            return x64.xxxxGetAttrDefinitionByValue(instance, out value);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "iterateOverInstances")]
+        public static long xxxxGetAttrDefinitionByValue(long instance, out IntPtr value)
+        {
+            if (_x86)
+            {
+                return x86.xxxxGetAttrDefinitionByValue((int)instance, out value);
+            }
 
-        public static extern long iterateOverInstances(long model, long instance, out long entity, byte[] entityName);
+            return x64.xxxxGetAttrDefinitionByValue(instance, out value);
+        }
 
 
 
-		//
+        //
 
-		//		iterateOverProperties                       (http://rdf.bg/ifcdoc/CS64/iterateOverProperties.html)
+        //		xxxxGetAttrNameByIndex                      (http://rdf.bg/ifcdoc/CS64/xxxxGetAttrNameByIndex.html)
 
-		//
+        //
 
-		//	This function iterated over all available attributes of a specific given entity.
+        //	...
 
-		//	This call is typically used in combination with iterateOverInstances(..).
+        //
 
-		//
+        public static void xxxxGetAttrNameByIndex(long instance, long index, out IntPtr name)
+        {
+            if (_x86)
+            {
+                x86.xxxxGetAttrNameByIndex((int)instance, (int)index, out name);
+            }
+            else
+            {
+                x64.xxxxGetAttrNameByIndex(instance, index, out name);
+            }
+        }
+
+
+
+        //
+
+        //		iterateOverInstances                        (http://rdf.bg/ifcdoc/CS64/iterateOverInstances.html)
+
+        //
+
+        //	This function interates over all available instances loaded in memory, it is the fastest way to find all instances.
+
+        //	Argument entity and entityName are both optional and if non-zero are filled with respectively the entity handle and entity name as char array.
+
+        //
+
+        public static long iterateOverInstances(long model, long instance, out long entity, string entityName)
+        {
+            if (_x86)
+            {
+                long lResult = x86.iterateOverInstances((int)model, (int)instance, out int iEntity, entityName);
+                entity = iEntity;
+                return lResult;
+            }
+
+            return x64.iterateOverInstances(model, instance, out entity, entityName);
+        }
+
+
+
+        public static long iterateOverInstances(long model, long instance, out long entity, byte[] entityName)
+        {
+            if (_x86)
+            {
+                long lResult = x86.iterateOverInstances((int)model, (int)instance, out int iEntity, entityName);
+                entity = iEntity;
+                return lResult;
+            }
+
+            return x64.iterateOverInstances(model, instance, out entity, entityName);
+        }
+
+
+
+        //
+
+        //		iterateOverProperties                       (http://rdf.bg/ifcdoc/CS64/iterateOverProperties.html)
+
+        //
+
+        //	This function iterated over all available attributes of a specific given entity.
+
+        //	This call is typically used in combination with iterateOverInstances(..).
+
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "iterateOverProperties")]
 
