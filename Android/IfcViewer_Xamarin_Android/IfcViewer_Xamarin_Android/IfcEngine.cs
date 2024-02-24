@@ -4050,9 +4050,15 @@ namespace IfcEngine
 
         //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetRevision")]
+        public static long GetRevision(out IntPtr timeStamp)
+        {
+            if (_x86)
+            {
+                return x86.GetRevision(out timeStamp);
+            }
 
-        public static extern long GetRevision(out IntPtr timeStamp);
+            return x64.GetRevision(out timeStamp);
+        }
 
 
 
@@ -4068,31 +4074,43 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetRevisionW")]
+        public static long GetRevisionW(out IntPtr timeStamp)
+        {
+            if (_x86)
+            {
+                return x86.GetRevisionW(out timeStamp);
+            }
 
-        public static extern long GetRevisionW(out IntPtr timeStamp);
+            return x64.GetRevisionW(out timeStamp);
+        }
 
 
 
-		//
+        //
 
-		//		GetProtection                               (http://rdf.bg/gkdoc/CS64/GetProtection.html)
+        //		GetProtection                               (http://rdf.bg/gkdoc/CS64/GetProtection.html)
 
-		//
+        //
 
-		//	This call is required to be called to enable the DLL to work if protection is active.
+        //	This call is required to be called to enable the DLL to work if protection is active.
 
-		//
+        //
 
-		//	Returns the number of days (incl. this one) that this version is still active or 0 if no protection is embedded.
+        //	Returns the number of days (incl. this one) that this version is still active or 0 if no protection is embedded.
 
-		//	In case no days are left and protection is active this call will return -1.
+        //	In case no days are left and protection is active this call will return -1.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetProtection")]
+        public static long GetProtection()
+        {
+            if (_x86)
+            {
+                return x86.GetProtection();
+            }
 
-        public static extern long GetProtection();
+            return x64.GetProtection();
+        }
 
 
 
@@ -4120,9 +4138,15 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetEnvironment")]
+        public static long GetEnvironment(out IntPtr environmentVariables, out IntPtr developmentVariables)
+        {
+            if (_x86)
+            {
+                return x86.GetEnvironment(out environmentVariables, out developmentVariables);
+            }
 
-        public static extern long GetEnvironment(out IntPtr environmentVariables, out IntPtr developmentVariables);
+            return x64.GetEnvironment(out environmentVariables, out developmentVariables);
+        }
 
 
 
@@ -4150,205 +4174,266 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetEnvironmentW")]
+        public static long GetEnvironmentW(out IntPtr environmentVariables, out IntPtr developmentVariables)
+        {
+            if (_x86)
+            {
+                return x86.GetEnvironmentW(out environmentVariables, out developmentVariables);
+            }
 
-        public static extern long GetEnvironmentW(out IntPtr environmentVariables, out IntPtr developmentVariables);
+            return x64.GetEnvironmentW(out environmentVariables, out developmentVariables);
+        }
 
 
 
-		//
+        //
 
-		//		SetAssertionFile                            (http://rdf.bg/gkdoc/CS64/SetAssertionFile.html)
+        //		SetAssertionFile                            (http://rdf.bg/gkdoc/CS64/SetAssertionFile.html)
 
-		//
+        //
 
-		//	This function sets the file location where internal assertions should be written to.
+        //	This function sets the file location where internal assertions should be written to.
 
-		//	If the filename is not set (default) many internal control procedures are not executed
+        //	If the filename is not set (default) many internal control procedures are not executed
 
-		//	and the code will be faster.
+        //	and the code will be faster.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetAssertionFile")]
+        public static void SetAssertionFile(string fileName)
+        {
+            if (_x86)
+            {
+                x86.SetAssertionFile(fileName);
+            }
+            else
+            {
+                x64.SetAssertionFile(fileName);
+            }            
+        }
 
-        public static extern void SetAssertionFile(string fileName);
 
 
+        public static void SetAssertionFile(byte[] fileName)
+        {
+            if (_x86)
+            {
+                x86.SetAssertionFile(fileName);
+            }
+            else
+            {
+                x64.SetAssertionFile(fileName);
+            }
+        }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetAssertionFile")]
 
-        public static extern void SetAssertionFile(byte[] fileName);
 
+        //
 
+        //		SetAssertionFileW                           (http://rdf.bg/gkdoc/CS64/SetAssertionFileW.html)
 
-		//
+        //
 
-		//		SetAssertionFileW                           (http://rdf.bg/gkdoc/CS64/SetAssertionFileW.html)
+        //	This function sets the file location where internal assertions should be written to.
 
-		//
+        //	If the filename is not set (default) many internal control procedures are not executed
 
-		//	This function sets the file location where internal assertions should be written to.
+        //	and the code will be faster.
 
-		//	If the filename is not set (default) many internal control procedures are not executed
+        //
 
-		//	and the code will be faster.
+        public static void SetAssertionFileW(string fileName)
+        {
+            if (_x86)
+            {
+                x86.SetAssertionFileW(fileName);
+            }
+            else
+            {
+                x64.SetAssertionFileW(fileName);
+            }
+        }
 
-		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetAssertionFileW")]
 
-        public static extern void SetAssertionFileW(string fileName);
+        public static void SetAssertionFileW(byte[] fileName)
+        {
+            if (_x86)
+            {
+                x86.SetAssertionFileW(fileName);
+            }
+            else
+            {
+                x64.SetAssertionFileW(fileName);
+            }
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetAssertionFileW")]
 
-        public static extern void SetAssertionFileW(byte[] fileName);
+        //
 
+        //		GetAssertionFile                            (http://rdf.bg/gkdoc/CS64/GetAssertionFile.html)
 
+        //
 
-		//
+        //	This function gets the file location as stored/set internally where internal assertions should be written to.
 
-		//		GetAssertionFile                            (http://rdf.bg/gkdoc/CS64/GetAssertionFile.html)
+        //	It works independent if the file location is set through SetAssertionFile() or SetAssertionFileW().
 
-		//
+        //
 
-		//	This function gets the file location as stored/set internally where internal assertions should be written to.
+        public static void GetAssertionFile(out IntPtr fileName)
+        {
+            if (_x86)
+            {
+                x86.GetAssertionFile(out fileName);
+            }
+            else
+            {
+                x64.GetAssertionFile(out fileName);
+            }
+        }
 
-		//	It works independent if the file location is set through SetAssertionFile() or SetAssertionFileW().
 
-		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetAssertionFile")]
+        //
 
-        public static extern void GetAssertionFile(out IntPtr fileName);
+        //		GetAssertionFileW                           (http://rdf.bg/gkdoc/CS64/GetAssertionFileW.html)
 
+        //
 
+        //	This function gets the file location as stored/set internally where internal assertions should be written to.
 
-		//
+        //	It works independent if the file location is set through SetAssertionFile() or SetAssertionFileW().
 
-		//		GetAssertionFileW                           (http://rdf.bg/gkdoc/CS64/GetAssertionFileW.html)
+        //
 
-		//
+        public static void GetAssertionFileW(out IntPtr fileName)
+        {
+            if (_x86)
+            {
+                x86.GetAssertionFileW(out fileName);
+            }
+            else
+            {
+                x64.GetAssertionFileW(out fileName);
+            }
+        }
 
-		//	This function gets the file location as stored/set internally where internal assertions should be written to.
 
-		//	It works independent if the file location is set through SetAssertionFile() or SetAssertionFileW().
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetAssertionFileW")]
+        //		SetCharacterSerialization                   (http://rdf.bg/gkdoc/CS64/SetCharacterSerialization.html)
 
-        public static extern void GetAssertionFileW(out IntPtr fileName);
+        //
 
+        //	This call defines how characters for names, strings will be serializaed and how
 
+        //	they are expected to be serialized. An exception are the Open / Import / Save calls,
 
-		//
+        //	these calls have a fixed way of serialization of path / file names.
 
-		//		SetCharacterSerialization                   (http://rdf.bg/gkdoc/CS64/SetCharacterSerialization.html)
+        //
 
-		//
+        //	If the encoding value is non-zero the following values are possible (if zero encoding is kept as defined)
 
-		//	This call defines how characters for names, strings will be serializaed and how
+        //		 32 [default]	encoding ignored
 
-		//	they are expected to be serialized. An exception are the Open / Import / Save calls,
+        //		 64				encoding Windows 1250
 
-		//	these calls have a fixed way of serialization of path / file names.
+        //		 65				encoding Windows 1251
 
-		//
+        //		 66				encoding Windows 1252
 
-		//	If the encoding value is non-zero the following values are possible (if zero encoding is kept as defined)
+        //		 67				encoding Windows 1253
 
-		//		 32 [default]	encoding ignored
+        //		 68				encoding Windows 1254
 
-		//		 64				encoding Windows 1250
+        //		 69				encoding Windows 1255
 
-		//		 65				encoding Windows 1251
+        //		 70				encoding Windows 1256
 
-		//		 66				encoding Windows 1252
+        //		 71				encoding Windows 1257
 
-		//		 67				encoding Windows 1253
+        //		 72				encoding Windows 1258
 
-		//		 68				encoding Windows 1254
+        //		128				encoding ISO8859 1
 
-		//		 69				encoding Windows 1255
+        //		129				encoding ISO8859 2
 
-		//		 70				encoding Windows 1256
+        //		130				encoding ISO8859 3
 
-		//		 71				encoding Windows 1257
+        //		131				encoding ISO8859 4
 
-		//		 72				encoding Windows 1258
+        //		132				encoding ISO8859 5
 
-		//		128				encoding ISO8859 1
+        //		133				encoding ISO8859 6
 
-		//		129				encoding ISO8859 2
+        //		134				encoding ISO8859 7
 
-		//		130				encoding ISO8859 3
+        //		135				encoding ISO8859 8
 
-		//		131				encoding ISO8859 4
+        //		136				encoding ISO8859 9
 
-		//		132				encoding ISO8859 5
+        //		137				encoding ISO8859 10
 
-		//		133				encoding ISO8859 6
+        //		138				encoding ISO8859 11
 
-		//		134				encoding ISO8859 7
+        //						encoding ISO8859 12 => does not exist
 
-		//		135				encoding ISO8859 8
+        //		140				encoding ISO8859 13
 
-		//		136				encoding ISO8859 9
+        //		141				encoding ISO8859 14
 
-		//		137				encoding ISO8859 10
+        //		142				encoding ISO8859 15
 
-		//		138				encoding ISO8859 11
+        //		143				encoding ISO8859 16
 
-		//						encoding ISO8859 12 => does not exist
+        //		160				encoding MACINTOSH CENTRAL EUROPEAN
 
-		//		140				encoding ISO8859 13
+        //		192				encoding SHIFT JIS X 213
 
-		//		141				encoding ISO8859 14
+        //
 
-		//		142				encoding ISO8859 15
+        //	The wcharBitSizeOverride value overrides the OS based size of wchar_t, the following values can be applied:
 
-		//		143				encoding ISO8859 16
+        //		0			wcharBitSizeOverride is ignored, override is not changed
 
-		//		160				encoding MACINTOSH CENTRAL EUROPEAN
+        //		16			wchar_t interpreted as being 2 bytes wide (size of wchar_t in bits)
 
-		//		192				encoding SHIFT JIS X 213
+        //		32			wchar_t interpreted as being 4 bytes wide (size of wchar_t in bits)
 
-		//
+        //		Any other value will reset the override and wchar_t will follow the OS based size of wchar_t
 
-		//	The wcharBitSizeOverride value overrides the OS based size of wchar_t, the following values can be applied:
+        //	Note: this setting is independent from the model, this call can also be called without a model defined.
 
-		//		0			wcharBitSizeOverride is ignored, override is not changed
+        //
 
-		//		16			wchar_t interpreted as being 2 bytes wide (size of wchar_t in bits)
+        //	The ascii value defines
 
-		//		32			wchar_t interpreted as being 4 bytes wide (size of wchar_t in bits)
+        //		true [default]	8 bit serializatiom (size of char returned in bits)
 
-		//		Any other value will reset the override and wchar_t will follow the OS based size of wchar_t
+        //		false			16/32 bit serialization (depending on the operating system, i.e. sizeof of wchar_t returned in number of bits)
 
-		//	Note: this setting is independent from the model, this call can also be called without a model defined.
+        //	Note: this setting is model-dependent and requires a model present to have any effect.
 
-		//
+        //
 
-		//	The ascii value defines
+        //	The return value is the size of a single character in bits, i.e. 1 byte is 8 bits, the value for a wchar_t can be 16 or 32 depending on settings and operating system
 
-		//		true [default]	8 bit serializatiom (size of char returned in bits)
+        //
 
-		//		false			16/32 bit serialization (depending on the operating system, i.e. sizeof of wchar_t returned in number of bits)
+        public static long SetCharacterSerialization(long model, long encoding, long wcharBitSizeOverride, byte ascii)
+        {
+            if (_x86)
+            {
+                return x86.SetCharacterSerialization(model, encoding, wcharBitSizeOverride, ascii);
+            }
 
-		//	Note: this setting is model-dependent and requires a model present to have any effect.
-
-		//
-
-		//	The return value is the size of a single character in bits, i.e. 1 byte is 8 bits, the value for a wchar_t can be 16 or 32 depending on settings and operating system
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "SetCharacterSerialization")]
-
-        public static extern long SetCharacterSerialization(long model, long encoding, long wcharBitSizeOverride, byte ascii);
+            return x64.SetCharacterSerialization(model, encoding, wcharBitSizeOverride, ascii); 
+        }
 
 
 
@@ -4366,27 +4451,39 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetCharacterSerialization")]
+        public static long GetCharacterSerialization(long model, out long encoding, out byte ascii)
+        {
+            if (_x86)
+            {
+                return x86.GetCharacterSerialization(model, out encoding, out ascii);
+            }
 
-        public static extern long GetCharacterSerialization(long model, out long encoding, out byte ascii);
+            return x64.GetCharacterSerialization(model, out encoding, out ascii);
+        }
 
 
 
-		//
+        //
 
-		//		AbortModel                                  (http://rdf.bg/gkdoc/CS64/AbortModel.html)
+        //		AbortModel                                  (http://rdf.bg/gkdoc/CS64/AbortModel.html)
 
-		//
+        //
 
-		//	This function abort running processes for a model. It can be used when a task takes more time than
+        //	This function abort running processes for a model. It can be used when a task takes more time than
 
-		//	expected / available, or in case the requested results are not relevant anymore.
+        //	expected / available, or in case the requested results are not relevant anymore.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "AbortModel")]
+        public static long AbortModel(long model, long setting)
+        {
+            if (_x86)
+            {
+                return x86.AbortModel(model, setting);
+            }
 
-        public static extern long AbortModel(long model, long setting);
+            return x64.AbortModel(model, setting);
+        }
 
 
 
@@ -4402,9 +4499,15 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetSessionMetaInfo")]
+        public static long GetSessionMetaInfo(out long allocatedBlocks, out long allocatedBytes, out long nonUsedBlocks, out long nonUsedBytes)
+        {
+            if (_x86)
+            {
+                return x86.GetSessionMetaInfo(out allocatedBlocks, out allocatedBytes, out nonUsedBlocks, out nonUsedBytes);
+            }
 
-        public static extern long GetSessionMetaInfo(out long allocatedBlocks, out long allocatedBytes, out long nonUsedBlocks, out long nonUsedBytes);
+            return x64.GetSessionMetaInfo(out allocatedBlocks, out allocatedBytes, out nonUsedBlocks, out nonUsedBytes);
+        }
 
 
 
@@ -4420,97 +4523,151 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetModelMetaInfo")]
+        public static long GetModelMetaInfo(long model, IntPtr activeClasses, IntPtr deletedClasses, IntPtr activeProperties, IntPtr deletedProperties, IntPtr activeInstances, IntPtr deletedInstances, IntPtr inactiveInstances)
+        {
+            if (_x86)
+            {
+                return x86.GetModelMetaInfo(model, activeClasses, deletedClasses, activeProperties, deletedProperties, activeInstances, deletedInstances, inactiveInstances);
+            }
 
-        public static extern long GetModelMetaInfo(long model, IntPtr activeClasses, IntPtr deletedClasses, IntPtr activeProperties, IntPtr deletedProperties, IntPtr activeInstances, IntPtr deletedInstances, IntPtr inactiveInstances);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "GetModelMetaInfo")]
-
-        public static extern long GetModelMetaInfo(long model, IntPtr activeClasses, IntPtr deletedClasses, IntPtr activeProperties, IntPtr deletedProperties, out long activeInstances, out long deletedInstances, out long inactiveInstances);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "GetModelMetaInfo")]
-
-        public static extern long GetModelMetaInfo(long model, IntPtr activeClasses, IntPtr deletedClasses, out long activeProperties, out long deletedProperties, IntPtr activeInstances, IntPtr deletedInstances, IntPtr inactiveInstances);
+            return x64.GetModelMetaInfo(model, activeClasses, deletedClasses, activeProperties, deletedProperties, activeInstances, deletedInstances, inactiveInstances);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetModelMetaInfo")]
+        public static long GetModelMetaInfo(long model, IntPtr activeClasses, IntPtr deletedClasses, IntPtr activeProperties, IntPtr deletedProperties, out long activeInstances, out long deletedInstances, out long inactiveInstances)
+        {
+            if (_x86)
+            {
+                return x86.GetModelMetaInfo(model, activeClasses, deletedClasses, activeProperties, deletedProperties, out activeInstances, out deletedInstances, out inactiveInstances);
+            }
 
-        public static extern long GetModelMetaInfo(long model, IntPtr activeClasses, IntPtr deletedClasses, out long activeProperties, out long deletedProperties, out long activeInstances, out long deletedInstances, out long inactiveInstances);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "GetModelMetaInfo")]
-
-        public static extern long GetModelMetaInfo(long model, out long activeClasses, out long deletedClasses, IntPtr activeProperties, IntPtr deletedProperties, IntPtr activeInstances, IntPtr deletedInstances, IntPtr inactiveInstances);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "GetModelMetaInfo")]
-
-        public static extern long GetModelMetaInfo(long model, out long activeClasses, out long deletedClasses, IntPtr activeProperties, IntPtr deletedProperties, out long activeInstances, out long deletedInstances, out long inactiveInstances);
+            return x64.GetModelMetaInfo(model, activeClasses, deletedClasses, activeProperties, deletedProperties, out activeInstances, out deletedInstances, out inactiveInstances);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetModelMetaInfo")]
+        public static long GetModelMetaInfo(long model, IntPtr activeClasses, IntPtr deletedClasses, out long activeProperties, out long deletedProperties, IntPtr activeInstances, IntPtr deletedInstances, IntPtr inactiveInstances)
+        {
+            if (_x86)
+            {
+                return x86.GetModelMetaInfo(model, activeClasses, deletedClasses, out activeProperties, out deletedProperties, activeInstances, deletedInstances, inactiveInstances);
+            }
 
-        public static extern long GetModelMetaInfo(long model, out long activeClasses, out long removedClasses, out long activeProperties, out long deletedProperties, IntPtr activeInstances, IntPtr deletedInstances, IntPtr inactiveInstances);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "GetModelMetaInfo")]
-
-        public static extern long GetModelMetaInfo(long model, out long activeClasses, out long removedClasses, out long activeProperties, out long deletedProperties, out long activeInstances, out long deletedInstances, out long inactiveInstances);
-
-
-
-		//
-
-		//		GetInstanceMetaInfo                         (http://rdf.bg/gkdoc/CS64/GetInstanceMetaInfo.html)
-
-		//
-
-		//	This function is meant for debugging purposes and return statistics during processing.
-
-		//	The return value represents the number of active instances within the model (or zero if the instance was not recognized).
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "GetInstanceMetaInfo")]
-
-        public static extern long GetInstanceMetaInfo(long owlInstance, out long allocatedBlocks, out long allocatedBytes);
+            return x64.GetModelMetaInfo(model, activeClasses, deletedClasses, out activeProperties, out deletedProperties, activeInstances, deletedInstances, inactiveInstances);
+        }
 
 
 
-		//
+        public static long GetModelMetaInfo(long model, IntPtr activeClasses, IntPtr deletedClasses, out long activeProperties, out long deletedProperties, out long activeInstances, out long deletedInstances, out long inactiveInstances)
+        {
+            if (_x86)
+            {
+                return x86.GetModelMetaInfo(model, activeClasses, deletedClasses, out activeProperties, out deletedProperties, out activeInstances, out deletedInstances, out inactiveInstances);
+            }
 
-		//		GetSmoothness                               (http://rdf.bg/gkdoc/CS64/GetSmoothness.html)
+            return x64.GetModelMetaInfo(model, activeClasses, deletedClasses, out activeProperties, out deletedProperties, out activeInstances, out deletedInstances, out inactiveInstances);
+        }
 
-		//
 
-		//	This function returns the smoothness of a line or surface.
 
-		//	In case the smoothness can be defined the degree will get assigned either
+        public static long GetModelMetaInfo(long model, out long activeClasses, out long deletedClasses, IntPtr activeProperties, IntPtr deletedProperties, IntPtr activeInstances, IntPtr deletedInstances, IntPtr inactiveInstances)
+        {
+            if (_x86)
+            {
+                return x86.GetModelMetaInfo(model, out activeClasses, out deletedClasses, activeProperties, deletedProperties, activeInstances, deletedInstances, inactiveInstances);
+            }
 
-		//		0 - continuous curve / surface (i.e. degree 9)
+            return x64.GetModelMetaInfo(model, out activeClasses, out deletedClasses, activeProperties, deletedProperties, activeInstances, deletedInstances, inactiveInstances);
+        }
 
-		//		1 - the direction of the curve / surface is gradually changing (i.e. degree 1)
 
-		//		2 - the change of direction of the curve / surface is gradually changing (i.e. degree 2)
 
-		//	In return value of this function retuns the dimension of the found smoothness:
+        public static long GetModelMetaInfo(long model, out long activeClasses, out long deletedClasses, IntPtr activeProperties, IntPtr deletedProperties, out long activeInstances, out long deletedInstances, out long inactiveInstances)
+        {
+            if (_x86)
+            {
+                return x86.GetModelMetaInfo(model, out activeClasses, out deletedClasses, activeProperties, deletedProperties, out activeInstances, out deletedInstances, out inactiveInstances);
+            }
 
-		//		0 - smoothness could not be defined
+            return x64.GetModelMetaInfo(model, out activeClasses, out deletedClasses, activeProperties, deletedProperties, out activeInstances, out deletedInstances, out inactiveInstances);
+        }
 
-		//		1 - found the smoothness of a curve
 
-		//		2 - found the smoothness of a surface
 
-		//
+        public static long GetModelMetaInfo(long model, out long activeClasses, out long removedClasses, out long activeProperties, out long deletedProperties, IntPtr activeInstances, IntPtr deletedInstances, IntPtr inactiveInstances)
+        {
+            if (_x86)
+            {
+                return x86.GetModelMetaInfo(model, out activeClasses, out removedClasses, out activeProperties, out deletedProperties, activeInstances, deletedInstances, inactiveInstances);
+            }
+
+            return x64.GetModelMetaInfo(model, out activeClasses, out removedClasses, out activeProperties, out deletedProperties, activeInstances, deletedInstances, inactiveInstances);
+        }
+
+
+
+        public static long GetModelMetaInfo(long model, out long activeClasses, out long removedClasses, out long activeProperties, out long deletedProperties, out long activeInstances, out long deletedInstances, out long inactiveInstances)
+        {
+            if (_x86)
+            {
+                return x86.GetModelMetaInfo(model, out activeClasses, out removedClasses, out activeProperties, out deletedProperties, out activeInstances, out deletedInstances, out inactiveInstances);
+            }
+
+            return x64.GetModelMetaInfo(model, out activeClasses, out removedClasses, out activeProperties, out deletedProperties, out activeInstances, out deletedInstances, out inactiveInstances);
+        }
+
+
+
+        //
+
+        //		GetInstanceMetaInfo                         (http://rdf.bg/gkdoc/CS64/GetInstanceMetaInfo.html)
+
+        //
+
+        //	This function is meant for debugging purposes and return statistics during processing.
+
+        //	The return value represents the number of active instances within the model (or zero if the instance was not recognized).
+
+        //
+
+        public static long GetInstanceMetaInfo(long owlInstance, out long allocatedBlocks, out long allocatedBytes)
+        {
+            if (_x86)
+            {
+                return x86.GetInstanceMetaInfo(owlInstance, out allocatedBlocks, out allocatedBytes);
+            }
+
+            return x64.GetInstanceMetaInfo(owlInstance, out allocatedBlocks, out allocatedBytes);
+        }
+
+
+
+        //
+
+        //		GetSmoothness                               (http://rdf.bg/gkdoc/CS64/GetSmoothness.html)
+
+        //
+
+        //	This function returns the smoothness of a line or surface.
+
+        //	In case the smoothness can be defined the degree will get assigned either
+
+        //		0 - continuous curve / surface (i.e. degree 9)
+
+        //		1 - the direction of the curve / surface is gradually changing (i.e. degree 1)
+
+        //		2 - the change of direction of the curve / surface is gradually changing (i.e. degree 2)
+
+        //	In return value of this function retuns the dimension of the found smoothness:
+
+        //		0 - smoothness could not be defined
+
+        //		1 - found the smoothness of a curve
+
+        //		2 - found the smoothness of a surface
+
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "GetSmoothness")]
 
