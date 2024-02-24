@@ -1,6 +1,5 @@
-using Java.Util.Functions;
 using System;
-using System.Runtime.InteropServices;using static Android.Renderscripts.Sampler;
+using System.Runtime.InteropServices;
 using static IfcEngine.x86_64;
 namespace IfcEngine
 {
@@ -225,8 +224,9 @@ namespace IfcEngine
             }
 
             return x64.sdaiOpenModelBN(repository, fileName, schemaName);
-        }
-
+        }
+
+
         public static long sdaiOpenModelBN(long repository, byte[] fileName, string schemaName)
         {
             if (_x86)
@@ -235,8 +235,10 @@ namespace IfcEngine
             }
 
             return x64.sdaiOpenModelBN(repository, fileName, schemaName);
-        }
-
+        }
+
+
+
         public static long sdaiOpenModelBN(long repository, byte[] fileName, byte[] schemaName)
         {
             if (_x86)
@@ -271,8 +273,10 @@ namespace IfcEngine
             }
 
             return x64.sdaiOpenModelBNUnicode(repository, fileName, schemaName);
-        }
-
+        }
+
+
+
         public static long sdaiOpenModelBNUnicode(long repository, string fileName, byte[] schemaName)
         {
             if (_x86)
@@ -281,8 +285,10 @@ namespace IfcEngine
             }
 
             return x64.sdaiOpenModelBNUnicode(repository, fileName, schemaName);
-        }
-
+        }
+
+
+
         public static long sdaiOpenModelBNUnicode(long repository, byte[] fileName, string schemaName)
         {
             if (_x86)
@@ -291,8 +297,10 @@ namespace IfcEngine
             }
 
             return x64.sdaiOpenModelBNUnicode(repository, fileName, schemaName);
-        }
-
+        }
+
+
+
         public static long sdaiOpenModelBNUnicode(long repository, byte[] fileName, byte[] schemaName)
         {
             if (_x86)
@@ -319,7 +327,9 @@ namespace IfcEngine
 
         //
 
-        public static long engiOpenModelByStream(long repository, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, string schemaName)        {            if (_x86)
+        public static long engiOpenModelByStream(long repository, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, string schemaName)
+        {
+            if (_x86)
             {
                 return x86.engiOpenModelByStream((int)repository, callback, schemaName);
             }
@@ -330,7 +340,8 @@ namespace IfcEngine
 
 
         public static long engiOpenModelByStream(long repository, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, byte[] schemaName)
-        {            if (_x86)
+        {
+            if (_x86)
             {
                 return x86.engiOpenModelByStream((int)repository, callback, schemaName);
             }
@@ -1456,8 +1467,7 @@ namespace IfcEngine
             if (_x86)
             {
                 int iADB = (int)ADB;
-                x86.sdaiGetADBValue(ref iADB, (int)valueType, out double dValue);
-                value = dValue;
+                x86.sdaiGetADBValue(ref iADB, (int)valueType, out value);
             }
             else
             {
@@ -1510,9 +1520,7 @@ namespace IfcEngine
         {
             if (_x86)
             {
-                long lResult = x86.engiGetAggrElement((int)aggregate, (int)elementIndex, (int)valueType, out double dValue);
-                value = dValue;
-                return lResult;
+                return x86.engiGetAggrElement((int)aggregate, (int)elementIndex, (int)valueType, out value);
             }
 
             return x64.engiGetAggrElement(aggregate, elementIndex, valueType, out value);
@@ -1605,9 +1613,7 @@ namespace IfcEngine
         {
             if (_x86)
             {
-                long lResult = x86.sdaiGetAttr((int)instance, (int)attribute, (int)valueType, out double dValue);
-                value = dValue;
-                return lResult;
+                return x86.sdaiGetAttr((int)instance, (int)attribute, (int)valueType, out value);
             }
 
             return x64.sdaiGetAttr(instance, attribute, valueType, out value);
@@ -1655,9 +1661,7 @@ namespace IfcEngine
         {
             if (_x86)
             {
-                long lResult = x86.sdaiGetAttrBN((int)instance, attributeName, (int)valueType, out double dValue);
-                value = dValue;
-                return lResult;
+                return x86.sdaiGetAttrBN((int)instance, attributeName, (int)valueType, out value);
             }
 
             return x64.sdaiGetAttrBN(instance, attributeName, valueType, out value);
@@ -1695,9 +1699,7 @@ namespace IfcEngine
         {
             if (_x86)
             {
-                long lResult = x86.sdaiGetAttrBN((int)instance, attributeName, (int)valueType, out double dValue);
-                value = dValue;
-                return lResult;
+                return x86.sdaiGetAttrBN((int)instance, attributeName, (int)valueType, out value);
             }
 
             return x64.sdaiGetAttrBN(instance, attributeName, valueType, out value);
@@ -2228,8 +2230,7 @@ namespace IfcEngine
         {
             if (_x86)
             {
-                x86.sdaiPrepend((int)list, (int)valueType, out double dValue);
-                value = dValue;
+                x86.sdaiPrepend((int)list, (int)valueType, out value);
             }
             else
             {
@@ -2282,8 +2283,7 @@ namespace IfcEngine
         {
             if (_x86)
             {
-                x86.sdaiAppend((int)list, (int)valueType, out double dValue);
-                value = dValue;
+                x86.sdaiAppend((int)list, (int)valueType, out value);
             }
             else
             {
@@ -2359,9 +2359,7 @@ namespace IfcEngine
         {
             if (_x86)
             {
-                long lResult = x86.sdaiCreateADB((int)valueType, out double dValue);
-                value = dValue;
-                return lResult;
+                return x86.sdaiCreateADB((int)valueType, out value);
             }
 
             return x64.sdaiCreateADB(valueType, out value);
@@ -2414,31 +2412,51 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateAggrBN")]
+        public static long sdaiCreateAggrBN(long instance, string attributeName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiCreateAggrBN((int)instance, attributeName);
+            }
 
-        public static extern long sdaiCreateAggrBN(long instance, string attributeName);
+            return x64.sdaiCreateAggrBN(instance, attributeName);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateAggrBN")]
+        public static long sdaiCreateAggrBN(long instance, byte[] attributeName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiCreateAggrBN((int)instance, attributeName);
+            }
 
-        public static extern long sdaiCreateAggrBN(long instance, byte[] attributeName);
+            return x64.sdaiCreateAggrBN(instance, attributeName);
+        }
 
 
 
-		//
+        //
 
-		//		sdaiCreateNestedAggr                        (http://rdf.bg/ifcdoc/CS64/sdaiCreateNestedAggr.html)
+        //		sdaiCreateNestedAggr                        (http://rdf.bg/ifcdoc/CS64/sdaiCreateNestedAggr.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateNestedAggr")]
+        public static long sdaiCreateNestedAggr(out long aggr)
+        {
+            if (_x86)
+            {
+                long lResult = x86.sdaiCreateNestedAggr(out int iAggr);
+                aggr = iAggr;
+                return lResult;
+            }
 
-        public static extern long sdaiCreateNestedAggr(out long aggr);
+            return x64.sdaiCreateNestedAggr(out aggr);
+        }
 
 
 
@@ -2452,9 +2470,15 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateInstance")]
+        public static long sdaiCreateInstance(long model, long entity)
+        {
+            if (_x86)
+            {
+                return x86.sdaiCreateInstance((int)model, (int)entity);
+            }
 
-        public static extern long sdaiCreateInstance(long model, long entity);
+            return x64.sdaiCreateInstance(model, entity);
+        }
 
 
 
@@ -2468,161 +2492,289 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateInstanceBN")]
+        public static long sdaiCreateInstanceBN(long model, string entityName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiCreateInstanceBN((int)model, entityName);
+            }
 
-        public static extern long sdaiCreateInstanceBN(long model, string entityName);
+            return x64.sdaiCreateInstanceBN(model, entityName);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateInstanceBN")]
+        public static long sdaiCreateInstanceBN(long model, byte[] entityName)
+        {
+            if (_x86)
+            {
+                return x86.sdaiCreateInstanceBN((int)model, entityName);
+            }
 
-        public static extern long sdaiCreateInstanceBN(long model, byte[] entityName);
+            return x64.sdaiCreateInstanceBN(model, entityName);
+        }
 
 
 
-		//
+        //
 
-		//		sdaiDeleteInstance                          (http://rdf.bg/ifcdoc/CS64/sdaiDeleteInstance.html)
+        //		sdaiDeleteInstance                          (http://rdf.bg/ifcdoc/CS64/sdaiDeleteInstance.html)
 
-		//
+        //
 
-		//	...
+        //	...
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiDeleteInstance")]
+        public static void sdaiDeleteInstance(long instance)
+        {
+            if (_x86)
+            {
+                x86.sdaiDeleteInstance((int)instance);
+            }
+            else
+            {
+                x64.sdaiDeleteInstance(instance);
+            }
+        }
 
-        public static extern void sdaiDeleteInstance(long instance);
 
 
+        //
 
-		//
+        //		sdaiPutADBTypePath                          (http://rdf.bg/ifcdoc/CS64/sdaiPutADBTypePath.html)
 
-		//		sdaiPutADBTypePath                          (http://rdf.bg/ifcdoc/CS64/sdaiPutADBTypePath.html)
+        //
 
-		//
+        //	...
 
-		//	...
+        //
 
-		//
+        public static void sdaiPutADBTypePath(string ADB, long pathCount, string path)
+        {
+            if (_x86)
+            {
+                x86.sdaiPutADBTypePath(ADB, (int)pathCount, path);
+            }
+            else
+            {
+                x64.sdaiPutADBTypePath(ADB, pathCount, path);
+            }            
+        }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiPutADBTypePath")]
 
-        public static extern void sdaiPutADBTypePath(string ADB, long pathCount, string path);
 
+        public static void sdaiPutADBTypePath(byte[] ADB, long pathCount, byte[] path)
+        {
+            if (_x86)
+            {
+                x86.sdaiPutADBTypePath(ADB, (int)pathCount, path);
+            }
+            else
+            {
+                x64.sdaiPutADBTypePath(ADB, pathCount, path);
+            }
+        }
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiPutADBTypePath")]
 
-        public static extern void sdaiPutADBTypePath(byte[] ADB, long pathCount, byte[] path);
+        //
 
+        //		sdaiPutAttr                                 (http://rdf.bg/ifcdoc/CS64/sdaiPutAttr.html)
 
+        //
 
-		//
+        //	...
 
-		//		sdaiPutAttr                                 (http://rdf.bg/ifcdoc/CS64/sdaiPutAttr.html)
+        //
 
-		//
+        public static void sdaiPutAttr(long instance, ref long attribute, long valueType, out long value)
+        {
+            if (_x86)
+            {
+                int iAttribute = (int)attribute;
+                x86.sdaiPutAttr((int)instance, ref iAttribute, (int)valueType, out int iValue);
+                value = iValue;
+            }
+            else
+            {
+                x64.sdaiPutAttr(instance, ref attribute, valueType, out value);
+            }            
+        }
+
+
+
+        public static void sdaiPutAttr(long instance, ref long attribute, long valueType, out double value)
+        {
+            if (_x86)
+            {
+                int iAttribute = (int)attribute;
+                x86.sdaiPutAttr((int)instance, ref iAttribute, (int)valueType, out value);
+            }
+            else
+            {
+                x64.sdaiPutAttr(instance, ref attribute, valueType, out value);
+            }
+        }
+
+
+
+        public static void sdaiPutAttr(long instance, ref long attribute, long valueType, out IntPtr value)
+        {
+            if (_x86)
+            {
+                int iAttribute = (int)attribute;
+                x86.sdaiPutAttr((int)instance, ref iAttribute, (int)valueType, out value);
+            }
+            else
+            {
+                x64.sdaiPutAttr(instance, ref attribute, valueType, out value);
+            }
+        }
+
+
+
+        //
+
+        //		sdaiPutAttrBN                               (http://rdf.bg/ifcdoc/CS64/sdaiPutAttrBN.html)
+
+        //
 
-		//	...
+        //	...
+
+        //
+
+        public static void sdaiPutAttrBN(long instance, string attributeName, long valueType, long value)
+        {
+            if (_x86)
+            {
+                x86.sdaiPutAttrBN((int)instance, attributeName, (int)valueType, (int)value);
+            }
+            else
+            {
+                x64.sdaiPutAttrBN(instance, attributeName, valueType, value);
+            }
+        }
+
+
+
+        public static void sdaiPutAttrBN(long instance, string attributeName, long valueType, ref double value)
+        {
+            if (_x86)
+            {
+                x86.sdaiPutAttrBN((int)instance, attributeName, (int)valueType, ref value);
+            }
+            else
+            {
+                x64.sdaiPutAttrBN(instance, attributeName, valueType, ref value);
+            }
+        }
+
 
-		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAttr")]
+        public static void sdaiPutAttrBN(long instance, string attributeName, long valueType, ref IntPtr value)
+        {
+            if (_x86)
+            {
+                x86.sdaiPutAttrBN((int)instance, attributeName, (int)valueType, ref value);
+            }
+            else
+            {
+                x64.sdaiPutAttrBN(instance, attributeName, valueType, ref value);
+            }
+        }
 
-        public static extern void sdaiPutAttr(long instance, ref long attribute, long valueType, out long value);
 
 
+        public static void sdaiPutAttrBN(long instance, byte[] attributeName, long valueType, long value)
+        {
+            if (_x86)
+            {
+                x86.sdaiPutAttrBN((int)instance, attributeName, (int)valueType, (int)value);
+            }
+            else
+            {
+                x64.sdaiPutAttrBN(instance, attributeName, valueType, value);
+            }
+        }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAttr")]
 
-        public static extern void sdaiPutAttr(long instance, ref long attribute, long valueType, out double value);
 
+        public static void sdaiPutAttrBN(long instance, byte[] attributeName, long valueType, ref double value)
+        {
+            if (_x86)
+            {
+                x86.sdaiPutAttrBN((int)instance, attributeName, (int)valueType, ref value);
+            }
+            else
+            {
+                x64.sdaiPutAttrBN(instance, attributeName, valueType, ref value);
+            }
+        }
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAttr")]
 
-        public static extern void sdaiPutAttr(long instance, ref long attribute, long valueType, out IntPtr value);
+        public static void sdaiPutAttrBN(long instance, byte[] attributeName, long valueType, ref IntPtr value)
+        {
+            if (_x86)
+            {
+                x86.sdaiPutAttrBN((int)instance, attributeName, (int)valueType, ref value);
+            }
+            else
+            {
+                x64.sdaiPutAttrBN(instance, attributeName, valueType, ref value);
+            }
+        }
 
 
 
-		//
+        //
 
-		//		sdaiPutAttrBN                               (http://rdf.bg/ifcdoc/CS64/sdaiPutAttrBN.html)
+        //		engiSetComment                              (http://rdf.bg/ifcdoc/CS64/engiSetComment.html)
 
-		//
+        //
 
-		//	...
+        //	This call can be used to add a comment to an instance when exporting the content. The comment is available in the exported/saved IFC file.
 
-		//
+        //
 
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAttrBN")]
+        public static void engiSetComment(long instance, string comment)
+        {
+            if (_x86)
+            {
+                x86.engiSetComment((int)instance, comment);
+            }
+            else
+            {
+                x64.engiSetComment(instance, comment);
+            }            
+        }
 
-		public static extern void sdaiPutAttrBN(long instance, string attributeName, long valueType, long value);
 
 
+        public static void engiSetComment(long instance, byte[] comment)
+        {
+            if (_x86)
+            {
+                x86.engiSetComment((int)instance, comment);
+            }
+            else
+            {
+                x64.engiSetComment(instance, comment);
+            }
+        }
 
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAttrBN")]
 
-		public static extern void sdaiPutAttrBN(long instance, string attributeName, long valueType, ref double value);
 
+        //
 
+        //		engiGetInstanceLocalId                      (http://rdf.bg/ifcdoc/CS64/engiGetInstanceLocalId.html)
 
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAttrBN")]
+        //
 
-		public static extern void sdaiPutAttrBN(long instance, string attributeName, long valueType, ref IntPtr value);
+        //	...
 
-
-
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAttrBN")]
-
-		public static extern void sdaiPutAttrBN(long instance, byte[] attributeName, long valueType, long value);
-
-
-
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAttrBN")]
-
-		public static extern void sdaiPutAttrBN(long instance, byte[] attributeName, long valueType, ref double value);
-
-
-
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAttrBN")]
-
-		public static extern void sdaiPutAttrBN(long instance, byte[] attributeName, long valueType, ref IntPtr value);
-
-
-
-		//
-
-		//		engiSetComment                              (http://rdf.bg/ifcdoc/CS64/engiSetComment.html)
-
-		//
-
-		//	This call can be used to add a comment to an instance when exporting the content. The comment is available in the exported/saved IFC file.
-
-		//
-
-		[DllImport(IFCEngineDLL, EntryPoint = "engiSetComment")]
-
-        public static extern void engiSetComment(long instance, string comment);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "engiSetComment")]
-
-        public static extern void engiSetComment(long instance, byte[] comment);
-
-
-
-		//
-
-		//		engiGetInstanceLocalId                      (http://rdf.bg/ifcdoc/CS64/engiGetInstanceLocalId.html)
-
-		//
-
-		//	...
-
-		//
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "engiGetInstanceLocalId")]
 
