@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using static Android.Graphics.ColorSpace;
 using static Android.Icu.Text.Edits;
 using static Android.Renderscripts.Sampler;
@@ -5545,9 +5546,17 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetOverrideFileIO")]
-
-        public static extern void SetOverrideFileIO(long model, long setting, long mask);
+        public static void SetOverrideFileIO(long model, long setting, long mask)
+        {
+            if (_x86)
+            {
+                x86.SetOverrideFileIO(model, setting, mask);
+            }
+            else
+            {
+                x64.SetOverrideFileIO(model, setting, mask);
+            }
+        }
 
 
 
@@ -5615,9 +5624,15 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetOverrideFileIO")]
+        public static long GetOverrideFileIO(long model, long mask)
+        {
+            if (_x86)
+            {
+                return x86.GetOverrideFileIO(model, mask);
+            }
 
-        public static extern long GetOverrideFileIO(long model, long mask);
+            return x64.GetOverrideFileIO(model, mask);
+        }
 
 
 
@@ -5637,9 +5652,15 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "CloseModel")]
+        public static long CloseModel(long model)
+        {
+            if (_x86)
+            {
+                return x86.CloseModel(model);
+            }
 
-        public static extern long CloseModel(long model);
+            return x64.CloseModel(model);
+        }
 
 
 
@@ -5651,17 +5672,17 @@ namespace IfcEngine
 
 
 
-		//
+        //
 
-		//		CreateClass                                 (http://rdf.bg/gkdoc/CS64/CreateClass.html)
+        //		CreateClass                                 (http://rdf.bg/gkdoc/CS64/CreateClass.html)
 
-		//
+        //
 
-		//	Returns a handle to an on the fly created class.
+        //	Returns a handle to an on the fly created class.
 
-		//	If the model input is zero or not a model handle 0 will be returned,
+        //	If the model input is zero or not a model handle 0 will be returned,
 
-		//
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "CreateClass")]
 
