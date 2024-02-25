@@ -5,6 +5,7 @@ using static Android.Graphics.ColorSpace;
 using static Android.Icu.Text.Edits;
 using static Android.Renderscripts.Sampler;
 using static IfcEngine.x86_64;
+using static Java.Util.Jar.Attributes;
 namespace IfcEngine
 {
     class x86_64
@@ -6452,243 +6453,351 @@ namespace IfcEngine
 
         //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "CreateProperty")]
+        public static long CreateProperty(long model, long rdfPropertyType, string name)
+        {
+            if (_x86)
+            {
+                return x86.CreateProperty(model, rdfPropertyType, name);
+            }
 
-        public static extern long CreateProperty(long model, long rdfPropertyType, string name);
+            return x64.CreateProperty(model, rdfPropertyType, name);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "CreateProperty")]
+        public static long CreateProperty(long model, long rdfPropertyType, byte[] name)
+        {
+            if (_x86)
+            {
+                return x86.CreateProperty(model, rdfPropertyType, name);
+            }
 
-        public static extern long CreateProperty(long model, long rdfPropertyType, byte[] name);
+            return x64.CreateProperty(model, rdfPropertyType, name);
+        }
 
 
 
-		//
+        //
 
-		//		CreatePropertyW                             (http://rdf.bg/gkdoc/CS64/CreatePropertyW.html)
+        //		CreatePropertyW                             (http://rdf.bg/gkdoc/CS64/CreatePropertyW.html)
 
-		//
+        //
 
-		//	Returns a handle to an on the fly created property.
+        //	Returns a handle to an on the fly created property.
 
-		//	If the model input is zero or not a model handle 0 will be returned,
+        //	If the model input is zero or not a model handle 0 will be returned,
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "CreatePropertyW")]
+        public static long CreatePropertyW(long model, long rdfPropertyType, string name)
+        {
+            if (_x86)
+            {
+                return x86.CreatePropertyW(model, rdfPropertyType, name);
+            }
 
-        public static extern long CreatePropertyW(long model, long rdfPropertyType, string name);
+            return x64.CreatePropertyW(model, rdfPropertyType, name);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "CreatePropertyW")]
+        public static long CreatePropertyW(long model, long rdfPropertyType, byte[] name)
+        {
+            if (_x86)
+            {
+                return x86.CreatePropertyW(model, rdfPropertyType, name);
+            }
 
-        public static extern long CreatePropertyW(long model, long rdfPropertyType, byte[] name);
+            return x64.CreatePropertyW(model, rdfPropertyType, name);
+        }
 
 
 
-		//
+        //
 
-		//		GetPropertyByName                           (http://rdf.bg/gkdoc/CS64/GetPropertyByName.html)
+        //		GetPropertyByName                           (http://rdf.bg/gkdoc/CS64/GetPropertyByName.html)
 
-		//
+        //
 
-		//	Returns a handle to the objectTypeProperty or dataTypeProperty as stored inside.
+        //	Returns a handle to the objectTypeProperty or dataTypeProperty as stored inside.
 
-		//	When the property does not exist yet and the name is unique
+        //	When the property does not exist yet and the name is unique
 
-		//	the property will be created on-the-fly and the handle will be returned.
+        //	the property will be created on-the-fly and the handle will be returned.
 
-		//	When the name is not unique and given to a class or instance 0 will be returned.
+        //	When the name is not unique and given to a class or instance 0 will be returned.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetPropertyByName")]
+        public static long GetPropertyByName(long model, string name)
+        {
+            if (_x86)
+            {
+                return x86.GetPropertyByName(model, name);
+            }
 
-        public static extern long GetPropertyByName(long model, string name);
+            return x64.GetPropertyByName(model, name);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetPropertyByName")]
+        public static long GetPropertyByName(long model, byte[] name)
+        {
+            if (_x86)
+            {
+                return x86.GetPropertyByName(model, name);
+            }
 
-        public static extern long GetPropertyByName(long model, byte[] name);
+            return x64.GetPropertyByName(model, name);
+        }
 
 
 
-		//
+        //
 
-		//		GetPropertyByNameW                          (http://rdf.bg/gkdoc/CS64/GetPropertyByNameW.html)
+        //		GetPropertyByNameW                          (http://rdf.bg/gkdoc/CS64/GetPropertyByNameW.html)
 
-		//
+        //
 
-		//	Returns a handle to the objectTypeProperty or dataTypeProperty as stored inside.
+        //	Returns a handle to the objectTypeProperty or dataTypeProperty as stored inside.
 
-		//	When the property does not exist yet and the name is unique
+        //	When the property does not exist yet and the name is unique
 
-		//	the property will be created on-the-fly and the handle will be returned.
+        //	the property will be created on-the-fly and the handle will be returned.
 
-		//	When the name is not unique and given to a class or instance 0 will be returned.
+        //	When the name is not unique and given to a class or instance 0 will be returned.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetPropertyByNameW")]
+        public static long GetPropertyByNameW(long model, string name)
+        {
+            if (_x86)
+            {
+                return x86.GetPropertyByNameW(model, name);
+            }
 
-        public static extern long GetPropertyByNameW(long model, string name);
+            return x64.GetPropertyByNameW(model, name);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetPropertyByNameW")]
+        public static long GetPropertyByNameW(long model, byte[] name)
+        {
+            if (_x86)
+            {
+                return x86.GetPropertyByNameW(model, name);
+            }
 
-        public static extern long GetPropertyByNameW(long model, byte[] name);
+            return x64.GetPropertyByNameW(model, name);
+        }
 
 
 
-		//
+        //
 
-		//		GetPropertiesByIterator                     (http://rdf.bg/gkdoc/CS64/GetPropertiesByIterator.html)
+        //		GetPropertiesByIterator                     (http://rdf.bg/gkdoc/CS64/GetPropertiesByIterator.html)
 
-		//
+        //
 
-		//	Returns a handle to a property.
+        //	Returns a handle to a property.
 
-		//	If input property is zero, the handle will point to the first relevant property.
+        //	If input property is zero, the handle will point to the first relevant property.
 
-		//	If all properties are past (or no relevant properties are found), the function will return 0.
+        //	If all properties are past (or no relevant properties are found), the function will return 0.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetPropertiesByIterator")]
+        public static long GetPropertiesByIterator(long model, long rdfProperty)
+        {
+            if (_x86)
+            {
+                return x86.GetPropertiesByIterator(model, rdfProperty);
+            }
 
-        public static extern long GetPropertiesByIterator(long model, long rdfProperty);
+            return x64.GetPropertiesByIterator(model, rdfProperty);
+        }
 
 
 
-		//
+        //
 
-		//		GetRangeRestrictionsByIterator              (http://rdf.bg/gkdoc/CS64/GetRangeRestrictionsByIterator.html)
+        //		GetRangeRestrictionsByIterator              (http://rdf.bg/gkdoc/CS64/GetRangeRestrictionsByIterator.html)
 
-		//
+        //
 
-		//	Returns the next class the property is restricted to.
+        //	Returns the next class the property is restricted to.
 
-		//	If input class is zero, the handle will point to the first relevant class.
+        //	If input class is zero, the handle will point to the first relevant class.
 
-		//	If all classes are past (or no relevant classes are found), the function will return 0.
+        //	If all classes are past (or no relevant classes are found), the function will return 0.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetRangeRestrictionsByIterator")]
+        public static long GetRangeRestrictionsByIterator(long rdfProperty, long owlClass)
+        {
+            if (_x86)
+            {
+                return x86.GetRangeRestrictionsByIterator(rdfProperty, owlClass);
+            }
 
-        public static extern long GetRangeRestrictionsByIterator(long rdfProperty, long owlClass);
+            return x64.GetRangeRestrictionsByIterator(rdfProperty, owlClass);
+        }
 
 
 
-		//
+        //
 
-		//		SetNameOfProperty                           (http://rdf.bg/gkdoc/CS64/SetNameOfProperty.html)
+        //		SetNameOfProperty                           (http://rdf.bg/gkdoc/CS64/SetNameOfProperty.html)
 
-		//
+        //
 
-		//	Sets/updates the name of the property, if no error it returns 0.
+        //	Sets/updates the name of the property, if no error it returns 0.
 
-		//	In case property does not exist it returns 1, when name cannot be updated 2.
+        //	In case property does not exist it returns 1, when name cannot be updated 2.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetNameOfProperty")]
+        public static long SetNameOfProperty(long rdfProperty, string name)
+        {
+            if (_x86)
+            {
+                return x86.SetNameOfProperty(rdfProperty, name);
+            }
 
-        public static extern long SetNameOfProperty(long rdfProperty, string name);
+            return x64.SetNameOfProperty(rdfProperty, name);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetNameOfProperty")]
+        public static long SetNameOfProperty(long rdfProperty, byte[] name)
+        {
+            if (_x86)
+            {
+                return x86.SetNameOfProperty(rdfProperty, name);
+            }
 
-        public static extern long SetNameOfProperty(long rdfProperty, byte[] name);
+            return x64.SetNameOfProperty(rdfProperty, name);
+        }
 
 
 
-		//
+        //
 
-		//		SetNameOfPropertyW                          (http://rdf.bg/gkdoc/CS64/SetNameOfPropertyW.html)
+        //		SetNameOfPropertyW                          (http://rdf.bg/gkdoc/CS64/SetNameOfPropertyW.html)
 
-		//
+        //
 
-		//	Sets/updates the name of the property, if no error it returns 0.
+        //	Sets/updates the name of the property, if no error it returns 0.
 
-		//	In case property does not exist it returns 1, when name cannot be updated 2.
+        //	In case property does not exist it returns 1, when name cannot be updated 2.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetNameOfPropertyW")]
+        public static long SetNameOfPropertyW(long rdfProperty, string name)
+        {
+            if (_x86)
+            {
+                return x86.SetNameOfPropertyW(rdfProperty, name);
+            }
 
-        public static extern long SetNameOfPropertyW(long rdfProperty, string name);
+            return x64.SetNameOfPropertyW(rdfProperty, name);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetNameOfPropertyW")]
+        public static long SetNameOfPropertyW(long rdfProperty, byte[] name)
+        {
+            if (_x86)
+            {
+                return x86.SetNameOfPropertyW(rdfProperty, name);
+            }
 
-        public static extern long SetNameOfPropertyW(long rdfProperty, byte[] name);
+            return x64.SetNameOfPropertyW(rdfProperty, name);
+        }
 
 
 
-		//
+        //
 
-		//		SetNameOfPropertyEx                         (http://rdf.bg/gkdoc/CS64/SetNameOfPropertyEx.html)
+        //		SetNameOfPropertyEx                         (http://rdf.bg/gkdoc/CS64/SetNameOfPropertyEx.html)
 
-		//
+        //
 
-		//	Sets/updates the name of the property, if no error it returns 0.
+        //	Sets/updates the name of the property, if no error it returns 0.
 
-		//	In case property does not exist it returns 1, when name cannot be updated 2.
+        //	In case property does not exist it returns 1, when name cannot be updated 2.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetNameOfPropertyEx")]
+        public static long SetNameOfPropertyEx(long model, long rdfProperty, string name)
+        {
+            if (_x86)
+            {
+                return x86.SetNameOfPropertyEx(model, rdfProperty, name);
+            }
 
-        public static extern long SetNameOfPropertyEx(long model, long rdfProperty, string name);
+            return x64.SetNameOfPropertyEx(model, rdfProperty, name);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetNameOfPropertyEx")]
+        public static long SetNameOfPropertyEx(long model, long rdfProperty, byte[] name)
+        {
+            if (_x86)
+            {
+                return x86.SetNameOfPropertyEx(model, rdfProperty, name);
+            }
 
-        public static extern long SetNameOfPropertyEx(long model, long rdfProperty, byte[] name);
+            return x64.SetNameOfPropertyEx(model, rdfProperty, name);
+        }
 
 
 
-		//
+        //
 
-		//		SetNameOfPropertyWEx                        (http://rdf.bg/gkdoc/CS64/SetNameOfPropertyWEx.html)
+        //		SetNameOfPropertyWEx                        (http://rdf.bg/gkdoc/CS64/SetNameOfPropertyWEx.html)
 
-		//
+        //
 
-		//	Sets/updates the name of the property, if no error it returns 0.
+        //	Sets/updates the name of the property, if no error it returns 0.
 
-		//	In case property does not exist it returns 1, when name cannot be updated 2.
+        //	In case property does not exist it returns 1, when name cannot be updated 2.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetNameOfPropertyWEx")]
+        public static long SetNameOfPropertyWEx(long model, long rdfProperty, string name)
+        {
+            if (_x86)
+            {
+                return x86.SetNameOfPropertyWEx(model, rdfProperty, name);
+            }
 
-        public static extern long SetNameOfPropertyWEx(long model, long rdfProperty, string name);
+            return x64.SetNameOfPropertyWEx(model, rdfProperty, name);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetNameOfPropertyWEx")]
+        public static long SetNameOfPropertyWEx(long model, long rdfProperty, byte[] name)
+        {
+            if (_x86)
+            {
+                return x86.SetNameOfPropertyWEx(model, rdfProperty, name);
+            }
 
-        public static extern long SetNameOfPropertyWEx(long model, long rdfProperty, byte[] name);
+            return x64.SetNameOfPropertyWEx(model, rdfProperty, name);
+        }
 
 
 
-		//
+        //
 
-		//		GetNameOfProperty                           (http://rdf.bg/gkdoc/CS64/GetNameOfProperty.html)
+        //		GetNameOfProperty                           (http://rdf.bg/gkdoc/CS64/GetNameOfProperty.html)
 
-		//
+        //
 
-		//	Returns the name of the property, if the property does not exist it returns nullptr.
+        //	Returns the name of the property, if the property does not exist it returns nullptr.
 
-		//
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "GetNameOfProperty")]
 
