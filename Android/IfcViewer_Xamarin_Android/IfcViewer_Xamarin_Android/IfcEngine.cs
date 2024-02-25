@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using static Android.Graphics.ColorSpace;
 using static Android.Icu.Text.Edits;
 using static Android.Renderscripts.Sampler;
-using static IfcEngine.x86_64;
-namespace IfcEngine
+using static IfcEngine.x86_64;
+namespace IfcEngine
 {
     class x86_64
     {
@@ -5684,139 +5684,201 @@ namespace IfcEngine
 
         //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "CreateClass")]
+        public static long CreateClass(long model, string name)
+        {
+            if (_x86)
+            {
+                return x86.CreateClass(model, name);
+            }
 
-        public static extern long CreateClass(long model, string name);
+            return x64.CreateClass(model, name);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "CreateClass")]
+        public static long CreateClass(long model, byte[] name)
+        {
+            if (_x86)
+            {
+                return x86.CreateClass(model, name);
+            }
 
-        public static extern long CreateClass(long model, byte[] name);
+            return x64.CreateClass(model, name);
+        }
 
 
 
-		//
+        //
 
-		//		CreateClassW                                (http://rdf.bg/gkdoc/CS64/CreateClassW.html)
+        //		CreateClassW                                (http://rdf.bg/gkdoc/CS64/CreateClassW.html)
 
-		//
+        //
 
-		//	Returns a handle to an on the fly created class.
+        //	Returns a handle to an on the fly created class.
 
-		//	If the model input is zero or not a model handle 0 will be returned,
+        //	If the model input is zero or not a model handle 0 will be returned,
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "CreateClassW")]
+        public static long CreateClassW(long model, string name)
+        {
+            if (_x86)
+            {
+                return x86.CreateClassW(model, name);
+            }
 
-        public static extern long CreateClassW(long model, string name);
+            return x64.CreateClassW(model, name);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "CreateClassW")]
+        public static long CreateClassW(long model, byte[] name)
+        {
+            if (_x86)
+            {
+                return x86.CreateClassW(model, name);
+            }
 
-        public static extern long CreateClassW(long model, byte[] name);
+            return x64.CreateClassW(model, name);
+        }
 
 
 
-		//
+        //
 
-		//		GetClassByName                              (http://rdf.bg/gkdoc/CS64/GetClassByName.html)
+        //		GetClassByName                              (http://rdf.bg/gkdoc/CS64/GetClassByName.html)
 
-		//
+        //
 
-		//	Returns a handle to the class as stored inside.
+        //	Returns a handle to the class as stored inside.
 
-		//	When the class does not exist yet and the name is unique
+        //	When the class does not exist yet and the name is unique
 
-		//	the class will be created on the fly and the handle will be returned.
+        //	the class will be created on the fly and the handle will be returned.
 
-		//	When the name is not unique and given to an instance, objectTypeProperty
+        //	When the name is not unique and given to an instance, objectTypeProperty
 
-		//	or dataTypeProperty 0 will be returned.
+        //	or dataTypeProperty 0 will be returned.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetClassByName")]
+        public static long GetClassByName(long model, string name)
+        {
+            if (_x86)
+            {
+                return x86.GetClassByName(model, name);
+            }
 
-        public static extern long GetClassByName(long model, string name);
+            return x64.GetClassByName(model, name);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetClassByName")]
+        public static long GetClassByName(long model, byte[] name)
+        {
+            if (_x86)
+            {
+                return x86.GetClassByName(model, name);
+            }
 
-        public static extern long GetClassByName(long model, byte[] name);
+            return x64.GetClassByName(model, name);
+        }
 
 
 
-		//
+        //
 
-		//		GetClassByNameW                             (http://rdf.bg/gkdoc/CS64/GetClassByNameW.html)
+        //		GetClassByNameW                             (http://rdf.bg/gkdoc/CS64/GetClassByNameW.html)
 
-		//
+        //
 
-		//	Returns a handle to the class as stored inside.
+        //	Returns a handle to the class as stored inside.
 
-		//	When the class does not exist yet and the name is unique
+        //	When the class does not exist yet and the name is unique
 
-		//	the class will be created on the fly and the handle will be returned.
+        //	the class will be created on the fly and the handle will be returned.
 
-		//	When the name is not unique and given to an instance, objectTypeProperty
+        //	When the name is not unique and given to an instance, objectTypeProperty
 
-		//	or dataTypeProperty 0 will be returned.
+        //	or dataTypeProperty 0 will be returned.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetClassByNameW")]
+        public static long GetClassByNameW(long model, string name)
+        {
+            if (_x86)
+            {
+                return x86.GetClassByNameW(model, name);
+            }
 
-        public static extern long GetClassByNameW(long model, string name);
+            return x64.GetClassByNameW(model, name);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetClassByNameW")]
+        public static long GetClassByNameW(long model, byte[] name)
+        {
+            if (_x86)
+            {
+                return x86.GetClassByNameW(model, name);
+            }
 
-        public static extern long GetClassByNameW(long model, byte[] name);
+            return x64.GetClassByNameW(model, name);
+        }
 
 
 
-		//
+        //
 
-		//		GetClassesByIterator                        (http://rdf.bg/gkdoc/CS64/GetClassesByIterator.html)
+        //		GetClassesByIterator                        (http://rdf.bg/gkdoc/CS64/GetClassesByIterator.html)
 
-		//
+        //
 
-		//	Returns a handle to an class.
+        //	Returns a handle to an class.
 
-		//	If input class is zero, the handle will point to the first relevant class.
+        //	If input class is zero, the handle will point to the first relevant class.
 
-		//	If all classes are past (or no relevant classes are found), the function will return 0.
+        //	If all classes are past (or no relevant classes are found), the function will return 0.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetClassesByIterator")]
+        public static long GetClassesByIterator(long model, long owlClass)
+        {
+            if (_x86)
+            {
+                return x86.GetClassesByIterator(model, owlClass);
+            }
 
-        public static extern long GetClassesByIterator(long model, long owlClass);
+            return x64.GetClassesByIterator(model, owlClass);
+        }
 
 
 
-		//
+        //
 
-		//		SetClassParent                              (http://rdf.bg/gkdoc/CS64/SetClassParent.html)
+        //		SetClassParent                              (http://rdf.bg/gkdoc/CS64/SetClassParent.html)
 
-		//
+        //
 
-		//	Defines (set/unset) the parent class of a given class. Multiple-inheritence is supported and behavior
+        //	Defines (set/unset) the parent class of a given class. Multiple-inheritence is supported and behavior
 
-		//	of parent classes is also inherited as well as cardinality restrictions on datatype properties and
+        //	of parent classes is also inherited as well as cardinality restrictions on datatype properties and
 
-		//	object properties (relations).
+        //	object properties (relations).
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetClassParent")]
-
-        public static extern void SetClassParent(long owlClass, long parentOwlClass, long setting);
+        public static void SetClassParent(long owlClass, long parentOwlClass, long setting)
+        {
+            if (_x86)
+            {
+                x86.SetClassParent(owlClass, parentOwlClass, setting);
+            }
+            else
+            {
+                x64.SetClassParent(owlClass, parentOwlClass, setting);
+            }            
+        }
 
 
 
@@ -5840,29 +5902,43 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetClassParentEx")]
+        public static void SetClassParentEx(long model, long owlClass, long parentOwlClass, long setting)
+        {
+            if (_x86)
+            {
+                x86.SetClassParentEx(model, owlClass, parentOwlClass, setting);
+            }
+            else
+            {
+                x64.SetClassParentEx(model, owlClass, parentOwlClass, setting);
+            }
+        }
 
-        public static extern void SetClassParentEx(long model, long owlClass, long parentOwlClass, long setting);
 
 
+        //
 
-		//
+        //		GetParentsByIterator                        (http://rdf.bg/gkdoc/CS64/GetParentsByIterator.html)
 
-		//		GetParentsByIterator                        (http://rdf.bg/gkdoc/CS64/GetParentsByIterator.html)
+        //
 
-		//
+        //	Returns the next parent of the class.
 
-		//	Returns the next parent of the class.
+        //	If input parent is zero, the handle will point to the first relevant parent.
 
-		//	If input parent is zero, the handle will point to the first relevant parent.
+        //	If all parent are past (or no relevant parent are found), the function will return 0.
 
-		//	If all parent are past (or no relevant parent are found), the function will return 0.
+        //
 
-		//
+        public static long GetParentsByIterator(long owlClass, long parentOwlClass)
+        {
+            if (_x86)
+            {
+                return x86.GetParentsByIterator(owlClass, parentOwlClass);
+            }
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetParentsByIterator")]
-
-        public static extern long GetParentsByIterator(long owlClass, long parentOwlClass);
+            return x64.GetParentsByIterator(owlClass, parentOwlClass);
+        }
 
 
 
@@ -5878,111 +5954,159 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetNameOfClass")]
+        public static long SetNameOfClass(long owlClass, string name)
+        {
+            if (_x86)
+            {
+                return x86.SetNameOfClass(owlClass, name);
+            }
 
-        public static extern long SetNameOfClass(long owlClass, string name);
-
-
-
-        [DllImport(IFCEngineDLL, EntryPoint = "SetNameOfClass")]
-
-        public static extern long SetNameOfClass(long owlClass, byte[] name);
-
-
-
-		//
-
-		//		SetNameOfClassW                             (http://rdf.bg/gkdoc/CS64/SetNameOfClassW.html)
-
-		//
-
-		//	Sets/updates the name of the class, if no error it returns 0.
-
-		//	In case class does not exist it returns 1, when name cannot be updated 2.
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "SetNameOfClassW")]
-
-        public static extern long SetNameOfClassW(long owlClass, string name);
+            return x64.SetNameOfClass(owlClass, name);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetNameOfClassW")]
+        public static long SetNameOfClass(long owlClass, byte[] name)
+        {
+            if (_x86)
+            {
+                return x86.SetNameOfClass(owlClass, name);
+            }
 
-        public static extern long SetNameOfClassW(long owlClass, byte[] name);
-
-
-
-		//
-
-		//		SetNameOfClassEx                            (http://rdf.bg/gkdoc/CS64/SetNameOfClassEx.html)
-
-		//
-
-		//	Sets/updates the name of the class, if no error it returns 0.
-
-		//	In case class does not exist it returns 1, when name cannot be updated 2.
-
-		//
-
-		//	This call has the same behavior as SetNameOfClass, however needs to be
-
-		//	used in case classes are exchanged as a successive series of integers.
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "SetNameOfClassEx")]
-
-        public static extern long SetNameOfClassEx(long model, long owlClass, string name);
+            return x64.SetNameOfClass(owlClass, name);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetNameOfClassEx")]
+        //
 
-        public static extern long SetNameOfClassEx(long model, long owlClass, byte[] name);
+        //		SetNameOfClassW                             (http://rdf.bg/gkdoc/CS64/SetNameOfClassW.html)
 
+        //
 
+        //	Sets/updates the name of the class, if no error it returns 0.
 
-		//
+        //	In case class does not exist it returns 1, when name cannot be updated 2.
 
-		//		SetNameOfClassWEx                           (http://rdf.bg/gkdoc/CS64/SetNameOfClassWEx.html)
+        //
 
-		//
+        public static long SetNameOfClassW(long owlClass, string name)
+        {
+            if (_x86)
+            {
+                return x86.SetNameOfClassW(owlClass, name);
+            }
 
-		//	Sets/updates the name of the class, if no error it returns 0.
-
-		//	In case class does not exist it returns 1, when name cannot be updated 2.
-
-		//
-
-		//	This call has the same behavior as SetNameOfClassW, however needs to be
-
-		//	used in case classes are exchanged as a successive series of integers.
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "SetNameOfClassWEx")]
-
-        public static extern long SetNameOfClassWEx(long model, long owlClass, string name);
+            return x64.SetNameOfClassW(owlClass, name);
+        }
 
 
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetNameOfClassWEx")]
+        public static long SetNameOfClassW(long owlClass, byte[] name)
+        {
+            if (_x86)
+            {
+                return x86.SetNameOfClassW(owlClass, name);
+            }
 
-        public static extern long SetNameOfClassWEx(long model, long owlClass, byte[] name);
+            return x64.SetNameOfClassW(owlClass, name);
+        }
 
 
 
-		//
+        //
 
-		//		GetNameOfClass                              (http://rdf.bg/gkdoc/CS64/GetNameOfClass.html)
+        //		SetNameOfClassEx                            (http://rdf.bg/gkdoc/CS64/SetNameOfClassEx.html)
 
-		//
+        //
 
-		//	Returns the name of the class, if the class does not exist it returns nullptr.
+        //	Sets/updates the name of the class, if no error it returns 0.
 
-		//
+        //	In case class does not exist it returns 1, when name cannot be updated 2.
+
+        //
+
+        //	This call has the same behavior as SetNameOfClass, however needs to be
+
+        //	used in case classes are exchanged as a successive series of integers.
+
+        //
+
+        public static long SetNameOfClassEx(long model, long owlClass, string name)
+        {
+            if (_x86)
+            {
+                return x86.SetNameOfClassEx(model, owlClass, name);
+            }
+
+            return x64.SetNameOfClassEx(model, owlClass, name);
+        }
+
+
+
+        public static long SetNameOfClassEx(long model, long owlClass, byte[] name)
+        {
+            if (_x86)
+            {
+                return x86.SetNameOfClassEx(model, owlClass, name);
+            }
+
+            return x64.SetNameOfClassEx(model, owlClass, name);
+        }
+
+
+
+        //
+
+        //		SetNameOfClassWEx                           (http://rdf.bg/gkdoc/CS64/SetNameOfClassWEx.html)
+
+        //
+
+        //	Sets/updates the name of the class, if no error it returns 0.
+
+        //	In case class does not exist it returns 1, when name cannot be updated 2.
+
+        //
+
+        //	This call has the same behavior as SetNameOfClassW, however needs to be
+
+        //	used in case classes are exchanged as a successive series of integers.
+
+        //
+
+        public static long SetNameOfClassWEx(long model, long owlClass, string name)
+        {
+            if (_x86)
+            {
+                return x86.SetNameOfClassWEx(model, owlClass, name);
+            }
+
+            return x64.SetNameOfClassWEx(model, owlClass, name);
+        }
+
+
+
+        public static long SetNameOfClassWEx(long model, long owlClass, byte[] name)
+        {
+            if (_x86)
+            {
+                return x86.SetNameOfClassWEx(model, owlClass, name);
+            }
+
+            return x64.SetNameOfClassWEx(model, owlClass, name);
+        }
+
+
+
+        //
+
+        //		GetNameOfClass                              (http://rdf.bg/gkdoc/CS64/GetNameOfClass.html)
+
+        //
+
+        //	Returns the name of the class, if the class does not exist it returns nullptr.
+
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "GetNameOfClass")]
 
