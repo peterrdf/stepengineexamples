@@ -6108,9 +6108,17 @@ namespace IfcEngine
 
         //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetNameOfClass")]
-
-        public static extern void GetNameOfClass(long owlClass, out IntPtr name);
+        public static void GetNameOfClass(long owlClass, out IntPtr name)
+        {
+            if (_x86)
+            {
+                x86.GetNameOfClass(owlClass, out name);
+            }
+            else
+            {
+                x64.GetNameOfClass(owlClass, out name);
+            }
+        }
 
 
 
@@ -6124,79 +6132,111 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetNameOfClassW")]
-
-        public static extern void GetNameOfClassW(long owlClass, out IntPtr name);
-
-
-
-		//
-
-		//		GetNameOfClassEx                            (http://rdf.bg/gkdoc/CS64/GetNameOfClassEx.html)
-
-		//
-
-		//	Returns the name of the class, if the class does not exist it returns nullptr.
-
-		//
-
-		//	This call has the same behavior as GetNameOfClass, however needs to be
-
-		//	used in case properties are exchanged as a successive series of integers.
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "GetNameOfClassEx")]
-
-        public static extern void GetNameOfClassEx(long model, long owlClass, out IntPtr name);
+        public static void GetNameOfClassW(long owlClass, out IntPtr name)
+        {
+            if (_x86)
+            {
+                x86.GetNameOfClassW(owlClass, out name);
+            }
+            else
+            {
+                x64.GetNameOfClassW(owlClass, out name);
+            }
+        }
 
 
 
-		//
+        //
 
-		//		GetNameOfClassWEx                           (http://rdf.bg/gkdoc/CS64/GetNameOfClassWEx.html)
+        //		GetNameOfClassEx                            (http://rdf.bg/gkdoc/CS64/GetNameOfClassEx.html)
 
-		//
+        //
 
-		//	Returns the name of the class, if the class does not exist it returns nullptr.
+        //	Returns the name of the class, if the class does not exist it returns nullptr.
 
-		//
+        //
 
-		//	This call has the same behavior as GetNameOfClassW, however needs to be
+        //	This call has the same behavior as GetNameOfClass, however needs to be
 
-		//	used in case classes are exchanged as a successive series of integers.
+        //	used in case properties are exchanged as a successive series of integers.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetNameOfClassWEx")]
+        public static void GetNameOfClassEx(long model, long owlClass, out IntPtr name)
+        {
+            if (_x86)
+            {
+                x86.GetNameOfClassEx(model, owlClass, out name);
+            }
+            else
+            {
+                x64.GetNameOfClassEx(model, owlClass, out name);
+            }
+        }
 
-        public static extern void GetNameOfClassWEx(long model, long owlClass, out IntPtr name);
+
+
+        //
+
+        //		GetNameOfClassWEx                           (http://rdf.bg/gkdoc/CS64/GetNameOfClassWEx.html)
+
+        //
+
+        //	Returns the name of the class, if the class does not exist it returns nullptr.
+
+        //
+
+        //	This call has the same behavior as GetNameOfClassW, however needs to be
+
+        //	used in case classes are exchanged as a successive series of integers.
+
+        //
+
+        public static void GetNameOfClassWEx(long model, long owlClass, out IntPtr name)
+        {
+            if (_x86)
+            {
+                x86.GetNameOfClassWEx(model, owlClass, out name);
+            }
+            else
+            {
+                x64.GetNameOfClassWEx(model, owlClass, out name);
+            }
+        }
 
 
 
-		//
+        //
 
-		//		SetClassPropertyCardinalityRestriction      (http://rdf.bg/gkdoc/CS64/SetClassPropertyCardinalityRestriction.html)
+        //		SetClassPropertyCardinalityRestriction      (http://rdf.bg/gkdoc/CS64/SetClassPropertyCardinalityRestriction.html)
 
-		//
+        //
 
-		//	This function sets the minCard and maxCard of a certain property in the context of a class.
+        //	This function sets the minCard and maxCard of a certain property in the context of a class.
 
-		//	The cardinality of a property in an instance has to be between minCard and maxCard (as well 
+        //	The cardinality of a property in an instance has to be between minCard and maxCard (as well 
 
-		//	as within the cardinality restrictions as given by the property in context of any of its
+        //	as within the cardinality restrictions as given by the property in context of any of its
 
-		//	(indirect) parent classes).
+        //	(indirect) parent classes).
 
-		//	If undefined minCard and/or maxCard will be of value -1, this means
+        //	If undefined minCard and/or maxCard will be of value -1, this means
 
-		//	for minCard that it is 0 and for maxCard it means infinity.
+        //	for minCard that it is 0 and for maxCard it means infinity.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetClassPropertyCardinalityRestriction")]
-
-        public static extern void SetClassPropertyCardinalityRestriction(long owlClass, long rdfProperty, long minCard, long maxCard);
+        public static void SetClassPropertyCardinalityRestriction(long owlClass, long rdfProperty, long minCard, long maxCard)
+        {
+            if (_x86)
+            {
+                x86.SetClassPropertyCardinalityRestriction(owlClass, rdfProperty, minCard, maxCard);
+            }
+            else
+            {
+                x64.SetClassPropertyCardinalityRestriction(owlClass, rdfProperty, minCard, maxCard);
+            }            
+        }
 
 
 
@@ -6226,103 +6266,133 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "SetClassPropertyCardinalityRestrictionEx")]
-
-        public static extern void SetClassPropertyCardinalityRestrictionEx(long model, long owlClass, long rdfProperty, long minCard, long maxCard);
-
-
-
-		//
-
-		//		GetClassPropertyCardinalityRestriction      (http://rdf.bg/gkdoc/CS64/GetClassPropertyCardinalityRestriction.html)
-
-		//
-
-		//	This function returns the minCard and maxCard of a certain
-
-		//	property in the context of a class. The cardinality of a property in 
-
-		//	an instance has to be between minCard and maxCard (as well as within the cardinality restrictions
-
-		//	as given by the property in context of any of its (indirect) parent classes).
-
-		//	If undefined minCard and/or maxCard will be of value -1, this means
-
-		//	for minCard that it is 0 and for maxCard it means infinity.
-
-		//
-
-		//	Note: this function does not return inherited restrictions. The example shows how to retrieve
-
-		//	this knowledge, as it is derived knowledge the call that used to be available is removed.
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "GetClassPropertyCardinalityRestriction")]
-
-        public static extern void GetClassPropertyCardinalityRestriction(long owlClass, long rdfProperty, out long minCard, out long maxCard);
+        public static void SetClassPropertyCardinalityRestrictionEx(long model, long owlClass, long rdfProperty, long minCard, long maxCard)
+        {
+            if (_x86)
+            {
+                x86.SetClassPropertyCardinalityRestrictionEx(model, owlClass, rdfProperty, minCard, maxCard);
+            }
+            else
+            {
+                x64.SetClassPropertyCardinalityRestrictionEx(model, owlClass, rdfProperty, minCard, maxCard);
+            }
+        }
 
 
 
-		//
+        //
 
-		//		GetClassPropertyCardinalityRestrictionEx    (http://rdf.bg/gkdoc/CS64/GetClassPropertyCardinalityRestrictionEx.html)
+        //		GetClassPropertyCardinalityRestriction      (http://rdf.bg/gkdoc/CS64/GetClassPropertyCardinalityRestriction.html)
 
-		//
+        //
 
-		//	This function returns the minCard and maxCard of a certain
+        //	This function returns the minCard and maxCard of a certain
 
-		//	property in the context of a class. The cardinality of a property in 
+        //	property in the context of a class. The cardinality of a property in 
 
-		//	an instance has to be between minCard and maxCard (as well as within the cardinality restrictions
+        //	an instance has to be between minCard and maxCard (as well as within the cardinality restrictions
 
-		//	as given by the property in context of any of its (indirect) parent classes).
+        //	as given by the property in context of any of its (indirect) parent classes).
 
-		//	If undefined minCard and/or maxCard will be of value -1, this means
+        //	If undefined minCard and/or maxCard will be of value -1, this means
 
-		//	for minCard that it is 0 and for maxCard it means infinity.
+        //	for minCard that it is 0 and for maxCard it means infinity.
 
-		//
+        //
 
-		//	This call has the same behavior as GetClassPropertyCardinalityRestriction, however needs to be
+        //	Note: this function does not return inherited restrictions. The example shows how to retrieve
 
-		//	used in case classes or properties are exchanged as a successive series of integers.
+        //	this knowledge, as it is derived knowledge the call that used to be available is removed.
 
-		//
+        //
 
-		//	Note: this function does not return inherited restrictions. The example shows how to retrieve
+        public static void GetClassPropertyCardinalityRestriction(long owlClass, long rdfProperty, out long minCard, out long maxCard)
+        {
+            if (_x86)
+            {
+                x86.GetClassPropertyCardinalityRestriction(owlClass, rdfProperty, out minCard, out maxCard);
+            }
+            else
+            {
+                x64.GetClassPropertyCardinalityRestriction(owlClass, rdfProperty, out minCard, out maxCard);
+            }
+        }
 
-		//	this knowledge, as it is derived knowledge the call that used to be available is removed.
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "GetClassPropertyCardinalityRestrictionEx")]
-
-        public static extern void GetClassPropertyCardinalityRestrictionEx(long model, long owlClass, long rdfProperty, out long minCard, out long maxCard);
 
 
+        //
 
-		//
+        //		GetClassPropertyCardinalityRestrictionEx    (http://rdf.bg/gkdoc/CS64/GetClassPropertyCardinalityRestrictionEx.html)
 
-		//		GetGeometryClass                            (http://rdf.bg/gkdoc/CS64/GetGeometryClass.html)
+        //
 
-		//
+        //	This function returns the minCard and maxCard of a certain
 
-		//	Returns non-zero if the owlClass is a geometry type. This call will return the input class
+        //	property in the context of a class. The cardinality of a property in 
 
-		//	for all classes initially available. It will return as well non-for all classes created by the
+        //	an instance has to be between minCard and maxCard (as well as within the cardinality restrictions
 
-		//	user or loaded / imported through a model that (indirectly) inherit one of the
+        //	as given by the property in context of any of its (indirect) parent classes).
 
-		//	original classes available. in this case it returns the original available class
+        //	If undefined minCard and/or maxCard will be of value -1, this means
 
-		//	it inherits the behavior from.
+        //	for minCard that it is 0 and for maxCard it means infinity.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetGeometryClass")]
+        //	This call has the same behavior as GetClassPropertyCardinalityRestriction, however needs to be
 
-        public static extern long GetGeometryClass(long owlClass);
+        //	used in case classes or properties are exchanged as a successive series of integers.
+
+        //
+
+        //	Note: this function does not return inherited restrictions. The example shows how to retrieve
+
+        //	this knowledge, as it is derived knowledge the call that used to be available is removed.
+
+        //
+
+        public static void GetClassPropertyCardinalityRestrictionEx(long model, long owlClass, long rdfProperty, out long minCard, out long maxCard)
+        {
+            if (_x86)
+            {
+                x86.GetClassPropertyCardinalityRestrictionEx(model, owlClass, rdfProperty, out minCard, out maxCard);
+            }
+            else
+            {
+                x64.GetClassPropertyCardinalityRestrictionEx(model, owlClass, rdfProperty, out minCard, out maxCard);
+            }
+        }
+
+
+
+        //
+
+        //		GetGeometryClass                            (http://rdf.bg/gkdoc/CS64/GetGeometryClass.html)
+
+        //
+
+        //	Returns non-zero if the owlClass is a geometry type. This call will return the input class
+
+        //	for all classes initially available. It will return as well non-for all classes created by the
+
+        //	user or loaded / imported through a model that (indirectly) inherit one of the
+
+        //	original classes available. in this case it returns the original available class
+
+        //	it inherits the behavior from.
+
+        //
+
+        public static long GetGeometryClass(long owlClass)
+        {
+            if (_x86)
+            {
+                return x86.GetGeometryClass(owlClass);
+            }
+
+            return x64.GetGeometryClass(owlClass);
+        }
 
 
 
@@ -6350,9 +6420,15 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetGeometryClassEx")]
+        public static long GetGeometryClassEx(long model, long owlClass)
+        {
+            if (_x86)
+            {
+                return x86.GetGeometryClassEx(model, owlClass);
+            }
 
-        public static extern long GetGeometryClassEx(long model, long owlClass);
+            return x64.GetGeometryClassEx(model, owlClass);
+        }
 
 
 
@@ -6364,17 +6440,17 @@ namespace IfcEngine
 
 
 
-		//
+        //
 
-		//		CreateProperty                              (http://rdf.bg/gkdoc/CS64/CreateProperty.html)
+        //		CreateProperty                              (http://rdf.bg/gkdoc/CS64/CreateProperty.html)
 
-		//
+        //
 
-		//	Returns a handle to an on the fly created property.
+        //	Returns a handle to an on the fly created property.
 
-		//	If the model input is zero or not a model handle 0 will be returned,
+        //	If the model input is zero or not a model handle 0 will be returned,
 
-		//
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "CreateProperty")]
 
