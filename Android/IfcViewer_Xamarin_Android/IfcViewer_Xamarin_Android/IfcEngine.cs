@@ -6799,9 +6799,17 @@ namespace IfcEngine
 
         //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetNameOfProperty")]
-
-        public static extern void GetNameOfProperty(long rdfProperty, out IntPtr name);
+        public static void GetNameOfProperty(long rdfProperty, out IntPtr name)
+        {
+            if (_x86)
+            {
+                x86.GetNameOfProperty(rdfProperty, out name);
+            }
+            else
+            {
+                x64.GetNameOfProperty(rdfProperty, out name);
+            }            
+        }
 
 
 
@@ -6815,75 +6823,99 @@ namespace IfcEngine
 
 		//
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetNameOfPropertyW")]
-
-        public static extern void GetNameOfPropertyW(long rdfProperty, out IntPtr name);
-
-
-
-		//
-
-		//		GetNameOfPropertyEx                         (http://rdf.bg/gkdoc/CS64/GetNameOfPropertyEx.html)
-
-		//
-
-		//	Returns the name of the property, if the property does not exist it returns nullptr.
-
-		//
-
-        [DllImport(IFCEngineDLL, EntryPoint = "GetNameOfPropertyEx")]
-
-        public static extern void GetNameOfPropertyEx(long model, long rdfProperty, out IntPtr name);
+        public static void GetNameOfPropertyW(long rdfProperty, out IntPtr name)
+        {
+            if (_x86)
+            {
+                x86.GetNameOfPropertyW(rdfProperty, out name);
+            }
+            else
+            {
+                x64.GetNameOfPropertyW(rdfProperty, out name);
+            }
+        }
 
 
 
-		//
+        //
 
-		//		GetNameOfPropertyWEx                        (http://rdf.bg/gkdoc/CS64/GetNameOfPropertyWEx.html)
+        //		GetNameOfPropertyEx                         (http://rdf.bg/gkdoc/CS64/GetNameOfPropertyEx.html)
 
-		//
+        //
 
-		//	Returns the name of the property, if the property does not exist it returns nullptr.
+        //	Returns the name of the property, if the property does not exist it returns nullptr.
 
-		//
+        //
 
-        [DllImport(IFCEngineDLL, EntryPoint = "GetNameOfPropertyWEx")]
+        public static void GetNameOfPropertyEx(long model, long rdfProperty, out IntPtr name)
+        {
+            if (_x86)
+            {
+                x86.GetNameOfPropertyEx(model, rdfProperty, out name);
+            }
+            else
+            {
+                x64.GetNameOfPropertyEx(model, rdfProperty, out name);
+            }
+        }
 
-        public static extern void GetNameOfPropertyWEx(long model, long rdfProperty, out IntPtr name);
+
+
+        //
+
+        //		GetNameOfPropertyWEx                        (http://rdf.bg/gkdoc/CS64/GetNameOfPropertyWEx.html)
+
+        //
+
+        //	Returns the name of the property, if the property does not exist it returns nullptr.
+
+        //
+
+        public static void GetNameOfPropertyWEx(long model, long rdfProperty, out IntPtr name)
+        {
+            if (_x86)
+            {
+                x86.GetNameOfPropertyWEx(model, rdfProperty, out name);
+            }
+            else
+            {
+                x64.GetNameOfPropertyWEx(model, rdfProperty, out name);
+            }
+        }
 
 
 
-		//
+        //
 
-		//		SetPropertyType                             (http://rdf.bg/gkdoc/CS64/SetPropertyType.html)
+        //		SetPropertyType                             (http://rdf.bg/gkdoc/CS64/SetPropertyType.html)
 
-		//
+        //
 
-		//	This function sets the type of the property. This is only allowed
+        //	This function sets the type of the property. This is only allowed
 
-		//	if the type of the property was not set before.
+        //	if the type of the property was not set before.
 
-		//
+        //
 
-		//	The following values are possible for propertyType:
+        //	The following values are possible for propertyType:
 
-		//			1	The property is an Object Property
+        //			1	The property is an Object Property
 
-		//			2	The property is an Datatype Property of type Boolean
+        //			2	The property is an Datatype Property of type Boolean
 
-		//			3	The property is an Datatype Property of type Char
+        //			3	The property is an Datatype Property of type Char
 
-		//			4	The property is an Datatype Property of type Integer
+        //			4	The property is an Datatype Property of type Integer
 
-		//			5	The property is an Datatype Property of type Double
+        //			5	The property is an Datatype Property of type Double
 
-		//	The return value of this call is GetPropertyType/Ex applied after applying
+        //	The return value of this call is GetPropertyType/Ex applied after applying
 
-		//	the type, normally this corresponds with the propertyType requested
+        //	the type, normally this corresponds with the propertyType requested
 
-		//	to be set unless the property already has a different propertyType set before.
+        //	to be set unless the property already has a different propertyType set before.
 
-		//
+        //
 
         [DllImport(IFCEngineDLL, EntryPoint = "SetPropertyType")]
 
