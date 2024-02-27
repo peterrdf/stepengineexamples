@@ -1223,27 +1223,32 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 
 		createProperties(itBuilding.first, iBuildingInstance);
 
-		vecBuildingInstances.push_back(iBuildingInstance);
+		vecBuildingInstances.push_back(iBuildingInstance);		
 		
-		vector<SdaiInstance> vecBuildingGeometryInstances;
+		vector<SdaiInstance> vecBuildingElementInstances;
 		for (auto iBuildingElementInstance : itBuilding.second)
 		{
 			auto itBuildingElement = m_mapBuildingElements.find(iBuildingElementInstance);
 			assert(itBuildingElement != m_mapBuildingElements.end());
 
-			for (auto iOwlInstance : itBuildingElement->second)
+			vector<SdaiInstance> vecBuildingElementGeometryInstances;
+			for (auto iBuildingElementGeometryInstance : itBuildingElement->second)
 			{
-				createGeometry(iOwlInstance, vecBuildingGeometryInstances);
+				createGeometry(iBuildingElementGeometryInstance, vecBuildingElementGeometryInstances);
 			}
 
-			OwlClass iInstanceClass = GetInstanceClass(iBuildingElementInstance);
-			assert(iInstanceClass != 0);
+			SdaiInstance iBuildingElementInstancePlacement = 0;
+			SdaiInstance iBuildingElementInstance = buildBuildingElementInstance(
+				"Container for Geometry",
+				&mtxIdentity,
+				iBuildingInstancePlacement,
+				iBuildingElementInstancePlacement,
+				vecBuildingElementGeometryInstances
+			);
+			assert(iBuildingElementInstance != 0);
 
-			wchar_t* szClassName = nullptr;
-			GetNameOfClassW(iInstanceClass, &szClassName);
-
-			TRACE(L"\n%s", szClassName);
-		}
+			vecBuildingElementInstances.push_back(iBuildingElementInstance);
+		} // for (auto iBuildingElementInstance : ...
 
 		SdaiInstance iBuildingStoreyInstancePlacement = 0;
 		SdaiInstance iBuildingStoreyInstance = buildBuildingStoreyInstance(&mtxIdentity, iBuildingInstancePlacement, iBuildingStoreyInstancePlacement);
@@ -1255,33 +1260,17 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 			iBuildingInstance, 
 			vector<SdaiInstance>{ iBuildingStoreyInstance });
 
-		/*vector<SdaiInstance> vecBuildingGeometryInstances;
-		for (auto iOwlInstance : itBuilding.second)
+		if (vecBuildingElementInstances.empty())
 		{
-			createGeometry(iOwlInstance, vecBuildingGeometryInstances);
-		}*/
-
-		if (vecBuildingGeometryInstances.empty())
-		{
-			// There is no Geometry
+			// Not supported
 			continue;
-		}
-
-		SdaiInstance iBuildingElementInstancePlacement = 0;
-		SdaiInstance iBuildingElementInstance = buildBuildingElementInstance(
-			"Container for Geometry",
-			&mtxIdentity,
-			iBuildingInstancePlacement,
-			iBuildingElementInstancePlacement,
-			vecBuildingGeometryInstances
-		);
-		assert(iBuildingElementInstance != 0);
+		}		
 
 		buildRelContainedInSpatialStructureInstance(
 			"BuildingStoreyContainer", 
 			"BuildingStoreyContainer for Building Elements", 
 			iBuildingStoreyInstance, 
-			vector<SdaiInstance>{ iBuildingElementInstance });
+			vecBuildingElementInstances);
 	} // for (auto itBuilding : ...
 
 	buildRelAggregatesInstance(
