@@ -241,9 +241,11 @@ class _citygml_exporter : public _exporter_base
 
 private: // Members
 
-	OwlClass m_iBuildingClass;	
-	map<OwlInstance, vector<OwlInstance>> m_mapBuildings;
-	map<OwlInstance, SdaiInstance> m_mapGeometries;
+	OwlClass m_iBuildingClass;
+	OwlClass m_iWallSurfaceClass;
+	OwlClass m_iRoofSurfaceClass;
+	map<OwlInstance, vector<OwlInstance>> m_mapBuildings; // Building : Building Elements
+	map<OwlInstance, vector<OwlInstance>> m_mapBuildingElements; // Building Element : Geometries
 
 public: // Methods
 
@@ -256,7 +258,8 @@ protected:  // Methods
 
 	void createBuildings(SdaiInstance iSiteInstance, SdaiInstance iSiteInstancePlacement);
 	void createBuildingsRecursive(OwlInstance iInstance);
-	void searchForBuildingGeometry(OwlInstance iBuildingInstance, OwlInstance iInstance);
+	void searchForBuildingElements(OwlInstance iBuildingInstance, OwlInstance iInstance);
+	void searchForBuildingElementsGeometry(OwlInstance iBuildingElementInstance, OwlInstance iInstance);
 	void createGeometry(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createCompositeSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
