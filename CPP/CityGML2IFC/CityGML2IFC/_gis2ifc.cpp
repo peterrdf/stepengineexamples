@@ -733,12 +733,16 @@ void _exporter_base::createStyledItemInstance(OwlInstance iOwlInstance, SdaiInst
 	{
 		m_pSite->logWarn("Textures are not supported.");
 
+		createDefaultStyledItemInstance(iSdaiInstance);
+
 		return;
 	}
 
 	string strTag = getTag(iMaterialInstance);
 	if (strTag == "Default Material")
 	{
+		createDefaultStyledItemInstance(iSdaiInstance);
+
 		return;
 	}
 
@@ -1110,6 +1114,7 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	, m_iRoofSurfaceClass(0)
 	, m_mapBuildings()
 	, m_mapBuildingElements()
+	, m_iCurrentOwlBuildingElementInstance(0)
 {
 	m_iBuildingClass = GetClassByName(getSite()->getOwlModel(), "class:Building");
 	m_iWallSurfaceClass = GetClassByName(getSite()->getOwlModel(), "class:WallSurface");
@@ -1163,6 +1168,28 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	createBuildings(iSiteInstance, iSiteInstancePlacement);
 
 	saveIfcFile(strOuputFile.c_str());
+}
+
+/*virtual*/ void _citygml_exporter::createDefaultStyledItemInstance(SdaiInstance iSdaiInstance) /*override*/
+{
+	assert(m_iCurrentOwlBuildingElementInstance != 0);
+	assert(iSdaiInstance != 0);
+
+	OwlClass iInstanceClass = GetInstanceClass(m_iCurrentOwlBuildingElementInstance);
+	assert(iInstanceClass != 0);
+
+	if (isWallSurfaceClass(iInstanceClass))
+	{
+		createStyledItemInstance(iSdaiInstance, 128. / 255., 128. / 255., 128. / 255., 0.);
+	}
+	else if (isRoofSurfaceClass(iInstanceClass))
+	{
+		createStyledItemInstance(iSdaiInstance, 139. / 255., 69. /  255., 19. / 255., 0.);
+	}
+	else
+	{
+		assert(false); //#todo
+	}
 }
 
 void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance iSiteInstancePlacement)
@@ -1240,27 +1267,31 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 		vector<SdaiInstance> vecBuildingElementInstances;
 		for (auto iOwlBuildingElementInstance : itBuilding.second)
 		{
+			m_iCurrentOwlBuildingElementInstance = iOwlBuildingElementInstance;
+
 			auto itBuildingElement = m_mapBuildingElements.find(iOwlBuildingElementInstance);
 			assert(itBuildingElement != m_mapBuildingElements.end());
 
-			vector<SdaiInstance> vecBuildingElementGeometryInstances;
-			for (auto iBuildingElementGeometryInstance : itBuildingElement->second)
+			vector<SdaiInstance> vecSdaiBuildingElementGeometryInstances;
+			for (auto iOwlBuildingElementGeometryInstance : itBuildingElement->second)
 			{
-				createGeometry(iBuildingElementGeometryInstance, vecBuildingElementGeometryInstances);
+				createGeometry(iOwlBuildingElementGeometryInstance, vecSdaiBuildingElementGeometryInstances);
 			}
-
+			
 			SdaiInstance iBuildingElementInstancePlacement = 0;
 			SdaiInstance iSdaiBuildingElementInstance = buildBuildingElementInstance(
 				itBuildingElement->first,
 				&mtxIdentity,
 				iBuildingInstancePlacement,
 				iBuildingElementInstancePlacement,
-				vecBuildingElementGeometryInstances);
+				vecSdaiBuildingElementGeometryInstances);
 			assert(iSdaiBuildingElementInstance != 0);
 
 			createProperties(iOwlBuildingElementInstance, iSdaiBuildingElementInstance);
 
 			vecBuildingElementInstances.push_back(iSdaiBuildingElementInstance);
+
+			m_iCurrentOwlBuildingElementInstance = 0;
 		} // for (auto iOwlBuildingElementInstance : ...
 
 		SdaiInstance iBuildingStoreyInstancePlacement = 0;

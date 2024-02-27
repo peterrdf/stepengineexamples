@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Linq;
 using System.IO;
 using System.Runtime.InteropServices;
+using static Android.Content.ClipData;
 
 
 namespace IfcViewer_Xamarin_Android
@@ -109,8 +110,41 @@ namespace IfcViewer_Xamarin_Android
 
         private void LoadModel(long model)
         {
-            Console.Out.WriteLine("TODO");
+            long lVertexElementSizeInBytes = SetFormat(model);
+            Console.Out.WriteLine("SetFormat(): " + lVertexElementSizeInBytes);
         }
+
+        private long SetFormat(long lModel)
+        {
+            long setting = 0, mask = 0;
+
+            mask += IfcEngine.x86_64.flagbit2;           //    PRECISION (32/64 bit)
+            mask += IfcEngine.x86_64.flagbit3;           //     INDEX ARRAY (32/64 bit)
+            mask += IfcEngine.x86_64.flagbit5;           //    NORMALS
+            mask += IfcEngine.x86_64.flagbit8;           //    TRIANGLES
+            mask += IfcEngine.x86_64.flagbit9;           //    LINES
+            mask += IfcEngine.x86_64.flagbit10;          //    POINTS
+            mask += IfcEngine.x86_64.flagbit12;          //    WIREFRAME
+            mask += IfcEngine.x86_64.flagbit24;          // AMBIENT
+            mask += IfcEngine.x86_64.flagbit25;          // DIFFUSE
+            mask += IfcEngine.x86_64.flagbit26;          // EMISSIVE
+            mask += IfcEngine.x86_64.flagbit27;          //     SPECULAR*/
+
+            setting += 0 * IfcEngine.x86_64.flagbit2;    //    SINGLE PRECISION (float)
+            setting += 0;                                //    32 BIT INDEX ARRAY (Int32)
+            setting += 1 * IfcEngine.x86_64.flagbit5;    //    NORMALS
+            setting += IfcEngine.x86_64.flagbit8;        //    TRIANGLES ON
+            setting += 1 * IfcEngine.x86_64.flagbit9;    //    LINES ON
+            setting += 0 * IfcEngine.x86_64.flagbit10;   //    POINTS ON
+            setting += 1 * IfcEngine.x86_64.flagbit12;   //    WIREFRAME ON
+            setting += 1 * IfcEngine.x86_64.flagbit24;   //  AMBIENT
+            setting += 0 * IfcEngine.x86_64.flagbit25;   //  DIFFUSE
+            setting += 0 * IfcEngine.x86_64.flagbit26;   //  EMISSIVE
+            setting += 0 * IfcEngine.x86_64.flagbit27;   //  SPECULAR
+
+            return IfcEngine.x86_64.SetFormat(lModel, setting, mask);
+        }
+
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {

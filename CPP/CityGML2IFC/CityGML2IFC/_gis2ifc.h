@@ -206,6 +206,7 @@ protected: // Methods
 	/* Style */
 	void createStyledItemInstance(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance);
 	void createStyledItemInstance(SdaiInstance iSdaiInstance, double dR, double G, double dB, double dTransparency);
+	virtual void createDefaultStyledItemInstance(SdaiInstance iSdaiInstance) {}
 	SdaiInstance buildPresentationStyleAssignmentInstance();
 	SdaiInstance buildSurfaceStyleInstance();
 	SdaiInstance buildSurfaceStyleRenderingInstance();
@@ -249,6 +250,8 @@ private: // Members
 	OwlClass m_iRoofSurfaceClass;
 	map<OwlInstance, vector<OwlInstance>> m_mapBuildings; // Building : Building Elements
 	map<OwlInstance, vector<OwlInstance>> m_mapBuildingElements; // Building Element : Geometries
+	
+	OwlInstance m_iCurrentOwlBuildingElementInstance; // Temp
 
 public: // Methods
 
@@ -258,6 +261,8 @@ public: // Methods
 	virtual void execute(OwlInstance iRootInstance, const wstring& strOuputFile) override;
 
 protected:  // Methods
+
+	virtual void createDefaultStyledItemInstance(SdaiInstance iSdaiInstance) override;
 
 	void createBuildings(SdaiInstance iSiteInstance, SdaiInstance iSiteInstancePlacement);
 	void createBuildingsRecursive(OwlInstance iInstance);
