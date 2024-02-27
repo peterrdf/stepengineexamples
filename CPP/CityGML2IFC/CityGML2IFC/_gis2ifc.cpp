@@ -1231,9 +1231,9 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 		vecBuildingInstances.push_back(iBuildingInstance);		
 		
 		vector<SdaiInstance> vecBuildingElementInstances;
-		for (auto iBuildingElementInstance : itBuilding.second)
+		for (auto iOwlBuildingElementInstance : itBuilding.second)
 		{
-			auto itBuildingElement = m_mapBuildingElements.find(iBuildingElementInstance);
+			auto itBuildingElement = m_mapBuildingElements.find(iOwlBuildingElementInstance);
 			assert(itBuildingElement != m_mapBuildingElements.end());
 
 			vector<SdaiInstance> vecBuildingElementGeometryInstances;
@@ -1243,16 +1243,18 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 			}
 
 			SdaiInstance iBuildingElementInstancePlacement = 0;
-			SdaiInstance iBuildingElementInstance = buildBuildingElementInstance(
+			SdaiInstance iSdaiBuildingElementInstance = buildBuildingElementInstance(
 				itBuildingElement->first,
 				&mtxIdentity,
 				iBuildingInstancePlacement,
 				iBuildingElementInstancePlacement,
 				vecBuildingElementGeometryInstances);
-			assert(iBuildingElementInstance != 0);
+			assert(iSdaiBuildingElementInstance != 0);
 
-			vecBuildingElementInstances.push_back(iBuildingElementInstance);
-		} // for (auto iBuildingElementInstance : ...
+			createProperties(iOwlBuildingElementInstance, iSdaiBuildingElementInstance);
+
+			vecBuildingElementInstances.push_back(iSdaiBuildingElementInstance);
+		} // for (auto iOwlBuildingElementInstance : ...
 
 		SdaiInstance iBuildingStoreyInstancePlacement = 0;
 		SdaiInstance iBuildingStoreyInstance = buildBuildingStoreyInstance(&mtxIdentity, iBuildingInstancePlacement, iBuildingStoreyInstancePlacement);
