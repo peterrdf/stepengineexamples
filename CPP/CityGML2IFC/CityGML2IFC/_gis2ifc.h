@@ -275,6 +275,8 @@ protected:  // Methods
 	void createProperties(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance);
 
 	bool isBuildingElement(OwlInstance iInstance) const;
+	bool isWallSurfaceClass(OwlClass iInstanceClass) const;
+	bool isRoofSurfaceClass(OwlInstance iInstanceClass) const;
 };
 
 // ************************************************************************************************

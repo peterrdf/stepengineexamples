@@ -2050,17 +2050,31 @@ bool _citygml_exporter::isBuildingElement(OwlInstance iInstance) const
 	OwlClass iInstanceClass = GetInstanceClass(iInstance);
 	assert(iInstanceClass != 0);
 
-	if ((iInstanceClass == m_iWallSurfaceClass) || IsClassAncestor(iInstanceClass, m_iWallSurfaceClass))
+	if (isWallSurfaceClass(iInstanceClass))
 	{
 		return true;
 	}
 
-	if ((iInstanceClass == m_iRoofSurfaceClass) || IsClassAncestor(iInstanceClass, m_iRoofSurfaceClass))
+	if (isRoofSurfaceClass(iInstanceClass))
 	{
 		return true;
 	}
 
 	return false;
+}
+
+bool _citygml_exporter::isWallSurfaceClass(OwlClass iInstanceClass) const
+{
+	assert(iInstanceClass != 0);
+
+	return (iInstanceClass == m_iWallSurfaceClass) || IsClassAncestor(iInstanceClass, m_iWallSurfaceClass);
+}
+
+bool _citygml_exporter::isRoofSurfaceClass(OwlInstance iInstanceClass) const
+{
+	assert(iInstanceClass != 0);
+
+	return (iInstanceClass == m_iRoofSurfaceClass) || IsClassAncestor(iInstanceClass, m_iRoofSurfaceClass);
 }
 
 // ************************************************************************************************
