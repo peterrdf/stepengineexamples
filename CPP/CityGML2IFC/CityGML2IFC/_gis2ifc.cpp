@@ -1243,7 +1243,7 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 			}
 
 			SdaiInstance iBuildingElementInstancePlacement = 0;
-			SdaiInstance iBuildingElementInstance = buildBuildingElementInstanceEx(
+			SdaiInstance iBuildingElementInstance = buildBuildingElementInstance(
 				itBuildingElement->first,
 				&mtxIdentity,
 				iBuildingInstancePlacement,
@@ -2036,7 +2036,7 @@ void _citygml_exporter::createProperties(OwlInstance iOwlInstance, SdaiInstance 
 	buildRelDefinesByProperties(iSdaiInstance, iPropertySetInstance);
 }
 
-SdaiInstance _citygml_exporter::buildBuildingElementInstanceEx(
+SdaiInstance _citygml_exporter::buildBuildingElementInstance(
 	OwlInstance iOwlInstance,
 	_matrix* pMatrix,
 	SdaiInstance iPlacementRelativeTo,
@@ -2066,8 +2066,12 @@ SdaiInstance _citygml_exporter::buildBuildingElementInstanceEx(
 	{
 		strEntity = "IFCROOF";
 	}
+	else
+	{
+		assert(false); //#todo
+	}
 
-	return buildBuildingElementInstance(
+	return _exporter_base::buildBuildingElementInstance(
 		strEntity.c_str(),
 		strTag.c_str(),
 		szClassName,

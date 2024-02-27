@@ -276,7 +276,7 @@ protected:  // Methods
 
 	void createProperties(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance);
 
-	SdaiInstance buildBuildingElementInstanceEx(
+	SdaiInstance buildBuildingElementInstance(
 		OwlInstance iOwlInstance,
 		_matrix* pMatrix,
 		SdaiInstance iPlacementRelativeTo,
