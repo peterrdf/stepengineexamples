@@ -259,7 +259,7 @@ protected:  // Methods
 	void createBuildings(SdaiInstance iSiteInstance, SdaiInstance iSiteInstancePlacement);
 	void createBuildingsRecursive(OwlInstance iInstance);
 	void searchForBuildingElements(OwlInstance iBuildingInstance, OwlInstance iInstance);
-	void searchForBuildingElementsGeometry(OwlInstance iBuildingElementInstance, OwlInstance iInstance);
+	void searchForBuildingElementGeometry(OwlInstance iBuildingElementInstance, OwlInstance iInstance);
 	void createGeometry(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createCompositeSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
@@ -273,6 +273,8 @@ protected:  // Methods
 	void createPolyLine3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 
 	void createProperties(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance);
+
+	bool isBuildingElement(OwlInstance iInstance) const;
 };
 
 // ************************************************************************************************

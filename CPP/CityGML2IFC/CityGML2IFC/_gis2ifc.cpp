@@ -1221,15 +1221,13 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 			iBuildingInstancePlacement);
 		assert(iBuildingInstance != 0);
 
-		vecBuildingInstances.push_back(iBuildingInstance);
-
 		createProperties(itBuilding.first, iBuildingInstance);
+
+		vecBuildingInstances.push_back(iBuildingInstance);
 		
 		vector<SdaiInstance> vecBuildingGeometryInstances;
 		for (auto iBuildingElementInstance : itBuilding.second)
 		{
-			searchForBuildingElementsGeometry(iBuildingElementInstance, iBuildingElementInstance);
-
 			auto itBuildingElement = m_mapBuildingElements.find(iBuildingElementInstance);
 			assert(itBuildingElement != m_mapBuildingElements.end());
 
@@ -1361,11 +1359,7 @@ void _citygml_exporter::searchForBuildingElements(OwlInstance iBuildingInstance,
 					continue;
 				}
 
-				OwlClass iInstanceClass = GetInstanceClass(piValues[iValue]);
-				assert(iInstanceClass != 0);
-
-				if (((iInstanceClass == m_iWallSurfaceClass) || IsClassAncestor(iInstanceClass, m_iWallSurfaceClass)) ||
-					((iInstanceClass == m_iRoofSurfaceClass) || IsClassAncestor(iInstanceClass, m_iRoofSurfaceClass)))
+				if (isBuildingElement(piValues[iValue]))
 				{
 					auto itBuilding = m_mapBuildings.find(iBuildingInstance);
 					if (itBuilding != m_mapBuildings.end())
@@ -1376,6 +1370,8 @@ void _citygml_exporter::searchForBuildingElements(OwlInstance iBuildingInstance,
 					{
 						m_mapBuildings[iBuildingInstance] = vector<OwlInstance>{ piValues[iValue] };
 					}
+
+					searchForBuildingElementGeometry(piValues[iValue], piValues[iValue]);
 				}
 				else
 				{
@@ -1388,7 +1384,7 @@ void _citygml_exporter::searchForBuildingElements(OwlInstance iBuildingInstance,
 	} // while (iProperty != 0)
 }
 
-void _citygml_exporter::searchForBuildingElementsGeometry(OwlInstance iBuildingElementInstance, OwlInstance iInstance)
+void _citygml_exporter::searchForBuildingElementGeometry(OwlInstance iBuildingElementInstance, OwlInstance iInstance)
 {
 	assert(iBuildingElementInstance != 0);
 	assert(iInstance != 0);
@@ -1424,7 +1420,7 @@ void _citygml_exporter::searchForBuildingElementsGeometry(OwlInstance iBuildingE
 				}
 				else
 				{
-					searchForBuildingElementsGeometry(iBuildingElementInstance, piValues[iValue]);
+					searchForBuildingElementGeometry(iBuildingElementInstance, piValues[iValue]);
 				}
 			} // for (int64_t iValue = ...
 		} // if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
@@ -2045,6 +2041,26 @@ void _citygml_exporter::createProperties(OwlInstance iOwlInstance, SdaiInstance 
 	}
 
 	buildRelDefinesByProperties(iSdaiInstance, iPropertySetInstance);
+}
+
+bool _citygml_exporter::isBuildingElement(OwlInstance iInstance) const
+{
+	assert(iInstance != 0);
+
+	OwlClass iInstanceClass = GetInstanceClass(iInstance);
+	assert(iInstanceClass != 0);
+
+	if ((iInstanceClass == m_iWallSurfaceClass) || IsClassAncestor(iInstanceClass, m_iWallSurfaceClass))
+	{
+		return true;
+	}
+
+	if ((iInstanceClass == m_iRoofSurfaceClass) || IsClassAncestor(iInstanceClass, m_iRoofSurfaceClass))
+	{
+		return true;
+	}
+
+	return false;
 }
 
 // ************************************************************************************************
