@@ -195,7 +195,9 @@ protected: // Methods
 		SdaiInstance iRelatingStructureInstance,
 		const vector<SdaiInstance>& vecRelatedElements);
 	SdaiInstance buildBuildingElementInstance(
+		const char* szEntity,
 		const char* szName,
+		const char* szDescription,
 		_matrix* pMatrix,
 		SdaiInstance iPlacementRelativeTo,
 		SdaiInstance& iBuildingElementInstancePlacement,
@@ -273,6 +275,13 @@ protected:  // Methods
 	void createPolyLine3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 
 	void createProperties(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance);
+
+	SdaiInstance buildBuildingElementInstanceEx(
+		OwlInstance iOwlInstance,
+		_matrix* pMatrix,
+		SdaiInstance iPlacementRelativeTo,
+		SdaiInstance& iBuildingElementInstancePlacement,
+		const vector<SdaiInstance>& vecRepresentations);
 
 	bool isBuildingElement(OwlInstance iInstance) const;
 	bool isWallSurfaceClass(OwlClass iInstanceClass) const;

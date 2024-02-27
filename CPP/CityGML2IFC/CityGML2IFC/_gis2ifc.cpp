@@ -679,23 +679,28 @@ SdaiInstance _exporter_base::buildRelContainedInSpatialStructureInstance(
 }
 
 SdaiInstance _exporter_base::buildBuildingElementInstance(
+	const char* szEntity,
 	const char* szName,
+	const char* szDescription,
 	_matrix* pMatrix,
 	SdaiInstance iPlacementRelativeTo,
 	SdaiInstance& iBuildingElementInstancePlacement,
 	const vector<SdaiInstance>& vecRepresentations)
 {
+	assert(szEntity != nullptr);
+	assert(szName != nullptr);
+	assert(szDescription != nullptr);
 	assert(pMatrix != nullptr);
 	assert(iPlacementRelativeTo != 0);
 	assert(!vecRepresentations.empty());
 
-	SdaiInstance iBuildingElementInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCBUILDINGELEMENT");
+	SdaiInstance iBuildingElementInstance = sdaiCreateInstanceBN(m_iIfcModel, szEntity);
 	assert(iBuildingElementInstance != 0);
 
 	sdaiPutAttrBN(iBuildingElementInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
 	sdaiPutAttrBN(iBuildingElementInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
 	sdaiPutAttrBN(iBuildingElementInstance, "Name", sdaiSTRING, szName);
-	sdaiPutAttrBN(iBuildingElementInstance, "Description", sdaiSTRING, "Description of Building Element"); //#tbd
+	sdaiPutAttrBN(iBuildingElementInstance, "Description", sdaiSTRING, szDescription);
 
 	iBuildingElementInstancePlacement = buildLocalPlacementInstance(pMatrix, iPlacementRelativeTo);
 	assert(iBuildingElementInstancePlacement != 0);
@@ -1238,13 +1243,12 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 			}
 
 			SdaiInstance iBuildingElementInstancePlacement = 0;
-			SdaiInstance iBuildingElementInstance = buildBuildingElementInstance(
-				"Container for Geometry",
+			SdaiInstance iBuildingElementInstance = buildBuildingElementInstanceEx(
+				itBuildingElement->first,
 				&mtxIdentity,
 				iBuildingInstancePlacement,
 				iBuildingElementInstancePlacement,
-				vecBuildingElementGeometryInstances
-			);
+				vecBuildingElementGeometryInstances);
 			assert(iBuildingElementInstance != 0);
 
 			vecBuildingElementInstances.push_back(iBuildingElementInstance);
@@ -2030,6 +2034,47 @@ void _citygml_exporter::createProperties(OwlInstance iOwlInstance, SdaiInstance 
 	}
 
 	buildRelDefinesByProperties(iSdaiInstance, iPropertySetInstance);
+}
+
+SdaiInstance _citygml_exporter::buildBuildingElementInstanceEx(
+	OwlInstance iOwlInstance,
+	_matrix* pMatrix,
+	SdaiInstance iPlacementRelativeTo,
+	SdaiInstance& iBuildingElementInstancePlacement,
+	const vector<SdaiInstance>& vecRepresentations)
+{
+	assert(iOwlInstance != 0);
+	assert(pMatrix != nullptr);
+	assert(iPlacementRelativeTo != 0);
+	assert(!vecRepresentations.empty());
+
+	string strTag = getTag(iOwlInstance);
+
+	OwlClass iInstanceClass = GetInstanceClass(iOwlInstance);
+	assert(iInstanceClass != 0);
+
+	char* szClassName = nullptr;
+	GetNameOfClass(iInstanceClass, &szClassName);
+	assert(szClassName != nullptr);
+
+	string strEntity = "IFCBUILDINGELEMENT";
+	if (isWallSurfaceClass(iInstanceClass))
+	{
+		strEntity = "IFCWALL";
+	}
+	else if (isRoofSurfaceClass(iInstanceClass))
+	{
+		strEntity = "IFCROOF";
+	}
+
+	return buildBuildingElementInstance(
+		strEntity.c_str(),
+		strTag.c_str(),
+		szClassName,
+		pMatrix,
+		iPlacementRelativeTo,
+		iBuildingElementInstancePlacement,
+		vecRepresentations);
 }
 
 bool _citygml_exporter::isBuildingElement(OwlInstance iInstance) const
