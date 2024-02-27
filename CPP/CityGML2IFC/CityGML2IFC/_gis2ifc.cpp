@@ -816,6 +816,13 @@ void _exporter_base::createStyledItemInstance(OwlInstance iOwlInstance, SdaiInst
 
 	assert(iValuesCount == 1);
 
+	createStyledItemInstance(iSdaiInstance, pdRValue[0], pdGValue[0], pdBValue[0], dTransparency);
+}
+
+void _exporter_base::createStyledItemInstance(SdaiInstance iSdaiInstance, double dR, double dG, double dB, double dTransparency)
+{
+	assert(iSdaiInstance != 0);
+
 	SdaiInstance iStyledItemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSTYLEDITEM");
 	assert(iStyledItemInstance != 0);
 
@@ -833,7 +840,7 @@ void _exporter_base::createStyledItemInstance(OwlInstance iOwlInstance, SdaiInst
 
 	SdaiInstance iSurfaceStyleInstance = buildSurfaceStyleInstance();
 	sdaiPutAttrBN(iSurfaceStyleInstance, "Side", sdaiENUM, "BOTH");
-	sdaiAppend(pStyles, sdaiINSTANCE, (void*)iSurfaceStyleInstance);	
+	sdaiAppend(pStyles, sdaiINSTANCE, (void*)iSurfaceStyleInstance);
 
 	pStyles = sdaiCreateAggrBN(iSurfaceStyleInstance, "Styles");
 	assert(pStyles != nullptr);
@@ -843,10 +850,10 @@ void _exporter_base::createStyledItemInstance(OwlInstance iOwlInstance, SdaiInst
 	sdaiAppend(pStyles, sdaiINSTANCE, (void*)iSurfaceStyleRenderingInstance);
 
 	SdaiInstance iColorRgbInstance = buildColorRgbInstance();
-	sdaiPutAttrBN(iColorRgbInstance, "Red", sdaiREAL, &pdRValue[0]);
-	sdaiPutAttrBN(iColorRgbInstance, "Green", sdaiREAL, &pdGValue[0]);
-	sdaiPutAttrBN(iColorRgbInstance, "Blue", sdaiREAL, &pdBValue[0]);
-	
+	sdaiPutAttrBN(iColorRgbInstance, "Red", sdaiREAL, &dR);
+	sdaiPutAttrBN(iColorRgbInstance, "Green", sdaiREAL, &dG);
+	sdaiPutAttrBN(iColorRgbInstance, "Blue", sdaiREAL, &dB);
+
 	sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "SurfaceColour", sdaiINSTANCE, (void*)iColorRgbInstance);
 	sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "Transparency", sdaiREAL, &dTransparency);
 

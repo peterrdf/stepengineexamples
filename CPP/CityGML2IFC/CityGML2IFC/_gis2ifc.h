@@ -205,6 +205,7 @@ protected: // Methods
 
 	/* Style */
 	void createStyledItemInstance(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance);
+	void createStyledItemInstance(SdaiInstance iSdaiInstance, double dR, double G, double dB, double dTransparency);
 	SdaiInstance buildPresentationStyleAssignmentInstance();
 	SdaiInstance buildSurfaceStyleInstance();
 	SdaiInstance buildSurfaceStyleRenderingInstance();
