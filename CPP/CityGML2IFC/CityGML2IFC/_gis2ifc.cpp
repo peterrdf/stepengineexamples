@@ -42,15 +42,21 @@ void _gis2ifc::execute(const wstring& strInputFile, const wstring& strOuputFile)
 	OwlInstance iRootInstance = ImportGISModelW(m_iOwlModel, strInputFile.c_str());
 	if (iRootInstance != 0)
 	{
+		logInfo("Exporting...");
+
 		if (IsCityGML(m_iOwlModel))
 		{
 			_citygml_exporter exporter(this);
 			exporter.execute(iRootInstance, strOuputFile);
+
+			logInfo("Done.");
 		}
 		else if (IsCityJSON(m_iOwlModel))
 		{
 			_cityjson_exporter exporter(this);
 			exporter.execute(iRootInstance, strOuputFile);
+
+			logInfo("Done.");
 		}
 		else
 		{
@@ -1134,7 +1140,9 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 
 	if (m_iBuildingClass == 0)
 	{
-		return; //#tbd
+		getSite()->logWarn("There are no Buildings.");
+
+		return;
 	}
 
 	createIfcModel(L"IFC4");

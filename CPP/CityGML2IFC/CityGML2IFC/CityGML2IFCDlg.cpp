@@ -53,9 +53,7 @@ void STDCALL LogCallbackImpl(enumLogEvent enLogEvent, const char* szEvent)
 	if (!pDialog->m_strInputFile.IsEmpty())
 	{
 		pDialog->ExportFile((LPCTSTR)pDialog->m_strInputFile);
-	}
-
-	LogCallbackImpl(enumLogEvent::info, "Done.");
+	}	
 
 	::EnableWindow(pDialog->GetDlgItem(IDOK)->GetSafeHwnd(), TRUE);
 
@@ -245,8 +243,6 @@ HCURSOR CCityGML2IFCDlg::OnQueryDragIcon()
 
 void CCityGML2IFCDlg::OnBnClickedOk()
 {
-	LogCallbackImpl(enumLogEvent::info, "Exporting...");
-
 	::EnableWindow(GetDlgItem(IDOK)->GetSafeHwnd(), FALSE);	
 
 	wchar_t szAppPath[_MAX_PATH];
