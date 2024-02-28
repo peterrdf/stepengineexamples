@@ -288,8 +288,9 @@ protected:  // Methods
 		SdaiInstance iPlacementRelativeTo,
 		SdaiInstance& iBuildingElementInstancePlacement,
 		const vector<SdaiInstance>& vecRepresentations);
-
+	
 	bool isBuildingElement(OwlInstance iInstance) const;
+	bool isBuildingClass(OwlClass iInstanceClass) const;
 	bool isWallSurfaceClass(OwlClass iInstanceClass) const;
 	bool isRoofSurfaceClass(OwlInstance iInstanceClass) const;
 };

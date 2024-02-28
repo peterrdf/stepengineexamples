@@ -1188,7 +1188,7 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	}
 	else
 	{
-		assert(false); //#todo
+		createStyledItemInstance(iSdaiInstance, 0., 0., 1., 0.75);
 	}
 }
 
@@ -1240,7 +1240,7 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 		
 	_matrix mtxIdentity;
 	vector<SdaiInstance> vecBuildingInstances;
-	for (const auto& itBuilding : m_mapBuildings)
+	for (auto& itBuilding : m_mapBuildings)
 	{
 		string strTag = getTag(itBuilding.first);
 
@@ -1262,7 +1262,14 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 
 		createProperties(itBuilding.first, iBuildingInstance);
 
-		vecBuildingInstances.push_back(iBuildingInstance);		
+		vecBuildingInstances.push_back(iBuildingInstance);
+
+		if (itBuilding.second.empty())
+		{
+			// PATCH: Unknown Building Elements
+			itBuilding.second.push_back(itBuilding.first);
+			searchForBuildingElementGeometry(itBuilding.first, itBuilding.first);			
+		}
 		
 		vector<SdaiInstance> vecBuildingElementInstances;
 		for (auto iOwlBuildingElementInstance : itBuilding.second)
@@ -1271,6 +1278,7 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 
 			auto itBuildingElement = m_mapBuildingElements.find(iOwlBuildingElementInstance);
 			assert(itBuildingElement != m_mapBuildingElements.end());
+			assert(!itBuildingElement->second.empty());
 
 			vector<SdaiInstance> vecSdaiBuildingElementGeometryInstances;
 			for (auto iOwlBuildingElementGeometryInstance : itBuildingElement->second)
@@ -1315,7 +1323,7 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 			"BuildingStoreyContainer for Building Elements", 
 			iBuildingStoreyInstance, 
 			vecBuildingElementInstances);
-	} // for (auto itBuilding : ...
+	} // for (auto& itBuilding : ...
 
 	buildRelAggregatesInstance(
 		"SiteContainer", 
@@ -2097,6 +2105,8 @@ SdaiInstance _citygml_exporter::buildBuildingElementInstance(
 	GetNameOfClass(iInstanceClass, &szClassName);
 	assert(szClassName != nullptr);
 
+	string strClass = szClassName;
+
 	string strEntity = "IFCBUILDINGELEMENT";
 	if (isWallSurfaceClass(iInstanceClass))
 	{
@@ -2106,7 +2116,14 @@ SdaiInstance _citygml_exporter::buildBuildingElementInstance(
 	{
 		strEntity = "IFCROOF";
 	}
-	else
+	else if (isBuildingClass(iInstanceClass))
+	{
+		strEntity = "IFCMEMBER"; // Unknown Building Element
+
+		strTag = "Unknown";
+		strClass = "Unknown";
+	}
+	else 
 	{
 		assert(false); //#todo
 	}
@@ -2114,7 +2131,7 @@ SdaiInstance _citygml_exporter::buildBuildingElementInstance(
 	return _exporter_base::buildBuildingElementInstance(
 		strEntity.c_str(),
 		strTag.c_str(),
-		szClassName,
+		strClass.c_str(),
 		pMatrix,
 		iPlacementRelativeTo,
 		iBuildingElementInstancePlacement,
@@ -2139,6 +2156,13 @@ bool _citygml_exporter::isBuildingElement(OwlInstance iInstance) const
 	}
 
 	return false;
+}
+
+bool _citygml_exporter::isBuildingClass(OwlClass iInstanceClass) const
+{
+	assert(iInstanceClass != 0);
+
+	return (iInstanceClass == m_iBuildingClass) || IsClassAncestor(iInstanceClass, m_iBuildingClass);
 }
 
 bool _citygml_exporter::isWallSurfaceClass(OwlClass iInstanceClass) const
