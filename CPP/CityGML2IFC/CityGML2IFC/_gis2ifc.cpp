@@ -1297,20 +1297,7 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 			m_iCurrentOwlBuildingElementInstance = iOwlBuildingElementInstance;
 
 			auto itBuildingElement = m_mapBuildingElements.find(iOwlBuildingElementInstance);
-			if (itBuildingElement == m_mapBuildingElements.end())
-			{
-
-				//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				// No Geometry
-				OwlClass iInstanceClass = GetInstanceClass(iOwlBuildingElementInstance);
-				assert(iInstanceClass != 0);
-
-				wchar_t* szClassName = nullptr;
-				GetNameOfClassW(iInstanceClass, &szClassName);
-
-				continue;
-			}
-
+			assert(itBuildingElement != m_mapBuildingElements.end());
 			assert(!itBuildingElement->second.empty());
 
 			vector<SdaiInstance> vecSdaiBuildingElementGeometryInstances;
