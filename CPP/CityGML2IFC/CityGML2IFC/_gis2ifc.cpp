@@ -1200,11 +1200,11 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	}
 	else if (isDoorClass(iInstanceClass))
 	{
-		createStyledItemInstance(iSdaiInstance, 139. / 255., 69. / 255., 19. / 255., 0.);
+		createStyledItemInstance(iSdaiInstance, 139. / 255., 139. / 255., 139. / 255., 0.);
 	}
 	else if (isWindowClass(iInstanceClass))
 	{
-		createStyledItemInstance(iSdaiInstance, 139. / 255., 69. / 255., 19. / 255., 0.);
+		createStyledItemInstance(iSdaiInstance, 39. / 255., 39. / 255., 39. / 255., 0.5);
 	}
 	else
 	{
@@ -1297,7 +1297,16 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 			m_iCurrentOwlBuildingElementInstance = iOwlBuildingElementInstance;
 
 			auto itBuildingElement = m_mapBuildingElements.find(iOwlBuildingElementInstance);
-			assert(itBuildingElement != m_mapBuildingElements.end());
+			if (itBuildingElement == m_mapBuildingElements.end())
+			{
+				OwlClass iInstanceClass = GetInstanceClass(iOwlBuildingElementInstance);
+				assert(iInstanceClass != 0);
+
+				wchar_t* szClassName = nullptr;
+				GetNameOfClassW(iInstanceClass, &szClassName);
+
+				continue;
+			}
 			assert(!itBuildingElement->second.empty());
 
 			vector<SdaiInstance> vecSdaiBuildingElementGeometryInstances;
