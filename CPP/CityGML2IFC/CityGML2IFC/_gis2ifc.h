@@ -248,6 +248,8 @@ private: // Members
 	OwlClass m_iBuildingClass;
 	OwlClass m_iWallSurfaceClass;
 	OwlClass m_iRoofSurfaceClass;
+	OwlClass m_iDoorClass;
+	OwlClass m_iWindowClass;
 	map<OwlInstance, vector<OwlInstance>> m_mapBuildings; // Building : Building Elements
 	map<OwlInstance, vector<OwlInstance>> m_mapBuildingElements; // Building Element : Geometries
 	
@@ -293,6 +295,8 @@ protected:  // Methods
 	bool isBuildingClass(OwlClass iInstanceClass) const;
 	bool isWallSurfaceClass(OwlClass iInstanceClass) const;
 	bool isRoofSurfaceClass(OwlInstance iInstanceClass) const;
+	bool isDoorClass(OwlInstance iInstanceClass) const;
+	bool isWindowClass(OwlInstance iInstanceClass) const;
 };
 
 // ************************************************************************************************

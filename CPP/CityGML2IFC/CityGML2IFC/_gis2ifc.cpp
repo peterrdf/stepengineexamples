@@ -1118,6 +1118,8 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	, m_iBuildingClass(0)
 	, m_iWallSurfaceClass(0)
 	, m_iRoofSurfaceClass(0)
+	, m_iDoorClass(0)
+	, m_iWindowClass(0)
 	, m_mapBuildings()
 	, m_mapBuildingElements()
 	, m_iCurrentOwlBuildingElementInstance(0)
@@ -1125,6 +1127,8 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	m_iBuildingClass = GetClassByName(getSite()->getOwlModel(), "class:Building");
 	m_iWallSurfaceClass = GetClassByName(getSite()->getOwlModel(), "class:WallSurface");
 	m_iRoofSurfaceClass = GetClassByName(getSite()->getOwlModel(), "class:RoofSurface");
+	m_iDoorClass = GetClassByName(getSite()->getOwlModel(), "class:Door");
+	m_iWindowClass = GetClassByName(getSite()->getOwlModel(), "class:Window");
 }
 
 /*virtual*/ _citygml_exporter::~_citygml_exporter()
@@ -1192,7 +1196,15 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	}
 	else if (isRoofSurfaceClass(iInstanceClass))
 	{
-		createStyledItemInstance(iSdaiInstance, 139. / 255., 69. /  255., 19. / 255., 0.);
+		createStyledItemInstance(iSdaiInstance, 139. / 255., 69. / 255., 19. / 255., 0.);
+	}
+	else if (isDoorClass(iInstanceClass))
+	{
+		createStyledItemInstance(iSdaiInstance, 139. / 255., 69. / 255., 19. / 255., 0.);
+	}
+	else if (isWindowClass(iInstanceClass))
+	{
+		createStyledItemInstance(iSdaiInstance, 139. / 255., 69. / 255., 19. / 255., 0.);
 	}
 	else
 	{
@@ -1285,7 +1297,20 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 			m_iCurrentOwlBuildingElementInstance = iOwlBuildingElementInstance;
 
 			auto itBuildingElement = m_mapBuildingElements.find(iOwlBuildingElementInstance);
-			assert(itBuildingElement != m_mapBuildingElements.end());
+			if (itBuildingElement == m_mapBuildingElements.end())
+			{
+
+				//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				// No Geometry
+				OwlClass iInstanceClass = GetInstanceClass(iOwlBuildingElementInstance);
+				assert(iInstanceClass != 0);
+
+				wchar_t* szClassName = nullptr;
+				GetNameOfClassW(iInstanceClass, &szClassName);
+
+				continue;
+			}
+
 			assert(!itBuildingElement->second.empty());
 
 			vector<SdaiInstance> vecSdaiBuildingElementGeometryInstances;
@@ -1513,7 +1538,7 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	{
 		createPolyLine3D(iInstance, vecGeometryInstances);
 	}
-	else 
+	else
 	{
 		//#log
 		wchar_t* szClassName = nullptr;
@@ -2124,6 +2149,14 @@ SdaiInstance _citygml_exporter::buildBuildingElementInstance(
 	{
 		strEntity = "IFCROOF";
 	}
+	else if (isDoorClass(iInstanceClass))
+	{
+		strEntity = "IFCDOOR";
+	}
+	else if (isWindowClass(iInstanceClass))
+	{
+		strEntity = "IFCWINDOW";
+	} 
 	else if (isBuildingClass(iInstanceClass))
 	{
 		strEntity = "IFCMEMBER"; // Unknown Building Element
@@ -2162,6 +2195,16 @@ bool _citygml_exporter::isBuildingElement(OwlInstance iInstance) const
 	{
 		return true;
 	}
+	
+	if (isDoorClass(iInstanceClass))
+	{
+		return true;
+	}
+	
+	if (isWindowClass(iInstanceClass))
+	{
+		return true;
+	}
 
 	return false;
 }
@@ -2185,6 +2228,20 @@ bool _citygml_exporter::isRoofSurfaceClass(OwlInstance iInstanceClass) const
 	assert(iInstanceClass != 0);
 
 	return (iInstanceClass == m_iRoofSurfaceClass) || IsClassAncestor(iInstanceClass, m_iRoofSurfaceClass);
+}
+
+bool _citygml_exporter::isDoorClass(OwlInstance iInstanceClass) const
+{
+	assert(iInstanceClass != 0);
+
+	return (iInstanceClass == m_iDoorClass) || IsClassAncestor(iInstanceClass, m_iDoorClass);
+}
+
+bool _citygml_exporter::isWindowClass(OwlInstance iInstanceClass) const
+{
+	assert(iInstanceClass != 0);
+
+	return (iInstanceClass == m_iWindowClass) || IsClassAncestor(iInstanceClass, m_iWindowClass);
 }
 
 // ************************************************************************************************
