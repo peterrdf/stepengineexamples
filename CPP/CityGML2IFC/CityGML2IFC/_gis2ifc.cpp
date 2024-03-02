@@ -2155,7 +2155,7 @@ SdaiInstance _citygml_exporter::buildBuildingElementInstance(
 	} 
 	else if (isBuildingClass(iInstanceClass))
 	{
-		strEntity = "IFCMEMBER"; // Unknown Building Element
+		strEntity = "IFCBUILDINGELEMENTPROXY"; // Unknown Building Element
 
 		strTag = "Unknown";
 		strClass = "Unknown";
