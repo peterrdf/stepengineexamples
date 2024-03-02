@@ -1204,7 +1204,7 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	}
 	else if (isWindowClass(iInstanceClass))
 	{
-		createStyledItemInstance(iSdaiInstance, 39. / 255., 39. / 255., 39. / 255., 0.5);
+		createStyledItemInstance(iSdaiInstance, 25. / 255., 25. / 255., 25. / 255., 0.95);
 	}
 	else
 	{
@@ -1286,9 +1286,13 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 
 		if (itBuilding.second.empty())
 		{
-			// PATCH: Unknown Building Elements
-			itBuilding.second.push_back(itBuilding.first);
-			searchForBuildingElementGeometry(itBuilding.first, itBuilding.first);			
+			// Proxy/Unknown Building Elements
+			searchForProxyBuildingElements(itBuilding.first, itBuilding.first);
+		}
+
+		if (itBuilding.second.empty())
+		{
+			continue;
 		}
 		
 		vector<SdaiInstance> vecBuildingElementInstances;
@@ -1446,6 +1450,54 @@ void _citygml_exporter::searchForBuildingElements(OwlInstance iBuildingInstance,
 				else
 				{
 					searchForBuildingElements(iInstance, piValues[iValue]);
+				}
+			} // for (int64_t iValue = ...
+		} // if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
+
+		iProperty = GetInstancePropertyByIterator(iInstance, iProperty);
+	} // while (iProperty != 0)
+}
+
+void _citygml_exporter::searchForProxyBuildingElements(OwlInstance iBuildingInstance, OwlInstance iInstance)
+{
+	assert(iBuildingInstance != 0);
+	assert(iInstance != 0);
+
+	RdfProperty iProperty = GetInstancePropertyByIterator(iInstance, 0);
+	while (iProperty != 0)
+	{
+		if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
+		{
+			int64_t iValuesCount = 0;
+			OwlInstance* piValues = nullptr;
+			GetObjectProperty(iInstance, iProperty, &piValues, &iValuesCount);
+
+			for (int64_t iValue = 0; iValue < iValuesCount; iValue++)
+			{
+				if (piValues[iValue] == 0)
+				{
+					continue;
+				}
+
+				if (GetInstanceGeometryClass(piValues[iValue]) &&
+					GetBoundingBox(piValues[iValue], nullptr, nullptr))
+				{
+					auto itBuilding = m_mapBuildings.find(iBuildingInstance);
+					if (itBuilding != m_mapBuildings.end())
+					{
+						itBuilding->second.push_back(piValues[iValue]);
+					}
+					else
+					{
+						m_mapBuildings[iBuildingInstance] = vector<OwlInstance>{ piValues[iValue] };
+					}
+
+					assert(m_mapBuildingElements.find(piValues[iValue]) == m_mapBuildingElements.end());
+					m_mapBuildingElements[piValues[iValue]] = vector<OwlInstance>{ piValues[iValue] };
+				}
+				else
+				{
+					searchForProxyBuildingElements(iInstance, piValues[iValue]);
 				}
 			} // for (int64_t iValue = ...
 		} // if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
@@ -2153,22 +2205,15 @@ SdaiInstance _citygml_exporter::buildBuildingElementInstance(
 	{
 		strEntity = "IFCWINDOW";
 	} 
-	else if (isBuildingClass(iInstanceClass))
+	else
 	{
-		strEntity = "IFCBUILDINGELEMENTPROXY"; // Unknown Building Element
-
-		strTag = "Unknown";
-		strClass = "Unknown";
-	}
-	else 
-	{
-		assert(false); //#todo
+		strEntity = "IFCBUILDINGELEMENTPROXY"; // Proxy/Unknown Building Element
 	}
 
 	return _exporter_base::buildBuildingElementInstance(
 		strEntity.c_str(),
 		strTag.c_str(),
-		strClass.c_str(),
+		szClassName,
 		pMatrix,
 		iPlacementRelativeTo,
 		iBuildingElementInstancePlacement,
