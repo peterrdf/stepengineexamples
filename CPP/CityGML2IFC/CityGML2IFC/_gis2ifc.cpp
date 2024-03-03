@@ -1566,8 +1566,11 @@ void _citygml_exporter::searchForProxyBuildingElements(OwlInstance iBuildingInst
 					}
 					else
 					{
+						OwlClass iChildInstanceClass = GetInstanceClass(piValues[iValue]);
+						assert(iChildInstanceClass != 0);
+
 						wchar_t* szClassName = nullptr;
-						GetNameOfClassW(piValues[iValue], &szClassName);
+						GetNameOfClassW(iChildInstanceClass, &szClassName);
 
 						string strEvent = "Duplicated Geometry: '";
 						strEvent += CW2A(szClassName);
