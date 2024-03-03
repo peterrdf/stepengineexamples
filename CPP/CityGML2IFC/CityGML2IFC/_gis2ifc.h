@@ -245,6 +245,7 @@ class _citygml_exporter : public _exporter_base
 
 private: // Members
 
+	OwlClass m_iCollectionClass;
 	OwlClass m_iBuildingClass;
 	OwlClass m_iWallSurfaceClass;
 	OwlClass m_iRoofSurfaceClass;

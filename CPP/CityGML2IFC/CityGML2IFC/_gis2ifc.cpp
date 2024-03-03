@@ -1115,6 +1115,7 @@ bool _exporter_base::hasObjectProperty(OwlInstance iInstance, const string& strP
 // ************************************************************************************************
 _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	: _exporter_base(pSite)
+	, m_iCollectionClass(0)
 	, m_iBuildingClass(0)
 	, m_iWallSurfaceClass(0)
 	, m_iRoofSurfaceClass(0)
@@ -1124,6 +1125,7 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	, m_mapBuildingElements()
 	, m_iCurrentOwlBuildingElementInstance(0)
 {
+	m_iCollectionClass = GetClassByName(getSite()->getOwlModel(), "Collection");
 	m_iBuildingClass = GetClassByName(getSite()->getOwlModel(), "class:Building");
 	m_iWallSurfaceClass = GetClassByName(getSite()->getOwlModel(), "class:WallSurface");
 	m_iRoofSurfaceClass = GetClassByName(getSite()->getOwlModel(), "class:RoofSurface");
@@ -1284,11 +1286,8 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 
 		vecBuildingInstances.push_back(iBuildingInstance);
 
-		if (itBuilding.second.empty())
-		{
-			// Proxy/Unknown Building Elements
-			searchForProxyBuildingElements(itBuilding.first, itBuilding.first);
-		}
+		// Proxy/Unknown Building Elements
+		searchForProxyBuildingElements(itBuilding.first, itBuilding.first);
 
 		if (itBuilding.second.empty())
 		{
@@ -1449,7 +1448,7 @@ void _citygml_exporter::searchForBuildingElements(OwlInstance iBuildingInstance,
 				}
 				else
 				{
-					searchForBuildingElements(iInstance, piValues[iValue]);
+					searchForBuildingElements(iBuildingInstance, piValues[iValue]);
 				}
 			} // for (int64_t iValue = ...
 		} // if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
@@ -1479,6 +1478,11 @@ void _citygml_exporter::searchForProxyBuildingElements(OwlInstance iBuildingInst
 					continue;
 				}
 
+				if (isBuildingElement(piValues[iValue]))
+				{
+					continue;
+				}
+
 				if (GetInstanceGeometryClass(piValues[iValue]) &&
 					GetBoundingBox(piValues[iValue], nullptr, nullptr))
 				{
@@ -1497,7 +1501,7 @@ void _citygml_exporter::searchForProxyBuildingElements(OwlInstance iBuildingInst
 				}
 				else
 				{
-					searchForProxyBuildingElements(iInstance, piValues[iValue]);
+					searchForProxyBuildingElements(iBuildingInstance, piValues[iValue]);
 				}
 			} // for (int64_t iValue = ...
 		} // if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
@@ -1585,6 +1589,21 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "PolyLine3D"))
 	{
 		createPolyLine3D(iInstance, vecGeometryInstances);
+	}
+	else if ((iInstanceClass == m_iCollectionClass) || IsClassAncestor(iInstanceClass, m_iCollectionClass))
+	{
+		OwlInstance* piInstances = nullptr;
+		int64_t iInstancesCount = 0;
+		GetObjectProperty(
+			iInstance,
+			GetPropertyByName(getSite()->getOwlModel(), "objects"),
+			&piInstances,
+			&iInstancesCount);
+
+		for (int64_t iInstanceIndex = 0; iInstanceIndex < iInstancesCount; iInstanceIndex++)
+		{
+			createGeometry(piInstances[iInstanceIndex], vecGeometryInstances);
+		}
 	}
 	else
 	{
