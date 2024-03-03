@@ -859,10 +859,43 @@ void _exporter_base::createStyledItemInstance(SdaiInstance iSdaiInstance, double
 	sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "ReflectanceMethod", sdaiENUM, "NOTDEFINED");
 	sdaiAppend(pStyles, sdaiINSTANCE, (void*)iSurfaceStyleRenderingInstance);
 
-	SdaiInstance iColorRgbInstance = buildColorRgbInstance();
-	sdaiPutAttrBN(iColorRgbInstance, "Red", sdaiREAL, &dR);
-	sdaiPutAttrBN(iColorRgbInstance, "Green", sdaiREAL, &dG);
-	sdaiPutAttrBN(iColorRgbInstance, "Blue", sdaiREAL, &dB);
+	SdaiInstance iColorRgbInstance = buildColorRgbInstance(dR, dG, dB);
+	sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "SurfaceColour", sdaiINSTANCE, (void*)iColorRgbInstance);
+	sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "Transparency", sdaiREAL, &dTransparency);
+
+	sdaiPutAttrBN(iStyledItemInstance, "Item", sdaiINSTANCE, (void*)iSdaiInstance);
+}
+
+void _exporter_base::createStyledItemInstance(SdaiInstance iSdaiInstance, SdaiInstance iColorRgbInstance, double dTransparency)
+{
+	assert(iSdaiInstance != 0);
+	assert(iColorRgbInstance != 0);
+
+	SdaiInstance iStyledItemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSTYLEDITEM");
+	assert(iStyledItemInstance != 0);
+
+	sdaiPutAttrBN(iStyledItemInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iStyledItemInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+
+	SdaiAggr pStyles = sdaiCreateAggrBN(iStyledItemInstance, "Styles");
+	assert(pStyles != nullptr);
+
+	SdaiInstance iPresentationStyleAssignmentInstance = buildPresentationStyleAssignmentInstance();
+	sdaiAppend(pStyles, sdaiINSTANCE, (void*)iPresentationStyleAssignmentInstance);
+
+	pStyles = sdaiCreateAggrBN(iPresentationStyleAssignmentInstance, "Styles");
+	assert(pStyles != nullptr);
+
+	SdaiInstance iSurfaceStyleInstance = buildSurfaceStyleInstance();
+	sdaiPutAttrBN(iSurfaceStyleInstance, "Side", sdaiENUM, "BOTH");
+	sdaiAppend(pStyles, sdaiINSTANCE, (void*)iSurfaceStyleInstance);
+
+	pStyles = sdaiCreateAggrBN(iSurfaceStyleInstance, "Styles");
+	assert(pStyles != nullptr);
+
+	SdaiInstance iSurfaceStyleRenderingInstance = buildSurfaceStyleRenderingInstance();
+	sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "ReflectanceMethod", sdaiENUM, "NOTDEFINED");
+	sdaiAppend(pStyles, sdaiINSTANCE, (void*)iSurfaceStyleRenderingInstance);
 
 	sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "SurfaceColour", sdaiINSTANCE, (void*)iColorRgbInstance);
 	sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "Transparency", sdaiREAL, &dTransparency);
@@ -903,7 +936,7 @@ SdaiInstance _exporter_base::buildSurfaceStyleRenderingInstance()
 	return iSurfaceStyleRenderingInstance;
 }
 
-SdaiInstance _exporter_base::buildColorRgbInstance()
+SdaiInstance _exporter_base::buildColorRgbInstance(double dR, double dG, double dB)
 {
 	SdaiInstance iColorRgbInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCCOLOURRGB");
 	assert(iColorRgbInstance != 0);
@@ -911,6 +944,9 @@ SdaiInstance _exporter_base::buildColorRgbInstance()
 	sdaiPutAttrBN(iColorRgbInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
 	sdaiPutAttrBN(iColorRgbInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
 	sdaiPutAttrBN(iColorRgbInstance, "Name", sdaiSTRING, "Color");
+	sdaiPutAttrBN(iColorRgbInstance, "Red", sdaiREAL, &dR);
+	sdaiPutAttrBN(iColorRgbInstance, "Green", sdaiREAL, &dG);
+	sdaiPutAttrBN(iColorRgbInstance, "Blue", sdaiREAL, &dB);
 
 	return iColorRgbInstance;
 }
@@ -1124,6 +1160,11 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	, m_mapBuildings()
 	, m_mapBuildingElements()
 	, m_iCurrentOwlBuildingElementInstance(0)
+	, m_iDefaultWallSurfaceColorRgbInstance(0)
+	, m_iDefaultRoofSurfaceColorRgbInstance(0)
+	, m_iDefaultDoorColorRgbInstance(0)
+	, m_iDefaultWindowColorRgbInstance(0)
+	, m_iDefaultColorRgbInstance(0)
 {
 	m_iCollectionClass = GetClassByName(getSite()->getOwlModel(), "Collection");
 	m_iBuildingClass = GetClassByName(getSite()->getOwlModel(), "class:Building");
@@ -1194,23 +1235,48 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 
 	if (isWallSurfaceClass(iInstanceClass))
 	{
-		createStyledItemInstance(iSdaiInstance, 128. / 255., 128. / 255., 128. / 255., 0.);
+		if (m_iDefaultWallSurfaceColorRgbInstance == 0)
+		{
+			m_iDefaultWallSurfaceColorRgbInstance = buildColorRgbInstance(128. / 255., 128. / 255., 128. / 255.);
+		}
+
+		createStyledItemInstance(iSdaiInstance, m_iDefaultWallSurfaceColorRgbInstance, 0.);
 	}
 	else if (isRoofSurfaceClass(iInstanceClass))
 	{
-		createStyledItemInstance(iSdaiInstance, 139. / 255., 69. / 255., 19. / 255., 0.);
+		if (m_iDefaultRoofSurfaceColorRgbInstance == 0)
+		{
+			m_iDefaultRoofSurfaceColorRgbInstance = buildColorRgbInstance(139. / 255., 69. / 255., 19. / 255.);
+		}
+
+		createStyledItemInstance(iSdaiInstance, m_iDefaultRoofSurfaceColorRgbInstance, 0.);
 	}
 	else if (isDoorClass(iInstanceClass))
 	{
-		createStyledItemInstance(iSdaiInstance, 139. / 255., 139. / 255., 139. / 255., 0.);
+		if (m_iDefaultDoorColorRgbInstance == 0)
+		{
+			m_iDefaultDoorColorRgbInstance = buildColorRgbInstance(139. / 255., 139. / 255., 139. / 255.);
+		}
+
+		createStyledItemInstance(iSdaiInstance, m_iDefaultDoorColorRgbInstance, 0.);
 	}
 	else if (isWindowClass(iInstanceClass))
 	{
-		createStyledItemInstance(iSdaiInstance, 25. / 255., 25. / 255., 25. / 255., 0.95);
+		if (m_iDefaultWindowColorRgbInstance == 0)
+		{
+			m_iDefaultWindowColorRgbInstance = buildColorRgbInstance(25. / 255., 25. / 255., 25. / 255.);
+		}
+
+		createStyledItemInstance(iSdaiInstance, m_iDefaultWindowColorRgbInstance, 0.95);
 	}
 	else
 	{
-		createStyledItemInstance(iSdaiInstance, 0., 0., 1., 0.75);
+		if (m_iDefaultColorRgbInstance == 0)
+		{
+			m_iDefaultColorRgbInstance = buildColorRgbInstance(0., 0., 1.);
+		}
+
+		createStyledItemInstance(iSdaiInstance, m_iDefaultColorRgbInstance, 0.75);
 	}
 }
 

@@ -206,11 +206,12 @@ protected: // Methods
 	/* Style */
 	void createStyledItemInstance(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance);
 	void createStyledItemInstance(SdaiInstance iSdaiInstance, double dR, double G, double dB, double dTransparency);
+	void createStyledItemInstance(SdaiInstance iSdaiInstance, SdaiInstance iColorRgbInstance, double dTransparency);
 	virtual void createDefaultStyledItemInstance(SdaiInstance iSdaiInstance) {}
 	SdaiInstance buildPresentationStyleAssignmentInstance();
 	SdaiInstance buildSurfaceStyleInstance();
 	SdaiInstance buildSurfaceStyleRenderingInstance();
-	SdaiInstance buildColorRgbInstance();
+	SdaiInstance buildColorRgbInstance(double dR, double dG, double dB);
 
 	/* Properties */
 	SdaiInstance buildPropertySet(char* szName, SdaiAggr& pHasProperties);
@@ -255,6 +256,13 @@ private: // Members
 	map<OwlInstance, vector<OwlInstance>> m_mapBuildingElements; // Building Element : Geometries
 	
 	OwlInstance m_iCurrentOwlBuildingElementInstance; // Temp
+
+	// Cache
+	SdaiInstance m_iDefaultWallSurfaceColorRgbInstance;
+	SdaiInstance m_iDefaultRoofSurfaceColorRgbInstance;
+	SdaiInstance m_iDefaultDoorColorRgbInstance;
+	SdaiInstance m_iDefaultWindowColorRgbInstance;
+	SdaiInstance m_iDefaultColorRgbInstance;
 
 public: // Methods
 
