@@ -40,6 +40,14 @@ void STDCALL LogCallbackImpl(enumLogEvent enLogEvent, const char* szEvent)
 	strEntry += "\r\n";
 
 	int iLength = g_pMainDialog->m_edtProgress.GetWindowTextLength();
+	if (iLength > 2048)
+	{
+		g_pMainDialog->m_edtProgress.SetSel(0, iLength);
+		g_pMainDialog->m_edtProgress.ReplaceSel(L"...\r\n");
+
+		iLength = g_pMainDialog->m_edtProgress.GetWindowTextLength();
+	}
+
 	g_pMainDialog->m_edtProgress.SetSel(iLength, iLength);
 	g_pMainDialog->m_edtProgress.ReplaceSel(CA2W(strEntry.c_str()));
 }
@@ -76,6 +84,12 @@ void CCityGML2IFCDlg::ExportFile(const wstring& strInputFile)
 {
 	assert(!m_strRootFolder.empty());
 	assert(!strInputFile.empty());
+
+	string strEvent = "Input file: '";
+	strEvent += CW2A(strInputFile.c_str());
+	strEvent += "'";
+
+	LogCallbackImpl(enumLogEvent::info, strEvent.c_str());
 
 	wstring strOutputFile = strInputFile;
 	strOutputFile += L".ifc";

@@ -1308,7 +1308,9 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 				wchar_t* szClassName = nullptr;
 				GetNameOfClassW(iInstanceClass, &szClassName);
 
-				continue;
+				TRACE(L"\n%s", szClassName);
+
+				continue; //#tbd
 			}
 			assert(!itBuildingElement->second.empty());
 
@@ -1316,6 +1318,12 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 			for (auto iOwlBuildingElementGeometryInstance : itBuildingElement->second)
 			{
 				createGeometry(iOwlBuildingElementGeometryInstance, vecSdaiBuildingElementGeometryInstances);
+			}
+
+			if (vecSdaiBuildingElementGeometryInstances.empty())
+			{
+				// Not supported Geometry 
+				continue; //#tbd
 			}
 			
 			SdaiInstance iBuildingElementInstancePlacement = 0;
@@ -1496,8 +1504,24 @@ void _citygml_exporter::searchForProxyBuildingElements(OwlInstance iBuildingInst
 						m_mapBuildings[iBuildingInstance] = vector<OwlInstance>{ piValues[iValue] };
 					}
 
-					assert(m_mapBuildingElements.find(piValues[iValue]) == m_mapBuildingElements.end());
-					m_mapBuildingElements[piValues[iValue]] = vector<OwlInstance>{ piValues[iValue] };
+					auto itBuildingElement = m_mapBuildingElements.find(piValues[iValue]);
+					if (itBuildingElement == m_mapBuildingElements.end())
+					{
+						m_mapBuildingElements[piValues[iValue]] = vector<OwlInstance>{ piValues[iValue] };
+					}
+					else
+					{
+						OwlClass iInstanceClass = GetInstanceClass(piValues[iValue]);
+						assert(iInstanceClass != 0);
+
+						wchar_t* szClassName = nullptr;
+						GetNameOfClassW(iInstanceClass, &szClassName);
+
+						TRACE(L"\n%s", szClassName);
+						assert(false);
+
+						continue; //#tbd
+					}
 				}
 				else
 				{
