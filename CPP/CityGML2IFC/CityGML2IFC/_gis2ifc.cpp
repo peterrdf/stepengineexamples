@@ -1300,18 +1300,7 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 			m_iCurrentOwlBuildingElementInstance = iOwlBuildingElementInstance;
 
 			auto itBuildingElement = m_mapBuildingElements.find(iOwlBuildingElementInstance);
-			if (itBuildingElement == m_mapBuildingElements.end())
-			{
-				OwlClass iInstanceClass = GetInstanceClass(iOwlBuildingElementInstance);
-				assert(iInstanceClass != 0);
-
-				wchar_t* szClassName = nullptr;
-				GetNameOfClassW(iInstanceClass, &szClassName);
-
-				TRACE(L"\n%s", szClassName);
-
-				continue; //#tbd
-			}
+			assert(itBuildingElement != m_mapBuildingElements.end());
 			assert(!itBuildingElement->second.empty());
 
 			vector<SdaiInstance> vecSdaiBuildingElementGeometryInstances;
@@ -1511,17 +1500,13 @@ void _citygml_exporter::searchForProxyBuildingElements(OwlInstance iBuildingInst
 					}
 					else
 					{
-						//#todo
-						OwlClass iInstanceClass = GetInstanceClass(piValues[iValue]);
-						assert(iInstanceClass != 0);
-
 						wchar_t* szClassName = nullptr;
-						GetNameOfClassW(iInstanceClass, &szClassName);
+						GetNameOfClassW(piValues[iValue], &szClassName);
 
-						TRACE(L"\n%s", szClassName);
-						assert(false);
-
-						continue;
+						string strEvent = "Duplicated Geometry: '";
+						strEvent += CW2A(szClassName);
+						strEvent += "'";
+						getSite()->logErr(strEvent);
 					}
 				}
 				else
@@ -1792,7 +1777,8 @@ void _citygml_exporter::createCompositeSurface(OwlInstance iInstance, vector<Sda
 		}
 		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:OrientableSurfaceType"))
 		{
-			//createOrientableSurface(iInstance, vecGeometryInstances); //#todo
+			//#todo
+			getSite()->logErr("Geometry is not supported: 'class:OrientableSurfaceType'");
 		}
 		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:SurfacePropertyType"))
 		{
