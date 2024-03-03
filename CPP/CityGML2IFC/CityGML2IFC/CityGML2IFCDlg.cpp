@@ -55,6 +55,18 @@ void STDCALL LogCallbackImpl(enumLogEvent enLogEvent, const char* szEvent)
 		pDialog->ExportFile((LPCTSTR)pDialog->m_strInputFile);
 	}	
 
+	/* TEST 1 */
+	/*{
+		wstring strInputFile = L"D:\\Temp\\gisengine in\\InfraGMLTest\\DenHaag_01.xml";
+		ExportFile(strInputFile);
+	}*/
+
+	/* TEST 2 */
+	/*{
+		wstring strInputFolder = L"D:\\Temp\\gisengine in";
+		pDialog->ExportFiles(strInputFolder);
+	}*/
+
 	::EnableWindow(pDialog->GetDlgItem(IDOK)->GetSafeHwnd(), TRUE);
 
 	return 0;
@@ -261,18 +273,6 @@ void CCityGML2IFCDlg::OnBnClickedOk()
 
 	m_pThread = ::AfxBeginThread(ThreadProc, this);
 	m_pThread->m_bAutoDelete = FALSE;
-
-	/* TEST 1 */
-	/*{
-		wstring strInputFile = L"D:\\Temp\\gisengine in\\InfraGMLTest\\DenHaag_01.xml";
-		ExportFile(strInputFile);
-	}*/
-
-	/* TEST 2 */
-	/*{
-		wstring strInputFolder = L"D:\\Temp\\gisengine in";
-		ExportFiles(strInputFolder);
-	}*/
 }
 
 void CCityGML2IFCDlg::OnBnClickedButtonInputFile()
