@@ -198,12 +198,6 @@
     <ClInclude Include="CityGML2IFC.h" />
     <ClInclude Include="CityGML2IFCDlg.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="ifc\baseIfc.h" />
-    <ClInclude Include="ifc\baseIfcObject.h" />
-    <ClInclude Include="ifc\boundingBoxIfc.h" />
-    <ClInclude Include="ifc\BRepIfc.h" />
-    <ClInclude Include="ifc\extrudedPolygonIfc.h" />
-    <ClInclude Include="ifc\propertiesIfc.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
@@ -213,12 +207,6 @@
   <ItemGroup>
     <ClCompile Include="CityGML2IFC.cpp" />
     <ClCompile Include="CityGML2IFCDlg.cpp" />
-    <ClCompile Include="ifc\baseIfc.cpp" />
-    <ClCompile Include="ifc\baseIfcObject.cpp" />
-    <ClCompile Include="ifc\boundingBoxIfc.cpp" />
-    <ClCompile Include="ifc\BRepIfc.cpp" />
-    <ClCompile Include="ifc\extrudedPolygonIfc.cpp" />
-    <ClCompile Include="ifc\propertiesIfc.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

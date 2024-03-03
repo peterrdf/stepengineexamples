@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ifc">
-      <UniqueIdentifier>{e0f73725-3e07-48de-bbe4-8e9069887858}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CityGML2IFC.h">
@@ -36,24 +33,6 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ifc\baseIfc.h">
-      <Filter>ifc</Filter>
-    </ClInclude>
-    <ClInclude Include="ifc\baseIfcObject.h">
-      <Filter>ifc</Filter>
-    </ClInclude>
-    <ClInclude Include="ifc\boundingBoxIfc.h">
-      <Filter>ifc</Filter>
-    </ClInclude>
-    <ClInclude Include="ifc\BRepIfc.h">
-      <Filter>ifc</Filter>
-    </ClInclude>
-    <ClInclude Include="ifc\extrudedPolygonIfc.h">
-      <Filter>ifc</Filter>
-    </ClInclude>
-    <ClInclude Include="ifc\propertiesIfc.h">
-      <Filter>ifc</Filter>
-    </ClInclude>
     <ClInclude Include="_gis2ifc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -70,24 +49,6 @@
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ifc\baseIfc.cpp">
-      <Filter>ifc</Filter>
-    </ClCompile>
-    <ClCompile Include="ifc\baseIfcObject.cpp">
-      <Filter>ifc</Filter>
-    </ClCompile>
-    <ClCompile Include="ifc\boundingBoxIfc.cpp">
-      <Filter>ifc</Filter>
-    </ClCompile>
-    <ClCompile Include="ifc\BRepIfc.cpp">
-      <Filter>ifc</Filter>
-    </ClCompile>
-    <ClCompile Include="ifc\extrudedPolygonIfc.cpp">
-      <Filter>ifc</Filter>
-    </ClCompile>
-    <ClCompile Include="ifc\propertiesIfc.cpp">
-      <Filter>ifc</Filter>
     </ClCompile>
     <ClCompile Include="_gis2ifc.cpp">
       <Filter>Source Files</Filter>
