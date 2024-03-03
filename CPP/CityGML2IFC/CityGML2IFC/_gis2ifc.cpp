@@ -1322,8 +1322,8 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 
 			if (vecSdaiBuildingElementGeometryInstances.empty())
 			{
-				// Not supported Geometry 
-				continue; //#tbd
+				// Not supported
+				continue;
 			}
 			
 			SdaiInstance iBuildingElementInstancePlacement = 0;
@@ -1511,6 +1511,7 @@ void _citygml_exporter::searchForProxyBuildingElements(OwlInstance iBuildingInst
 					}
 					else
 					{
+						//#todo
 						OwlClass iInstanceClass = GetInstanceClass(piValues[iValue]);
 						assert(iInstanceClass != 0);
 
@@ -1520,7 +1521,7 @@ void _citygml_exporter::searchForProxyBuildingElements(OwlInstance iBuildingInst
 						TRACE(L"\n%s", szClassName);
 						assert(false);
 
-						continue; //#tbd
+						continue;
 					}
 				}
 				else
@@ -1631,13 +1632,14 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	}
 	else
 	{
-		//#log
+		//#todo
 		wchar_t* szClassName = nullptr;
 		GetNameOfClassW(iInstanceClass, &szClassName);
 
-		TRACE(L"\n%s", szClassName);
-
-		assert(false);
+		string strEvent = "Geometry is not supported: '";
+		strEvent += CW2A(szClassName);
+		strEvent += "'";
+		getSite()->logErr(strEvent);
 	}
 }
 
@@ -1672,13 +1674,14 @@ void _citygml_exporter::createSolid(OwlInstance iInstance, vector<SdaiInstance>&
 		}
 		else
 		{
-			//#log
+			//#todo
 			wchar_t* szClassName = nullptr;
 			GetNameOfClassW(iChildInstanceClass, &szClassName);
 
-			TRACE(L"\n%s", szClassName);
-
-			assert(false);
+			string strEvent = "Geometry is not supported: '";
+			strEvent += CW2A(szClassName);
+			strEvent += "'";
+			getSite()->logErr(strEvent);
 		}
 	} // for (int64_t iInstanceIndex = ...
 }
@@ -1711,13 +1714,14 @@ void _citygml_exporter::createMultiSolid(OwlInstance iInstance, vector<SdaiInsta
 		}
 		else
 		{
-			//#log
+			//#todo
 			wchar_t* szClassName = nullptr;
 			GetNameOfClassW(iChildInstanceClass, &szClassName);
 
-			TRACE(L"\n%s", szClassName);
-
-			assert(false);
+			string strEvent = "Geometry is not supported: '";
+			strEvent += CW2A(szClassName);
+			strEvent += "'";
+			getSite()->logErr(strEvent);
 		}
 	} // for (int64_t iInstanceIndex = ...
 }
@@ -1753,13 +1757,14 @@ void _citygml_exporter::createMultiSurface(OwlInstance iInstance, vector<SdaiIns
 		}
 		else 
 		{
-			//#log
+			//#todo
 			wchar_t* szClassName = nullptr;
 			GetNameOfClassW(iChildInstanceClass, &szClassName);
 
-			TRACE(L"\n%s", szClassName);
-
-			assert(false);
+			string strEvent = "Geometry is not supported: '";
+			strEvent += CW2A(szClassName);
+			strEvent += "'";
+			getSite()->logErr(strEvent);
 		}
 	} // for (int64_t iInstanceIndex = ...
 }
@@ -1799,13 +1804,14 @@ void _citygml_exporter::createCompositeSurface(OwlInstance iInstance, vector<Sda
 		}
 		else
 		{
-			//#log
+			//#todo
 			wchar_t* szClassName = nullptr;
 			GetNameOfClassW(iChildInstanceClass, &szClassName);
 
-			TRACE(L"\n%s", szClassName);
-
-			assert(false);
+			string strEvent = "Geometry is not supported: '";
+			strEvent += CW2A(szClassName);
+			strEvent += "'";
+			getSite()->logErr(strEvent);
 		}
 	} // for (int64_t iInstanceIndex = ...
 }
@@ -1837,13 +1843,14 @@ void _citygml_exporter::createSurfaceMember(OwlInstance iInstance, vector<SdaiIn
 		}
 		else
 		{
-			//#log
+			//#todo
 			wchar_t* szClassName = nullptr;
 			GetNameOfClassW(iChildInstanceClass, &szClassName);
 
-			TRACE(L"\n%s", szClassName);
-
-			assert(false);
+			string strEvent = "Geometry is not supported: '";
+			strEvent += CW2A(szClassName);
+			strEvent += "'";
+			getSite()->logErr(strEvent);
 		}
 	} // for (int64_t iInstanceIndex = ...
 }
