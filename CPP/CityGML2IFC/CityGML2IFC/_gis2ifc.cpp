@@ -777,7 +777,7 @@ void _exporter_base::createStyledItemInstance(OwlInstance iOwlInstance, SdaiInst
 	double dTransparency = 0.;
 	if (iValuesCount == 1)
 	{
-		dTransparency = pdValues[0];
+		dTransparency = 1. - pdValues[0];
 	}
 
 	// diffuse
