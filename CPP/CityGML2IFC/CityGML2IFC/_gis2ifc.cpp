@@ -1509,10 +1509,8 @@ void _citygml_exporter::searchForBuildingElements(OwlInstance iBuildingInstance,
 
 					searchForBuildingElementGeometry(piValues[iValue], piValues[iValue]);
 				}
-				else
-				{
-					searchForBuildingElements(iBuildingInstance, piValues[iValue]);
-				}
+
+				searchForBuildingElements(iBuildingInstance, piValues[iValue]);
 			} // for (int64_t iValue = ...
 		} // if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
 
@@ -1606,6 +1604,11 @@ void _citygml_exporter::searchForBuildingElementGeometry(OwlInstance iBuildingEl
 			for (int64_t iValue = 0; iValue < iValuesCount; iValue++)
 			{
 				if (piValues[iValue] == 0)
+				{
+					continue;
+				}
+
+				if (isBuildingElement(piValues[iValue]))
 				{
 					continue;
 				}
@@ -1989,6 +1992,12 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 	SdaiAggr pCfsFaces = sdaiCreateAggrBN(iClosedShellInstance, "CfsFaces");
 	assert(pCfsFaces != nullptr);
 
+	SdaiInstance iFaceInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACE");
+	assert(iFaceInstance != 0);
+
+	SdaiAggr pBounds = sdaiCreateAggrBN(iFaceInstance, "Bounds");
+	sdaiAppend(pCfsFaces, sdaiINSTANCE, (void*)iFaceInstance);
+
 	if (!vecOuterPolygons.empty())
 	{
 		for (auto iOuterPolygon : vecOuterPolygons)
@@ -1999,13 +2008,7 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 			sdaiPutAttrBN(iFaceOuterBoundInstance, "Bound", sdaiINSTANCE, (void*)iOuterPolygon);
 			sdaiPutAttrBN(iFaceOuterBoundInstance, "Orientation", sdaiENUM, "T");
 
-			SdaiInstance iFaceInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACE");
-			assert(iFaceInstance != 0);
-
-			SdaiAggr pBounds = sdaiCreateAggrBN(iFaceInstance, "Bounds");
 			sdaiAppend(pBounds, sdaiINSTANCE, (void*)iFaceOuterBoundInstance);
-
-			sdaiAppend(pCfsFaces, sdaiINSTANCE, (void*)iFaceInstance);
 		}
 	} // if (!vecOuterPolygons.empty())
 
@@ -2019,13 +2022,7 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 			sdaiPutAttrBN(iFaceBoundInstance, "Bound", sdaiINSTANCE, (void*)iInnerPolygon);
 			sdaiPutAttrBN(iFaceBoundInstance, "Orientation", sdaiENUM, "T");
 
-			SdaiInstance iFaceInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACE");
-			assert(iFaceInstance != 0);
-
-			SdaiAggr pBounds = sdaiCreateAggrBN(iFaceInstance, "Bounds");
 			sdaiAppend(pBounds, sdaiINSTANCE, (void*)iFaceBoundInstance);
-
-			sdaiAppend(pCfsFaces, sdaiINSTANCE, (void*)iFaceInstance);
 		}		
 	} // if (!vecInnerPolygons.empty())
 
