@@ -217,6 +217,7 @@ SdaiInstance _exporter_base::getOwnerHistoryInstance()
 		sdaiPutAttrBN(m_iOwnerHistoryInstance, "OwningApplication", sdaiINSTANCE, (void*)getApplicationInstance());
 		sdaiPutAttrBN(m_iOwnerHistoryInstance, "ChangeAction", sdaiENUM, "ADDED");
 		sdaiPutAttrBN(m_iOwnerHistoryInstance, "CreationDate", sdaiINTEGER, &iTimeStamp);
+		sdaiPutAttrBN(m_iOwnerHistoryInstance, "LastModifiedDate", sdaiINTEGER, &iTimeStamp);
 	}
 
 	return	m_iOwnerHistoryInstance;
