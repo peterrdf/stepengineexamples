@@ -61,15 +61,12 @@ public: // Members
 	double Y;
 	double Z;
 
-	SdaiInstance CartesianPointInstance;
-
 public: // Methods
 
 	_point3d()
 		: X(0.)
 		, Y(0.)
 		, Z(0.)
-		, CartesianPointInstance(0)
 	{}
 };
 
