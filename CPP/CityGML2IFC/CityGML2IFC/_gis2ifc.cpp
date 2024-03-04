@@ -1936,7 +1936,7 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 		&iVerticesCount);
 
 	vector<SdaiInstance> vecOuterPolygons;
-	vector<SdaiInstance> vecInnerPolygons;
+	map<SdaiInstance, vector<SdaiInstance>> mapOuter2InnerPolygons;
 	vector<int64_t> vecPolygonIndices;
 	map<int64_t, SdaiInstance> mapIndex2Instance;
 	for (int64_t iIndex = 0; iIndex < iIndicesCount; iIndex++)
@@ -1958,13 +1958,24 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 
 			if (piIndices[iIndex] == -1)
 			{
+				// Outer Polygon
 				vecOuterPolygons.push_back(iPolyLoopInstance);
 			}
 			else
 			{
+				// Outer Polygon : [Inner Polygons...]
 				assert(piIndices[iIndex] == -2);
+				assert(!vecOuterPolygons.empty());
 
-				vecInnerPolygons.push_back(iPolyLoopInstance);
+				auto itOuter2InnerPolygons = mapOuter2InnerPolygons.find(vecOuterPolygons.back());
+				if (itOuter2InnerPolygons != mapOuter2InnerPolygons.end())
+				{
+					itOuter2InnerPolygons->second.push_back(iPolyLoopInstance);
+				}
+				else
+				{
+					mapOuter2InnerPolygons[vecOuterPolygons.back()] = vector<SdaiInstance>{ iPolyLoopInstance };
+				}
 			}
 
 			vecPolygonIndices.clear();
@@ -1984,47 +1995,47 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 	} // for (int64_t iIndex = ...
 
 	assert(vecPolygonIndices.empty());
-	assert(!vecOuterPolygons.empty() || !vecInnerPolygons.empty());
+	assert(!vecOuterPolygons.empty());
 
 	SdaiInstance iClosedShellInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCCLOSEDSHELL");
 	assert(iClosedShellInstance != 0);
 
 	SdaiAggr pCfsFaces = sdaiCreateAggrBN(iClosedShellInstance, "CfsFaces");
-	assert(pCfsFaces != nullptr);
+	assert(pCfsFaces != nullptr);	
 
-	SdaiInstance iFaceInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACE");
-	assert(iFaceInstance != 0);
-
-	SdaiAggr pBounds = sdaiCreateAggrBN(iFaceInstance, "Bounds");
-	sdaiAppend(pCfsFaces, sdaiINSTANCE, (void*)iFaceInstance);
-
-	if (!vecOuterPolygons.empty())
+	for (auto iOuterPolygon : vecOuterPolygons)
 	{
-		for (auto iOuterPolygon : vecOuterPolygons)
+		// Outer Polygon
+		SdaiInstance iFaceOuterBoundInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACEOUTERBOUND");
+		assert(iFaceOuterBoundInstance != 0);
+
+		sdaiPutAttrBN(iFaceOuterBoundInstance, "Bound", sdaiINSTANCE, (void*)iOuterPolygon);
+		sdaiPutAttrBN(iFaceOuterBoundInstance, "Orientation", sdaiENUM, "T");
+
+		SdaiInstance iFaceInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACE");
+		assert(iFaceInstance != 0);
+
+		SdaiAggr pBounds = sdaiCreateAggrBN(iFaceInstance, "Bounds");
+		sdaiAppend(pCfsFaces, sdaiINSTANCE, (void*)iFaceInstance);
+
+		sdaiAppend(pBounds, sdaiINSTANCE, (void*)iFaceOuterBoundInstance);
+
+		// Inner Polygons
+		auto itOuter2InnerPolygons = mapOuter2InnerPolygons.find(iOuterPolygon);
+		if (itOuter2InnerPolygons != mapOuter2InnerPolygons.end())
 		{
-			SdaiInstance iFaceOuterBoundInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACEOUTERBOUND");
-			assert(iFaceOuterBoundInstance != 0);
+			for (auto iInnerPolygon : itOuter2InnerPolygons->second)
+			{
+				SdaiInstance iFaceBoundInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACEBOUND");
+				assert(iFaceBoundInstance != 0);
 
-			sdaiPutAttrBN(iFaceOuterBoundInstance, "Bound", sdaiINSTANCE, (void*)iOuterPolygon);
-			sdaiPutAttrBN(iFaceOuterBoundInstance, "Orientation", sdaiENUM, "T");
+				sdaiPutAttrBN(iFaceBoundInstance, "Bound", sdaiINSTANCE, (void*)iInnerPolygon);
+				sdaiPutAttrBN(iFaceBoundInstance, "Orientation", sdaiENUM, "T");
 
-			sdaiAppend(pBounds, sdaiINSTANCE, (void*)iFaceOuterBoundInstance);
+				sdaiAppend(pBounds, sdaiINSTANCE, (void*)iFaceBoundInstance);
+			}
 		}
-	} // if (!vecOuterPolygons.empty())
-
-	if (!vecInnerPolygons.empty())
-	{
-		for (auto iInnerPolygon : vecInnerPolygons)
-		{
-			SdaiInstance iFaceBoundInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACEBOUND");
-			assert(iFaceBoundInstance != 0);
-
-			sdaiPutAttrBN(iFaceBoundInstance, "Bound", sdaiINSTANCE, (void*)iInnerPolygon);
-			sdaiPutAttrBN(iFaceBoundInstance, "Orientation", sdaiENUM, "T");
-
-			sdaiAppend(pBounds, sdaiINSTANCE, (void*)iFaceBoundInstance);
-		}		
-	} // if (!vecInnerPolygons.empty())
+	} // auto iOuterPolygon : ...
 
 	SdaiInstance iFacetedBrepInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACETEDBREP");
 	assert(iFacetedBrepInstance != 0);
