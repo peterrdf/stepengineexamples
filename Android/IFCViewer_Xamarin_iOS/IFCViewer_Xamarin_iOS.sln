@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29609.76
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IFCViewer_Xamarin_iOS", "IFCViewer_Xamarin_iOS\IFCViewer_Xamarin_iOS.csproj", "{8BAF9950-0D9E-46E6-855D-F2F6C4659535}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Ad-Hoc|iPhone = Ad-Hoc|iPhone
+		Ad-Hoc|iPhoneSimulator = Ad-Hoc|iPhoneSimulator
+		AppStore|iPhone = AppStore|iPhone
+		AppStore|iPhoneSimulator = AppStore|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhone = Release|iPhone
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8BAF9950-0D9E-46E6-855D-F2F6C4659535}.Ad-Hoc|iPhone.ActiveCfg = Ad-Hoc|iPhone
+		{8BAF9950-0D9E-46E6-855D-F2F6C4659535}.Ad-Hoc|iPhone.Build.0 = Ad-Hoc|iPhone
+		{8BAF9950-0D9E-46E6-855D-F2F6C4659535}.Ad-Hoc|iPhoneSimulator.ActiveCfg = Ad-Hoc|iPhoneSimulator
+		{8BAF9950-0D9E-46E6-855D-F2F6C4659535}.Ad-Hoc|iPhoneSimulator.Build.0 = Ad-Hoc|iPhoneSimulator
+		{8BAF9950-0D9E-46E6-855D-F2F6C4659535}.AppStore|iPhone.ActiveCfg = AppStore|iPhone
+		{8BAF9950-0D9E-46E6-855D-F2F6C4659535}.AppStore|iPhone.Build.0 = AppStore|iPhone
+		{8BAF9950-0D9E-46E6-855D-F2F6C4659535}.AppStore|iPhoneSimulator.ActiveCfg = AppStore|iPhoneSimulator
+		{8BAF9950-0D9E-46E6-855D-F2F6C4659535}.AppStore|iPhoneSimulator.Build.0 = AppStore|iPhoneSimulator
+		{8BAF9950-0D9E-46E6-855D-F2F6C4659535}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{8BAF9950-0D9E-46E6-855D-F2F6C4659535}.Debug|iPhone.Build.0 = Debug|iPhone
+		{8BAF9950-0D9E-46E6-855D-F2F6C4659535}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhone
+		{8BAF9950-0D9E-46E6-855D-F2F6C4659535}.Debug|iPhoneSimulator.Build.0 = Debug|iPhone
+		{8BAF9950-0D9E-46E6-855D-F2F6C4659535}.Release|iPhone.ActiveCfg = Release|iPhone
+		{8BAF9950-0D9E-46E6-855D-F2F6C4659535}.Release|iPhone.Build.0 = Release|iPhone
+		{8BAF9950-0D9E-46E6-855D-F2F6C4659535}.Release|iPhoneSimulator.ActiveCfg = Release|iPhone
+		{8BAF9950-0D9E-46E6-855D-F2F6C4659535}.Release|iPhoneSimulator.Build.0 = Release|iPhone
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BF176FF3-5142-4ED3-BE46-B4E95A19C20F}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = IFCViewer_Xamarin_iOS\IFCViewer_Xamarin_iOS.csproj
+	EndGlobalSection
+EndGlobal
