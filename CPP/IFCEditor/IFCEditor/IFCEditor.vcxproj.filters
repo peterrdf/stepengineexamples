@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Visualization">
+      <UniqueIdentifier>{33c3a66c-ed2b-4a80-9462-f7030fa313c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{c48c77a7-f1c8-4c1d-8dc2-ac8f54dbf0fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IFCEditor.h">
@@ -54,6 +60,90 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Visualization\IFCInstance.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\IFCModel.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\IFCProperty.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\IFCUnit.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\OpenGLIFCView.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\_3DUtils.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\_geometry.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\_material.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\_oglUtils.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\_quaterniond.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\Generic.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\engdef.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\glext.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ifcengine.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\wglext.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\engine.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\InstanceBase.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\Model.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\Entity.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="IFCModelStructureView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeViewBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\ViewBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\Controller.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\OpenGLView.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchTreeCtrlDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeCtrlEx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StructureViewConsts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IFCEditor.cpp">
@@ -84,6 +174,51 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Visualization\IFCInstance.cpp">
+      <Filter>Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="Visualization\IFCModel.cpp">
+      <Filter>Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="Visualization\IFCProperty.cpp">
+      <Filter>Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="Visualization\IFCUnit.cpp">
+      <Filter>Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="Visualization\OpenGLIFCView.cpp">
+      <Filter>Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="Visualization\InstanceBase.cpp">
+      <Filter>Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="Visualization\Model.cpp">
+      <Filter>Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="Visualization\Entity.cpp">
+      <Filter>Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="IFCModelStructureView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Visualization\ViewBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Visualization\Controller.cpp">
+      <Filter>Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="Visualization\OpenGLView.cpp">
+      <Filter>Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchTreeCtrlDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeCtrlEx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
