@@ -117,9 +117,6 @@
     <ClInclude Include="Visualization\Entity.h">
       <Filter>Visualization</Filter>
     </ClInclude>
-    <ClInclude Include="IFCModelStructureView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TreeViewBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -200,9 +197,6 @@
     <ClCompile Include="Visualization\Entity.cpp">
       <Filter>Visualization</Filter>
     </ClCompile>
-    <ClCompile Include="IFCModelStructureView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Visualization\ViewBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -225,6 +219,12 @@
   <ItemGroup>
     <None Include="IFCEditor.reg" />
     <None Include="res\IFCEditor.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\text1.bin">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\text2.bin">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -321,5 +321,30 @@
     <Image Include="res\Toolbar256.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\none.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\bitmap1.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\property.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\propertySet.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\selectedNone.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\selectedAll.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\selectedPart.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="res\fragment_shader2.txt" />
+    <Text Include="res\vertex_shader2.txt" />
   </ItemGroup>
 </Project>

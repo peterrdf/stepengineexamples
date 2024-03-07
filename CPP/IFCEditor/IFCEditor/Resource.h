@@ -88,7 +88,16 @@
 #define IDS_OUTLOOKBAR                  258
 #define IDS_EXPLORER                    305
 #define IDS_EDIT_MENU                   306
+#define IDB_NONE                        310
+#define IDB_PROPERTY                    312
+#define IDB_PROPERTY_SET                313
+#define IDB_SELECTED_NONE               314
+#define IDB_SELECTED_ALL                315
 #define IDD_DIALOG_SEARCH               316
+#define IDB_SELECTED_PART               317
+#define IDR_TEXTFILE_FRAGMENT_SHADER2   318
+#define IDR_TEXTFILE_VERTEX_SHADER2     319
+#define TEXTFILE                        320
 #define IDC_BUTTON_SEARCH               1006
 #define IDC_EDIT_SEARCH_TEXT            1007
 #define IDC_COMBO_SEARCH_FILTER         1008
@@ -97,7 +106,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        310
+#define _APS_NEXT_RESOURCE_VALUE        321
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           310

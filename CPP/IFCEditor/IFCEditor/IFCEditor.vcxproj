@@ -198,7 +198,6 @@
     <ClInclude Include="IFCEditor.h" />
     <ClInclude Include="IFCEditorDoc.h" />
     <ClInclude Include="IFCEditorView.h" />
-    <ClInclude Include="IFCModelStructureView.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PropertiesWnd.h" />
@@ -235,7 +234,6 @@
     <ClCompile Include="IFCEditor.cpp" />
     <ClCompile Include="IFCEditorDoc.cpp" />
     <ClCompile Include="IFCEditorView.cpp" />
-    <ClCompile Include="IFCModelStructureView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -263,11 +261,14 @@
   <ItemGroup>
     <None Include="IFCEditor.reg" />
     <None Include="res\IFCEditor.rc2" />
+    <None Include="res\text1.bin" />
+    <None Include="res\text2.bin" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IFCEditor.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\bitmap1.bmp" />
     <Image Include="res\classview.bmp" />
     <Image Include="res\classview_hc.bmp" />
     <Image Include="res\class_view.ico" />
@@ -284,6 +285,7 @@
     <Image Include="res\menuimages_hc.bmp" />
     <Image Include="res\nav_large.bmp" />
     <Image Include="res\nav_large_hc.bmp" />
+    <Image Include="res\none.bmp" />
     <Image Include="res\pages.bmp" />
     <Image Include="res\pages_hc.bmp" />
     <Image Include="res\pages_small.bmp" />
@@ -292,11 +294,20 @@
     <Image Include="res\properties_hc.bmp" />
     <Image Include="res\properties_wnd.ico" />
     <Image Include="res\properties_wnd_hc.ico" />
+    <Image Include="res\property.bmp" />
+    <Image Include="res\propertySet.bmp" />
+    <Image Include="res\selectedAll.bmp" />
+    <Image Include="res\selectedNone.bmp" />
+    <Image Include="res\selectedPart.bmp" />
     <Image Include="res\sort.bmp" />
     <Image Include="res\sort_hc.bmp" />
     <Image Include="res\Toolbar.bmp" />
     <Image Include="res\Toolbar256.bmp" />
     <Image Include="res\userimages.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="res\fragment_shader2.txt" />
+    <Text Include="res\vertex_shader2.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
