@@ -23,6 +23,7 @@
 IMPLEMENT_DYNCREATE(CIFCEditorDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CIFCEditorDoc, CDocument)
+	ON_COMMAND(ID_FILE_OPEN, &CIFCEditorDoc::OnFileOpen)
 END_MESSAGE_MAP()
 
 
@@ -36,6 +37,7 @@ CIFCEditorDoc::CIFCEditorDoc() noexcept
 
 CIFCEditorDoc::~CIFCEditorDoc()
 {
+	delete m_pModel;
 }
 
 BOOL CIFCEditorDoc::OnNewDocument()
@@ -43,8 +45,15 @@ BOOL CIFCEditorDoc::OnNewDocument()
 	if (!CDocument::OnNewDocument())
 		return FALSE;
 
-	// TODO: add reinitialization code here
-	// (SDI documents will reuse this document)
+	if (m_pModel != nullptr)
+	{
+		delete m_pModel;
+		m_pModel = nullptr;
+	}
+
+	m_pModel = new CIFCModel();
+
+	SetModel(m_pModel);
 
 	return TRUE;
 }
@@ -136,3 +145,76 @@ void CIFCEditorDoc::Dump(CDumpContext& dc) const
 
 
 // CIFCEditorDoc commands
+
+
+BOOL CIFCEditorDoc::OnOpenDocument(LPCTSTR lpszPathName)
+{
+	if (!CDocument::OnOpenDocument(lpszPathName))
+		return FALSE;
+
+	if (m_pModel != nullptr)
+	{
+		delete m_pModel;
+		m_pModel = nullptr;
+	}
+
+	auto iModel = sdaiOpenModelBNUnicode(0, lpszPathName, L"");
+	if (iModel == 0)
+	{
+		MessageBox(::AfxGetMainWnd()->GetSafeHwnd(), L"Failed to open the model.", L"Error", MB_ICONERROR | MB_OK);
+
+		return FALSE;
+	}
+
+	wchar_t* fileSchema = 0;
+	GetSPFFHeaderItem(iModel, 9, 0, sdaiUNICODE, (char**)&fileSchema);
+
+	if (fileSchema == nullptr)
+	{
+		MessageBox(::AfxGetMainWnd()->GetSafeHwnd(), L"Unknown file schema.", L"Error", MB_ICONERROR | MB_OK);
+
+		return FALSE;
+	}
+
+	CString strFileSchema = fileSchema;
+	strFileSchema.MakeUpper();
+
+	if (strFileSchema.Find(L"IFC") != 0)
+	{
+		MessageBox(::AfxGetMainWnd()->GetSafeHwnd(), L"Unknown file schema.", L"Error", MB_ICONERROR | MB_OK);
+
+		return FALSE;
+	}
+
+	auto pModel = new CIFCModel();
+	pModel->Load(lpszPathName, iModel);
+
+	m_pModel = pModel;
+
+	SetModel(m_pModel);
+
+	// Title
+	CString strTitle = AfxGetAppName();
+	strTitle += L" - ";
+	strTitle += lpszPathName;
+
+	AfxGetMainWnd()->SetWindowTextW(strTitle);
+
+	// MRU
+	AfxGetApp()->AddToRecentFileList(lpszPathName);
+
+	return TRUE;
+}
+
+void CIFCEditorDoc::OnFileOpen()
+{
+	TCHAR szFilters[] = _T("IFC Files (*.ifc)|*.ifc|All Files (*.*)|*.*||");
+	CFileDialog dlgFile(TRUE, nullptr, _T(""), OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY, szFilters);
+
+	if (dlgFile.DoModal() != IDOK)
+	{
+		return;
+	}
+
+	OnOpenDocument(dlgFile.GetPathName());
+}

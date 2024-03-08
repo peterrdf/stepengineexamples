@@ -3,7 +3,9 @@
 //
 
 #pragma once
-#include "FileView.h"
+
+#include "Controller.h"
+#include "SchemaView.h"
 #include "ClassView.h"
 #include "PropertiesWnd.h"
 #include "CalendarBar.h"
@@ -17,6 +19,12 @@ class COutlookBar : public CMFCOutlookBar
 
 class CMainFrame : public CFrameWndEx
 {
+
+private: // Methods
+
+	// --------------------------------------------------------------------------------------------
+	// Controller - MVC
+	CController* GetController() const;
 	
 protected: // create from serialization only
 	CMainFrame() noexcept;
@@ -46,7 +54,7 @@ protected:  // control bar embedded members
 	CMFCToolBar       m_wndToolBar;
 	CMFCStatusBar     m_wndStatusBar;
 	CMFCToolBarImages m_UserImages;
-	CFileView         m_wndFileView;
+	CSchemaView       m_schemaView;
 	CClassView        m_wndClassView;
 	CPropertiesWnd    m_wndProperties;
 	COutlookBar       m_wndNavigationBar;

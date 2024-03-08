@@ -5,8 +5,12 @@
 
 #pragma once
 
+#include "Controller.h"
+#include "IFCModel.h"
 
-class CIFCEditorDoc : public CDocument
+class CIFCEditorDoc 
+	: public CDocument
+	, public CController
 {
 protected: // create from serialization only
 	CIFCEditorDoc() noexcept;
@@ -45,4 +49,7 @@ protected:
 	// Helper function that sets search content for a Search Handler
 	void SetSearchContent(const CString& value);
 #endif // SHARED_HANDLERS
+public:
+	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
+	afx_msg void OnFileOpen();
 };

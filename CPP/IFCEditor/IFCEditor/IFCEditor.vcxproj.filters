@@ -138,6 +138,12 @@
     <ClInclude Include="TreeCtrlEx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SchemaView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SchemaViewConsts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IFCEditor.cpp">
@@ -210,6 +216,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TreeCtrlEx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SchemaView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

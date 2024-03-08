@@ -42,6 +42,32 @@ static UINT indicators[] =
 	ID_INDICATOR_SCRL,
 };
 
+CController* CMainFrame::GetController() const
+{
+	POSITION posDocTemplate = AfxGetApp()->GetFirstDocTemplatePosition();
+	if (posDocTemplate == nullptr)
+	{
+		return nullptr;
+	}
+
+	CDocTemplate* pDocTemplate = AfxGetApp()->GetNextDocTemplate(posDocTemplate);
+	if (pDocTemplate == nullptr)
+	{
+		return nullptr;
+	}
+
+	POSITION posDocument = pDocTemplate->GetFirstDocPosition();
+	if (posDocument == nullptr)
+	{
+		return nullptr;
+	}
+
+	CDocument* pDocument = pDocTemplate->GetNextDoc(posDocument);
+	ASSERT(pDocument);
+
+	return dynamic_cast<CController*>(pDocument);
+}
+
 // CMainFrame construction/destruction
 
 CMainFrame::CMainFrame() noexcept
@@ -136,11 +162,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	}
 
-	m_wndFileView.EnableDocking(CBRS_ALIGN_ANY);
+	m_schemaView.EnableDocking(CBRS_ALIGN_ANY);
 	m_wndClassView.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndFileView);
+	DockPane(&m_schemaView);
 	CDockablePane* pTabbedBar = nullptr;
-	m_wndClassView.AttachToTabWnd(&m_wndFileView, DM_SHOW, TRUE, &pTabbedBar);
+	m_wndClassView.AttachToTabWnd(&m_schemaView, DM_SHOW, TRUE, &pTabbedBar);
 	m_wndProperties.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wndProperties);
 
@@ -209,6 +235,14 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 
 BOOL CMainFrame::CreateDockingWindows()
 {
+	CController* pController = GetController();
+	if (pController == nullptr)
+	{
+		ASSERT(FALSE);
+
+		return FALSE;
+	}
+
 	BOOL bNameValid;
 
 	// Create class view
@@ -221,15 +255,23 @@ BOOL CMainFrame::CreateDockingWindows()
 		return FALSE; // failed to create
 	}
 
-	// Create file view
-	CString strFileView;
-	bNameValid = strFileView.LoadString(IDS_FILE_VIEW);
-	ASSERT(bNameValid);
-	if (!m_wndFileView.Create(strFileView, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_FILEVIEW, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT| CBRS_FLOAT_MULTI))
+	// ********************************************************************************************
+	// Schema View
+	m_schemaView.SetController(pController);
+
+	if (!m_schemaView.Create(
+		_T("Schema"),
+		this,
+		CRect(0, 0, 200, 200),
+		TRUE,
+		ID_VIEW_SCHEMA,
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
 	{
-		TRACE0("Failed to create File View window\n");
-		return FALSE; // failed to create
+		ASSERT(FALSE);
+
+		return FALSE;
 	}
+	// ********************************************************************************************
 
 	// Create properties window
 	CString strPropertiesWnd;
@@ -247,8 +289,8 @@ BOOL CMainFrame::CreateDockingWindows()
 
 void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 {
-	HICON hFileViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_FILE_VIEW_HC : IDI_FILE_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
-	m_wndFileView.SetIcon(hFileViewIcon, FALSE);
+	HICON hSchemaViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_FILE_VIEW_HC : IDI_FILE_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
+	m_schemaView.SetIcon(hSchemaViewIcon, FALSE);
 
 	HICON hClassViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_CLASS_VIEW_HC : IDI_CLASS_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 	m_wndClassView.SetIcon(hClassViewIcon, FALSE);
@@ -436,8 +478,8 @@ void CMainFrame::OnViewFileView()
 {
 	// Show or activate the pane, depending on current state.  The
 	// pane can only be closed via the [x] button on the pane frame.
-	m_wndFileView.ShowPane(TRUE, FALSE, TRUE);
-	m_wndFileView.SetFocus();
+	m_schemaView.ShowPane(TRUE, FALSE, TRUE);
+	m_schemaView.SetFocus();
 }
 
 void CMainFrame::OnUpdateViewFileView(CCmdUI* pCmdUI)

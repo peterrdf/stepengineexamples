@@ -89,6 +89,8 @@
 #define IDS_EXPLORER                    305
 #define IDS_EDIT_MENU                   306
 #define IDB_NONE                        310
+#define IDC_TREE_IFC                    310
+#define ID_VIEW_SCHEMA                  311
 #define IDB_PROPERTY                    312
 #define IDB_PROPERTY_SET                313
 #define IDB_SELECTED_NONE               314
@@ -109,6 +111,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        321
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1000
-#define _APS_NEXT_SYMED_VALUE           310
+#define _APS_NEXT_SYMED_VALUE           312
 #endif
 #endif
