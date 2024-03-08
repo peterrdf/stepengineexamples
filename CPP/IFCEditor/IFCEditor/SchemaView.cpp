@@ -255,12 +255,6 @@ pair<int, int> CSchemaView::GetInstancesCount(CEntity* pEntity) const
 // ----------------------------------------------------------------------------
 void CSchemaView::OnNMClickTree(NMHDR* /*pNMHDR*/, LRESULT * pResult)
 {
-	*pResult = 0;
-}
-
-// ----------------------------------------------------------------------------
-void CSchemaView::OnNMRClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
-{
 	*pResult = 1;
 
 	DWORD dwPosition = GetMessagePos();
@@ -277,36 +271,34 @@ void CSchemaView::OnNMRClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 
 	m_treeCtrl.SelectItem(hItem);
 
-	auto pEntity = (CEntity *)m_treeCtrl.GetItemData(hItem);
+	if ((hItem == nullptr) || (m_treeCtrl.GetItemData(hItem) == NULL))
+	{
+		return;
+	}
 
-	CMenu menu;
-	VERIFY(menu.CreatePopupMenu());
+	m_treeCtrl.SelectItem(hItem);
 
-	int iImage, iSelectedImage = -1;
-	m_treeCtrl.GetItemImage(hItem, iImage, iSelectedImage);
+	GetController()->OnViewRelations(this, (CEntity*)m_treeCtrl.GetItemData(hItem));
+}
 
-	ASSERT(iImage == iSelectedImage);
+// ----------------------------------------------------------------------------
+void CSchemaView::OnNMRClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
+{
+	*pResult = 0;
 
-	// ********************************************************************************************
-	// View Relations/Attributes
-	CString strViewRelations;
-	//VERIFY(strViewRelations.LoadStringW(IDS_VIEW_IFC_RELATIONS));
+	DWORD dwPosition = GetMessagePos();
+	CPoint point(LOWORD(dwPosition), HIWORD(dwPosition));
+	m_treeCtrl.ScreenToClient(&point);
 
-	//menu.AppendMenu(MF_STRING, IDS_VIEW_IFC_RELATIONS, strViewRelations);
-	//// ********************************************************************************************
+	UINT uFlags = 0;
+	HTREEITEM hItem = m_treeCtrl.HitTest(point, &uFlags);
 
-	//CPoint pointScreen(LOWORD(dwPosition), HIWORD(dwPosition));
-	//int iResult = menu.TrackPopupMenu(TPM_RETURNCMD | TPM_LEFTALIGN, pointScreen.x, pointScreen.y, &m_treeCtrl);
-	//switch (iResult)
-	//{
-	//	case IDS_VIEW_IFC_RELATIONS:
-	//	{			
-	//		GetController()->OnViewRelations(this, pEntity);
-	//	}
-	//	break;
-	//} // switch (iResult)
+	if ((hItem == nullptr) || (m_treeCtrl.GetItemData(hItem) == NULL))
+	{
+		return;
+	}
 
-	//VERIFY(menu.DestroyMenu());
+	m_treeCtrl.SelectItem(hItem);
 }
 
 // ----------------------------------------------------------------------------
