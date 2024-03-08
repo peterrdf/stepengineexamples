@@ -138,9 +138,6 @@
     <ClInclude Include="TreeCtrlEx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StructureViewConsts.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IFCEditor.cpp">
