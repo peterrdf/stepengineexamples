@@ -255,7 +255,7 @@ pair<int, int> CSchemaView::GetInstancesCount(CEntity* pEntity) const
 // ----------------------------------------------------------------------------
 void CSchemaView::OnNMClickTree(NMHDR* /*pNMHDR*/, LRESULT * pResult)
 {
-	*pResult = 1;
+	*pResult = 0;
 
 	DWORD dwPosition = GetMessagePos();
 	CPoint point(LOWORD(dwPosition), HIWORD(dwPosition));
@@ -264,10 +264,12 @@ void CSchemaView::OnNMClickTree(NMHDR* /*pNMHDR*/, LRESULT * pResult)
 	UINT uFlags = 0;
 	HTREEITEM hItem = m_treeCtrl.HitTest(point, &uFlags);
 
-	if (hItem != nullptr)
+	if (hItem == nullptr)
 	{
-		m_treeCtrl.SelectItem(hItem);
+		return;
 	}
+
+	m_treeCtrl.SelectItem(hItem);
 
 	if (m_treeCtrl.GetItemData(hItem) != NULL)
 	{
@@ -278,7 +280,7 @@ void CSchemaView::OnNMClickTree(NMHDR* /*pNMHDR*/, LRESULT * pResult)
 // ----------------------------------------------------------------------------
 void CSchemaView::OnNMRClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
-	*pResult = 1;
+	*pResult = 0;
 
 	DWORD dwPosition = GetMessagePos();
 	CPoint point(LOWORD(dwPosition), HIWORD(dwPosition));
@@ -287,10 +289,12 @@ void CSchemaView::OnNMRClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 	UINT uFlags = 0;
 	HTREEITEM hItem = m_treeCtrl.HitTest(point, &uFlags);
 
-	if (hItem != nullptr)
+	if (hItem == nullptr)
 	{
-		m_treeCtrl.SelectItem(hItem);
+		return;
 	}
+
+	m_treeCtrl.SelectItem(hItem);
 }
 
 // ----------------------------------------------------------------------------
