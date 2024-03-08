@@ -197,7 +197,6 @@
     <ClInclude Include="..\include\wglext.h" />
     <ClInclude Include="calendarbar.h" />
     <ClInclude Include="ClassView.h" />
-    <ClInclude Include="FileView.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="IFCEditor.h" />
     <ClInclude Include="IFCEditorDoc.h" />
@@ -235,7 +234,6 @@
   <ItemGroup>
     <ClCompile Include="calendarbar.cpp" />
     <ClCompile Include="ClassView.cpp" />
-    <ClCompile Include="FileView.cpp" />
     <ClCompile Include="IFCEditor.cpp" />
     <ClCompile Include="IFCEditorDoc.cpp" />
     <ClCompile Include="IFCEditorView.cpp" />
