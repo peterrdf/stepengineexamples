@@ -185,7 +185,7 @@ void CSchemaView::LoadAttributes(CEntity* pEntity, HTREEITEM hParent)
 		tvInsertStruct.item.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_TEXT | TVIF_PARAM;
 		tvInsertStruct.item.pszText = (LPWSTR)pEntity->GetAttributes()[iAttribute].c_str();
 		tvInsertStruct.item.iImage = tvInsertStruct.item.iSelectedImage = IMAGE_ATTRIBUTE;
-		tvInsertStruct.item.lParam = (LPARAM)pEntity;
+		tvInsertStruct.item.lParam = NULL;
 
 		HTREEITEM hAttribute = m_treeCtrl.InsertItem(&tvInsertStruct);
 		VERIFY(hAttribute != nullptr);
@@ -264,27 +264,21 @@ void CSchemaView::OnNMClickTree(NMHDR* /*pNMHDR*/, LRESULT * pResult)
 	UINT uFlags = 0;
 	HTREEITEM hItem = m_treeCtrl.HitTest(point, &uFlags);
 
-	if ((hItem == nullptr) || (m_treeCtrl.GetItemData(hItem) == NULL))
+	if (hItem != nullptr)
 	{
-		return;
+		m_treeCtrl.SelectItem(hItem);
 	}
 
-	m_treeCtrl.SelectItem(hItem);
-
-	if ((hItem == nullptr) || (m_treeCtrl.GetItemData(hItem) == NULL))
+	if (m_treeCtrl.GetItemData(hItem) != NULL)
 	{
-		return;
+		GetController()->OnViewRelations(this, (CEntity*)m_treeCtrl.GetItemData(hItem));
 	}
-
-	m_treeCtrl.SelectItem(hItem);
-
-	GetController()->OnViewRelations(this, (CEntity*)m_treeCtrl.GetItemData(hItem));
 }
 
 // ----------------------------------------------------------------------------
 void CSchemaView::OnNMRClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
-	*pResult = 0;
+	*pResult = 1;
 
 	DWORD dwPosition = GetMessagePos();
 	CPoint point(LOWORD(dwPosition), HIWORD(dwPosition));
@@ -293,12 +287,10 @@ void CSchemaView::OnNMRClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 	UINT uFlags = 0;
 	HTREEITEM hItem = m_treeCtrl.HitTest(point, &uFlags);
 
-	if ((hItem == nullptr) || (m_treeCtrl.GetItemData(hItem) == NULL))
+	if (hItem != nullptr)
 	{
-		return;
+		m_treeCtrl.SelectItem(hItem);
 	}
-
-	m_treeCtrl.SelectItem(hItem);
 }
 
 // ----------------------------------------------------------------------------
