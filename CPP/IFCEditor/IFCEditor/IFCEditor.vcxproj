@@ -204,6 +204,7 @@
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PropertiesWnd.h" />
+    <ClInclude Include="RelationsView.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SchemaView.h" />
     <ClInclude Include="SchemaViewConsts.h" />
@@ -245,6 +246,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PropertiesWnd.cpp" />
+    <ClCompile Include="RelationsView.cpp" />
     <ClCompile Include="SchemaView.cpp" />
     <ClCompile Include="SearchTreeCtrlDialog.cpp" />
     <ClCompile Include="Texture.cpp" />

@@ -163,10 +163,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 
 	m_schemaView.EnableDocking(CBRS_ALIGN_ANY);
-	m_wndClassView.EnableDocking(CBRS_ALIGN_ANY);
+	m_relationsView.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_schemaView);
 	CDockablePane* pTabbedBar = nullptr;
-	m_wndClassView.AttachToTabWnd(&m_schemaView, DM_SHOW, TRUE, &pTabbedBar);
+	m_relationsView.AttachToTabWnd(&m_schemaView, DM_SHOW, TRUE, &pTabbedBar);
 	m_wndProperties.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wndProperties);
 
@@ -243,18 +243,6 @@ BOOL CMainFrame::CreateDockingWindows()
 		return FALSE;
 	}
 
-	BOOL bNameValid;
-
-	// Create class view
-	CString strClassView;
-	bNameValid = strClassView.LoadString(IDS_CLASS_VIEW);
-	ASSERT(bNameValid);
-	if (!m_wndClassView.Create(strClassView, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_CLASSVIEW, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
-	{
-		TRACE0("Failed to create Class View window\n");
-		return FALSE; // failed to create
-	}
-
 	// ********************************************************************************************
 	// Schema View
 	m_schemaView.SetController(pController);
@@ -273,9 +261,27 @@ BOOL CMainFrame::CreateDockingWindows()
 	}
 	// ********************************************************************************************
 
+	// ********************************************************************************************
+	// Relations/Attributes View
+	m_relationsView.SetController(pController);
+
+	if (!m_relationsView.Create(
+		_T("Instances"),
+		this,
+		CRect(0, 0, 200, 200),
+		TRUE,
+		ID_VIEW_RELATIONS,
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
+	{
+		ASSERT(FALSE);
+
+		return FALSE;
+	}
+	// ********************************************************************************************
+
 	// Create properties window
 	CString strPropertiesWnd;
-	bNameValid = strPropertiesWnd.LoadString(IDS_PROPERTIES_WND);
+	BOOL bNameValid = strPropertiesWnd.LoadString(IDS_PROPERTIES_WND);
 	ASSERT(bNameValid);
 	if (!m_wndProperties.Create(strPropertiesWnd, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_PROPERTIESWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
 	{
@@ -292,8 +298,8 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 	HICON hSchemaViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_FILE_VIEW_HC : IDI_FILE_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 	m_schemaView.SetIcon(hSchemaViewIcon, FALSE);
 
-	HICON hClassViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_CLASS_VIEW_HC : IDI_CLASS_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
-	m_wndClassView.SetIcon(hClassViewIcon, FALSE);
+	HICON hRelationsViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_CLASS_VIEW_HC : IDI_CLASS_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
+	m_relationsView.SetIcon(hRelationsViewIcon, FALSE);
 
 	HICON hPropertiesBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_PROPERTIES_WND_HC : IDI_PROPERTIES_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 	m_wndProperties.SetIcon(hPropertiesBarIcon, FALSE);
@@ -491,8 +497,8 @@ void CMainFrame::OnViewClassView()
 {
 	// Show or activate the pane, depending on current state.  The
 	// pane can only be closed via the [x] button on the pane frame.
-	m_wndClassView.ShowPane(TRUE, FALSE, TRUE);
-	m_wndClassView.SetFocus();
+	m_relationsView.ShowPane(TRUE, FALSE, TRUE);
+	m_relationsView.SetFocus();
 }
 
 void CMainFrame::OnUpdateViewClassView(CCmdUI* pCmdUI)

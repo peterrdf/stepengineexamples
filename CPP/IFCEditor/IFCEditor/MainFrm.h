@@ -6,7 +6,7 @@
 
 #include "Controller.h"
 #include "SchemaView.h"
-#include "ClassView.h"
+#include "RelationsView.h"
 #include "PropertiesWnd.h"
 #include "CalendarBar.h"
 #include "Resource.h"
@@ -55,7 +55,7 @@ protected:  // control bar embedded members
 	CMFCStatusBar     m_wndStatusBar;
 	CMFCToolBarImages m_UserImages;
 	CSchemaView       m_schemaView;
-	CClassView        m_wndClassView;
+	CRelationsView    m_relationsView;
 	CPropertiesWnd    m_wndProperties;
 	COutlookBar       m_wndNavigationBar;
 	CMFCShellTreeCtrl m_wndTree;
