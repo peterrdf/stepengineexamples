@@ -29,4 +29,6 @@ public: // Methods
 	static int64_t GetEntity(int64_t iInstance);
 	const wchar_t* GetEntityName() const;
 	static const wchar_t* GetEntityName(int64_t iInstance);
+
+	static void BuildInstanceNames(OwlModel iModel, OwlInstance iInstance, wstring& strName, wstring& strUniqueName);
 };

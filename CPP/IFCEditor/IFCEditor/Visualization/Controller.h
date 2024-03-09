@@ -69,6 +69,7 @@ public: // Methods
 
 	// Save
 	void SaveInstance();
+	void SaveInstance(OwlInstance iInstance);
 	
 	// [-1, 1]
 	void ScaleAndCenter();

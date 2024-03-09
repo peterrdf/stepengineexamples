@@ -101,16 +101,18 @@
 #define IDR_TEXTFILE_FRAGMENT_SHADER2   318
 #define IDR_TEXTFILE_VERTEX_SHADER2     319
 #define TEXTFILE                        320
+#define IDR_POPUP_INSTANCE              321
 #define IDC_BUTTON_SEARCH               1006
 #define IDC_EDIT_SEARCH_TEXT            1007
 #define IDC_COMBO_SEARCH_FILTER         1008
+#define ID_INSTANCE_SAVE                32773
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        321
-#define _APS_NEXT_COMMAND_VALUE         32771
+#define _APS_NEXT_RESOURCE_VALUE        322
+#define _APS_NEXT_COMMAND_VALUE         32774
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           313
 #endif

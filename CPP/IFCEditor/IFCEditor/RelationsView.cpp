@@ -1483,12 +1483,40 @@ void CRelationsView::ResetView()
 void CRelationsView::OnNMClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
 	*pResult = 0;
+
+	DWORD dwPosition = GetMessagePos();
+	CPoint point(LOWORD(dwPosition), HIWORD(dwPosition));
+	m_treeCtrl.ScreenToClient(&point);
+
+	UINT uFlags = 0;
+	HTREEITEM hItem = m_treeCtrl.HitTest(point, &uFlags);
+
+	if (hItem == nullptr)
+	{
+		return;
+	}
+
+	m_treeCtrl.SelectItem(hItem);
 }
 
 // ------------------------------------------------------------------------------------------------
 void CRelationsView::OnNMRClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
 	*pResult = 0;
+
+	DWORD dwPosition = GetMessagePos();
+	CPoint point(LOWORD(dwPosition), HIWORD(dwPosition));
+	m_treeCtrl.ScreenToClient(&point);
+
+	UINT uFlags = 0;
+	HTREEITEM hItem = m_treeCtrl.HitTest(point, &uFlags);
+
+	if (hItem == nullptr)
+	{
+		return;
+	}
+
+	m_treeCtrl.SelectItem(hItem);
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -1758,8 +1786,80 @@ void CRelationsView::OnProperties()
 	}
 }
 
-void CRelationsView::OnContextMenu(CWnd* /*pWnd*/, CPoint /*point*/)
+void CRelationsView::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
 {	
+	auto pController = GetController();
+	if (pController == nullptr)
+	{
+		ASSERT(FALSE);
+
+		return;
+	}
+
+	// Select clicked item
+	CPoint ptTree = point;
+	m_treeCtrl.ScreenToClient(&ptTree);
+
+	UINT uFlags = 0;
+	HTREEITEM hItem = m_treeCtrl.HitTest(ptTree, &uFlags);
+
+	if (hItem == nullptr)
+	{
+		return;
+	}
+
+	int iImage, iSelectedImage = -1;
+	m_treeCtrl.GetItemImage(hItem, iImage, iSelectedImage);
+
+	ASSERT(iImage == iSelectedImage);
+
+	if (iImage != IMAGE_INSTANCE)
+	{
+		return;
+	}
+
+		
+	auto pInstanceData = (CInstanceData*)m_treeCtrl.GetItemData(hItem);
+	if (pInstanceData == nullptr)
+	{
+		ASSERT(FALSE);
+
+		return;
+	}
+
+	SdaiInstance iInstance = 0;
+	owlBuildInstance(engiGetEntityModel(sdaiGetInstanceType(pInstanceData->GetInstance())), pInstanceData->GetInstance(), &iInstance);
+
+	if (iInstance == 0)
+	{
+		return;
+	}
+
+	CMenu menu;
+	VERIFY(menu.LoadMenuW(IDR_POPUP_INSTANCE));
+
+	auto pPopup = menu.GetSubMenu(0);
+
+	UINT uiCommand = pPopup->TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD, point.x, point.y, &m_treeCtrl);
+	if (uiCommand == 0)
+	{
+		return;
+	}
+
+	switch (uiCommand)
+	{
+		case ID_INSTANCE_SAVE:
+		{
+			pController->SaveInstance(iInstance);
+		}
+		break;
+
+		default:
+		{
+			ASSERT(FALSE);
+		}
+		break;
+	}
 }
 
 void CRelationsView::OnPaint()

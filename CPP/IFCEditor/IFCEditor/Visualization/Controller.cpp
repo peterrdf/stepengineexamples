@@ -115,6 +115,26 @@ void CController::SaveInstance()
 	SaveInstanceTreeW(m_pSelectedInstance->GetInstance(), dlgFile.GetPathName());
 }
 
+void CController::SaveInstance(OwlInstance iInstance)
+{
+	ASSERT(iInstance != 0);
+
+	wstring strName;
+	wstring strUniqueName;
+	CInstanceBase::BuildInstanceNames(m_pModel->GetSdaiModel(), iInstance, strName, strUniqueName);
+
+	TCHAR szFilters[] = _T("BIN Files (*.bin)|*.bin|All Files (*.*)|*.*||");
+	CFileDialog dlgFile(FALSE, _T("bin"), strUniqueName.c_str(),
+		OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY, szFilters);
+
+	if (dlgFile.DoModal() != IDOK)
+	{
+		return;
+	}
+
+	SaveInstanceTreeW(iInstance, dlgFile.GetPathName());
+}
+
 // ------------------------------------------------------------------------------------------------
 void CController::ScaleAndCenter()
 {

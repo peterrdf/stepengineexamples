@@ -117,3 +117,54 @@ const wchar_t* CInstanceBase::GetEntityName() const
 
 	return szEntityName != nullptr ? szEntityName : L"";
 }
+
+// --------------------------------------------------------------------------------------------
+/*static*/ void CInstanceBase::BuildInstanceNames(OwlModel iModel, OwlInstance iInstance, wstring& strName, wstring& strUniqueName)
+{
+	ASSERT(iModel != 0);
+	ASSERT(iInstance != 0);
+
+	int64_t iClassInstance = GetInstanceClass(iInstance);
+	ASSERT(iClassInstance != 0);
+
+	wchar_t* szClassName = nullptr;
+	GetNameOfClassW(iClassInstance, &szClassName);
+
+	wchar_t* szName = nullptr;
+	GetNameOfInstanceW(iInstance, &szName);
+
+	if (szName == nullptr)
+	{
+		RdfProperty iTagProperty = GetPropertyByName(iModel, "tag");
+		if (iTagProperty != 0)
+		{
+			SetCharacterSerialization(iModel, 0, 0, false);
+
+			int64_t iCard = 0;
+			wchar_t** szValue = nullptr;
+			GetDatatypeProperty(iInstance, iTagProperty, (void**)&szValue, &iCard);
+
+			if (iCard == 1)
+			{
+				szName = szValue[0];
+			}
+
+			SetCharacterSerialization(iModel, 0, 0, true);
+		}
+	} // if (szName == nullptr)
+
+	wchar_t szUniqueName[200];
+
+	if (szName != nullptr)
+	{
+		strName = szName;
+		swprintf(szUniqueName, 200, L"%s (%s)", szName, szClassName);
+	}
+	else
+	{
+		strName = szClassName;
+		swprintf(szUniqueName, 200, L"#%lld (%s)", iInstance, szClassName);
+	}
+
+	strUniqueName = szUniqueName;
+}
