@@ -167,8 +167,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	DockPane(&m_schemaView);
 	CDockablePane* pTabbedBar = nullptr;
 	m_relationsView.AttachToTabWnd(&m_schemaView, DM_SHOW, TRUE, &pTabbedBar);
-	m_wndProperties.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndProperties);
+	m_propertiesView.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_propertiesView);
 
 	// set the visual manager and style based on persisted value
 	OnApplicationLook(theApp.m_nAppLook);
@@ -279,15 +279,23 @@ BOOL CMainFrame::CreateDockingWindows()
 	}
 	// ********************************************************************************************
 
-	// Create properties window
-	CString strPropertiesWnd;
-	BOOL bNameValid = strPropertiesWnd.LoadString(IDS_PROPERTIES_WND);
-	ASSERT(bNameValid);
-	if (!m_wndProperties.Create(strPropertiesWnd, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_PROPERTIESWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
+	// ********************************************************************************************
+	// Create IFC Instance Properties View
+	m_propertiesView.SetController(pController);
+
+	if (!m_propertiesView.Create(
+		_T("Properties"),
+		this,
+		CRect(0, 0, 200, 200),
+		TRUE,
+		ID_VIEW_PROPERTIESWND,
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
 	{
-		TRACE0("Failed to create Properties window\n");
-		return FALSE; // failed to create
+		ASSERT(FALSE);
+
+		return FALSE;
 	}
+	// ********************************************************************************************
 
 	SetDockingWindowIcons(theApp.m_bHiColorIcons);
 	return TRUE;
@@ -302,7 +310,7 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 	m_relationsView.SetIcon(hRelationsViewIcon, FALSE);
 
 	HICON hPropertiesBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_PROPERTIES_WND_HC : IDI_PROPERTIES_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
-	m_wndProperties.SetIcon(hPropertiesBarIcon, FALSE);
+	m_propertiesView.SetIcon(hPropertiesBarIcon, FALSE);
 
 }
 
@@ -510,8 +518,8 @@ void CMainFrame::OnViewPropertiesWindow()
 {
 	// Show or activate the pane, depending on current state.  The
 	// pane can only be closed via the [x] button on the pane frame.
-	m_wndProperties.ShowPane(TRUE, FALSE, TRUE);
-	m_wndProperties.SetFocus();
+	m_propertiesView.ShowPane(TRUE, FALSE, TRUE);
+	m_propertiesView.SetFocus();
 }
 
 void CMainFrame::OnUpdateViewPropertiesWindow(CCmdUI* pCmdUI)

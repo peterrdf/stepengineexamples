@@ -56,7 +56,7 @@ protected:  // control bar embedded members
 	CMFCToolBarImages m_UserImages;
 	CSchemaView       m_schemaView;
 	CRelationsView    m_relationsView;
-	CPropertiesWnd    m_wndProperties;
+	CPropertiesWnd    m_propertiesView;
 	COutlookBar       m_wndNavigationBar;
 	CMFCShellTreeCtrl m_wndTree;
 	CCalendarBar      m_wndCalendar;

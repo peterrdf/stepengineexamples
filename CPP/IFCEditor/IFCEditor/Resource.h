@@ -94,6 +94,7 @@
 #define IDB_PROPERTY                    312
 #define ID_VIEW_RELATIONS               312
 #define IDB_PROPERTY_SET                313
+#define ID_COMBO_PROPERTIES_VIEW        313
 #define IDB_SELECTED_NONE               314
 #define IDB_SELECTED_ALL                315
 #define IDD_DIALOG_SEARCH               316
@@ -114,6 +115,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        322
 #define _APS_NEXT_COMMAND_VALUE         32774
 #define _APS_NEXT_CONTROL_VALUE         1000
-#define _APS_NEXT_SYMED_VALUE           313
+#define _APS_NEXT_SYMED_VALUE           314
 #endif
 #endif

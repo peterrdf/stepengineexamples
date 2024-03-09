@@ -1,6 +1,11 @@
 
 #pragma once
 
+#include "ViewBase.h"
+
+#include <map>
+#include <string>
+
 class CPropertiesToolBar : public CMFCToolBar
 {
 public:
@@ -12,8 +17,74 @@ public:
 	virtual BOOL AllowShowOnList() const { return FALSE; }
 };
 
-class CPropertiesWnd : public CDockablePane
+// ------------------------------------------------------------------------------------------------
+class CApplicationPropertyData
 {
+
+private:  // Members
+
+	// --------------------------------------------------------------------------------------------
+	// Type
+	enumApplicationProperty m_enApplicationProperty;
+
+public: // Methods
+
+	// --------------------------------------------------------------------------------------------
+	// ctor
+	CApplicationPropertyData(enumApplicationProperty enApplicationProperty);
+
+	// --------------------------------------------------------------------------------------------
+	// Getter
+	enumApplicationProperty GetType() const;
+};
+
+// ------------------------------------------------------------------------------------------------
+class CApplicationProperty : public CMFCPropertyGridProperty
+{
+
+public: // Methods
+
+	// --------------------------------------------------------------------------------------------
+	// ctor
+	CApplicationProperty(const CString& strName, const COleVariant& vtValue, LPCTSTR szDescription, DWORD_PTR dwData);
+
+	// --------------------------------------------------------------------------------------------
+	// ctor
+	CApplicationProperty(const CString& strGroupName, DWORD_PTR dwData, BOOL bIsValueList);
+
+	// --------------------------------------------------------------------------------------------
+	// dtor
+	virtual ~CApplicationProperty();
+};
+
+
+class CPropertiesWnd
+	: public CDockablePane
+	, public CViewBase
+{
+
+public: // Methods
+
+	// --------------------------------------------------------------------------------------------
+	// CViewBase
+	virtual void OnModelChanged();
+	virtual void OnShowMetaInformation();
+	virtual void OnInstanceSelected(CViewBase* pSender);
+	virtual void OnApplicationPropertyChanged(CViewBase* pSender, enumApplicationProperty enApplicationProperty) override;
+
+protected: // Methods
+
+	// --------------------------------------------------------------------------------------------
+	// Support for properties
+	afx_msg LRESULT OnPropertyChanged(__in WPARAM wparam, __in LPARAM lparam);
+
+	void LoadApplicationProperties();
+	void LoadInstanceProperties();
+	void LoadIFCInstanceProperties();
+
+	afx_msg void OnViewModeChanged();
+	afx_msg void OnDestroy();
+
 // Construction
 public:
 	CPropertiesWnd() noexcept;
@@ -50,7 +121,7 @@ protected:
 	afx_msg void OnProperties2();
 	afx_msg void OnUpdateProperties2(CCmdUI* pCmdUI);
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
-	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
+	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);	
 
 	DECLARE_MESSAGE_MAP()
 
