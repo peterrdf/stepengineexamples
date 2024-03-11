@@ -12,8 +12,9 @@
 /*static*/ int_t CIFCModel::s_iInstanceID = 1;
 
 // ------------------------------------------------------------------------------------------------
-CIFCModel::CIFCModel()
+CIFCModel::CIFCModel(bool bLoadInstancesOnDemand/* = false*/)
 	: CModel(enumModelType::IFC)
+	, m_bLoadInstancesOnDemand(bLoadInstancesOnDemand)
 	, m_ifcProjectEntity(0)
 	, m_ifcSpaceEntity(0)
 	, m_ifcOpeningElementEntity(0)
@@ -253,11 +254,14 @@ void CIFCModel::Load(const wchar_t* szIFCFile, int64_t iModel)
 	/*
 	* Retrieve the objects recursively
 	*/
-	RetrieveObjects__depth(ifcObjectEntity, DEFAULT_CIRCLE_SEGMENTS, 0);	
-	//#test
-	RetrieveObjects("IFCPROJECT", L"IFCPROJECT", DEFAULT_CIRCLE_SEGMENTS);
-	RetrieveObjects("IFCRELSPACEBOUNDARY", L"IFCRELSPACEBOUNDARY", DEFAULT_CIRCLE_SEGMENTS);
-
+	if (!m_bLoadInstancesOnDemand)
+	{	
+		RetrieveObjects__depth(ifcObjectEntity, DEFAULT_CIRCLE_SEGMENTS, 0);	
+		//#test
+		RetrieveObjects("IFCPROJECT", L"IFCPROJECT", DEFAULT_CIRCLE_SEGMENTS);
+		RetrieveObjects("IFCRELSPACEBOUNDARY", L"IFCRELSPACEBOUNDARY", DEFAULT_CIRCLE_SEGMENTS);
+	}
+	
 	/*
 	* Units
 	*/
@@ -285,8 +289,41 @@ void CIFCModel::Load(const wchar_t* szIFCFile, int64_t iModel)
 	/**
 	* Scale and Center
 	*/
+	ScaleAndCenter();
+}
+
+/*virtual*/ CInstanceBase* CIFCModel::LoadInstance(OwlInstance iInstance) /*override*/
+{
+	ASSERT(iInstance != 0);
+
+	m_bUpdteVertexBuffers = true;
+
+	for (auto pInstance : m_vecInstances)
+	{
+		delete pInstance;
+	}
+	m_vecInstances.clear();
+
+	m_mapInstances.clear();
+	m_mapID2Instance.clear();
+	m_mapExpressID2Instance.clear();
+
+	wchar_t* szInstanceGUID = nullptr;
+	sdaiGetAttrBN(iInstance, "GlobalId", sdaiUNICODE, &szInstanceGUID);
+
+	auto pInstance = RetrieveGeometry(szInstanceGUID, iInstance, DEFAULT_CIRCLE_SEGMENTS);
+	pInstance->ID() = s_iInstanceID++;
+
+	pInstance->SetEnable(true);
+
+	m_vecInstances.push_back(pInstance);
+	m_mapInstances[iInstance] = pInstance;
+	m_mapID2Instance[pInstance->ID()] = pInstance;
+	m_mapExpressID2Instance[pInstance->ExpressID()] = pInstance;
 
 	ScaleAndCenter();
+
+	return pInstance;
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -303,6 +340,9 @@ void CIFCModel::Clean()
 		delete pInstance;
 	}
 	m_vecInstances.clear();
+
+	m_mapID2Instance.clear();
+	m_mapExpressID2Instance.clear();
 
 	delete m_pUnitProvider;
 	m_pUnitProvider = nullptr;
@@ -525,16 +565,16 @@ void CIFCModel::RetrieveObjects(const char * szEntityName, const wchar_t * szEnt
 		SdaiInstance iInstance = 0;
 		engiGetAggrElement(iIFCInstances, i, sdaiINSTANCE, &iInstance);
 
-		wchar_t* szInstanceGUIDW = nullptr;
-		sdaiGetAttrBN(iInstance, "GlobalId", sdaiUNICODE, &szInstanceGUIDW);
+		wchar_t* szInstanceGUID = nullptr;
+		sdaiGetAttrBN(iInstance, "GlobalId", sdaiUNICODE, &szInstanceGUID);
 
-		auto pInstance = RetrieveGeometry(szInstanceGUIDW, iInstance, iCircleSegements);
+		auto pInstance = RetrieveGeometry(szInstanceGUID, iInstance, iCircleSegements);
 		pInstance->ID() = s_iInstanceID++;
 
 		CString strEntity = szEntityNameW;
 		strEntity.MakeUpper();
 
-		pInstance->SetEnable((strEntity != "IFCSPACE") && (strEntity != "IFCRELSPACEBOUNDARY") && (strEntity != "IFCOPENINGELEMENT"));
+		pInstance->SetEnable((strEntity != L"IFCSPACE") && (strEntity != L"IFCRELSPACEBOUNDARY") && (strEntity != L"IFCOPENINGELEMENT"));
 		
 		m_vecInstances.push_back(pInstance);
 		m_mapInstances[iInstance] = pInstance;

@@ -1497,6 +1497,46 @@ void CRelationsView::OnNMClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 	}
 
 	m_treeCtrl.SelectItem(hItem);
+
+	auto pController = GetController();
+	if (pController == nullptr)
+	{
+		ASSERT(FALSE);
+
+		return;
+	}
+
+	int iImage, iSelectedImage = -1;
+	m_treeCtrl.GetItemImage(hItem, iImage, iSelectedImage);
+
+	ASSERT(iImage == iSelectedImage);
+
+	if (iImage != IMAGE_INSTANCE)
+	{
+		return;
+	}
+
+	auto pInstanceData = (CInstanceData*)m_treeCtrl.GetItemData(hItem);
+	if (pInstanceData == nullptr)
+	{
+		ASSERT(FALSE);
+
+		return;
+	}
+
+	SdaiInstance iInstance = 0;
+	owlBuildInstance(engiGetEntityModel(sdaiGetInstanceType(pInstanceData->GetInstance())), pInstanceData->GetInstance(), &iInstance);
+
+	if (iInstance == 0)
+	{
+		return;
+	}
+
+	auto pInstance = pController->LoadInstance(pInstanceData->GetInstance());
+	if (pInstance != nullptr)
+	{
+		pController->SelectInstance(this, pInstance);
+	}
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -1796,7 +1836,6 @@ void CRelationsView::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
 		return;
 	}
 
-	// Select clicked item
 	CPoint ptTree = point;
 	m_treeCtrl.ScreenToClient(&ptTree);
 
@@ -1817,7 +1856,6 @@ void CRelationsView::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
 	{
 		return;
 	}
-
 		
 	auto pInstanceData = (CInstanceData*)m_treeCtrl.GetItemData(hItem);
 	if (pInstanceData == nullptr)

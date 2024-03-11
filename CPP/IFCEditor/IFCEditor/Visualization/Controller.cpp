@@ -44,6 +44,28 @@ void CController::SetModel(CModel* pModel)
 	m_bUpdatingModel = false;
 }
 
+CInstanceBase* CController::LoadInstance(OwlInstance iInstance)
+{
+	ASSERT(iInstance != 0);
+	ASSERT(m_pModel != nullptr);
+
+	m_pSelectedInstance = nullptr;
+
+	m_bUpdatingModel = true;
+
+	auto pInstance = m_pModel->LoadInstance(iInstance);
+
+	auto itView = m_setViews.begin();
+	for (; itView != m_setViews.end(); itView++)
+	{
+		(*itView)->OnModelChanged();
+	}
+
+	m_bUpdatingModel = false;
+
+	return pInstance;
+}
+
 // ------------------------------------------------------------------------------------------------
 void CController::RegisterView(CViewBase* pView)
 {

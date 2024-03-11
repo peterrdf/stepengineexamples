@@ -54,7 +54,7 @@ CApplicationProperty::CApplicationProperty(const CString& strGroupName, DWORD_PT
 }
 
 // ------------------------------------------------------------------------------------------------
-/*virtual*/ void CPropertiesWnd::OnModelChanged()
+/*virtual*/ void CPropertiesWnd::OnModelChanged() /*override*/
 {
 	m_wndObjectCombo.SetCurSel(0 /*Application*/);
 
@@ -62,7 +62,7 @@ CApplicationProperty::CApplicationProperty(const CString& strGroupName, DWORD_PT
 }
 
 // ------------------------------------------------------------------------------------------------
-/*virtual*/ void CPropertiesWnd::OnShowMetaInformation()
+/*virtual*/ void CPropertiesWnd::OnShowMetaInformation() /*override*/
 {
 	m_wndObjectCombo.SetCurSel(1 /*Properties*/);
 
@@ -70,7 +70,7 @@ CApplicationProperty::CApplicationProperty(const CString& strGroupName, DWORD_PT
 }
 
 // ------------------------------------------------------------------------------------------------
-/*virtual*/ void CPropertiesWnd::OnInstanceSelected(CViewBase* /*pSender*/)
+/*virtual*/ void CPropertiesWnd::OnInstanceSelected(CViewBase* /*pSender*/) /*override*/
 {
 	m_wndObjectCombo.SetCurSel(1 /*Properties*/);
 
@@ -78,7 +78,7 @@ CApplicationProperty::CApplicationProperty(const CString& strGroupName, DWORD_PT
 }
 
 // ------------------------------------------------------------------------------------------------
-/*virtual*/ void CPropertiesWnd::OnApplicationPropertyChanged(CViewBase* pSender, enumApplicationProperty /*enApplicationProperty*/)
+/*virtual*/ void CPropertiesWnd::OnApplicationPropertyChanged(CViewBase* pSender, enumApplicationProperty /*enApplicationProperty*/) /*override*/
 {
 	if (pSender == this)
 	{

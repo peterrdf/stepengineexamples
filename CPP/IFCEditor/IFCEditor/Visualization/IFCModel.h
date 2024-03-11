@@ -25,6 +25,9 @@ private: // Classes
 
 private: // Members
 
+	// Load
+	bool m_bLoadInstancesOnDemand;
+
 	// Entities
 	SdaiEntity m_ifcProjectEntity;
 	SdaiEntity m_ifcSpaceEntity;
@@ -56,7 +59,7 @@ private: // Members
 
 public: // Methods
 	
-	CIFCModel();
+	CIFCModel(bool bLoadInstancesOnDemand = false);
 	virtual ~CIFCModel();
 
 	void PreLoadInstance(SdaiInstance iInstance);
@@ -70,6 +73,7 @@ public: // Methods
 	void ScaleAndCenter(); // [-1, 1]
 
 	void Load(const wchar_t* szIFCFile, int64_t iModel);
+	virtual CInstanceBase* LoadInstance(OwlInstance iInstance) override;
 	void Clean();
 
 	const map<SdaiInstance, CIFCInstance*>& GetInstances() const;

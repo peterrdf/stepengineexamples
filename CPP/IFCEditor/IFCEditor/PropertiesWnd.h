@@ -67,9 +67,9 @@ public: // Methods
 
 	// --------------------------------------------------------------------------------------------
 	// CViewBase
-	virtual void OnModelChanged();
-	virtual void OnShowMetaInformation();
-	virtual void OnInstanceSelected(CViewBase* pSender);
+	virtual void OnModelChanged() override;
+	virtual void OnShowMetaInformation() override;
+	virtual void OnInstanceSelected(CViewBase* pSender) override;
 	virtual void OnApplicationPropertyChanged(CViewBase* pSender, enumApplicationProperty enApplicationProperty) override;
 
 protected: // Methods

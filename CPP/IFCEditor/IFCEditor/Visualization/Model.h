@@ -59,6 +59,9 @@ public: // Methods
 	SdaiModel GetSdaiModel() const;
 
 	// --------------------------------------------------------------------------------------------	
+	virtual CInstanceBase* LoadInstance(OwlInstance iInstance) = 0;
+
+	// --------------------------------------------------------------------------------------------	
 	void GetWorldDimensions(float& fXmin, float& fXmax, float& fYmin, float& fYmax, float& fZmin, float& fZmax) const;
 	void GetWorldTranslations(float& fXTranslation, float& fYTranslation, float& fZTranslation) const;
 	float GetBoundingSphereDiameter() const;

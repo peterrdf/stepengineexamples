@@ -41,6 +41,7 @@ public: // Methods
 	
 	CModel* GetModel() const;
 	void SetModel(CModel* pModel);
+	CInstanceBase* LoadInstance(OwlInstance iInstance);
 
 	// Events
 	void RegisterView(CViewBase* pView);

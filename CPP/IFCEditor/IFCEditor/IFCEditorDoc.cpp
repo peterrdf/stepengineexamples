@@ -51,7 +51,7 @@ BOOL CIFCEditorDoc::OnNewDocument()
 		m_pModel = nullptr;
 	}
 
-	m_pModel = new CIFCModel();
+	m_pModel = new CIFCModel(true);
 
 	SetModel(m_pModel);
 
@@ -186,7 +186,7 @@ BOOL CIFCEditorDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		return FALSE;
 	}
 
-	auto pModel = new CIFCModel();
+	auto pModel = new CIFCModel(true);
 	pModel->Load(lpszPathName, iModel);
 
 	m_pModel = pModel;
