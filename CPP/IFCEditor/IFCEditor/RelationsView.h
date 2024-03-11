@@ -57,6 +57,7 @@ enum class enumRelationsViewMode : int
 class CRelationsView 
 	: public CDockablePane
 	, public CViewBase
+	, public CItemStateProvider
 	, public CSearchTreeCtrlDialogSite
 {
 
@@ -165,6 +166,9 @@ public: // Methods
 	virtual void OnInstanceSelected(CViewBase* pSender) override;
 	virtual void OnViewRelations(CViewBase* pSender, int64_t iInstance) override;
 	virtual void OnViewRelations(CViewBase* pSender, CEntity* pEntity) override;
+
+	// CItemStateProvider
+	virtual bool IsSelected(HTREEITEM hItem) override;
 
 	// CSearchTreeCtrlDialogSite
 	virtual CTreeCtrlEx* GetTreeView() override;

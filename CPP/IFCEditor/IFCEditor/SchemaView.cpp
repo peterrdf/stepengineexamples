@@ -314,10 +314,6 @@ CSchemaView::CSchemaView()
 {
 	// State provider
 	m_treeCtrl.SetItemStateProvider(this);
-
-	//  Search
-	m_pSearchDialog = new CSearchTreeCtrlDialog(this);
-	m_pSearchDialog->Create(IDD_DIALOG_SEARCH, &m_treeCtrl);
 }
 
 CSchemaView::~CSchemaView()

@@ -56,7 +56,7 @@ protected:
 	virtual void OnModelChanged() override;
 
 	// CItemStateProvider
-	virtual bool IsSelected(HTREEITEM hItem);
+	virtual bool IsSelected(HTREEITEM hItem) override;
 
 	// CSearchTreeCtrlDialogSite
 	virtual CTreeCtrlEx* GetTreeView() override;

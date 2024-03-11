@@ -104,6 +104,11 @@ static char THIS_FILE[]=__FILE__;
 	ShowPane(TRUE, TRUE, TRUE);
 }
 
+/*virtual*/ bool CRelationsView::IsSelected(HTREEITEM hItem) /*override*/
+{
+	return m_treeCtrl.GetSelectedItem() == hItem;
+}
+
 // ------------------------------------------------------------------------------------------------
 /*virtual*/ CTreeCtrlEx* CRelationsView::GetTreeView() /*override*/
 {
@@ -1705,12 +1710,16 @@ CRelationsView::CRelationsView()
 	, m_pSearchDialog(nullptr)
 	, m_strTooltip(L"")
 {
+	// State provider
+	m_treeCtrl.SetItemStateProvider(this);
 }
 
 // ------------------------------------------------------------------------------------------------
 CRelationsView::~CRelationsView()
 {
 	Clean();
+
+	m_treeCtrl.SetItemStateProvider(nullptr);
 }
 
 BEGIN_MESSAGE_MAP(CRelationsView, CDockablePane)
