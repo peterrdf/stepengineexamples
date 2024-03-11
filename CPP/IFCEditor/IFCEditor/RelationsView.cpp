@@ -38,12 +38,14 @@ static char THIS_FILE[]=__FILE__;
 // ------------------------------------------------------------------------------------------------
 /*virtual*/ void CRelationsView::OnInstanceSelected(CViewBase* pSender) /*override*/
 {
+	
 	if (pSender == this)
 	{
 		return;
 	}
 
-	auto pController = GetController();
+	// OBSOLETE
+	/*auto pController = GetController();
 	if (pController == nullptr)
 	{
 		ASSERT(FALSE);
@@ -59,7 +61,7 @@ static char THIS_FILE[]=__FILE__;
 		vecInstances.push_back(pInstance->GetInstance());
 	}
 	
-	LoadInstances(vecInstances);
+	LoadInstances(vecInstances);*/
 }
 
 // ------------------------------------------------------------------------------------------------
