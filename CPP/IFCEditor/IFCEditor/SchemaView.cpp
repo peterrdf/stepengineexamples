@@ -20,6 +20,12 @@ static char THIS_FILE[]=__FILE__;
 	ResetView();
 }
 
+// CItemStateProvider
+/*virtual*/ bool CSchemaView::IsSelected(HTREEITEM hItem) /*override*/
+{
+	return m_treeCtrl.GetSelectedItem() == hItem;
+}
+
 // ------------------------------------------------------------------------------------------------
 /*virtual*/ CTreeCtrlEx* CSchemaView::GetTreeView() /*override*/
 {
@@ -306,10 +312,17 @@ void CSchemaView::OnTVNItemexpandingTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 CSchemaView::CSchemaView()
 	: m_pSearchDialog(nullptr)
 {
+	// State provider
+	m_treeCtrl.SetItemStateProvider(this);
+
+	//  Search
+	m_pSearchDialog = new CSearchTreeCtrlDialog(this);
+	m_pSearchDialog->Create(IDD_DIALOG_SEARCH, &m_treeCtrl);
 }
 
 CSchemaView::~CSchemaView()
 {
+	m_treeCtrl.SetItemStateProvider(nullptr);
 }
 
 BEGIN_MESSAGE_MAP(CSchemaView, CDockablePane)

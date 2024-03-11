@@ -33,6 +33,7 @@ class CSchemaViewToolBar : public CMFCToolBar
 class CSchemaView 
 	: public CDockablePane
 	, public CViewBase
+	, public CItemStateProvider
 	, public CSearchTreeCtrlDialogSite
 {
 
@@ -53,6 +54,9 @@ protected:
 
 	// CViewBase
 	virtual void OnModelChanged() override;
+
+	// CItemStateProvider
+	virtual bool IsSelected(HTREEITEM hItem);
 
 	// CSearchTreeCtrlDialogSite
 	virtual CTreeCtrlEx* GetTreeView() override;
