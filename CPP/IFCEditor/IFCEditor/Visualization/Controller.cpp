@@ -58,7 +58,7 @@ CInstanceBase* CController::LoadInstance(OwlInstance iInstance)
 	auto itView = m_setViews.begin();
 	for (; itView != m_setViews.end(); itView++)
 	{
-		(*itView)->OnModelChanged();
+		(*itView)->OnModelUpdated();
 	}
 
 	m_bUpdatingModel = false;

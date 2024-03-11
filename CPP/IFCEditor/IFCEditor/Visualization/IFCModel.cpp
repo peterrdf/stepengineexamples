@@ -286,7 +286,7 @@ void CIFCModel::Load(const wchar_t* szIFCFile, int64_t iModel)
 		m_mapExpressID2Instance[pInstance->ExpressID()] = pInstance;
 	}
 
-	/**
+	/*
 	* Scale and Center
 	*/
 	ScaleAndCenter();
@@ -308,6 +308,9 @@ void CIFCModel::Load(const wchar_t* szIFCFile, int64_t iModel)
 	m_mapID2Instance.clear();
 	m_mapExpressID2Instance.clear();
 
+	delete m_pPropertyProvider;
+	m_pPropertyProvider = nullptr;
+
 	wchar_t* szInstanceGUID = nullptr;
 	sdaiGetAttrBN(iInstance, "GlobalId", sdaiUNICODE, &szInstanceGUID);
 
@@ -318,9 +321,21 @@ void CIFCModel::Load(const wchar_t* szIFCFile, int64_t iModel)
 
 	m_vecInstances.push_back(pInstance);
 	m_mapInstances[iInstance] = pInstance;
+
+	/*
+	* Properties
+	*/
+	m_pPropertyProvider = new CIFCPropertyProvider(m_iModel, m_pUnitProvider);
+
+	/*
+	* Helper data structures
+	*/
 	m_mapID2Instance[pInstance->ID()] = pInstance;
 	m_mapExpressID2Instance[pInstance->ExpressID()] = pInstance;
 
+	/*
+	* Scale and Center
+	*/
 	ScaleAndCenter();
 
 	return pInstance;
@@ -341,6 +356,7 @@ void CIFCModel::Clean()
 	}
 	m_vecInstances.clear();
 
+	m_mapInstances.clear();
 	m_mapID2Instance.clear();
 	m_mapExpressID2Instance.clear();
 

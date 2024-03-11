@@ -48,6 +48,7 @@ public: // Methods
 
 	// Events
 	virtual void OnModelChanged();
+	virtual void OnModelUpdated();
 	virtual void OnWorldDimensionsChanged();	
 	virtual void OnShowMetaInformation();
 	virtual void OnInstanceSelected(CViewBase* pSender);

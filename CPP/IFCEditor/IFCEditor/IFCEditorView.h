@@ -22,7 +22,8 @@ private: // Methods
 public: // Methods
 
 	// CViewBase
-	virtual void OnModelChanged();
+	virtual void OnModelChanged() override;
+	virtual void OnModelUpdated() override;
 
 protected: // create from serialization only
 	CIFCEditorView() noexcept;

@@ -28,6 +28,10 @@ void CViewBase::SetController(CController* pController)
 {
 }
 
+/*virtual*/ void CViewBase::OnModelUpdated()
+{
+}
+
 // ------------------------------------------------------------------------------------------------
 /*virtual*/ void CViewBase::OnWorldDimensionsChanged()
 {

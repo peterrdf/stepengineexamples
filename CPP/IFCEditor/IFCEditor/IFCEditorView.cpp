@@ -28,7 +28,7 @@ CController* CIFCEditorView::GetController()
 }
 
 // ------------------------------------------------------------------------------------------------
-/*virtual*/ void CIFCEditorView::OnModelChanged()
+/*virtual*/ void CIFCEditorView::OnModelChanged() /*override*/
 {
 	delete m_pOpenGLView;
 	m_pOpenGLView = nullptr;
@@ -73,6 +73,11 @@ CController* CIFCEditorView::GetController()
 		}
 		break;
 	}
+}
+
+/*virtual*/ void CIFCEditorView::OnModelUpdated() /*override*/
+{
+	OnModelChanged();
 }
 
 
