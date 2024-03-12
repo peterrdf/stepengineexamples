@@ -1965,16 +1965,19 @@ void CRelationsView::OnDestroy()
 	ASSERT(GetController() != nullptr);
 	GetController()->UnRegisterView(this);
 
-	__super::OnDestroy();
-
 	delete m_pSearchDialog;
+	m_pSearchDialog = nullptr;
+
+	__super::OnDestroy();
 }
 
 void CRelationsView::OnShowWindow(BOOL bShow, UINT nStatus)
 {
 	__super::OnShowWindow(bShow, nStatus);
 
-	if (!bShow)
+	if (!bShow && 
+		(m_pSearchDialog != nullptr) &&
+		(m_pSearchDialog->GetSafeHwnd() != NULL))
 	{
 		m_pSearchDialog->ShowWindow(SW_HIDE);
 	}

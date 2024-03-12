@@ -141,12 +141,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// Navigation pane will be created at left, so temporary disable docking at the left side:
 	EnableDocking(CBRS_ALIGN_TOP | CBRS_ALIGN_BOTTOM | CBRS_ALIGN_RIGHT);
 
+	// DISABLED
 	// Create and setup "Outlook" navigation bar:
-	if (!CreateOutlookBar(m_wndNavigationBar, ID_VIEW_NAVIGATION, m_wndTree, m_wndCalendar, 250))
-	{
-		TRACE0("Failed to create navigation pane\n");
-		return -1;      // fail to create
-	}
+	//if (!CreateOutlookBar(m_wndNavigationBar, ID_VIEW_NAVIGATION, m_wndTree, m_wndCalendar, 250))
+	//{
+	//	TRACE0("Failed to create navigation pane\n");
+	//	return -1;      // fail to create
+	//}
 
 	// Outlook bar is created and docking on the left side should be allowed.
 	EnableDocking(CBRS_ALIGN_LEFT);
@@ -298,6 +299,7 @@ BOOL CMainFrame::CreateDockingWindows()
 	// ********************************************************************************************
 
 	SetDockingWindowIcons(theApp.m_bHiColorIcons);
+
 	return TRUE;
 }
 

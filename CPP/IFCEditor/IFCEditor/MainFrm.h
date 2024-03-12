@@ -57,9 +57,9 @@ protected:  // control bar embedded members
 	CSchemaView       m_schemaView;
 	CRelationsView    m_relationsView;
 	CPropertiesWnd    m_propertiesView;
-	COutlookBar       m_wndNavigationBar;
-	CMFCShellTreeCtrl m_wndTree;
-	CCalendarBar      m_wndCalendar;
+	//COutlookBar       m_wndNavigationBar; // DISABLED
+	//CMFCShellTreeCtrl m_wndTree; // DISABLED
+	//CCalendarBar      m_wndCalendar; // DISABLED
 
 // Generated message map functions
 protected:
