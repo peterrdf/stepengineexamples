@@ -51,6 +51,7 @@ public: // Methods
 	virtual void OnModelUpdated();
 	virtual void OnWorldDimensionsChanged();	
 	virtual void OnShowMetaInformation();
+	virtual void OnTargetInstanceChanged(CViewBase* pSender);
 	virtual void OnInstanceSelected(CViewBase* pSender);
 	virtual void OnInstancesEnabledStateChanged(CViewBase* pSender);
 	virtual void OnViewRelations(CViewBase* pSender, int64_t iInstance);

@@ -27,6 +27,9 @@ private: // Members
 	bool m_bUpdatingModel; // Updating model - disable all notifications	
 	
 	set<CViewBase*> m_setViews; // Views - MVC	
+
+	// Target
+	CInstanceBase* m_pTargetInstance;
 	
 	// Selection
 	CInstanceBase* m_pSelectedInstance;
@@ -77,6 +80,8 @@ public: // Methods
 	
 	// Events
 	void ShowMetaInformation(CInstanceBase* pInstance);
+	void SetTargetInstance(CViewBase* pSender, CInstanceBase* pInstance);
+	CInstanceBase* GetTargetInstance() const;
 	void SelectInstance(CViewBase* pSender, CInstanceBase* pInstance);
 	CInstanceBase* GetSelectedInstance() const;
 

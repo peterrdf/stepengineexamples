@@ -69,7 +69,8 @@ public: // Methods
 	// CViewBase
 	virtual void OnModelChanged() override;
 	virtual void OnShowMetaInformation() override;
-	virtual void OnInstanceSelected(CViewBase* pSender) override;
+	virtual void OnTargetInstanceChanged(CViewBase* pSender) override;
+	virtual void OnInstanceSelected(CViewBase* pSender) override;	
 	virtual void OnApplicationPropertyChanged(CViewBase* pSender, enumApplicationProperty enApplicationProperty) override;
 
 protected: // Methods
@@ -81,6 +82,7 @@ protected: // Methods
 	void LoadApplicationProperties();
 	void LoadInstanceProperties();
 	void LoadIFCInstanceProperties();
+	void LoadInstanceAttributes();
 
 	afx_msg void OnViewModeChanged();
 	afx_msg void OnDestroy();

@@ -8,6 +8,7 @@ CController::CController()
 	: m_pModel(nullptr)
 	, m_bUpdatingModel(false)
 	, m_setViews()
+	, m_pTargetInstance(nullptr)
 	, m_pSelectedInstance(nullptr)
 	, m_bScaleAndCenter(FALSE)
 {
@@ -32,6 +33,7 @@ void CController::SetModel(CModel* pModel)
 	m_pModel = pModel;
 
 	m_pSelectedInstance = nullptr;
+	m_pTargetInstance = nullptr;
 
 	m_bUpdatingModel = true;
 
@@ -50,6 +52,7 @@ CInstanceBase* CController::LoadInstance(OwlInstance iInstance)
 	ASSERT(m_pModel != nullptr);
 
 	m_pSelectedInstance = nullptr;
+	m_pTargetInstance = nullptr;
 
 	m_bUpdatingModel = true;
 
@@ -174,6 +177,29 @@ void CController::ScaleAndCenter()
 void CController::ShowMetaInformation(CInstanceBase* /*pInstance*/)
 {
 	ASSERT(FALSE); // OBSOLETE
+}
+
+// ------------------------------------------------------------------------------------------------
+void CController::SetTargetInstance(CViewBase* pSender, CInstanceBase* pInstance)
+{
+	if (m_bUpdatingModel)
+	{
+		return;
+	}
+
+	m_pTargetInstance = pInstance;
+
+	auto itView = m_setViews.begin();
+	for (; itView != m_setViews.end(); itView++)
+	{
+		(*itView)->OnTargetInstanceChanged(pSender);
+	}
+}
+
+// ------------------------------------------------------------------------------------------------
+CInstanceBase* CController::GetTargetInstance() const
+{
+	return m_pTargetInstance;
 }
 
 // ------------------------------------------------------------------------------------------------

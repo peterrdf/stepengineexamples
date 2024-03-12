@@ -56,25 +56,39 @@ CApplicationProperty::CApplicationProperty(const CString& strGroupName, DWORD_PT
 // ------------------------------------------------------------------------------------------------
 /*virtual*/ void CPropertiesWnd::OnModelChanged() /*override*/
 {
-	m_wndObjectCombo.SetCurSel(0 /*Application*/);
+	// Application and Properties are disabled!!!
+	
+	//m_wndObjectCombo.SetCurSel(0 /*Application*/);
 
-	LoadApplicationProperties();
+	//LoadApplicationProperties();
 }
 
 // ------------------------------------------------------------------------------------------------
 /*virtual*/ void CPropertiesWnd::OnShowMetaInformation() /*override*/
 {
-	m_wndObjectCombo.SetCurSel(1 /*Properties*/);
+	// Application and Properties are disabled!!!
+	
+	//m_wndObjectCombo.SetCurSel(1 /*Properties*/);
 
-	ASSERT(FALSE); // TODO
+	//ASSERT(FALSE); // TODO
+}
+
+// ------------------------------------------------------------------------------------------------
+/*virtual*/ void CPropertiesWnd::OnTargetInstanceChanged(CViewBase* pSender) /*override*/
+{
+	m_wndObjectCombo.SetCurSel(0 /*Attributes*/); // Application and Properties are disabled!!!
+
+	LoadInstanceAttributes();
 }
 
 // ------------------------------------------------------------------------------------------------
 /*virtual*/ void CPropertiesWnd::OnInstanceSelected(CViewBase* /*pSender*/) /*override*/
 {
-	m_wndObjectCombo.SetCurSel(1 /*Properties*/);
+	// Application and Properties are disabled!!!
+	
+	//m_wndObjectCombo.SetCurSel(1 /*Properties*/);
 
-	LoadInstanceProperties();
+	//LoadInstanceProperties();
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -87,7 +101,8 @@ CApplicationProperty::CApplicationProperty(const CString& strGroupName, DWORD_PT
 
 	if (m_wndObjectCombo.GetCurSel() == 0)
 	{
-		LoadApplicationProperties();
+		// Application and Properties are disabled!!!
+		//LoadApplicationProperties();
 	}
 }
 
@@ -738,21 +753,69 @@ void CPropertiesWnd::LoadIFCInstanceProperties()
 
 }
 
+void CPropertiesWnd::LoadInstanceAttributes()
+{
+	m_wndPropList.RemoveAll();
+	m_wndPropList.AdjustLayout();
+
+	SetPropListFont();
+
+	m_wndPropList.EnableHeaderCtrl(FALSE);
+	m_wndPropList.EnableDescriptionArea();
+	m_wndPropList.SetVSDotNetLook();
+	m_wndPropList.MarkModifiedProperties();
+
+	auto pContoller = GetController();
+	if (pContoller == nullptr)
+	{
+		ASSERT(FALSE);
+
+		return;
+	}
+
+	auto pTargetInstanceChanged = pContoller->GetTargetInstance();
+	if (pTargetInstanceChanged == nullptr)
+	{
+		return;
+	}
+
+	auto pModel = pContoller->GetModel();
+	if (pModel == nullptr)
+	{
+		return;
+	}	
+
+	auto pIFCModel = dynamic_cast<CIFCModel*>(pModel);
+	if (pIFCModel == nullptr)
+	{
+		ASSERT(FALSE);
+
+		return;
+	}
+}
+
 void CPropertiesWnd::OnViewModeChanged()
 {
 	switch (m_wndObjectCombo.GetCurSel())
 	{
-		case 0: // Application Properties
+		case 0:
 		{
-			LoadApplicationProperties();
+			LoadInstanceAttributes();
 		}
 		break;
 
-		case 1: // Instance Properties
-		{
-			LoadInstanceProperties();
-		}
-		break;
+		// Application and Properties are disabled!!!
+		//case 0: // Application Properties
+		//{
+		//	LoadApplicationProperties();
+		//}
+		//break;
+
+		//case 1: // Instance Properties
+		//{
+		//	LoadInstanceProperties();
+		//}
+		//break;
 
 		default:
 		{
@@ -837,8 +900,10 @@ int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;      // fail to create
 	}
 
-	m_wndObjectCombo.AddString(_T("Application"));
-	m_wndObjectCombo.AddString(_T("Properties"));
+	// Application and Properties are disabled!!!
+	//m_wndObjectCombo.AddString(_T("Application"));
+	//m_wndObjectCombo.AddString(_T("Properties"));
+	m_wndObjectCombo.AddString(_T("Attributes"));
 	m_wndObjectCombo.SetCurSel(0);
 
 	CRect rectCombo;

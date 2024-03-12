@@ -43,6 +43,11 @@ void CViewBase::SetController(CController* pController)
 }
 
 // ------------------------------------------------------------------------------------------------
+/*virtual*/ void CViewBase::OnTargetInstanceChanged(CViewBase* pSender)
+{
+}
+
+// ------------------------------------------------------------------------------------------------
 /*virtual*/ void CViewBase::OnInstanceSelected(CViewBase* /*pSender*/)
 {
 }

@@ -1542,7 +1542,7 @@ void CRelationsView::OnNMClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 	auto pInstance = pController->LoadInstance(pInstanceData->GetInstance());
 	if (pInstance != nullptr)
 	{
-		pController->SelectInstance(this, pInstance);
+		pController->SetTargetInstance(this, pInstance);
 	}
 }
 
