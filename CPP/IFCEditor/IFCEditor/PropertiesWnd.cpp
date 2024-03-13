@@ -929,6 +929,36 @@ void CPropertiesWnd::LoadInstanceAttributes()
 			}
 			break;
 
+			case sdaiSTRING:
+			{
+				wstring strValue;
+				wchar_t* szValue = nullptr;
+				if (sdaiGetAttr(pTargetInstance->GetInstance(), pAttribute->GetInstance(), sdaiUNICODE, &szValue))
+				{
+					strValue = szValue;
+				}
+				else
+				{
+					strValue += L"$";
+				}
+
+				wchar_t* szAttributeName = nullptr;
+				engiGetEntityArgumentName(
+					iEntity,
+					iIndex++,
+					sdaiUNICODE,
+					(char**)&szAttributeName);
+
+				auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
+				pInstanceGroup->AddSubItem(pAttributeProperty);
+
+				auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)strValue.c_str(), szAttributeName,
+					(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pTargetInstance), pAttribute));
+
+				pAttributeProperty->AddSubItem(pAttributeValue);
+			}
+			break;
+
 			default:
 			{
 				const char* szAttributeName = nullptr;
