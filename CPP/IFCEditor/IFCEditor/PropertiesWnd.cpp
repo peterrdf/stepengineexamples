@@ -197,209 +197,260 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 		return 0;
 	}
 
+	// Application and Properties are disabled!!!
 #pragma region Application
+	//if (m_wndObjectCombo.GetCurSel() == 0)
+	//{
+	//	auto pOpenGLView = GetController()->GetView<COpenGLView>();
+	//	ASSERT(pOpenGLView != nullptr);
+
+	//	auto ioglRender = dynamic_cast<_ioglRenderer*>(pOpenGLView);
+	//	ASSERT(ioglRender != nullptr);
+
+	//	auto pBlinnPhongProgram = ioglRender->_getOGLProgramAs<_oglBlinnPhongProgram>();
+	//	ASSERT(pBlinnPhongProgram != nullptr);
+
+	//	auto pApplicationProperty = dynamic_cast<CApplicationProperty*>((CMFCPropertyGridProperty*)lparam);
+	//	if (pApplicationProperty != nullptr)
+	//	{
+	//		CString strValue = pApplicationProperty->GetValue();
+
+	//		auto pData = (CApplicationPropertyData*)pApplicationProperty->GetData();
+	//		ASSERT(pData != nullptr);
+
+	//		switch (pData->GetType())
+	//		{
+	//		case enumApplicationProperty::ShowFaces:
+	//		{
+	//			pOpenGLView->ShowFaces(strValue == TRUE_VALUE_PROPERTY ? TRUE : FALSE);
+
+	//			GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::ShowFaces);
+	//		}
+	//		break;
+
+	//		case enumApplicationProperty::ShowConceptualFacesWireframes:
+	//		{
+	//			pOpenGLView->ShowConceptualFacesPolygons(strValue == TRUE_VALUE_PROPERTY ? TRUE : FALSE);
+
+	//			GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::ShowConceptualFacesWireframes);
+	//		}
+	//		break;
+
+	//		case enumApplicationProperty::ShowLines:
+	//		{
+	//			pOpenGLView->ShowLines(strValue == TRUE_VALUE_PROPERTY ? TRUE : FALSE);
+
+	//			GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::ShowLines);
+	//		}
+	//		break;
+
+	//		case enumApplicationProperty::ShowPoints:
+	//		{
+	//			pOpenGLView->ShowPoints(strValue == TRUE_VALUE_PROPERTY ? TRUE : FALSE);
+
+	//			GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::ShowPoints);
+	//		}
+	//		break;
+
+	//		case enumApplicationProperty::RotationMode:
+	//		{
+	//			pOpenGLView->SetRotationMode(strValue == ROTATION_MODE_XY ? enumRotationMode::XY : enumRotationMode::XYZ);
+
+	//			GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::RotationMode);
+	//		}
+	//		break;
+
+	//		case enumApplicationProperty::PointLightingLocation:
+	//		{
+	//			auto pProperty = pApplicationProperty->GetParent();
+	//			ASSERT(pProperty != nullptr);
+	//			ASSERT(dynamic_cast<CApplicationProperty*>(pProperty) != nullptr);
+	//			ASSERT(((CApplicationPropertyData*)dynamic_cast<CApplicationProperty*>(pProperty)->
+	//				GetData())->GetType() == enumApplicationProperty::PointLightingLocation);
+	//			ASSERT(pProperty->GetSubItemsCount() == 3);
+
+	//			auto pX = pProperty->GetSubItem(0);
+	//			auto pY = pProperty->GetSubItem(1);
+	//			auto pZ = pProperty->GetSubItem(2);
+
+	//			pBlinnPhongProgram->_setPointLightingLocation(glm::vec3(
+	//				(float)_wtof((LPCTSTR)(CString)pX->GetValue()),
+	//				(float)_wtof((LPCTSTR)(CString)pY->GetValue()),
+	//				(float)_wtof((LPCTSTR)(CString)pZ->GetValue()))
+	//			);
+
+	//			GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::PointLightingLocation);
+	//		}
+	//		break;
+
+	//		case enumApplicationProperty::AmbientLightWeighting:
+	//		{
+	//			auto pProperty = pApplicationProperty->GetParent();
+	//			ASSERT(pProperty != nullptr);
+	//			ASSERT(dynamic_cast<CApplicationProperty*>(pProperty) != nullptr);
+	//			ASSERT(((CApplicationPropertyData*)dynamic_cast<CApplicationProperty*>(pProperty)->
+	//				GetData())->GetType() == enumApplicationProperty::AmbientLightWeighting);
+	//			ASSERT(pProperty->GetSubItemsCount() == 3);
+
+	//			auto pX = pProperty->GetSubItem(0);
+	//			auto pY = pProperty->GetSubItem(1);
+	//			auto pZ = pProperty->GetSubItem(2);
+
+	//			pBlinnPhongProgram->_setAmbientLightWeighting(
+	//				(float)_wtof((LPCTSTR)(CString)pX->GetValue()),
+	//				(float)_wtof((LPCTSTR)(CString)pY->GetValue()),
+	//				(float)_wtof((LPCTSTR)(CString)pZ->GetValue())
+	//			);
+
+	//			GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::AmbientLightWeighting);
+	//		}
+	//		break;
+
+	//		case enumApplicationProperty::DiffuseLightWeighting:
+	//		{
+	//			auto pProperty = pApplicationProperty->GetParent();
+	//			ASSERT(pProperty != nullptr);
+	//			ASSERT(dynamic_cast<CApplicationProperty*>(pProperty) != nullptr);
+	//			ASSERT(((CApplicationPropertyData*)dynamic_cast<CApplicationProperty*>(pProperty)->
+	//				GetData())->GetType() == enumApplicationProperty::DiffuseLightWeighting);
+	//			ASSERT(pProperty->GetSubItemsCount() == 3);
+
+	//			auto pX = pProperty->GetSubItem(0);
+	//			auto pY = pProperty->GetSubItem(1);
+	//			auto pZ = pProperty->GetSubItem(2);
+
+	//			pBlinnPhongProgram->_setDiffuseLightWeighting(
+	//				(float)_wtof((LPCTSTR)(CString)pX->GetValue()),
+	//				(float)_wtof((LPCTSTR)(CString)pY->GetValue()),
+	//				(float)_wtof((LPCTSTR)(CString)pZ->GetValue())
+	//			);
+
+	//			GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::DiffuseLightWeighting);
+	//		}
+	//		break;
+
+	//		case enumApplicationProperty::SpecularLightWeighting:
+	//		{
+	//			auto pProperty = pApplicationProperty->GetParent();
+	//			ASSERT(pProperty != nullptr);
+	//			ASSERT(dynamic_cast<CApplicationProperty*>(pProperty) != nullptr);
+	//			ASSERT(((CApplicationPropertyData*)dynamic_cast<CApplicationProperty*>(pProperty)->
+	//				GetData())->GetType() == enumApplicationProperty::SpecularLightWeighting);
+	//			ASSERT(pProperty->GetSubItemsCount() == 3);
+
+	//			auto pX = pProperty->GetSubItem(0);
+	//			auto pY = pProperty->GetSubItem(1);
+	//			auto pZ = pProperty->GetSubItem(2);
+
+	//			pBlinnPhongProgram->_setSpecularLightWeighting(
+	//				(float)_wtof((LPCTSTR)(CString)pX->GetValue()),
+	//				(float)_wtof((LPCTSTR)(CString)pY->GetValue()),
+	//				(float)_wtof((LPCTSTR)(CString)pZ->GetValue())
+	//			);
+
+	//			GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::SpecularLightWeighting);
+	//		}
+	//		break;
+
+	//		case enumApplicationProperty::MaterialShininess:
+	//		{
+	//			float fValue = (float)_wtof((LPCTSTR)strValue);
+
+	//			pBlinnPhongProgram->_setMaterialShininess(fValue);
+
+	//			GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::MaterialShininess);
+	//		}
+	//		break;
+
+	//		case enumApplicationProperty::Contrast:
+	//		{
+	//			float fValue = (float)_wtof((LPCTSTR)strValue);
+
+	//			pBlinnPhongProgram->_setContrast(fValue);
+
+	//			GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::Contrast);
+	//		}
+	//		break;
+
+	//		case enumApplicationProperty::Brightness:
+	//		{
+	//			float fValue = (float)_wtof((LPCTSTR)strValue);
+
+	//			pBlinnPhongProgram->_setBrightness(fValue);
+
+	//			GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::Brightness);
+	//		}
+	//		break;
+
+	//		case enumApplicationProperty::Gamma:
+	//		{
+	//			float fValue = (float)_wtof((LPCTSTR)strValue);
+
+	//			pBlinnPhongProgram->_setGamma(fValue);
+
+	//			GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::Gamma);
+	//		}
+	//		break;
+
+	//		default:
+	//			ASSERT(FALSE);
+	//			break;
+	//		} // switch (pData->GetType())
+
+	//		return 0;
+	//	} // if (pApplicationProperty != nullptr)
+	//} // if (m_wndObjectCombo.GetCurSel() == 0)
+#pragma endregion
+
+	// Application and Properties are disabled!!!
+#pragma region Properties
+#pragma endregion // Properties
+
+	// Application and Properties are disabled!!!
+#pragma region Attributes
 	if (m_wndObjectCombo.GetCurSel() == 0)
 	{
-		auto pOpenGLView = GetController()->GetView<COpenGLView>();
-		ASSERT(pOpenGLView != nullptr);
-
-		auto ioglRender = dynamic_cast<_ioglRenderer*>(pOpenGLView);
-		ASSERT(ioglRender != nullptr);
-
-		auto pBlinnPhongProgram = ioglRender->_getOGLProgramAs<_oglBlinnPhongProgram>();
-		ASSERT(pBlinnPhongProgram != nullptr);
-
-		auto pApplicationProperty = dynamic_cast<CApplicationProperty*>((CMFCPropertyGridProperty*)lparam);
-		if (pApplicationProperty != nullptr)
+		auto pAttribute = dynamic_cast<CIFCInstanceAttribute*>((CMFCPropertyGridProperty*)lparam);
+		if (pAttribute == nullptr)
 		{
-			CString strValue = pApplicationProperty->GetValue();
+			return 0;
+		}
 
-			auto pData = (CApplicationPropertyData*)pApplicationProperty->GetData();
-			ASSERT(pData != nullptr);
+		CString strName = pAttribute->GetParent()->GetName();
 
-			switch (pData->GetType())
+		CString strValue = pAttribute->GetValue();
+		strValue.Trim();
+
+		auto pData = (CIFCInstanceAttributeData*)pAttribute->GetData();
+		if (pData == nullptr)
+		{
+			ASSERT(FALSE);
+
+			return 0;
+		}
+
+		switch (pData->GetAttribute()->GetType()) 
+		{
+			case sdaiINTEGER:
 			{
-			case enumApplicationProperty::ShowFaces:
-			{
-				pOpenGLView->ShowFaces(strValue == TRUE_VALUE_PROPERTY ? TRUE : FALSE);
+				int64_t iValue = 0;
+				if (!strValue.IsEmpty())
+				{
+					iValue = atoll(CW2A((LPCTSTR)strValue));
+				}
 
-				GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::ShowFaces);
-			}
-			break;
-
-			case enumApplicationProperty::ShowConceptualFacesWireframes:
-			{
-				pOpenGLView->ShowConceptualFacesPolygons(strValue == TRUE_VALUE_PROPERTY ? TRUE : FALSE);
-
-				GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::ShowConceptualFacesWireframes);
-			}
-			break;
-
-			case enumApplicationProperty::ShowLines:
-			{
-				pOpenGLView->ShowLines(strValue == TRUE_VALUE_PROPERTY ? TRUE : FALSE);
-
-				GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::ShowLines);
-			}
-			break;
-
-			case enumApplicationProperty::ShowPoints:
-			{
-				pOpenGLView->ShowPoints(strValue == TRUE_VALUE_PROPERTY ? TRUE : FALSE);
-
-				GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::ShowPoints);
-			}
-			break;
-
-			case enumApplicationProperty::RotationMode:
-			{
-				pOpenGLView->SetRotationMode(strValue == ROTATION_MODE_XY ? enumRotationMode::XY : enumRotationMode::XYZ);
-
-				GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::RotationMode);
-			}
-			break;
-
-			case enumApplicationProperty::PointLightingLocation:
-			{
-				auto pProperty = pApplicationProperty->GetParent();
-				ASSERT(pProperty != nullptr);
-				ASSERT(dynamic_cast<CApplicationProperty*>(pProperty) != nullptr);
-				ASSERT(((CApplicationPropertyData*)dynamic_cast<CApplicationProperty*>(pProperty)->
-					GetData())->GetType() == enumApplicationProperty::PointLightingLocation);
-				ASSERT(pProperty->GetSubItemsCount() == 3);
-
-				auto pX = pProperty->GetSubItem(0);
-				auto pY = pProperty->GetSubItem(1);
-				auto pZ = pProperty->GetSubItem(2);
-
-				pBlinnPhongProgram->_setPointLightingLocation(glm::vec3(
-					(float)_wtof((LPCTSTR)(CString)pX->GetValue()),
-					(float)_wtof((LPCTSTR)(CString)pY->GetValue()),
-					(float)_wtof((LPCTSTR)(CString)pZ->GetValue()))
-				);
-
-				GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::PointLightingLocation);
-			}
-			break;
-
-			case enumApplicationProperty::AmbientLightWeighting:
-			{
-				auto pProperty = pApplicationProperty->GetParent();
-				ASSERT(pProperty != nullptr);
-				ASSERT(dynamic_cast<CApplicationProperty*>(pProperty) != nullptr);
-				ASSERT(((CApplicationPropertyData*)dynamic_cast<CApplicationProperty*>(pProperty)->
-					GetData())->GetType() == enumApplicationProperty::AmbientLightWeighting);
-				ASSERT(pProperty->GetSubItemsCount() == 3);
-
-				auto pX = pProperty->GetSubItem(0);
-				auto pY = pProperty->GetSubItem(1);
-				auto pZ = pProperty->GetSubItem(2);
-
-				pBlinnPhongProgram->_setAmbientLightWeighting(
-					(float)_wtof((LPCTSTR)(CString)pX->GetValue()),
-					(float)_wtof((LPCTSTR)(CString)pY->GetValue()),
-					(float)_wtof((LPCTSTR)(CString)pZ->GetValue())
-				);
-
-				GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::AmbientLightWeighting);
-			}
-			break;
-
-			case enumApplicationProperty::DiffuseLightWeighting:
-			{
-				auto pProperty = pApplicationProperty->GetParent();
-				ASSERT(pProperty != nullptr);
-				ASSERT(dynamic_cast<CApplicationProperty*>(pProperty) != nullptr);
-				ASSERT(((CApplicationPropertyData*)dynamic_cast<CApplicationProperty*>(pProperty)->
-					GetData())->GetType() == enumApplicationProperty::DiffuseLightWeighting);
-				ASSERT(pProperty->GetSubItemsCount() == 3);
-
-				auto pX = pProperty->GetSubItem(0);
-				auto pY = pProperty->GetSubItem(1);
-				auto pZ = pProperty->GetSubItem(2);
-
-				pBlinnPhongProgram->_setDiffuseLightWeighting(
-					(float)_wtof((LPCTSTR)(CString)pX->GetValue()),
-					(float)_wtof((LPCTSTR)(CString)pY->GetValue()),
-					(float)_wtof((LPCTSTR)(CString)pZ->GetValue())
-				);
-
-				GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::DiffuseLightWeighting);
-			}
-			break;
-
-			case enumApplicationProperty::SpecularLightWeighting:
-			{
-				auto pProperty = pApplicationProperty->GetParent();
-				ASSERT(pProperty != nullptr);
-				ASSERT(dynamic_cast<CApplicationProperty*>(pProperty) != nullptr);
-				ASSERT(((CApplicationPropertyData*)dynamic_cast<CApplicationProperty*>(pProperty)->
-					GetData())->GetType() == enumApplicationProperty::SpecularLightWeighting);
-				ASSERT(pProperty->GetSubItemsCount() == 3);
-
-				auto pX = pProperty->GetSubItem(0);
-				auto pY = pProperty->GetSubItem(1);
-				auto pZ = pProperty->GetSubItem(2);
-
-				pBlinnPhongProgram->_setSpecularLightWeighting(
-					(float)_wtof((LPCTSTR)(CString)pX->GetValue()),
-					(float)_wtof((LPCTSTR)(CString)pY->GetValue()),
-					(float)_wtof((LPCTSTR)(CString)pZ->GetValue())
-				);
-
-				GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::SpecularLightWeighting);
-			}
-			break;
-
-			case enumApplicationProperty::MaterialShininess:
-			{
-				float fValue = (float)_wtof((LPCTSTR)strValue);
-
-				pBlinnPhongProgram->_setMaterialShininess(fValue);
-
-				GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::MaterialShininess);
-			}
-			break;
-
-			case enumApplicationProperty::Contrast:
-			{
-				float fValue = (float)_wtof((LPCTSTR)strValue);
-
-				pBlinnPhongProgram->_setContrast(fValue);
-
-				GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::Contrast);
-			}
-			break;
-
-			case enumApplicationProperty::Brightness:
-			{
-				float fValue = (float)_wtof((LPCTSTR)strValue);
-
-				pBlinnPhongProgram->_setBrightness(fValue);
-
-				GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::Brightness);
-			}
-			break;
-
-			case enumApplicationProperty::Gamma:
-			{
-				float fValue = (float)_wtof((LPCTSTR)strValue);
-
-				pBlinnPhongProgram->_setGamma(fValue);
-
-				GetController()->OnApplicationPropertyChanged(this, enumApplicationProperty::Gamma);
+				sdaiPutAttrBN(pData->GetInstance()->GetInstance(), CW2A((LPCTSTR)strName), sdaiINTEGER, &iValue);
 			}
 			break;
 
 			default:
-				ASSERT(FALSE);
-				break;
-			} // switch (pData->GetType())
+			{
 
-			return 0;
-		} // if (pApplicationProperty != nullptr)
-	} // if (m_wndObjectCombo.GetCurSel() == 0)
-#pragma endregion
+			}
+			break;
+		} // switch (pData->GetAttribute()->GetType()) 
+	}
+#pragma endregion // Attributes
 
 	return 0;
 }
@@ -879,12 +930,13 @@ void CPropertiesWnd::LoadInstanceAttributes()
 	ASSERT(iEntity != 0);
 
 	auto pAttributeProvider = pIFCModel->GetAttributeProvider();
-	auto& vecAttributes = pAttributeProvider->GetInstanceAttributes(pTargetInstance->GetInstance());
-	SdaiInteger iIndex = 0;
-	for (auto pAttribute : vecAttributes)
+	auto& vecAttributes = pAttributeProvider->GetInstanceAttributes(pTargetInstance->GetInstance());	
+	for (SdaiInteger iIndex = 0; iIndex < (SdaiInteger)vecAttributes.size(); iIndex++)
 	{
-		SdaiPrimitiveType iType = pAttribute->GetType();
-		switch(iType) {
+		auto pAttribute = vecAttributes[iIndex];
+
+		switch(pAttribute->GetType())
+		{
 			case sdaiINTEGER:
 			{
 				int_t iValue = 0;
@@ -970,8 +1022,8 @@ void CPropertiesWnd::LoadInstanceAttributes()
 				TRACE(L"\nTODO");
 			}
 			break;
-		}
-	}
+		} // switch(pAttribute->GetType())
+	} // for (SdaiInteger iIndex = ...
 
 	m_wndPropList.AddProperty(pInstanceGroup);
 }
