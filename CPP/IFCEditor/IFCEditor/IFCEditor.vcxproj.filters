@@ -141,6 +141,9 @@
     <ClInclude Include="RelationsView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IFCAttribute.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IFCEditor.cpp">
@@ -213,6 +216,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RelationsView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IFCAttribute.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

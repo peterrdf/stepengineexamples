@@ -2,13 +2,17 @@
 #pragma once
 
 #include "ViewBase.h"
+#include "Controller.h"
+#include "IFCAttribute.h"
 
 #include <map>
 #include <string>
 
+// ************************************************************************************************
 class CPropertiesToolBar : public CMFCToolBar
 {
 public:
+
 	virtual void OnUpdateCmdUI(CFrameWnd* /*pTarget*/, BOOL bDisableIfNoHndler)
 	{
 		CMFCToolBar::OnUpdateCmdUI((CFrameWnd*) GetOwner(), bDisableIfNoHndler);
@@ -17,47 +21,87 @@ public:
 	virtual BOOL AllowShowOnList() const { return FALSE; }
 };
 
-// ------------------------------------------------------------------------------------------------
+// ************************************************************************************************
 class CApplicationPropertyData
 {
 
 private:  // Members
 
-	// --------------------------------------------------------------------------------------------
-	// Type
 	enumApplicationProperty m_enApplicationProperty;
 
 public: // Methods
 
-	// --------------------------------------------------------------------------------------------
-	// ctor
 	CApplicationPropertyData(enumApplicationProperty enApplicationProperty);
 
-	// --------------------------------------------------------------------------------------------
-	// Getter
 	enumApplicationProperty GetType() const;
 };
 
-// ------------------------------------------------------------------------------------------------
+// ************************************************************************************************
 class CApplicationProperty : public CMFCPropertyGridProperty
 {
 
 public: // Methods
-
-	// --------------------------------------------------------------------------------------------
-	// ctor
 	CApplicationProperty(const CString& strName, const COleVariant& vtValue, LPCTSTR szDescription, DWORD_PTR dwData);
-
-	// --------------------------------------------------------------------------------------------
-	// ctor
 	CApplicationProperty(const CString& strGroupName, DWORD_PTR dwData, BOOL bIsValueList);
-
-	// --------------------------------------------------------------------------------------------
-	// dtor
 	virtual ~CApplicationProperty();
 };
 
+// ************************************************************************************************
+class CIFCInstanceData
+{
 
+private:  // Members
+
+	CController* m_pController;
+	CIFCInstance* m_pInstance;
+
+public: // Methods
+
+	CIFCInstanceData(CController* pController, CIFCInstance* pInstance)
+		: m_pController(pController)
+		, m_pInstance(pInstance)
+	{}
+	virtual ~CIFCInstanceData() {}
+
+	CController* GetController() const { return m_pController; }
+	CIFCInstance* GetInstance() const { return m_pInstance; }
+};
+
+// ************************************************************************************************
+class CIFCInstanceAttributeData : public CIFCInstanceData
+{
+
+private:  // Members
+
+	CIFCAttribute* m_pAttribute;
+
+public: // Methods
+
+	CIFCInstanceAttributeData(CController* pController, CIFCInstance* pInstance, CIFCAttribute* pAttribute)
+		: CIFCInstanceData(pController, pInstance)
+		, m_pAttribute(pAttribute)
+	{}
+	virtual ~CIFCInstanceAttributeData() {}
+
+	CIFCAttribute* GetAttribute() const { return m_pAttribute; }
+};
+
+// ************************************************************************************************
+class CIFCInstanceAttribute : public CMFCPropertyGridProperty
+{
+
+public: // Methods
+
+	CIFCInstanceAttribute(const CString& strName, const COleVariant& vtValue, LPCTSTR szDescription, DWORD_PTR dwData);
+	virtual ~CIFCInstanceAttribute();
+
+	virtual CString FormatProperty();
+	virtual BOOL TextToVar(const CString& strText);
+	virtual CWnd* CreateInPlaceEdit(CRect rectEdit, BOOL& bDefaultFormat);
+	void EnableSpinControlInt64();
+};
+
+// ************************************************************************************************
 class CPropertiesWnd
 	: public CDockablePane
 	, public CViewBase

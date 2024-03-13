@@ -1531,13 +1531,14 @@ void CRelationsView::OnNMClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 		return;
 	}
 
-	SdaiInstance iInstance = 0;
-	owlBuildInstance(engiGetEntityModel(sdaiGetInstanceType(pInstanceData->GetInstance())), pInstanceData->GetInstance(), &iInstance);
+	//#tbd
+	//int64_t iInstance = 0;
+	//owlBuildInstance(engiGetEntityModel(sdaiGetInstanceType(pInstanceData->GetInstance())), pInstanceData->GetInstance(), &iInstance);
 
-	if (iInstance == 0)
+	/*if (iInstance == 0)
 	{
 		return;
-	}
+	}*/
 
 	auto pInstance = pController->LoadInstance(pInstanceData->GetInstance());
 	if (pInstance != nullptr)

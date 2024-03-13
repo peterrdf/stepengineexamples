@@ -7,6 +7,7 @@
 #include "IFCUnit.h"
 #include "IFCProperty.h"
 #include "Entity.h"
+#include "IFCAttribute.h"
 
 #include <string>
 #include <map>
@@ -52,6 +53,7 @@ private: // Members
 	CIFCUnitProvider* m_pUnitProvider;
 	CIFCPropertyProvider* m_pPropertyProvider;
 	CEntityProvider* m_pEntityProvider;
+	CIFCAttributeProvider* m_pAttributeProvider;
 
 	static int_t s_iInstanceID;
 
@@ -79,6 +81,7 @@ public: // Methods
 	const map<SdaiInstance, CIFCInstance*>& GetInstances() const;
 	CIFCUnitProvider* GetUnitProvider() const;
 	CIFCPropertyProvider* GetPropertyProvider() const;
+	CIFCAttributeProvider* GetAttributeProvider() const;
 	CIFCInstance* GetInstanceByID(int_t iID);	
 	void GetInstancesByType(const wchar_t* szType, vector<CIFCInstance*>& vecInstances);
 

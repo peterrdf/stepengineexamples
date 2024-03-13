@@ -54,6 +54,86 @@ CApplicationProperty::CApplicationProperty(const CString& strGroupName, DWORD_PT
 }
 
 // ------------------------------------------------------------------------------------------------
+CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleVariant& vtValue, LPCTSTR szDescription, DWORD_PTR dwData)
+	: CMFCPropertyGridProperty(strName, vtValue, szDescription, dwData)
+{
+}
+
+// ------------------------------------------------------------------------------------------------
+/*virtual*/ CIFCInstanceAttribute::~CIFCInstanceAttribute()
+{
+	delete (CIFCInstanceAttributeData*)GetData();
+}
+
+// ------------------------------------------------------------------------------------------------
+/*virtual*/ CString CIFCInstanceAttribute::FormatProperty()
+{
+	if (m_varValue.vt != VT_I8)
+	{
+		return __super::FormatProperty();
+	}
+
+	CString strValue;
+	strValue.Format(L"%lld", m_varValue.llVal);
+
+	return strValue;
+}
+
+// ------------------------------------------------------------------------------------------------
+/*virtual*/ BOOL CIFCInstanceAttribute::TextToVar(const CString& strText)
+{
+	/*
+	* Support for int64_t
+	*/
+	if (m_varValue.vt != VT_I8)
+	{
+		return __super::TextToVar(strText);
+	}
+
+	m_varValue.llVal = _ttoi64(strText);
+
+	return TRUE;
+}
+
+// ------------------------------------------------------------------------------------------------
+/*virtual*/ CWnd* CIFCInstanceAttribute::CreateInPlaceEdit(CRect rectEdit, BOOL& bDefaultFormat)
+{
+	/*
+	* Support for int64_t
+	*/
+	bool bInt64 = false;
+	if (m_varValue.vt == VT_I8)
+	{
+		// Cheat the base class
+		m_varValue.vt = VT_I4;
+		bInt64 = true;
+	}
+
+	CWnd* pWnd = __super::CreateInPlaceEdit(rectEdit, bDefaultFormat);
+
+	if (bInt64)
+	{
+		// Restore type
+		m_varValue.vt = VT_I8;
+	}
+
+	return pWnd;
+}
+
+// ------------------------------------------------------------------------------------------------
+/*virtual*/ void CIFCInstanceAttribute::EnableSpinControlInt64()
+{
+	ASSERT(m_varValue.vt == VT_I8);
+
+	// Cheat the base class
+	m_varValue.vt = VT_I4;
+
+	EnableSpinControl(TRUE, 0, INT_MAX);
+
+	m_varValue.vt = VT_I8;
+}
+
+// ------------------------------------------------------------------------------------------------
 /*virtual*/ void CPropertiesWnd::OnModelChanged() /*override*/
 {
 	// Application and Properties are disabled!!!
@@ -773,8 +853,8 @@ void CPropertiesWnd::LoadInstanceAttributes()
 		return;
 	}
 
-	auto pTargetInstanceChanged = pContoller->GetTargetInstance();
-	if (pTargetInstanceChanged == nullptr)
+	auto pTargetInstance = pContoller->GetTargetInstance();
+	if (pTargetInstance == nullptr)
 	{
 		return;
 	}
@@ -792,6 +872,78 @@ void CPropertiesWnd::LoadInstanceAttributes()
 
 		return;
 	}
+
+	auto pInstanceGroup = new CMFCPropertyGridProperty(pTargetInstance->GetName().c_str());
+
+	SdaiEntity iEntity = sdaiGetInstanceType(pTargetInstance->GetInstance());
+	ASSERT(iEntity != 0);
+
+	auto pAttributeProvider = pIFCModel->GetAttributeProvider();
+	auto& vecAttributes = pAttributeProvider->GetInstanceAttributes(pTargetInstance->GetInstance());
+	SdaiInteger iIndex = 0;
+	for (auto pAttribute : vecAttributes)
+	{
+		SdaiPrimitiveType iType = pAttribute->GetType();
+		switch(iType) {
+			case sdaiINTEGER:
+			{
+				int_t iValue = 0;
+				sdaiGetAttr(pTargetInstance->GetInstance(), pAttribute->GetInstance(), sdaiINTEGER, &iValue);
+
+				wchar_t* szAttributeName = nullptr;
+				engiGetEntityArgumentName(
+					iEntity,
+					iIndex++,
+					sdaiUNICODE,
+					(char**)&szAttributeName);
+
+				auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
+				pInstanceGroup->AddSubItem(pAttributeProperty);
+
+				auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)iValue, szAttributeName,
+					(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pTargetInstance), pAttribute));
+
+				pAttributeProperty->AddSubItem(pAttributeValue);
+			}
+			break;
+
+			case sdaiREAL:
+			{
+				double dValue = 0;
+				sdaiGetAttr(pTargetInstance->GetInstance(), pAttribute->GetInstance(), sdaiREAL, &dValue);
+
+				wchar_t* szAttributeName = nullptr;
+				engiGetEntityArgumentName(
+					iEntity,
+					iIndex++,
+					sdaiUNICODE,
+					(char**)&szAttributeName);
+
+				auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
+				pInstanceGroup->AddSubItem(pAttributeProperty);
+
+				auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)dValue, szAttributeName,
+					(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pTargetInstance), pAttribute));
+
+				pAttributeProperty->AddSubItem(pAttributeValue);
+			}
+			break;
+
+			default:
+			{
+				const char* szAttributeName = nullptr;
+				engiGetEntityArgumentName(iEntity,
+					iIndex++,
+					sdaiSTRING,
+					&szAttributeName);
+
+				TRACE(L"\nTODO");
+			}
+			break;
+		}
+	}
+
+	m_wndPropList.AddProperty(pInstanceGroup);
 }
 
 void CPropertiesWnd::OnViewModeChanged()

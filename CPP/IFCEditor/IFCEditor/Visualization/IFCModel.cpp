@@ -36,6 +36,7 @@ CIFCModel::CIFCModel(bool bLoadInstancesOnDemand/* = false*/)
 	, m_pUnitProvider(nullptr)
 	, m_pPropertyProvider(nullptr)
 	, m_pEntityProvider(nullptr)
+	, m_pAttributeProvider(nullptr)
 	, m_bUpdteVertexBuffers(true)
 {
 }
@@ -278,6 +279,11 @@ void CIFCModel::Load(const wchar_t* szIFCFile, int64_t iModel)
 	m_pEntityProvider = new CEntityProvider(m_iModel);
 
 	/*
+	* Attributes
+	*/
+	m_pAttributeProvider = new CIFCAttributeProvider();
+
+	/*
 	* Helper data structures
 	*/
 	for (auto pInstance : m_vecInstances)
@@ -308,9 +314,6 @@ void CIFCModel::Load(const wchar_t* szIFCFile, int64_t iModel)
 	m_mapID2Instance.clear();
 	m_mapExpressID2Instance.clear();
 
-	delete m_pPropertyProvider;
-	m_pPropertyProvider = nullptr;
-
 	wchar_t* szInstanceGUID = nullptr;
 	sdaiGetAttrBN(iInstance, "GlobalId", sdaiUNICODE, &szInstanceGUID);
 
@@ -321,11 +324,6 @@ void CIFCModel::Load(const wchar_t* szIFCFile, int64_t iModel)
 
 	m_vecInstances.push_back(pInstance);
 	m_mapInstances[iInstance] = pInstance;
-
-	/*
-	* Properties
-	*/
-	m_pPropertyProvider = new CIFCPropertyProvider(m_iModel, m_pUnitProvider);
 
 	/*
 	* Helper data structures
@@ -368,6 +366,9 @@ void CIFCModel::Clean()
 
 	delete m_pEntityProvider;
 	m_pEntityProvider = nullptr;
+
+	delete m_pAttributeProvider;
+	m_pAttributeProvider = nullptr;
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -519,6 +520,12 @@ CIFCUnitProvider* CIFCModel::GetUnitProvider() const
 CIFCPropertyProvider* CIFCModel::GetPropertyProvider() const
 {
 	return m_pPropertyProvider;
+}
+
+// ------------------------------------------------------------------------------------------------
+CIFCAttributeProvider* CIFCModel::GetAttributeProvider() const
+{
+	return m_pAttributeProvider;
 }
 
 // ------------------------------------------------------------------------------------------------
