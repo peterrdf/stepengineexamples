@@ -24,6 +24,8 @@ IMPLEMENT_DYNCREATE(CIFCEditorDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CIFCEditorDoc, CDocument)
 	ON_COMMAND(ID_FILE_OPEN, &CIFCEditorDoc::OnFileOpen)
+	ON_COMMAND(ID_FILE_SAVE_AS, &CIFCEditorDoc::OnFileSaveAs)
+	ON_UPDATE_COMMAND_UI(ID_FILE_SAVE_AS, &CIFCEditorDoc::OnUpdateFileSaveAs)
 END_MESSAGE_MAP()
 
 
@@ -217,4 +219,36 @@ void CIFCEditorDoc::OnFileOpen()
 	}
 
 	OnOpenDocument(dlgFile.GetPathName());
+}
+
+
+void CIFCEditorDoc::OnFileSaveAs()
+{
+	wstring strFileName = m_pModel->GetModelName();
+
+	TCHAR szFilters[] = _T("IFC Files (SPPF) (*.ifc)|*.ifc|IFCX Files (IFCXML) (*.ifcxml)|*.ifcxml|All Files (*.*)|*.*||");
+	CFileDialog dlgFile(FALSE, _T(""), strFileName.c_str(),
+		OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY, szFilters);
+
+	if (dlgFile.DoModal() != IDOK)
+	{
+		return;
+	}
+
+	CString strExtension = PathFindExtension(dlgFile.GetPathName());
+	strExtension.MakeUpper();
+
+	if (strExtension == ".IFCXML")
+	{
+		sdaiSaveModelAsXmlBNUnicode(m_pModel->GetSdaiModel(), dlgFile.GetPathName());
+	}
+	else
+	{
+		sdaiSaveModelBNUnicode(m_pModel->GetSdaiModel(), dlgFile.GetPathName());
+	}
+}
+
+void CIFCEditorDoc::OnUpdateFileSaveAs(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable((m_pModel != nullptr) && (m_pModel->GetSdaiModel() != 0));
 }
