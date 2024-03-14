@@ -439,13 +439,54 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 					iValue = atoll(CW2A((LPCTSTR)strValue));
 				}
 
-				sdaiPutAttrBN(pData->GetInstance()->GetInstance(), CW2A((LPCTSTR)strName), sdaiINTEGER, &iValue);
+				sdaiPutAttrBN(
+					pData->GetInstance()->GetInstance(), 
+					CW2A((LPCTSTR)strName), 
+					pData->GetAttribute()->GetType(), 
+					&iValue);
+			}
+			break;
+
+			case sdaiREAL:
+			case sdaiNUMBER:
+			{
+				double dValue = 0.;
+				if (!strValue.IsEmpty())
+				{
+					dValue = atof(CW2A((LPCTSTR)strValue));
+				}
+
+				sdaiPutAttrBN(
+					pData->GetInstance()->GetInstance(), 
+					CW2A((LPCTSTR)strName), 
+					pData->GetAttribute()->GetType(), 
+					&dValue);
+			}
+			break;
+
+			case sdaiSTRING:
+			{
+				sdaiPutAttrBN(
+					pData->GetInstance()->GetInstance(),
+					CW2A((LPCTSTR)strName),
+					pData->GetAttribute()->GetType(),
+					CW2A(strValue));
+			}
+			break;
+
+			case sdaiUNICODE:
+			{
+				sdaiPutAttrBN(
+					pData->GetInstance()->GetInstance(),
+					CW2A((LPCTSTR)strName),
+					pData->GetAttribute()->GetType(),
+					(LPCTSTR)strValue);
 			}
 			break;
 
 			default:
 			{
-
+				ASSERT(FALSE); // TODO
 			}
 			break;
 		} // switch (pData->GetAttribute()->GetType()) 
@@ -935,19 +976,23 @@ void CPropertiesWnd::LoadInstanceAttributes()
 	{
 		auto pAttribute = vecAttributes[iIndex];
 
+		wchar_t* szAttributeName = nullptr;
+		engiGetEntityArgumentName(
+			iEntity,
+			iIndex,
+			sdaiUNICODE,
+			(char**)&szAttributeName);
+
 		switch(pAttribute->GetType())
 		{
 			case sdaiINTEGER:
 			{
 				int_t iValue = 0;
-				sdaiGetAttr(pTargetInstance->GetInstance(), pAttribute->GetInstance(), sdaiINTEGER, &iValue);
-
-				wchar_t* szAttributeName = nullptr;
-				engiGetEntityArgumentName(
-					iEntity,
-					iIndex++,
-					sdaiUNICODE,
-					(char**)&szAttributeName);
+				sdaiGetAttr(
+					pTargetInstance->GetInstance(), 
+					pAttribute->GetInstance(), 
+					pAttribute->GetType(), 
+					&iValue);
 
 				auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
 				pInstanceGroup->AddSubItem(pAttributeProperty);
@@ -960,16 +1005,14 @@ void CPropertiesWnd::LoadInstanceAttributes()
 			break;
 
 			case sdaiREAL:
+			case sdaiNUMBER:
 			{
-				double dValue = 0;
-				sdaiGetAttr(pTargetInstance->GetInstance(), pAttribute->GetInstance(), sdaiREAL, &dValue);
-
-				wchar_t* szAttributeName = nullptr;
-				engiGetEntityArgumentName(
-					iEntity,
-					iIndex++,
-					sdaiUNICODE,
-					(char**)&szAttributeName);
+				double dValue = 0.;
+				sdaiGetAttr(
+					pTargetInstance->GetInstance(), 
+					pAttribute->GetInstance(), 
+					pAttribute->GetType(),
+					&dValue);				
 
 				auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
 				pInstanceGroup->AddSubItem(pAttributeProperty);
@@ -983,23 +1026,39 @@ void CPropertiesWnd::LoadInstanceAttributes()
 
 			case sdaiSTRING:
 			{
-				wstring strValue;
-				wchar_t* szValue = nullptr;
-				if (sdaiGetAttr(pTargetInstance->GetInstance(), pAttribute->GetInstance(), sdaiUNICODE, &szValue))
+				string strValue;
+				char* szValue = nullptr;
+				if (sdaiGetAttr(
+					pTargetInstance->GetInstance(), 
+					pAttribute->GetInstance(), 
+					pAttribute->GetType(),
+					&szValue))
 				{
 					strValue = szValue;
 				}
-				else
-				{
-					strValue += L"$";
-				}
 
-				wchar_t* szAttributeName = nullptr;
-				engiGetEntityArgumentName(
-					iEntity,
-					iIndex++,
-					sdaiUNICODE,
-					(char**)&szAttributeName);
+				auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
+				pInstanceGroup->AddSubItem(pAttributeProperty);
+
+				auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)CA2W(strValue.c_str()), szAttributeName,
+					(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pTargetInstance), pAttribute));
+
+				pAttributeProperty->AddSubItem(pAttributeValue);
+			}
+			break;
+
+			case sdaiUNICODE:
+			{
+				wstring strValue;
+				wchar_t* szValue = nullptr;
+				if (sdaiGetAttr(
+					pTargetInstance->GetInstance(), 
+					pAttribute->GetInstance(), 
+					pAttribute->GetType(),
+					&szValue))
+				{
+					strValue = szValue;
+				}
 
 				auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
 				pInstanceGroup->AddSubItem(pAttributeProperty);
@@ -1013,13 +1072,7 @@ void CPropertiesWnd::LoadInstanceAttributes()
 
 			default:
 			{
-				const char* szAttributeName = nullptr;
-				engiGetEntityArgumentName(iEntity,
-					iIndex++,
-					sdaiSTRING,
-					&szAttributeName);
-
-				TRACE(L"\nTODO");
+				ASSERT(FALSE); // TODO
 			}
 			break;
 		} // switch(pAttribute->GetType())
