@@ -104,6 +104,44 @@ static char THIS_FILE[]=__FILE__;
 	ShowPane(TRUE, TRUE, TRUE);
 }
 
+// ------------------------------------------------------------------------------------------------
+/*virtual*/ void CRelationsView::OnInstanceAttributeEdited(CViewBase* pSender, SdaiInstance iInstance, SdaiAttr pAttribute) /*override*/
+{
+	if (pSender == this)
+	{
+		return;
+	}
+
+	auto itInstanceAttributes = m_mapInstanceAttributes.find(iInstance);
+	ASSERT(itInstanceAttributes != m_mapInstanceAttributes.end());
+
+	auto itAttribute = itInstanceAttributes->second.find(pAttribute);
+	ASSERT(itAttribute != itInstanceAttributes->second.end());
+
+	if (itAttribute->second == NULL)
+	{
+		// Not loaded
+		return;
+	}
+
+	auto pAttributeData = (CAttributeData*)m_treeCtrl.GetItemData(itAttribute->second);
+	if (pAttributeData == nullptr)
+	{
+		ASSERT(FALSE); // Internal error!
+
+		return;
+	}
+	
+	wstring strLabel;
+	CreateAttributeLabel(iInstance, pAttribute, strLabel);
+
+	wstring strText = CA2W(pAttributeData->GetName());
+	strText += L" = ";
+	strText += strLabel.empty() ? L"$" : strLabel;
+
+	m_treeCtrl.SetItemText(itAttribute->second, strText.c_str());
+}
+
 /*virtual*/ bool CRelationsView::IsSelected(HTREEITEM hItem) /*override*/
 {
 	return m_treeCtrl.GetSelectedItem() == hItem;
@@ -397,6 +435,18 @@ void CRelationsView::LoadInstance(int_t iEntity, int_t iInstance, HTREEITEM hPar
 	CAttributeSet attributeSet(iInstance, iEntity);
 	GetInstanceAttributes(iEntity, iInstance, hInstance, &attributeSet);
 
+	// Cache
+	ASSERT(m_mapInstanceAttributes.find(iInstance) == m_mapInstanceAttributes.end());
+	m_mapInstanceAttributes[iInstance] = map<SdaiAttr, HTREEITEM>();
+
+	auto& mapAttributes = m_mapInstanceAttributes.at(iInstance);
+	for (const auto& itAttrubute : attributeSet.Attributes())
+	{
+		ASSERT(mapAttributes.find(itAttrubute.first) == mapAttributes.end());
+
+		mapAttributes[itAttrubute.first] = NULL;
+	}	
+
 	// Load first page
 	size_t iAttributeStart = 0;
 	size_t iAttributeEnd = iAttributeStart + LOAD_ATTRIBUTES_LIMIT;
@@ -576,6 +626,19 @@ void CRelationsView::AddInstanceAttribute(SdaiEntity iEntity, SdaiInstance iInst
 	tvInsertStruct.item.lParam = (LPARAM)pAttributeData;
 
 	HTREEITEM hAttribute = m_treeCtrl.InsertItem(&tvInsertStruct);
+
+	// Cache
+	if ((tvInsertStruct.item.iImage == IMAGE_INVERSE_ATTRIBUTE) ||
+		(tvInsertStruct.item.iImage == IMAGE_ATTRIBUTE))
+	{
+		auto itInstanceAttributes = m_mapInstanceAttributes.find(iInstance);
+		ASSERT(itInstanceAttributes != m_mapInstanceAttributes.end());
+
+		auto itAttribute = itInstanceAttributes->second.find(iAttribute);
+		ASSERT(itAttribute != itInstanceAttributes->second.end());
+
+		itAttribute->second = hAttribute;
+	}
 
 	if (bHasChildren)
 	{
@@ -1473,6 +1536,8 @@ void CRelationsView::Clean()
 		delete pInstanceData;
 	}
 	m_vecItemDataCache.clear();
+
+	m_mapInstanceAttributes.clear();
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -1708,6 +1773,7 @@ void CRelationsView::OnTVNGetInfoTip(NMHDR* pNMHDR, LRESULT* pResult)
 CRelationsView::CRelationsView()
 	: m_enMode(enumRelationsViewMode::Flat)
 	, m_vecItemDataCache()
+	, m_mapInstanceAttributes()
 	, m_pSearchDialog(nullptr)
 	, m_strTooltip(L"")
 {

@@ -460,6 +460,8 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 					CW2A((LPCTSTR)strName), 
 					pData->GetAttribute()->GetType(), 
 					&iValue);
+
+				pController->OnInstanceAttributeEdited(this, pData->GetInstance()->GetInstance(), pData->GetAttribute()->GetInstance());
 			}
 			break;
 
@@ -477,6 +479,8 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 					CW2A((LPCTSTR)strName), 
 					pData->GetAttribute()->GetType(), 
 					&dValue);
+
+				pController->OnInstanceAttributeEdited(this, pData->GetInstance()->GetInstance(), pData->GetAttribute()->GetInstance());
 			}
 			break;
 
@@ -487,6 +491,8 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 					CW2A((LPCTSTR)strName),
 					pData->GetAttribute()->GetType(),
 					CW2A(strValue));
+
+				pController->OnInstanceAttributeEdited(this, pData->GetInstance()->GetInstance(), pData->GetAttribute()->GetInstance());
 			}
 			break;
 
@@ -497,6 +503,8 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 					CW2A((LPCTSTR)strName),
 					pData->GetAttribute()->GetType(),
 					(LPCTSTR)strValue);
+
+				pController->OnInstanceAttributeEdited(this, pData->GetInstance()->GetInstance(), pData->GetAttribute()->GetInstance());
 			}
 			break;
 
@@ -1086,9 +1094,27 @@ void CPropertiesWnd::LoadInstanceAttributes()
 			}
 			break;
 
+			case sdaiADB:
+			{
+				//#todo
+			}
+			break;
+
+			case sdaiAGGR:
+			{
+				//#todo
+			}
+			break;
+
+			case sdaiINSTANCE:
+			{
+				// NA
+			}
+			break;
+
 			default:
 			{
-				ASSERT(FALSE); // TODO
+				TRACE(L"\n!!!!!!!!!!!!!!!!!!! TODO %d", pAttribute->GetType()); //#todo
 			}
 			break;
 		} // switch(pAttribute->GetType())

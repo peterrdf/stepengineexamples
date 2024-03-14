@@ -58,6 +58,11 @@ void CViewBase::SetController(CController* pController)
 }
 
 // ------------------------------------------------------------------------------------------------
+/*virtual*/ void CViewBase::OnInstanceAttributeEdited(CViewBase* pSender, SdaiInstance iInstance, SdaiAttr pAttribute)
+{
+}
+
+// ------------------------------------------------------------------------------------------------
 /*virtual*/ void CViewBase::OnViewRelations(CViewBase* /*pSender*/, int64_t /*iInstance*/)
 {
 }

@@ -155,6 +155,7 @@ private: // Members
 	
 	// Cache
 	vector<CItemData*> m_vecItemDataCache;
+	map<SdaiInstance, map<SdaiAttr, HTREEITEM>> m_mapInstanceAttributes;
 
 	// Search
 	CSearchTreeCtrlDialog* m_pSearchDialog;
@@ -166,6 +167,7 @@ public: // Methods
 	virtual void OnInstanceSelected(CViewBase* pSender) override;
 	virtual void OnViewRelations(CViewBase* pSender, int64_t iInstance) override;
 	virtual void OnViewRelations(CViewBase* pSender, CEntity* pEntity) override;
+	virtual void OnInstanceAttributeEdited(CViewBase* pSender, SdaiInstance iInstance, SdaiAttr pAttribute) override;
 
 	// CItemStateProvider
 	virtual bool IsSelected(HTREEITEM hItem) override;

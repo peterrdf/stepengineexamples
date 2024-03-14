@@ -54,6 +54,7 @@ public: // Methods
 	virtual void OnTargetInstanceChanged(CViewBase* pSender);
 	virtual void OnInstanceSelected(CViewBase* pSender);
 	virtual void OnInstancesEnabledStateChanged(CViewBase* pSender);
+	virtual void OnInstanceAttributeEdited(CViewBase* pSender, SdaiInstance iInstance, SdaiAttr pAttribute);
 	virtual void OnViewRelations(CViewBase* pSender, int64_t iInstance);
 	virtual void OnViewRelations(CViewBase* pSender, CEntity* pEntity);
 	virtual void OnApplicationPropertyChanged(CViewBase* pSender, enumApplicationProperty enApplicationProperty);

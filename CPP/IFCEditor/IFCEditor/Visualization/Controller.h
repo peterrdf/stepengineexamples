@@ -94,6 +94,7 @@ public: // Methods
 	void OnApplicationPropertyChanged(CViewBase* pSender, enumApplicationProperty enApplicationProperty);
 	void OnViewRelations(CViewBase* pSender, int64_t iInstance);
 	void OnViewRelations(CViewBase* pSender, CEntity* pEntity);
+	void OnInstanceAttributeEdited(CViewBase* pSender, SdaiInstance iInstance, SdaiAttr pAttribute);
 };
 
 

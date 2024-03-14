@@ -283,3 +283,13 @@ void CController::OnViewRelations(CViewBase* pSender, CEntity* pEntity)
 		(*itView)->OnViewRelations(pSender, pEntity);
 	}
 }
+
+// ------------------------------------------------------------------------------------------------
+void CController::OnInstanceAttributeEdited(CViewBase* pSender, SdaiInstance iInstance, SdaiAttr pAttribute)
+{
+	auto itView = m_setViews.begin();
+	for (; itView != m_setViews.end(); itView++)
+	{
+		(*itView)->OnInstanceAttributeEdited(pSender, iInstance, pAttribute);
+	}
+}
