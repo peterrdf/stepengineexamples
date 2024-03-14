@@ -114,7 +114,9 @@ public: // Methods
 	virtual void OnModelChanged() override;
 	virtual void OnShowMetaInformation() override;
 	virtual void OnTargetInstanceChanged(CViewBase* pSender) override;
-	virtual void OnInstanceSelected(CViewBase* pSender) override;	
+	virtual void OnInstanceSelected(CViewBase* pSender) override;
+	virtual void OnViewRelations(CViewBase* pSender, int64_t iInstance) override;
+	virtual void OnViewRelations(CViewBase* pSender, CEntity* pEntity) override;
 	virtual void OnApplicationPropertyChanged(CViewBase* pSender, enumApplicationProperty enApplicationProperty) override;
 
 protected: // Methods

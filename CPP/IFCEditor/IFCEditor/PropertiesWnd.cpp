@@ -172,6 +172,22 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 }
 
 // ------------------------------------------------------------------------------------------------
+/*virtual*/ void CPropertiesWnd::OnViewRelations(CViewBase* pSender, int64_t iInstance) /*override*/
+{
+	m_wndObjectCombo.SetCurSel(0 /*Attributes*/); // Application and Properties are disabled!!!
+
+	LoadInstanceAttributes();
+}
+
+// ------------------------------------------------------------------------------------------------
+/*virtual*/ void CPropertiesWnd::OnViewRelations(CViewBase* pSender, CEntity* pEntity) /*override*/
+{
+	m_wndObjectCombo.SetCurSel(0 /*Attributes*/); // Application and Properties are disabled!!!
+
+	LoadInstanceAttributes();
+}
+
+// ------------------------------------------------------------------------------------------------
 /*virtual*/ void CPropertiesWnd::OnApplicationPropertyChanged(CViewBase* pSender, enumApplicationProperty /*enApplicationProperty*/) /*override*/
 {
 	if (pSender == this)

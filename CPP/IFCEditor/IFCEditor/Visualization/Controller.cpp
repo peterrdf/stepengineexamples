@@ -187,6 +187,11 @@ void CController::SetTargetInstance(CViewBase* pSender, CInstanceBase* pInstance
 		return;
 	}
 
+	if (m_pTargetInstance == pInstance)
+	{
+		return;
+	}
+
 	m_pTargetInstance = pInstance;
 
 	auto itView = m_setViews.begin();
@@ -270,6 +275,8 @@ void CController::OnViewRelations(CViewBase* pSender, int64_t iInstance)
 // ------------------------------------------------------------------------------------------------
 void CController::OnViewRelations(CViewBase* pSender, CEntity* pEntity)
 {
+	m_pTargetInstance = nullptr;
+
 	auto itView = m_setViews.begin();
 	for (; itView != m_setViews.end(); itView++)
 	{
