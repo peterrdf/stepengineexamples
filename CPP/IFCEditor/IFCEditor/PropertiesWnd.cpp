@@ -447,6 +447,18 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 
 		switch (pData->GetAttribute()->GetType()) 
 		{
+			case sdaiENUM:
+			{
+				sdaiPutAttrBN(
+					pData->GetInstance()->GetInstance(),
+					CW2A((LPCTSTR)strName),
+					pData->GetAttribute()->GetType(),
+					CW2A(strValue));
+
+				pController->OnInstanceAttributeEdited(this, pData->GetInstance()->GetInstance(), pData->GetAttribute()->GetInstance());
+			}
+			break;
+
 			case sdaiINTEGER:
 			{
 				int64_t iValue = 0;
@@ -460,6 +472,18 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 					CW2A((LPCTSTR)strName), 
 					pData->GetAttribute()->GetType(), 
 					&iValue);
+
+				pController->OnInstanceAttributeEdited(this, pData->GetInstance()->GetInstance(), pData->GetAttribute()->GetInstance());
+			}
+			break;
+
+			case sdaiLOGICAL:
+			{
+				sdaiPutAttrBN(
+					pData->GetInstance()->GetInstance(),
+					CW2A((LPCTSTR)strName),
+					pData->GetAttribute()->GetType(),
+					CW2A(strValue));
 
 				pController->OnInstanceAttributeEdited(this, pData->GetInstance()->GetInstance(), pData->GetAttribute()->GetInstance());
 			}
@@ -1009,13 +1033,54 @@ void CPropertiesWnd::LoadInstanceAttributes()
 
 		switch(pAttribute->GetType())
 		{
+			case sdaiADB:
+			{
+				//#todo
+			}
+			break;
+
+			case sdaiAGGR:
+			{
+				//#todo
+			}
+			break;
+
+			case sdaiENUM:
+			{
+				string strValue;
+				char* szValue = nullptr;
+				if (sdaiGetAttr(
+					pTargetInstance->GetInstance(),
+					pAttribute->GetInstance(),
+					pAttribute->GetType(),
+					&szValue))
+				{
+					strValue = szValue;
+				}
+
+				auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
+				pInstanceGroup->AddSubItem(pAttributeProperty);
+
+				auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)CA2W(strValue.c_str()), szAttributeName,
+					(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pTargetInstance), pAttribute));
+
+				pAttributeProperty->AddSubItem(pAttributeValue);
+			}
+			break;			
+
+			case sdaiINSTANCE:
+			{
+				// NA
+			}
+			break;
+
 			case sdaiINTEGER:
 			{
 				int_t iValue = 0;
 				sdaiGetAttr(
-					pTargetInstance->GetInstance(), 
-					pAttribute->GetInstance(), 
-					pAttribute->GetType(), 
+					pTargetInstance->GetInstance(),
+					pAttribute->GetInstance(),
+					pAttribute->GetType(),
 					&iValue);
 
 				auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
@@ -1028,15 +1093,38 @@ void CPropertiesWnd::LoadInstanceAttributes()
 			}
 			break;
 
+			case sdaiLOGICAL:
+			{
+				string strValue;
+				char* szValue = nullptr;
+				if (sdaiGetAttr(
+					pTargetInstance->GetInstance(),
+					pAttribute->GetInstance(),
+					pAttribute->GetType(),
+					&szValue))
+				{
+					strValue = szValue;
+				}
+
+				auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
+				pInstanceGroup->AddSubItem(pAttributeProperty);
+
+				auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)CA2W(strValue.c_str()), szAttributeName,
+					(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pTargetInstance), pAttribute));
+
+				pAttributeProperty->AddSubItem(pAttributeValue);
+			}
+			break;
+
 			case sdaiREAL:
 			case sdaiNUMBER:
 			{
 				double dValue = 0.;
 				sdaiGetAttr(
-					pTargetInstance->GetInstance(), 
-					pAttribute->GetInstance(), 
+					pTargetInstance->GetInstance(),
+					pAttribute->GetInstance(),
 					pAttribute->GetType(),
-					&dValue);				
+					&dValue);
 
 				auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
 				pInstanceGroup->AddSubItem(pAttributeProperty);
@@ -1053,8 +1141,8 @@ void CPropertiesWnd::LoadInstanceAttributes()
 				string strValue;
 				char* szValue = nullptr;
 				if (sdaiGetAttr(
-					pTargetInstance->GetInstance(), 
-					pAttribute->GetInstance(), 
+					pTargetInstance->GetInstance(),
+					pAttribute->GetInstance(),
 					pAttribute->GetType(),
 					&szValue))
 				{
@@ -1076,8 +1164,8 @@ void CPropertiesWnd::LoadInstanceAttributes()
 				wstring strValue;
 				wchar_t* szValue = nullptr;
 				if (sdaiGetAttr(
-					pTargetInstance->GetInstance(), 
-					pAttribute->GetInstance(), 
+					pTargetInstance->GetInstance(),
+					pAttribute->GetInstance(),
 					pAttribute->GetType(),
 					&szValue))
 				{
@@ -1091,24 +1179,6 @@ void CPropertiesWnd::LoadInstanceAttributes()
 					(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pTargetInstance), pAttribute));
 
 				pAttributeProperty->AddSubItem(pAttributeValue);
-			}
-			break;
-
-			case sdaiADB:
-			{
-				//#todo
-			}
-			break;
-
-			case sdaiAGGR:
-			{
-				//#todo
-			}
-			break;
-
-			case sdaiINSTANCE:
-			{
-				// NA
 			}
 			break;
 

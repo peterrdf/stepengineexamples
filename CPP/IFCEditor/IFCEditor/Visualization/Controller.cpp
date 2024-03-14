@@ -52,6 +52,12 @@ CInstanceBase* CController::LoadInstance(OwlInstance iInstance)
 	ASSERT(m_pModel != nullptr);
 
 	m_pSelectedInstance = nullptr;
+
+	if ((m_pTargetInstance != nullptr) && (m_pTargetInstance->GetInstance() == iInstance))
+	{
+		return nullptr;
+	}
+
 	m_pTargetInstance = nullptr;
 
 	m_bUpdatingModel = true;

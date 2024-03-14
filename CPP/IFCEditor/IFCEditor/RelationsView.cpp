@@ -436,15 +436,17 @@ void CRelationsView::LoadInstance(int_t iEntity, int_t iInstance, HTREEITEM hPar
 	GetInstanceAttributes(iEntity, iInstance, hInstance, &attributeSet);
 
 	// Cache
-	ASSERT(m_mapInstanceAttributes.find(iInstance) == m_mapInstanceAttributes.end());
-	m_mapInstanceAttributes[iInstance] = map<SdaiAttr, HTREEITEM>();
-
-	auto& mapAttributes = m_mapInstanceAttributes.at(iInstance);
-	for (const auto& itAttrubute : attributeSet.Attributes())
+	if (m_mapInstanceAttributes.find(iInstance) == m_mapInstanceAttributes.end())
 	{
-		ASSERT(mapAttributes.find(itAttrubute.first) == mapAttributes.end());
+		m_mapInstanceAttributes[iInstance] = map<SdaiAttr, HTREEITEM>();
 
-		mapAttributes[itAttrubute.first] = NULL;
+		auto& mapAttributes = m_mapInstanceAttributes.at(iInstance);
+		for (const auto& itAttrubute : attributeSet.Attributes())
+		{
+			ASSERT(mapAttributes.find(itAttrubute.first) == mapAttributes.end());
+
+			mapAttributes[itAttrubute.first] = NULL;
+		}
 	}	
 
 	// Load first page
