@@ -128,7 +128,14 @@ protected: // Methods
 	void LoadApplicationProperties();
 	void LoadInstanceProperties();
 	void LoadIFCInstanceProperties();
+
 	void LoadInstanceAttributes();
+	void CreateEnumGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, wchar_t* szAttributeName);
+	void CreateIntGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, wchar_t* szAttributeName);
+	void CreateLogicalGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, wchar_t* szAttributeName);
+	void CreateRealGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, wchar_t* szAttributeName);
+	void CreateStringGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, wchar_t* szAttributeName);
+	void CreateUnicodeGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, wchar_t* szAttributeName);
 
 	afx_msg void OnViewModeChanged();
 	afx_msg void OnDestroy();
