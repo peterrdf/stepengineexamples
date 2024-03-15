@@ -469,10 +469,10 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 
 			case sdaiINTEGER:
 			{
-				int64_t iValue = 0;
+				int_t iValue = 0;
 				if (!strValue.IsEmpty())
 				{
-					iValue = atoll(CW2A((LPCTSTR)strValue));
+					iValue = (int_t)atoll(CW2A((LPCTSTR)strValue));
 				}
 
 				sdaiPutAttrBN(
@@ -1388,10 +1388,10 @@ void CPropertiesWnd::UpdateADBAttribute(CInstanceBase* pInstance, CIFCAttribute*
 
 			case sdaiINTEGER:
 			{
-				int64_t iValue = 0;
+				int_t iValue = 0;
 				if (!strValue.IsEmpty())
 				{
-					iValue = atoll(CW2A((LPCTSTR)strValue));
+					iValue = (int_t)atoll(CW2A((LPCTSTR)strValue));
 				}
 
 				SdaiADB pValue = sdaiCreateADB(sdaiGetADBType(pADB), &iValue);
