@@ -115,6 +115,12 @@ static char THIS_FILE[]=__FILE__;
 	auto itInstance = m_mapInstances.find(iInstance);
 	ASSERT(itInstance != m_mapInstances.end());
 
+	wstring strInstance = CInstanceBase::GetName(iInstance);
+	for (auto hInstance : itInstance->second)
+	{
+		m_treeCtrl.SetItemText(hInstance, strInstance.c_str());
+	}
+
 	auto itInstanceAttributes = m_mapInstanceAttributes.find(iInstance);
 	ASSERT(itInstanceAttributes != m_mapInstanceAttributes.end());
 
@@ -125,9 +131,9 @@ static char THIS_FILE[]=__FILE__;
 		return;
 	}
 
-	for (auto hItem : itAttribute->second)
+	for (auto hAttribute : itAttribute->second)
 	{
-		auto pAttributeData = (CAttributeData*)m_treeCtrl.GetItemData(hItem);
+		auto pAttributeData = (CAttributeData*)m_treeCtrl.GetItemData(hAttribute);
 		if (pAttributeData == nullptr)
 		{
 			ASSERT(FALSE); // Internal error!
@@ -142,7 +148,7 @@ static char THIS_FILE[]=__FILE__;
 		strText += L" = ";
 		strText += strLabel.empty() ? L"$" : strLabel;
 
-		m_treeCtrl.SetItemText(hItem, strText.c_str());
+		m_treeCtrl.SetItemText(hAttribute, strText.c_str());
 	} // for (auto hItem : ...	
 }
 
