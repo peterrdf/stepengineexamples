@@ -546,6 +546,10 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 			}
 			break;
 		} // switch (pData->GetAttribute()->GetType()) 
+
+		// Update Target Instance
+		auto pInstanceGroup = pAttribute->GetParent()->GetParent();
+		pInstanceGroup->SetName(pData->GetInstance()->GetName().c_str());
 	}
 #pragma endregion // Attributes
 
