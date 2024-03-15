@@ -112,34 +112,38 @@ static char THIS_FILE[]=__FILE__;
 		return;
 	}
 
+	auto itInstance = m_mapInstances.find(iInstance);
+	ASSERT(itInstance != m_mapInstances.end());
+
 	auto itInstanceAttributes = m_mapInstanceAttributes.find(iInstance);
 	ASSERT(itInstanceAttributes != m_mapInstanceAttributes.end());
 
 	auto itAttribute = itInstanceAttributes->second.find(pAttribute);
-	ASSERT(itAttribute != itInstanceAttributes->second.end());
-
-	if (itAttribute->second == NULL)
+	if (itAttribute == itInstanceAttributes->second.end())
 	{
 		// Not loaded
 		return;
 	}
 
-	auto pAttributeData = (CAttributeData*)m_treeCtrl.GetItemData(itAttribute->second);
-	if (pAttributeData == nullptr)
+	for (auto hItem : itAttribute->second)
 	{
-		ASSERT(FALSE); // Internal error!
+		auto pAttributeData = (CAttributeData*)m_treeCtrl.GetItemData(hItem);
+		if (pAttributeData == nullptr)
+		{
+			ASSERT(FALSE); // Internal error!
 
-		return;
-	}
-	
-	wstring strLabel;
-	CreateAttributeLabel(iInstance, pAttribute, strLabel);
+			return;
+		}
+		
+		wstring strLabel;
+		CreateAttributeLabel(iInstance, pAttribute, strLabel);
 
-	wstring strText = CA2W(pAttributeData->GetName());
-	strText += L" = ";
-	strText += strLabel.empty() ? L"$" : strLabel;
+		wstring strText = CA2W(pAttributeData->GetName());
+		strText += L" = ";
+		strText += strLabel.empty() ? L"$" : strLabel;
 
-	m_treeCtrl.SetItemText(itAttribute->second, strText.c_str());
+		m_treeCtrl.SetItemText(hItem, strText.c_str());
+	} // for (auto hItem : ...	
 }
 
 /*virtual*/ bool CRelationsView::IsSelected(HTREEITEM hItem) /*override*/
@@ -436,18 +440,15 @@ void CRelationsView::LoadInstance(int_t iEntity, int_t iInstance, HTREEITEM hPar
 	GetInstanceAttributes(iEntity, iInstance, hInstance, &attributeSet);
 
 	// Cache
-	if (m_mapInstanceAttributes.find(iInstance) == m_mapInstanceAttributes.end())
+	auto itInstance = m_mapInstances.find(iInstance);
+	if (itInstance == m_mapInstances.end())
 	{
-		m_mapInstanceAttributes[iInstance] = map<SdaiAttr, HTREEITEM>();
-
-		auto& mapAttributes = m_mapInstanceAttributes.at(iInstance);
-		for (const auto& itAttrubute : attributeSet.Attributes())
-		{
-			ASSERT(mapAttributes.find(itAttrubute.first) == mapAttributes.end());
-
-			mapAttributes[itAttrubute.first] = NULL;
-		}
-	}	
+		m_mapInstances[iInstance] = vector<HTREEITEM>{ hInstance };
+	}
+	else
+	{
+		itInstance->second.push_back(hInstance);
+	}
 
 	// Load first page
 	size_t iAttributeStart = 0;
@@ -633,14 +634,26 @@ void CRelationsView::AddInstanceAttribute(SdaiEntity iEntity, SdaiInstance iInst
 	if ((tvInsertStruct.item.iImage == IMAGE_INVERSE_ATTRIBUTE) ||
 		(tvInsertStruct.item.iImage == IMAGE_ATTRIBUTE))
 	{
+		ASSERT(m_mapInstances.find(iInstance) != m_mapInstances.end());
+
 		auto itInstanceAttributes = m_mapInstanceAttributes.find(iInstance);
-		ASSERT(itInstanceAttributes != m_mapInstanceAttributes.end());
+		if (itInstanceAttributes == m_mapInstanceAttributes.end())
+		{
+			m_mapInstanceAttributes[iInstance] = map<SdaiAttr, vector<HTREEITEM>>();
+
+			itInstanceAttributes = m_mapInstanceAttributes.find(iInstance);
+		}
 
 		auto itAttribute = itInstanceAttributes->second.find(iAttribute);
-		ASSERT(itAttribute != itInstanceAttributes->second.end());
-
-		itAttribute->second = hAttribute;
-	}
+		if (itAttribute == itInstanceAttributes->second.end())
+		{
+			itInstanceAttributes->second[iAttribute] = vector<HTREEITEM>{ hAttribute };
+		}
+		else
+		{
+			itAttribute->second.push_back(hAttribute);
+		}
+	} // IMAGE_INVERSE_ATTRIBUTE || IMAGE_ATTRIBUTE
 
 	if (bHasChildren)
 	{
@@ -1539,6 +1552,7 @@ void CRelationsView::Clean()
 	}
 	m_vecItemDataCache.clear();
 
+	m_mapInstances.clear();
 	m_mapInstanceAttributes.clear();
 }
 
@@ -1775,6 +1789,7 @@ void CRelationsView::OnTVNGetInfoTip(NMHDR* pNMHDR, LRESULT* pResult)
 CRelationsView::CRelationsView()
 	: m_enMode(enumRelationsViewMode::Flat)
 	, m_vecItemDataCache()
+	, m_mapInstances()
 	, m_mapInstanceAttributes()
 	, m_pSearchDialog(nullptr)
 	, m_strTooltip(L"")

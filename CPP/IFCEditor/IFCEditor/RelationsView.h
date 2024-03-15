@@ -155,7 +155,8 @@ private: // Members
 	
 	// Cache
 	vector<CItemData*> m_vecItemDataCache;
-	map<SdaiInstance, map<SdaiAttr, HTREEITEM>> m_mapInstanceAttributes;
+	map<SdaiInstance, vector<HTREEITEM>> m_mapInstances;
+	map<SdaiInstance, map<SdaiAttr, vector<HTREEITEM>>> m_mapInstanceAttributes;
 
 	// Search
 	CSearchTreeCtrlDialog* m_pSearchDialog;
