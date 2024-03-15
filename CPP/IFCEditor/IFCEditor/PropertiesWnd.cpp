@@ -521,8 +521,8 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 				sdaiPutAttrBN(
 					pData->GetInstance()->GetInstance(),
 					CW2A((LPCTSTR)strName),
-					pData->GetAttribute()->GetType(),
-					CW2A(strValue));
+					sdaiUNICODE,
+					(LPCTSTR)strValue);
 
 				pController->OnInstanceAttributeEdited(this, pData->GetInstance()->GetInstance(), pData->GetAttribute()->GetInstance());
 			}
@@ -1199,13 +1199,13 @@ void CPropertiesWnd::CreateADBGridProperty(CMFCPropertyGridProperty* pParentGrid
 
 			case sdaiSTRING:
 			{
-				char* szValue = nullptr;
+				wchar_t* szValue = nullptr;
 				sdaiGetADBValue(pADB, sdaiGetADBType(pADB), &szValue);
 
 				auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
 				pParentGridProperty->AddSubItem(pAttributeProperty);
 
-				auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)CA2W(szValue), szAttributeName,
+				auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)szValue, szAttributeName,
 					(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pInstance), pAttribute));
 
 				pAttributeProperty->AddSubItem(pAttributeValue);
@@ -1318,12 +1318,12 @@ void CPropertiesWnd::CreateRealGridProperty(CMFCPropertyGridProperty* pParentGri
 
 void CPropertiesWnd::CreateStringGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, const wchar_t* szAttributeName)
 {
-	string strValue;
-	char* szValue = nullptr;
+	wstring strValue;
+	wchar_t* szValue = nullptr;
 	if (sdaiGetAttr(
 		pInstance->GetInstance(),
 		pAttribute->GetInstance(),
-		pAttribute->GetType(),
+		sdaiUNICODE,
 		&szValue))
 	{
 		strValue = szValue;
@@ -1332,7 +1332,7 @@ void CPropertiesWnd::CreateStringGridProperty(CMFCPropertyGridProperty* pParentG
 	auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
 	pParentGridProperty->AddSubItem(pAttributeProperty);
 
-	auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)CA2W(strValue.c_str()), szAttributeName,
+	auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)strValue.c_str(), szAttributeName,
 		(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pInstance), pAttribute));
 
 	pAttributeProperty->AddSubItem(pAttributeValue);
@@ -1440,7 +1440,7 @@ void CPropertiesWnd::UpdateADBAttribute(CInstanceBase* pInstance, CIFCAttribute*
 
 			case sdaiSTRING:
 			{
-				SdaiADB pValue = sdaiCreateADB(sdaiGetADBType(pADB), (LPCSTR)CW2A(strValue));
+				SdaiADB pValue = sdaiCreateADB(sdaiGetADBType(pADB), (LPCTSTR)strValue);
 				sdaiPutADBTypePath(pValue, 1, szTypePath);
 				sdaiPutAttrBN(
 					pInstance->GetInstance(),
@@ -1453,7 +1453,7 @@ void CPropertiesWnd::UpdateADBAttribute(CInstanceBase* pInstance, CIFCAttribute*
 
 			case sdaiUNICODE:
 			{
-				SdaiADB pValue = sdaiCreateADB(sdaiGetADBType(pADB), LPCTSTR(strValue));
+				SdaiADB pValue = sdaiCreateADB(sdaiGetADBType(pADB), (LPCTSTR)strValue);
 				sdaiPutADBTypePath(pValue, 1, szTypePath);
 				sdaiPutAttrBN(
 					pInstance->GetInstance(),
