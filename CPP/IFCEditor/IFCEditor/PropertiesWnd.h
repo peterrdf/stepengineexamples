@@ -87,6 +87,25 @@ public: // Methods
 };
 
 // ************************************************************************************************
+class CIFCInstanceAggrAttributeData : public CIFCInstanceAttributeData
+{
+
+private:  // Members
+
+	SdaiInteger m_iIndex;
+
+public: // Methods
+
+	CIFCInstanceAggrAttributeData(CController* pController, CIFCInstance* pInstance, CIFCAttribute* pAttribute, SdaiInteger iIndex)
+		: CIFCInstanceAttributeData(pController, pInstance, pAttribute)
+		, m_iIndex(iIndex)
+	{}
+	virtual ~CIFCInstanceAggrAttributeData() {}
+
+	SdaiInteger GetIndex() const { return m_iIndex; }
+};
+
+// ************************************************************************************************
 class CIFCInstanceAttribute : public CMFCPropertyGridProperty
 {
 
@@ -141,6 +160,7 @@ protected: // Methods
 	void CreateUnicodeGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, const wchar_t* szAttributeName);
 
 	void UpdateADBAttribute(CInstanceBase* pInstance, CIFCAttribute* pAttribute, const CString& strName, const CString& strValue);
+	void UpdateAGGRAttribute(CInstanceBase* pInstance, CIFCAttribute* pAttribute, const CString& strName, const CString& strValue, SdaiInteger iIndex);
 
 	afx_msg void OnViewModeChanged();
 	afx_msg void OnDestroy();

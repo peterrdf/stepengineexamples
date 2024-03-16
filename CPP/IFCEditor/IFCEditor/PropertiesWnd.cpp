@@ -445,13 +445,24 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 			return 0;
 		}
 
+		// sdaiAggr
+		auto pAggrData = dynamic_cast<CIFCInstanceAggrAttributeData*>(pData);
+		if (pAggrData != nullptr)
+		{
+			ASSERT(pData->GetAttribute()->GetType() == sdaiAGGR);
+
+			UpdateAGGRAttribute(pData->GetInstance(), pData->GetAttribute(), strName, strValue, pAggrData->GetIndex());
+
+			pController->OnInstanceAttributeEdited(this, pData->GetInstance()->GetInstance(), pData->GetAttribute()->GetInstance());
+
+			return 0;
+		} // if (pAggrData != nullptr)
+
 		switch (pData->GetAttribute()->GetType()) 
 		{
 			case sdaiAGGR:
 			{
-				//UpdateAGGRAttribute(pData->GetInstance(), pData->GetAttribute(), strName, strValue);
-
-				pController->OnInstanceAttributeEdited(this, pData->GetInstance()->GetInstance(), pData->GetAttribute()->GetInstance());
+				ASSERT(FALSE); // Internal error!
 			}
 			break;
 
@@ -550,7 +561,7 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 
 			default:
 			{
-				ASSERT(FALSE); // TODO
+				ASSERT(FALSE);
 			}
 			break;
 		} // switch (pData->GetAttribute()->GetType()) 
@@ -1283,7 +1294,7 @@ void CPropertiesWnd::CreateAGGRGridProperty(CMFCPropertyGridProperty* pParentGri
 				}
 				break;
 
-				case sdaiLOGICAL:
+				/*case sdaiLOGICAL: NOT TESTED!
 				{
 					string strValue;
 					char* szValue = nullptr;
@@ -1301,9 +1312,9 @@ void CPropertiesWnd::CreateAGGRGridProperty(CMFCPropertyGridProperty* pParentGri
 
 					pAttributeProperty->AddSubItem(pAttributeValue);
 				}
-				break;
+				break;*/
 
-				case sdaiENUM:
+				/*case sdaiENUM: NOT TESTED!
 				{
 					string strValue;
 					char* szValue = nullptr;
@@ -1316,17 +1327,15 @@ void CPropertiesWnd::CreateAGGRGridProperty(CMFCPropertyGridProperty* pParentGri
 						strValue = szValue;
 					}
 
-					auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
-					pParentGridProperty->AddSubItem(pAttributeProperty);
-
 					auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)CA2W(strValue.c_str()), szAttributeName,
 						(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pInstance), pAttribute));
 
 					pAttributeProperty->AddSubItem(pAttributeValue);
 				}
-				break;
+				break;*/
 
 				case sdaiREAL:
+				case sdaiNUMBER:
 				{
 					double dValue = 0.;
 					sdaiGetAggrByIndex(
@@ -1335,17 +1344,14 @@ void CPropertiesWnd::CreateAGGRGridProperty(CMFCPropertyGridProperty* pParentGri
 						iAggrType,
 						&dValue);
 
-					auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
-					pParentGridProperty->AddSubItem(pAttributeProperty);
-
 					auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)dValue, szAttributeName,
-						(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pInstance), pAttribute));
+						(DWORD_PTR)new CIFCInstanceAggrAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pInstance), pAttribute, iIndex));
 
 					pAttributeProperty->AddSubItem(pAttributeValue);
 				}
 				break;
 
-				case sdaiINTEGER:
+				/*case sdaiINTEGER: NOT TESTED!
 				{
 					int_t iValue = 0;
 					sdaiGetAggrByIndex(
@@ -1354,17 +1360,14 @@ void CPropertiesWnd::CreateAGGRGridProperty(CMFCPropertyGridProperty* pParentGri
 						iAggrType,
 						&iValue);
 
-					auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
-					pParentGridProperty->AddSubItem(pAttributeProperty);
-
 					auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)iValue, szAttributeName,
 						(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pInstance), pAttribute));
 
 					pAttributeProperty->AddSubItem(pAttributeValue);
 				}
-				break;
+				break;*/
 
-				case sdaiSTRING:
+				/*case sdaiSTRING: NOT TESTED!
 				case sdaiUNICODE:
 				{
 					wchar_t* szValue = nullptr;
@@ -1374,19 +1377,16 @@ void CPropertiesWnd::CreateAGGRGridProperty(CMFCPropertyGridProperty* pParentGri
 						iAggrType,
 						&szValue);
 
-					auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
-					pParentGridProperty->AddSubItem(pAttributeProperty);
-
 					auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)szValue, szAttributeName,
 						(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pInstance), pAttribute));
 
 					pAttributeProperty->AddSubItem(pAttributeValue);
 				}
-				break;
+				break;*/
 
 				default:
 				{
-					ASSERT(FALSE);
+					ASSERT(FALSE); // Not supported!
 				}
 				break;
 			} // switch (iAggrType)
@@ -1634,6 +1634,80 @@ void CPropertiesWnd::UpdateADBAttribute(CInstanceBase* pInstance, CIFCAttribute*
 			}
 			break;
 		} // switch (sdaiGetADBType(pADB))
+	} // sdaiGetAttr
+	else
+	{
+		ASSERT(FALSE); // Internal error!
+	}
+}
+
+void CPropertiesWnd::UpdateAGGRAttribute(CInstanceBase* pInstance, CIFCAttribute* pAttribute, const CString& strName, const CString& strValue, SdaiInteger iIndex)
+{
+	SdaiAggr pAggr = nullptr;
+	if (sdaiGetAttr(
+		pInstance->GetInstance(),
+		pAttribute->GetInstance(),
+		pAttribute->GetType(),
+		&pAggr))
+	{
+		SdaiPrimitiveType iAggrType = 0;
+		engiGetAggrType(pAggr, &iAggrType);
+
+		SdaiInteger iMemberCount = sdaiGetMemberCount(pAggr);
+		if (iMemberCount == 0)
+		{
+			ASSERT(FALSE); // Internal error!
+
+			return;
+		}
+
+		switch (iAggrType)
+		{
+			case sdaiREAL:
+			case sdaiNUMBER:
+			{
+				vector<double> vecValues;
+				for (SdaiInteger iIndex = 0; iIndex < iMemberCount; iIndex++)
+				{
+					double dValue = 0.;
+					sdaiGetAggrByIndex(
+						pAggr,
+						iIndex,
+						iAggrType,
+						&dValue);
+
+					vecValues.push_back(dValue);
+				}
+
+				if ((iIndex < 0) || iIndex >= (SdaiInteger)vecValues.size())
+				{
+					ASSERT(FALSE);
+
+					return;
+				}
+
+				vecValues[iIndex] = atof(CW2A((LPCTSTR)strValue));
+
+				SdaiAggr pAggr = sdaiCreateAggrBN(pInstance->GetInstance(), CW2A((LPCTSTR)strName));
+				ASSERT(pAggr != nullptr);
+
+				for (const auto& dValue : vecValues)
+				{
+					sdaiAppend(pAggr, sdaiREAL, &dValue);
+				}
+			}
+			break;
+
+			default:
+			{
+				ASSERT(FALSE); // Not supported!
+			}
+			break;
+		} // switch (iAggrType)
+	} // sdaiGetAttr
+	else
+	{
+		ASSERT(FALSE); // Internal error!
 	}
 }
 
