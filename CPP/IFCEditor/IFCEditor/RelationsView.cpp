@@ -32,6 +32,8 @@ static char THIS_FILE[]=__FILE__;
 // ------------------------------------------------------------------------------------------------
 /*virtual*/ void CRelationsView::OnModelChanged() /*override*/
 {
+	m_pEntity = nullptr;
+
 	LoadProperties(0, vector<int_t>(), true);
 }
 
@@ -97,6 +99,13 @@ static char THIS_FILE[]=__FILE__;
 	{
 		return;
 	}
+
+	if (m_pEntity == pEntity)
+	{
+		return;
+	}
+
+	m_pEntity = pEntity;
 
 	vector<SdaiInstance> vecInstances;
 	vecInstances.insert(vecInstances.begin(), pEntity->GetInstances().begin(), pEntity->GetInstances().end());
@@ -1841,7 +1850,8 @@ void CRelationsView::OnTVNGetInfoTip(NMHDR* pNMHDR, LRESULT* pResult)
 
 // ------------------------------------------------------------------------------------------------
 CRelationsView::CRelationsView()
-	: m_enMode(enumRelationsViewMode::Flat)
+	: m_pEntity(nullptr)
+	, m_enMode(enumRelationsViewMode::Flat)
 	, m_vecItemDataCache()
 	, m_mapInstances()
 	, m_mapInstanceAttributes()

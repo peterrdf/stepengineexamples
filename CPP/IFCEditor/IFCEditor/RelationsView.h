@@ -150,6 +150,9 @@ private: // Classes
 
 private: // Members
 
+	// Target
+	CEntity* m_pEntity;
+
 	// View
 	enumRelationsViewMode m_enMode;
 	
