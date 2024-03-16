@@ -32,7 +32,7 @@ static char THIS_FILE[]=__FILE__;
 // ------------------------------------------------------------------------------------------------
 /*virtual*/ void CRelationsView::OnModelChanged() /*override*/
 {
-	LoadProperties(0, vector<int_t>());
+	LoadProperties(0, vector<int_t>(), true);
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -84,7 +84,8 @@ static char THIS_FILE[]=__FILE__;
 
 	LoadProperties(
 		CInstanceBase::GetEntity(iInstance),
-		vecInstances);
+		vecInstances,
+		true);
 
 	ShowPane(TRUE, TRUE, TRUE);
 }
@@ -96,10 +97,42 @@ static char THIS_FILE[]=__FILE__;
 	{
 		return;
 	}
-	
+
+	vector<SdaiInstance> vecInstances;
+	vecInstances.insert(vecInstances.begin(), pEntity->GetInstances().begin(), pEntity->GetInstances().end());
+
+	if (vecInstances.empty())
+	{
+		map<CEntity*, vector<SdaiInstance>> mapEntityInstances;
+		GetAllInstances(pEntity, mapEntityInstances);
+
+		int iIndex = 0;
+		for (const auto& itEntityInstances : mapEntityInstances)
+		{
+			if (itEntityInstances.second.empty())
+			{
+				continue;
+			}
+
+			LoadProperties(
+				itEntityInstances.first->GetEntity(),
+				itEntityInstances.second,
+				iIndex == 0);
+
+			iIndex++;
+		}
+
+		if (iIndex > 0)
+		{
+			// There is at least one Sub-Entity with Instances
+			return;
+		}
+	} // if (vecInstances.empty())
+
 	LoadProperties(
 		pEntity->GetEntity(),
-		pEntity->GetInstances());
+		vecInstances,
+		true);
 	
 	ShowPane(TRUE, TRUE, TRUE);
 }
@@ -381,28 +414,33 @@ void CRelationsView::LoadInstances(const vector<int_t>& vecInstances)
 }
 
 // ------------------------------------------------------------------------------------------------
-void CRelationsView::LoadProperties(int_t iEntity, const vector<int_t>& vecInstances)
+void CRelationsView::LoadProperties(int_t iEntity, const vector<int_t>& vecInstances, bool bResetView)
 {
-	ResetView();
-
 	auto pModel = GetModel();
 	if (pModel == nullptr)
 	{
 		return;
 	}
 
-	// ******************************************************************************************** //
-	// Model
-	TV_INSERTSTRUCT tvInsertStruct;
-	tvInsertStruct.hParent = nullptr;
-	tvInsertStruct.hInsertAfter = TVI_LAST;
-	tvInsertStruct.item.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_TEXT | TVIF_PARAM;
-	tvInsertStruct.item.pszText = (LPWSTR)pModel->GetModelName();
-	tvInsertStruct.item.iImage = tvInsertStruct.item.iSelectedImage = IMAGE_MODEL;
-	tvInsertStruct.item.lParam = NULL;
+	HTREEITEM hModel = NULL;
+	if (bResetView)
+	{
+		ResetView();
 
-	HTREEITEM hModel = m_treeCtrl.InsertItem(&tvInsertStruct);
-	// ******************************************************************************************** //	
+		TV_INSERTSTRUCT tvInsertStruct;
+		tvInsertStruct.hParent = nullptr;
+		tvInsertStruct.hInsertAfter = TVI_LAST;
+		tvInsertStruct.item.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_TEXT | TVIF_PARAM;
+		tvInsertStruct.item.pszText = (LPWSTR)pModel->GetModelName();
+		tvInsertStruct.item.iImage = tvInsertStruct.item.iSelectedImage = IMAGE_MODEL;
+		tvInsertStruct.item.lParam = NULL;
+
+		hModel = m_treeCtrl.InsertItem(&tvInsertStruct);
+	}
+	else
+	{
+		hModel = m_treeCtrl.GetRootItem();
+	}
 
 	// ******************************************************************************************** //
 	// Instances
@@ -1546,6 +1584,16 @@ void CRelationsView::GetEntityHierarchy(int_t iEntity, vector<wstring>& vecHiera
 		vecHierarchy.insert(vecHierarchy.begin(), strEntity);
 
 		iParent = engiGetEntityParent(iParent);
+	}
+}
+
+void CRelationsView::GetAllInstances(CEntity* pEntity, map<CEntity*, vector<SdaiInstance>>& mapEntityInstances)
+{
+	for (auto pSubType : pEntity->GetSubTypes())
+	{
+		mapEntityInstances[pSubType] = pSubType->GetInstances();
+
+		GetAllInstances(pSubType, mapEntityInstances);
 	}
 }
 

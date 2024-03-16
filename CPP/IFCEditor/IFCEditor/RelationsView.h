@@ -186,7 +186,7 @@ private: // Methods
 	CModel* GetModel() const;
 	
 	void LoadInstances(const vector<int_t>& vecInstances);
-	void LoadProperties(int_t iEntity, const vector<int_t>& vecInstances);
+	void LoadProperties(int_t iEntity, const vector<int_t>& vecInstances, bool bResetView);
 	void LoadInstance(int_t iEntity, int_t iInstance, HTREEITEM hParent);
 	int_t GetInstanceAttributes(int_t iEntity, int_t iInstance, HTREEITEM hParent, CAttributeSet* pAttributeSet);
 	void LoadInstanceAttribute(int_t iEntity, int_t iInstance, SdaiAttr sdaiAttribute, const char* szAttributeName, HTREEITEM hParent, HTREEITEM hInsertAfter);
@@ -212,6 +212,7 @@ private: // Methods
 	void GetAttributeReferences(SdaiInstance iInstance, SdaiAttr iAttribute, HTREEITEM hParent);
 
 	void GetEntityHierarchy(int_t iEntity, vector<wstring>& vecHierarchy) const;
+	void GetAllInstances(CEntity* pEntity, map<CEntity*, vector<SdaiInstance>>& mapEntityInstances);
 
 	void Clean();
 
