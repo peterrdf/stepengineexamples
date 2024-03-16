@@ -447,11 +447,30 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 
 		switch (pData->GetAttribute()->GetType()) 
 		{
+			case sdaiAGGR:
+			{
+				//UpdateAGGRAttribute(pData->GetInstance(), pData->GetAttribute(), strName, strValue);
+
+				pController->OnInstanceAttributeEdited(this, pData->GetInstance()->GetInstance(), pData->GetAttribute()->GetInstance());
+			}
+			break;
+
 			case sdaiADB:
 			{
 				UpdateADBAttribute(pData->GetInstance(), pData->GetAttribute(), strName, strValue);
 
 				pController->OnInstanceAttributeEdited(this, pData->GetInstance()->GetInstance(), pData->GetAttribute()->GetInstance());
+			}
+			break;
+
+			case sdaiBOOLEAN:
+			{
+				bool bValue = strValue != L"0";
+				sdaiPutAttrBN(
+					pData->GetInstance()->GetInstance(),
+					CW2A((LPCTSTR)strName),
+					pData->GetAttribute()->GetType(),
+					&bValue);
 			}
 			break;
 
@@ -517,23 +536,12 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 			break;
 
 			case sdaiSTRING:
-			{
-				sdaiPutAttrBN(
-					pData->GetInstance()->GetInstance(),
-					CW2A((LPCTSTR)strName),
-					sdaiUNICODE,
-					(LPCTSTR)strValue);
-
-				pController->OnInstanceAttributeEdited(this, pData->GetInstance()->GetInstance(), pData->GetAttribute()->GetInstance());
-			}
-			break;
-
 			case sdaiUNICODE:
 			{
 				sdaiPutAttrBN(
 					pData->GetInstance()->GetInstance(),
 					CW2A((LPCTSTR)strName),
-					pData->GetAttribute()->GetType(),
+					sdaiUNICODE,
 					(LPCTSTR)strValue);
 
 				pController->OnInstanceAttributeEdited(this, pData->GetInstance()->GetInstance(), pData->GetAttribute()->GetInstance());
@@ -1053,7 +1061,13 @@ void CPropertiesWnd::LoadInstanceAttributes()
 
 			case sdaiAGGR:
 			{
-				// NA
+				CreateAGGRGridProperty(pInstanceGroup, pTargetInstance, pAttribute, szAttributeName);
+			}
+			break;
+
+			case sdaiBOOLEAN:
+			{
+				CreateBoolGridProperty(pInstanceGroup, pTargetInstance, pAttribute, szAttributeName);
 			}
 			break;
 
@@ -1090,7 +1104,7 @@ void CPropertiesWnd::LoadInstanceAttributes()
 
 			case sdaiSTRING:
 			{
-				CreateStringGridProperty(pInstanceGroup, pTargetInstance, pAttribute, szAttributeName);				
+				CreateStringGridProperty(pInstanceGroup, pTargetInstance, pAttribute, szAttributeName);
 			}
 			break;
 
@@ -1202,20 +1216,6 @@ void CPropertiesWnd::CreateADBGridProperty(CMFCPropertyGridProperty* pParentGrid
 			break;
 
 			case sdaiSTRING:
-			{
-				wchar_t* szValue = nullptr;
-				sdaiGetADBValue(pADB, sdaiGetADBType(pADB), &szValue);
-
-				auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
-				pParentGridProperty->AddSubItem(pAttributeProperty);
-
-				auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)szValue, szAttributeName,
-					(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pInstance), pAttribute));
-
-				pAttributeProperty->AddSubItem(pAttributeValue);
-			}
-			break;
-
 			case sdaiUNICODE:
 			{
 				wchar_t* szValue = nullptr;
@@ -1237,7 +1237,179 @@ void CPropertiesWnd::CreateADBGridProperty(CMFCPropertyGridProperty* pParentGrid
 			}
 			break;
 		} // switch (sdaiGetADBType(pADB))
-	}
+	} // sdaiGetAttr
+}
+
+void CPropertiesWnd::CreateAGGRGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, const wchar_t* szAttributeName)
+{
+	SdaiAggr pAggr = nullptr;
+	if (sdaiGetAttr(
+		pInstance->GetInstance(),
+		pAttribute->GetInstance(),
+		pAttribute->GetType(),
+		&pAggr))
+	{
+		SdaiPrimitiveType iAggrType = 0;
+		engiGetAggrType(pAggr, &iAggrType);
+
+		SdaiInteger iMemberCount = sdaiGetMemberCount(pAggr);
+		if (iMemberCount == 0)
+		{
+			return;
+		}
+
+		auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
+		pParentGridProperty->AddSubItem(pAttributeProperty);
+
+		for (SdaiInteger iIndex = 0; iIndex < iMemberCount; iIndex++)
+		{
+			switch (iAggrType)
+			{
+				case sdaiADB:
+				{
+					// NA
+				}
+				break;
+
+				case sdaiAGGR:
+				{
+					// NA
+				}
+				break;
+
+				case sdaiINSTANCE:
+				{
+					// NA
+				}
+				break;
+
+				case sdaiLOGICAL:
+				{
+					string strValue;
+					char* szValue = nullptr;
+					if (sdaiGetAggrByIndex(
+						pAggr,
+						iIndex,
+						iAggrType,
+						&szValue))
+					{
+						strValue = szValue;
+					}					
+
+					auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)CA2W(strValue.c_str()), szAttributeName,
+						(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pInstance), pAttribute));
+
+					pAttributeProperty->AddSubItem(pAttributeValue);
+				}
+				break;
+
+				case sdaiENUM:
+				{
+					string strValue;
+					char* szValue = nullptr;
+					if (sdaiGetAggrByIndex(
+						pAggr,
+						iIndex,
+						iAggrType,
+						&szValue))
+					{
+						strValue = szValue;
+					}
+
+					auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
+					pParentGridProperty->AddSubItem(pAttributeProperty);
+
+					auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)CA2W(strValue.c_str()), szAttributeName,
+						(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pInstance), pAttribute));
+
+					pAttributeProperty->AddSubItem(pAttributeValue);
+				}
+				break;
+
+				case sdaiREAL:
+				{
+					double dValue = 0.;
+					sdaiGetAggrByIndex(
+						pAggr,
+						iIndex,
+						iAggrType,
+						&dValue);
+
+					auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
+					pParentGridProperty->AddSubItem(pAttributeProperty);
+
+					auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)dValue, szAttributeName,
+						(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pInstance), pAttribute));
+
+					pAttributeProperty->AddSubItem(pAttributeValue);
+				}
+				break;
+
+				case sdaiINTEGER:
+				{
+					int_t iValue = 0;
+					sdaiGetAggrByIndex(
+						pAggr,
+						iIndex,
+						iAggrType,
+						&iValue);
+
+					auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
+					pParentGridProperty->AddSubItem(pAttributeProperty);
+
+					auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)iValue, szAttributeName,
+						(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pInstance), pAttribute));
+
+					pAttributeProperty->AddSubItem(pAttributeValue);
+				}
+				break;
+
+				case sdaiSTRING:
+				case sdaiUNICODE:
+				{
+					wchar_t* szValue = nullptr;
+					sdaiGetAggrByIndex(
+						pAggr,
+						iIndex,
+						iAggrType,
+						&szValue);
+
+					auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
+					pParentGridProperty->AddSubItem(pAttributeProperty);
+
+					auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)szValue, szAttributeName,
+						(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pInstance), pAttribute));
+
+					pAttributeProperty->AddSubItem(pAttributeValue);
+				}
+				break;
+
+				default:
+				{
+					ASSERT(FALSE);
+				}
+				break;
+			} // switch (iAggrType)
+		} // for (SdaiInteger iIndex = ...
+	} // sdaiGetAttr
+}
+
+void CPropertiesWnd::CreateBoolGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, const wchar_t* szAttributeName)
+{
+	bool bValue = false;
+	sdaiGetAttr(
+		pInstance->GetInstance(),
+		pAttribute->GetInstance(),
+		pAttribute->GetType(),
+		&bValue);
+
+	auto pAttributeProperty = new CMFCPropertyGridProperty(szAttributeName);
+	pParentGridProperty->AddSubItem(pAttributeProperty);
+
+	auto pAttributeValue = new CIFCInstanceAttribute(L"value", (_variant_t)bValue, szAttributeName,
+		(DWORD_PTR)new CIFCInstanceAttributeData(GetController(), dynamic_cast<CIFCInstance*>(pInstance), pAttribute));
+
+	pAttributeProperty->AddSubItem(pAttributeValue);
 }
 
 void CPropertiesWnd::CreateEnumGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, const wchar_t* szAttributeName)
@@ -1443,18 +1615,6 @@ void CPropertiesWnd::UpdateADBAttribute(CInstanceBase* pInstance, CIFCAttribute*
 			break;
 
 			case sdaiSTRING:
-			{
-				SdaiADB pValue = sdaiCreateADB(sdaiGetADBType(pADB), (LPCTSTR)strValue);
-				sdaiPutADBTypePath(pValue, 1, szTypePath);
-				sdaiPutAttrBN(
-					pInstance->GetInstance(),
-					CW2A((LPCTSTR)strName),
-					sdaiADB,
-					pValue);
-				sdaiDeleteADB(pValue);
-			}
-			break;
-
 			case sdaiUNICODE:
 			{
 				SdaiADB pValue = sdaiCreateADB(sdaiGetADBType(pADB), (LPCTSTR)strValue);

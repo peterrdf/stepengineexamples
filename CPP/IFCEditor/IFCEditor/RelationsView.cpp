@@ -1041,10 +1041,10 @@ bool CRelationsView::CreateAttributeLabelAggregationElement(SdaiAggr aggregation
 
         case sdaiSTRING:
         {
-            wchar_t* szVlue = nullptr;
-            if (sdaiGetAggrByIndex(aggregation, iIndex, sdaiUNICODE, &szVlue))
+            wchar_t* szValue = nullptr;
+            if (sdaiGetAggrByIndex(aggregation, iIndex, sdaiUNICODE, &szValue))
 			{
-				CreateAttributeLabelString(szVlue, strLabel);
+				CreateAttributeLabelString(szValue, strLabel);
             }
             else 
 			{

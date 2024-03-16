@@ -131,6 +131,8 @@ protected: // Methods
 
 	void LoadInstanceAttributes();
 	void CreateADBGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, const wchar_t* szAttributeName);
+	void CreateAGGRGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, const wchar_t* szAttributeName);
+	void CreateBoolGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, const wchar_t* szAttributeName);
 	void CreateEnumGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, const wchar_t* szAttributeName);
 	void CreateIntGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, const wchar_t* szAttributeName);
 	void CreateLogicalGridProperty(CMFCPropertyGridProperty* pParentGridProperty, CInstanceBase* pInstance, CIFCAttribute* pAttribute, const wchar_t* szAttributeName);
