@@ -84,6 +84,7 @@ function addContent(fileName, fileExtension, fileContent) {
   g_geometries = [...geometries]
 
   // Update Viewer
+  g_viewer._scaleFactor = SCALE_AND_CENTER ? Module.getScale() : 1.0
   g_viewer.loadInstances()
 
   if (!embeddedMode()) {
@@ -278,7 +279,7 @@ function loadInstances(updateViewer) {
     } // for (let i = ...
 
     if (updateViewer) {
-      g_viewer._scaleFactor = SCALE_AND_CENTER ? Module.getScale() : 1.0;     
+      g_viewer._scaleFactor = SCALE_AND_CENTER ? Module.getScale() : 1.0
       g_viewer.loadInstances()
     }
   }
