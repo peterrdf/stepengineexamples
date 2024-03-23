@@ -45,10 +45,15 @@ const getPropertySetName = (propertySet) => {
 }
 
 const getPropertyContent = (handle) => {
+  let propertyValue = Module.GetPropertyValue(handle)
+  if (propertyValue.indexOf('http') === 0) {
+    propertyValue = '<a href="' + propertyValue + '" target="_blank">' + propertyValue + '</a>'
+  }
+
   return propertyTemplate
     .replace(/__PropertyName__/g, getPropertyName(handle))
     .replace(/__PropertyData__/g, handle)
-    .replace(/__PropertyDescription__/g, Module.GetPropertyValue(handle))
+    .replace(/__PropertyDescription__/g, propertyValue)
 }
 
 const getPropertyName = (property) => {
@@ -79,7 +84,7 @@ const showPropertyDescription = (event) => {
   if (propsDescriptionMap.has(handle)) {
     description = propsDescriptionMap.get(handle)
   } else {
-    const itemClass = event.currentTarget.attributes.class.value
+    const itemClass = event.currentTarget.attributes.class.value    
     let content = ''
 
     if (itemClass === PROPERTY_SET_CLASS) {
