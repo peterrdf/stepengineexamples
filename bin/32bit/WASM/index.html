@@ -27,7 +27,6 @@
     <link href="css/styles.css" rel="stylesheet" />
     <link href="css/custom.css?" rel="stylesheet" />
     <link href="css/rdf.css?" rel="stylesheet">
-    <!-- <link href="css/appli-test.css?" rel="stylesheet"> -->
 
     <script src="//code.jquery.com/jquery-1.12.4.js"></script>
     <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -174,10 +173,9 @@
 
     <script id="code-js" type="text/javascript" src="custom-js/handlers.js"></script>
 
-
 </head>
 
-<body id="page-top"  class="model-page rdf-app" onload='runWebGLApp()'>   
+<body id="page-top" class="model-page rdf-app" onload='runWebGLApp()'>
     <header>
         <nav class="navbar navbar-expand-lg  text-uppercase fixed-top" id="mainNav">
             <div class="container-fluid">
@@ -195,11 +193,11 @@
                     </ul>
                 </div>
 
-                <ul class="nav nav-tabs mb-3"  role="tablist">
+                <ul class="nav nav-tabs mb-3" role="tablist">
                     <li class="nav-item" role="presentation"> <a class="nav-link active" id="ex1-tab-1" data-mdb-toggle="tab" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1" aria-selected="true">model</a> </li>
-                    
+
                     <li class="nav-item" role="presentation"> <a class="nav-link" id="ex1-tab-2" data-mdb-toggle="tab" href="#ex1-tabs-2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false">checker</a> </li>
-                    
+
                     <!--li class="nav-item" role="presentation"> <a class="nav-link" id="ex1-tab-3" data-mdb-toggle="tab" href="#ex1-tabs-3" role="tab" aria-controls="ex1-tabs-3" aria-selected="false">add-on</a> </li-->
                 </ul>
             </div>
@@ -207,7 +205,7 @@
     </header>
 
     <div id='canvas_container' class="canvas_container" style="height: 100%; width: 100%;">
-        <canvas id='canvas-element-id' oncontextmenu="return false;" width='480' height='400'>
+        <canvas id='canvas-element-id' width='480' height='400'>
             Your browser does not support the HTML5 canvas element.
         </canvas>
         <div id="labels-container"></div>
@@ -216,24 +214,25 @@
     <aside id="leftside">
         <div class="col col-app-title">
             <div class="app-head">
-                <h2><span class="head-objects">Objects in: </span>
+                <h2>
+                    <span class="head-objects">Objects in: </span>
                     <span class="file-name">3D file not loaded</span>
                 </h2>
             </div>
-            
-            <div  id="select-container">
-               <div  id="tree-container" class="col-app-content scrollable"></div>
+
+            <div id="select-container">
+                <div id="tree-container" class="col-app-content scrollable"></div>
             </div>
             <div class="app-bottom-bar">
                 <div class="app-controls">
-                    <div class="app-controls-group">Collapse<br/><a href="#" id="button-collapse-all">All</a><a href="#" id="button-collapse-selected">Selected</a></div><div class="app-controls-group" id="">Hide<br/><a href="#" id="button-hide-all">All</a><a href="#" id="button-hide-selected">Selected</a></div>
-                    <div class="app-controls-group" >Tree<br/><span id="tree-labels"><a href="#">Not loaded</a></span></div>
+                    <div class="app-controls-group">Collapse<br /><a href="#" id="button-collapse-all">All</a><a href="#" id="button-collapse-selected">Selected</a></div><div class="app-controls-group" id="">Hide<br /><a href="#" id="button-hide-all">All</a><a href="#" id="button-hide-selected">Selected</a></div>
+                    <div class="app-controls-group">Tree<br /><span id="tree-labels"><a href="#">Not loaded</a></span></div>
                 </div>
-                
+
             </div>
-        </div>        
+        </div>
     </aside>
-    
+
     <aside id="rightside">
         <!-- Tabs content BEGIN -->
         <div class="tab-content" id="ex1-content">
@@ -241,7 +240,8 @@
                 <!-- Tab #1 Content BEGIN -->
                 <div class="col col-app-title">
                     <div class="app-head">
-                        <h2>Details:</h2> </div>
+                        <h2>Details:</h2>
+                    </div>
                     <div class="col-app-content scrollable">
                         <div id="propertyDetails">
                             <ul class="rules-container"></ul>
@@ -249,7 +249,7 @@
                     </div>
                     <div class="app-bottom-bar">
                         <div class="app-controls">
-                            <div class="app-controls-group">Details interaction:<br/><a href="#" id="collapse-all-props">Collapse All</a><a href="#" id="expand-all-props">Expand All</a></div>
+                            <div class="app-controls-group">Details interaction:<br /><a href="#" id="collapse-all-props">Collapse All</a><a href="#" id="expand-all-props">Expand All</a></div>
                         </div>
                     </div>
                 </div>
@@ -259,7 +259,7 @@
                 <!-- Tab #2 Content BEGIN -->
                 <div class="col col-app-title">
                     <div class="app-head">
-                        <h2 id="rhside01">Rule selection: <a class="btn-rdf-modal" onclick="checkRules()">Check Rules</a></h2> 
+                        <h2 id="rhside01">Rule selection: <a class="btn-rdf-modal" onclick="checkRules()">Check Rules</a></h2>
                     </div>
                     <div id="flexible-content" class="split">
                         <div class="col-app-content scrollable" id="split-0">
@@ -268,9 +268,11 @@
                             </div>
                         </div>
                         <div class="app-bottom-bar" id="split-1">
-                            <div class="app-controls"><h2>Rule Details:</h2>
+                            <div class="app-controls">
+                                <h2>Rule Details:</h2>
                                 <div id="rule-details" class="scrollable"></div>
-                                <div class="app-controls-group interactionz">Rule Interactions:<br/>
+                                <div class="app-controls-group interactionz">
+                                    Rule Interactions:<br />
                                     <a href="#" id="collapse-all-rules">Collapse All</a><a href="#" id="expand-all-rules">Expand All</a>
                                     <a class="" data-bs-toggle="modal" data-bs-target="#reg-modal" onclick="getReport()">Report</a>
                                 </div>
@@ -282,12 +284,12 @@
             </div>
             <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
                 <div id="console" class="scrollable"> </div>
-            
+
             </div>
         </div>
         <!-- Tabs content END -->
     </aside>
-    
+
     <div class="zoom-nav" id="zoom-nav">
         <a class="btn-front" id="btnFront" title="Front view" data="1"> <span>Front</span> </a>
         <a class="btn-top" id="btnTop" title="Top view" data="3"> <span>Top</span> </a>
@@ -297,15 +299,15 @@
         <a class="btn-bottom" id="btnBottom" title="Bottom view" data="4"> <span>Right</span> </a>
         <a class="btn-rear" id="btnRear" title="Rear view" data="2"> <span>Rear</span> </a>
     </div>
-    
+
     <footer>
         <div class="copyright py-3 text-center text-white">
             <div class="container"><small>Copyright &copy; rdf.bg 2024</small></div>
         </div>
     </footer>
 
-    <!-- hidden input -->            
-    <input id="load_ifc_file" type="file" accept=".ifc, .ifx, .ifcOWL, .ttl, .stp, .bin, .dxf, .dae, .zae, .obj, .gml, citygml, .xml, .json" 
+    <!-- hidden input -->
+    <input id="load_ifc_file" type="file" accept=".ifc, .ifx, .ifcOWL, .ttl, .stp, .bin, .dxf, .dae, .zae, .obj, .gml, citygml, .xml, .json"
            onclick="this.value = null;" onchange="loadFile(this.files[0]);" style="display:none;" />
 
     <!-- modal content for Checker Report -->
@@ -319,14 +321,14 @@
                 <div class="modal-body">
                     <div class="modal-body-report-container" id="report-content">{#your-dynamic-content-here#}</div>
                 </div>
-                <div class="modal-footer bg-transparent">                    
-                    <a class="btn-rdf-modal" data-bs-dismiss="modal" >Close</a>
+                <div class="modal-footer bg-transparent">
+                    <a class="btn-rdf-modal" data-bs-dismiss="modal">Close</a>
                     <a class="btn-rdf-modal" onclick="saveReport()">Export</a>
                 </div>
-        </div>
+            </div>
         </div>
     </div>
-    
+
     <!-- modal content for Settings -->
     <div class="modal fade" id="reg-modal-settings" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
         <div class="modal-dialog bg-transparent modal-sm">
@@ -337,23 +339,24 @@
                 </div>
                 <div class="modal-body modal-rdf" id="settings-options">
                     <div class="modal-body-report-container">
-                     <h4>
-                        RDF settings</h4>
+                        <h4>
+                            RDF settings
+                        </h4>
                     </div>
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="switchCheck3dgrid" checked>
                         <label class="form-check-label" for="switchCheck3dgrid">3D grid visibility</label>
                     </div>
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="resetSidebarsWidth" >
+                        <input class="form-check-input" type="checkbox" id="resetSidebarsWidth">
                         <label class="form-check-label" for="resetSidebarsWidth">Reset sidebar position</label>
                     </div>
                 </div>
-                <div class="modal-footer bg-transparent">                    
+                <div class="modal-footer bg-transparent">
                     <a href="#" class="btn-rdf-modal" data-bs-dismiss="modal">Close</a>
                     <a onclick="updateSettings()" class="btn-rdf-modal" data-bs-dismiss="modal">Save</a>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -367,9 +370,9 @@
                 </div>
                 <div class="modal-body modal-rdf-body">
                     <div class="modal-body-report-container" id="dynamic">
-                     <h4>
-                        Lorem Ipsum Content
-                    </h4>
+                        <h4>
+                            Lorem Ipsum Content
+                        </h4>
                     </div>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra ante arcu, eget luctus diam ullamcorper iaculis. Curabitur varius urna eu mi pulvinar, at cursus ante rhoncus. Curabitur sodales blandit feugiat. Suspendisse tincidunt arcu vel ipsum pulvinar varius. Donec tempus eget neque rutrum lacinia. Morbi dui erat, efficitur at tempor eu, aliquam sed massa. Sed tempor pretium dapibus. Sed rhoncus nisl ac auctor vulputate. Aliquam erat volutpat. Phasellus diam mauris, finibus id dui vel, posuere pulvinar leo. Quisque vel lectus mauris. Phasellus id hendrerit lorem, ac tempus mi.</p>
                     <p>Aenean feugiat pulvinar leo a finibus. Nunc pharetra dolor id nisi imperdiet, a lobortis diam dictum. Etiam porttitor sed justo in congue. Interdum et malesuada fames ac ante ipsum primis in faucibus. Maecenas finibus leo magna, nec auctor arcu accumsan in. Vivamus tempor eros et ante ornare sollicitudin. Fusce at congue massa, vitae aliquet sem. Nullam in ex ac mauris molestie blandit nec at justo. Nunc sollicitudin consequat felis, non sollicitudin elit convallis vel. Proin id dolor ac odio vulputate lacinia. Praesent eget mi in magna fringilla dictum.</p>
@@ -377,7 +380,7 @@
                     <p>Proin pharetra consectetur nulla nec tincidunt. Proin malesuada dui sit amet placerat ornare. Quisque condimentum nisi interdum felis semper, et semper magna vestibulum. Pellentesque quis tincidunt est. Etiam pellentesque orci in molestie fermentum. Aenean bibendum vehicula neque scelerisque finibus. Nam volutpat, leo sit amet porttitor elementum, quam sapien sagittis turpis, vulputate rhoncus magna risus id nisi. Pellentesque mi lorem, blandit ac molestie quis, tincidunt vel enim. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed erat purus, consectetur sed leo eu, elementum tempor mi. Suspendisse faucibus feugiat semper. Curabitur bibendum nulla nec mi gravida, quis sodales ante semper.</p>
                     <p>Maecenas maximus purus a euismod viverra. Cras laoreet pulvinar purus, in pharetra massa ornare et. Pellentesque ultricies urna nec dolor cursus fringilla quis eget quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas et mauris faucibus, malesuada leo dignissim, rutrum massa. Curabitur nec scelerisque ligula, vitae facilisis lorem. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
                 </div>
-                <div class="modal-footer bg-transparent">                    
+                <div class="modal-footer bg-transparent">
                     <a href="#" class="btn-rdf-modal" data-bs-dismiss="modal">Close</a>
                     <a href="#" class="btn-rdf-modal" data-bs-dismiss="modal">Save</a>
                 </div>
@@ -391,13 +394,24 @@
         </ul>
     </div>
 
+    <div id="contextMenuCanvas" class="context-menu" style="display: none">
+        <ul>
+            <li><a href="#" id="view-faces">Show Faces</a></li>
+            <li><a href="#" id="view-wireframes">Show Wireframes</a></li>
+            <li><a href="#" id="view-bboxes">Show BBoxes</a></li>
+            <li><a href="#" id="view-tooltip">Show Tootltip</a></li>
+        </ul>
+    </div>
+
     <div id="propety-templates" style="display:none">
         <div id="propertyset-template">
             <li class="single-rule">
-                <h5><a class="arrow collapse"
-                        data-bs-toggle="collapse" href="#prop__PropertyOrder__" role="button" aria-expanded="true"
-                        aria-controls="prop__PropertyOrder__"> </a>
-                    <span class="propertyset-name" data="__PropertySetData__">__PropertySetName__</span></h5>
+                <h5>
+                    <a class="arrow collapse"
+                       data-bs-toggle="collapse" href="#prop__PropertyOrder__" role="button" aria-expanded="true"
+                       aria-controls="prop__PropertyOrder__"> </a>
+                    <span class="propertyset-name" data="__PropertySetData__">__PropertySetName__</span>
+                </h5>
                 <div class="collapse show rule-enumerator" id="prop__PropertyOrder__">
                     __PropertyTemplate__
                 </div>
@@ -405,29 +419,34 @@
         </div>
         <div id="property-template">
             <div class="rule-title">
-                <h6><span class="property-name rule-title-text"
-                        data="__PropertyData__"><i>__PropertyName__</i><em>__PropertyDescription__</em></span></h6>
+                <h6>
+                    <span class="property-name rule-title-text"
+                          data="__PropertyData__"><i>__PropertyName__</i><em>__PropertyDescription__</em></span>
+                </h6>
             </div>
         </div>
     </div>
     <div id="rule-templates" style="display:none">
         <div id="ruleset-template">
             <li class="single-rule" id="ruleset__RuleSetData__">
-                <h5><a class="arrow" data-bs-toggle="collapse" href="#rule__RuleOrder__" role="button" aria-expanded="true"
-                        aria-controls="rule__RuleOrder__"> </a><input type="checkbox" checked value="__RuleSetData__" class="ruleset-checkbox">
-                            <span class="ruleset-name" data="__RuleSetData__">__RuleSetName__</span></h5>
+                <h5>
+                    <a class="arrow" data-bs-toggle="collapse" href="#rule__RuleOrder__" role="button" aria-expanded="true"
+                       aria-controls="rule__RuleOrder__"> </a><input type="checkbox" checked value="__RuleSetData__" class="ruleset-checkbox">
+                    <span class="ruleset-name" data="__RuleSetData__">__RuleSetName__</span>
+                </h5>
                 <div id="rule__RuleOrder__" class="collapse show">
-                    __RuleTemplate__                 
+                    __RuleTemplate__
                 </div>
             </li>
         </div>
         <div id="rule-template">
             <div class="rule-container rule-enumerator hover-select" id="__RuleData__">
                 <div class="rule-title">
-                    <h6><input type="checkbox" value="__RuleData__" class="rule-checkbox"><span
-                            class="rule-name rule-title-text" data="__RuleData__">__RuleName__</span><span class="rule-indicator" value="__RuleData__"></span></h6>
+                    <h6>
+                        <input type="checkbox" value="__RuleData__" class="rule-checkbox"><span class="rule-name rule-title-text" data="__RuleData__">__RuleName__</span><span class="rule-indicator" value="__RuleData__"></span>
+                    </h6>
                 </div>
-            </div> 
+            </div>
         </div>
     </div>
 
@@ -438,11 +457,66 @@
     <script src="js/scripts.js"></script>
     <!-- MDB -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.1/mdb.min.js"></script>
-    
+
     <script>
+        const canvas = document.getElementById('canvas_container')
+        document.body.addEventListener('click', function (event) {
+            const menu = $('#contextMenuCanvas')
+            menu.hide()
+        })
+
+        canvas.addEventListener('contextmenu', function (event) {
+            event.preventDefault()
+
+            const menu = $('#contextMenuCanvas')
+
+            menu.show()
+            menu.css('left', event.pageX + 'px')
+            menu.css('top', event.pageY + 'px')
+        })
+
+        const viewFaces = document.getElementById('view-faces')
+        viewFaces.addEventListener('click', function (event) {
+            event.preventDefault()
+
+            g_viewer._viewTriangles = !g_viewer._viewTriangles
+
+            PENDING_DRAW_SCENE = true
+        })
+
+        const viewWireframes = document.getElementById('view-wireframes')
+        viewWireframes.addEventListener('click', function (event) {
+            event.preventDefault()
+
+            g_viewer._viewWireframes = !g_viewer._viewWireframes
+
+            PENDING_DRAW_SCENE = true
+        })
+
+        const viewBBoxes = document.getElementById('view-bboxes')
+        viewBBoxes.addEventListener('click', function (event) {
+            event.preventDefault()
+
+            g_viewer._viewBBox = !g_viewer._viewBBox
+            g_viewer._viewBBoxX = g_viewer._viewBBox
+            g_viewer._viewBBoxY = g_viewer._viewBBox
+            g_viewer._viewBBoxZ = g_viewer._viewBBox
+
+            PENDING_DRAW_SCENE = true
+        })
+
+        const viewTooltip = document.getElementById('view-tooltip')
+        viewTooltip.addEventListener('click', function (event) {
+            event.preventDefault()
+
+            g_viewer._viewTootlip = !g_viewer._viewTootlip
+
+            PENDING_DRAW_SCENE = true
+        })
+
         $(function () {
-            $('#tree-container').tooltip({tooltipClass: "tooltip-styling"});
-        });
+            $('#tree-container').tooltip({ tooltipClass: "tooltip-styling" });
+        })
 
         $('#leftside').resizable({
             handles: "e",
