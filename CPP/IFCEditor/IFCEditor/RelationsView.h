@@ -165,6 +165,11 @@ private: // Members
 	CSearchTreeCtrlDialog* m_pSearchDialog;
 
 public: // Methods
+
+	// CDockablePane
+	virtual BOOL CanFloat() const override { return FALSE; };
+	virtual BOOL CanBeClosed() const override { return FALSE; };
+	virtual BOOL CanAutoHide() const override { return FALSE; };
 	
 	// CViewBase
 	virtual void OnModelChanged() override;

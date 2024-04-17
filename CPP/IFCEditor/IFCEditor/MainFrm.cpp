@@ -150,7 +150,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//}
 
 	// Outlook bar is created and docking on the left side should be allowed.
-	EnableDocking(CBRS_ALIGN_LEFT);
+	EnableDocking(CBRS_ALIGN_ANY);
 	EnableAutoHidePanes(CBRS_ALIGN_RIGHT);
 
 	// Load menu item image (not placed on any standard toolbars):
@@ -163,13 +163,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	}
 
-	m_schemaView.EnableDocking(CBRS_ALIGN_ANY);
-	m_relationsView.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_schemaView);
-	CDockablePane* pTabbedBar = nullptr;
-	m_relationsView.AttachToTabWnd(&m_schemaView, DM_SHOW, TRUE, &pTabbedBar);
-	m_propertiesView.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_propertiesView);
+	m_schemaView.EnableDocking(CBRS_ALIGN_LEFT);
+	m_relationsView.EnableDocking(CBRS_ALIGN_TOP);
+	m_propertiesView.EnableDocking(CBRS_ALIGN_RIGHT);
+
+	DockPane(&m_schemaView, AFX_IDW_DOCKBAR_LEFT);
+	DockPane(&m_propertiesView, AFX_IDW_DOCKBAR_RIGHT);
+	DockPane(&m_relationsView, AFX_IDW_DOCKBAR_TOP);
 
 	// set the visual manager and style based on persisted value
 	OnApplicationLook(theApp.m_nAppLook);
@@ -254,7 +254,7 @@ BOOL CMainFrame::CreateDockingWindows()
 		CRect(0, 0, 200, 200),
 		TRUE,
 		ID_VIEW_SCHEMA,
-		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT))
 	{
 		ASSERT(FALSE);
 
@@ -272,7 +272,7 @@ BOOL CMainFrame::CreateDockingWindows()
 		CRect(0, 0, 200, 200),
 		TRUE,
 		ID_VIEW_RELATIONS,
-		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_TOP))
 	{
 		ASSERT(FALSE);
 
@@ -290,7 +290,7 @@ BOOL CMainFrame::CreateDockingWindows()
 		CRect(0, 0, 200, 200),
 		TRUE,
 		ID_VIEW_PROPERTIESWND,
-		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT))
 	{
 		ASSERT(FALSE);
 
