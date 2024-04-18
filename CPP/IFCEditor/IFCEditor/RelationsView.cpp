@@ -15,16 +15,17 @@ static char THIS_FILE[]=__FILE__;
 #define IMAGE_MODEL 			2
 #define IMAGE_INSTANCE			0
 #define IMAGE_ENTITY			1
-#define IMAGE_ATTRIBUTES		2
 #define IMAGE_INVERSE_ATTRIBUTE	3
 #define IMAGE_ATTRIBUTE			5
+#define IMAGE_PENDING_LOAD		2
 
 #define ITEM_SUB_TYPES			L"Sub-types"
 #define ITEM_ATTRIBUTES			L"Attributes"
 #define ITEM_PENDING_LOAD		L"***..........***"
 
 #define MAX_LABEL_SIZE			50
-#define LOAD_ATTRIBUTES_LIMIT	10
+#define LOAD_INSTANCES_LIMIT	500
+#define LOAD_ATTRIBUTES_LIMIT	500
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // CRelationsView
@@ -34,7 +35,7 @@ static char THIS_FILE[]=__FILE__;
 {
 	m_pEntity = nullptr;
 
-	LoadProperties(0, vector<int_t>(), true);
+	LoadProperties(0, vector<int_t>(), true, NULL);
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -87,7 +88,8 @@ static char THIS_FILE[]=__FILE__;
 	LoadProperties(
 		CInstanceBase::GetEntity(iInstance),
 		vecInstances,
-		true);
+		true,
+		NULL);
 
 	ShowPane(TRUE, TRUE, TRUE);
 }
@@ -126,7 +128,8 @@ static char THIS_FILE[]=__FILE__;
 			LoadProperties(
 				itEntityInstances.first->GetEntity(),
 				itEntityInstances.second,
-				iIndex == 0);
+				iIndex == 0,
+				NULL);
 
 			iIndex++;
 		}
@@ -141,7 +144,8 @@ static char THIS_FILE[]=__FILE__;
 	LoadProperties(
 		pEntity->GetEntity(),
 		vecInstances,
-		true);
+		true,
+		NULL);
 	
 	ShowPane(TRUE, TRUE, TRUE);
 }
@@ -385,45 +389,45 @@ CModel* CRelationsView::GetModel() const
 }
 
 // ------------------------------------------------------------------------------------------------
-void CRelationsView::LoadInstances(const vector<int_t>& vecInstances)
-{
-	ResetView();
-
-	auto pModel = GetModel();
-	if (pModel == nullptr)
-	{
-		return;
-	}
-
-	// ******************************************************************************************** //
-	// Model
-	TV_INSERTSTRUCT tvInsertStruct;
-	tvInsertStruct.hParent = nullptr;
-	tvInsertStruct.hInsertAfter = TVI_LAST;
-	tvInsertStruct.item.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_TEXT | TVIF_PARAM;
-	tvInsertStruct.item.pszText = (LPWSTR)pModel->GetModelName();
-	tvInsertStruct.item.iImage = tvInsertStruct.item.iSelectedImage = IMAGE_MODEL;
-	tvInsertStruct.item.lParam = NULL;
-
-	HTREEITEM hModel = m_treeCtrl.InsertItem(&tvInsertStruct);
-	// ******************************************************************************************** //	
-
-	// ******************************************************************************************** //
-	// Instances
-	for (auto iInstance : vecInstances)
-	{
-		LoadInstance(
-			CInstanceBase::GetEntity(iInstance),
-			iInstance, 
-			hModel);
-	}
-	// ******************************************************************************************** //
-
-	m_treeCtrl.Expand(hModel, TVE_EXPAND);
-}
+//void CRelationsView::LoadInstances(const vector<int_t>& vecInstances)
+//{
+//	ResetView();
+//
+//	auto pModel = GetModel();
+//	if (pModel == nullptr)
+//	{
+//		return;
+//	}
+//
+//	// ******************************************************************************************** //
+//	// Model
+//	TV_INSERTSTRUCT tvInsertStruct;
+//	tvInsertStruct.hParent = nullptr;
+//	tvInsertStruct.hInsertAfter = TVI_LAST;
+//	tvInsertStruct.item.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_TEXT | TVIF_PARAM;
+//	tvInsertStruct.item.pszText = (LPWSTR)pModel->GetModelName();
+//	tvInsertStruct.item.iImage = tvInsertStruct.item.iSelectedImage = IMAGE_MODEL;
+//	tvInsertStruct.item.lParam = NULL;
+//
+//	HTREEITEM hModel = m_treeCtrl.InsertItem(&tvInsertStruct);
+//	// ******************************************************************************************** //	
+//
+//	// ******************************************************************************************** //
+//	// Instances
+//	for (auto iInstance : vecInstances)
+//	{
+//		LoadInstance(
+//			CInstanceBase::GetEntity(iInstance),
+//			iInstance, 
+//			hModel);
+//	}
+//	// ******************************************************************************************** //
+//
+//	m_treeCtrl.Expand(hModel, TVE_EXPAND);
+//}
 
 // ------------------------------------------------------------------------------------------------
-void CRelationsView::LoadProperties(int_t iEntity, const vector<int_t>& vecInstances, bool bResetView)
+void CRelationsView::LoadProperties(int_t iEntity, const vector<int_t>& vecInstances, bool bResetView, HTREEITEM hInsertAfter)
 {
 	auto pModel = GetModel();
 	if (pModel == nullptr)
@@ -451,19 +455,73 @@ void CRelationsView::LoadProperties(int_t iEntity, const vector<int_t>& vecInsta
 		hModel = m_treeCtrl.GetRootItem();
 	}
 
-	// ******************************************************************************************** //
-	// Instances
-	for (auto iInstance : vecInstances)
+	/* Instances */
+
+	// Load first page
+	size_t iInstanceStart = 0;
+	size_t iInstanceEnd = iInstanceStart + LOAD_INSTANCES_LIMIT;
+	if (iInstanceEnd >= vecInstances.size())
 	{
-		LoadInstance(iEntity, iInstance, hModel);
+		iInstanceEnd = vecInstances.size();
 	}
-	// ******************************************************************************************** //
+
+	for (size_t iInstance = iInstanceStart; (iInstance < iInstanceEnd); iInstance++)
+	{
+		LoadInstance(iEntity, vecInstances[iInstance], hModel, hInsertAfter);
+
+		iInstanceStart++;
+	}
+
+	// Load on demand
+	while (iInstanceStart < vecInstances.size())
+	{
+		iInstanceEnd = iInstanceStart + LOAD_INSTANCES_LIMIT;
+		if (iInstanceEnd >= vecInstances.size())
+		{
+			iInstanceEnd = vecInstances.size();
+		}
+
+		auto pInstanceSet = new CInstanceSet();
+		m_vecItemDataCache.push_back(pInstanceSet);
+
+		for (size_t iInstance = iInstanceStart; (iInstance < iInstanceEnd); iInstance++)
+		{
+			pInstanceSet->Instances().push_back(vecInstances[iInstance]);
+		}
+
+		CString strPage;
+		strPage.Format(L"[%lld - %lld]", iInstanceStart + 1, iInstanceEnd);
+
+		// Pending load
+		 TV_INSERTSTRUCT tvInsertStruct;
+		tvInsertStruct.hParent = hModel;
+		tvInsertStruct.hInsertAfter = TVI_LAST;
+		tvInsertStruct.item.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_TEXT | TVIF_PARAM | TVIF_CHILDREN;;
+		tvInsertStruct.item.pszText = strPage.GetBuffer();
+		tvInsertStruct.item.cChildren = 1;
+		tvInsertStruct.item.iImage = tvInsertStruct.item.iSelectedImage = IMAGE_PENDING_LOAD;
+		tvInsertStruct.item.lParam = NULL;
+
+		HTREEITEM hInstances = m_treeCtrl.InsertItem(&tvInsertStruct);
+
+		// Add a fake item - load on demand		
+		tvInsertStruct.hParent = hInstances;
+		tvInsertStruct.hInsertAfter = TVI_LAST;
+		tvInsertStruct.item.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_TEXT | TVIF_PARAM;
+		tvInsertStruct.item.pszText = ITEM_PENDING_LOAD;
+		tvInsertStruct.item.iImage = tvInsertStruct.item.iSelectedImage = IMAGE_INSTANCE;
+		tvInsertStruct.item.lParam = (LPARAM)pInstanceSet;
+
+		m_treeCtrl.InsertItem(&tvInsertStruct);
+
+		iInstanceStart = iInstanceEnd;
+	} // while (iInstanceStart < ...
 
 	m_treeCtrl.Expand(hModel, TVE_EXPAND);
 }
 
 // ------------------------------------------------------------------------------------------------
-void CRelationsView::LoadInstance(int_t iEntity, int_t iInstance, HTREEITEM hParent)
+void CRelationsView::LoadInstance(int_t iEntity, int_t iInstance, HTREEITEM hParent, HTREEITEM hInsertAfter)
 {	
 	ASSERT(iEntity != 0);
 	ASSERT(iInstance != 0);	
@@ -481,7 +539,7 @@ void CRelationsView::LoadInstance(int_t iEntity, int_t iInstance, HTREEITEM hPar
 
 	TV_INSERTSTRUCT tvInsertStruct;
 	tvInsertStruct.hParent = hParent;
-	tvInsertStruct.hInsertAfter = TVI_LAST;
+	tvInsertStruct.hInsertAfter = hInsertAfter != NULL ? hInsertAfter : TVI_LAST;
 	tvInsertStruct.item.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_TEXT | TVIF_PARAM;
 	tvInsertStruct.item.pszText = (LPWSTR)strItem.c_str();
 	tvInsertStruct.item.iImage = tvInsertStruct.item.iSelectedImage = IMAGE_INSTANCE;
@@ -556,7 +614,7 @@ void CRelationsView::LoadInstance(int_t iEntity, int_t iInstance, HTREEITEM hPar
 		tvInsertStruct.item.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_TEXT | TVIF_PARAM | TVIF_CHILDREN;;
 		tvInsertStruct.item.pszText = strPage.GetBuffer();
 		tvInsertStruct.item.cChildren = 1;
-		tvInsertStruct.item.iImage = tvInsertStruct.item.iSelectedImage = IMAGE_ATTRIBUTES;
+		tvInsertStruct.item.iImage = tvInsertStruct.item.iSelectedImage = IMAGE_PENDING_LOAD;
 		tvInsertStruct.item.lParam = NULL;
 
 		HTREEITEM hAttributes = m_treeCtrl.InsertItem(&tvInsertStruct);
@@ -1351,7 +1409,8 @@ void CRelationsView::GetAttributeReferencesADB(SdaiADB ADB, HTREEITEM hParent)
 				LoadInstance(
 					iEntity,
 					iValueInstance,
-					hParent);
+					hParent,
+					NULL);
 			}
             else 
 			{
@@ -1370,7 +1429,8 @@ void CRelationsView::GetAttributeReferencesADB(SdaiADB ADB, HTREEITEM hParent)
 				LoadInstance(
 					iEntity,
 					iValue,
-					hParent);
+					hParent,
+					NULL);
 			}
 			else
 			{
@@ -1422,7 +1482,8 @@ void CRelationsView::GetAttributeReferencesAggregationElement(SdaiAggr aggregati
 				LoadInstance(
 					iEntity,
 					iValueInstance,
-					hParent);
+					hParent,
+					NULL);
             }
             else 
 			{
@@ -1441,7 +1502,8 @@ void CRelationsView::GetAttributeReferencesAggregationElement(SdaiAggr aggregati
 				LoadInstance(
 					iEntity,
 					iValue,
-					hParent);
+					hParent,
+					NULL);
 			}
 			else
 			{
@@ -1526,7 +1588,8 @@ void CRelationsView::GetAttributeReferences(SdaiInstance iInstance, SdaiAttr iAt
 				LoadInstance(
 					iEntity,
 					iValueInstance,
-					hParent);
+					hParent,
+					NULL);
 			}
 			else
 			{
@@ -1543,7 +1606,8 @@ void CRelationsView::GetAttributeReferences(SdaiInstance iInstance, SdaiAttr iAt
 				LoadInstance(
 					iEntity,
 					iValue,
-					hParent);
+					hParent,
+					NULL);
             }
 			else
 			{
@@ -1723,8 +1787,7 @@ void CRelationsView::OnTVNItemexpandingTree(NMHDR *pNMHDR, LRESULT *pResult)
 
 	ASSERT(iImage == iSelectedImage);
 
-	if (
-		((iImage == IMAGE_INSTANCE) || (iImage == IMAGE_ATTRIBUTES)) && 
+	if (((iImage == IMAGE_INSTANCE) || (iImage == IMAGE_PENDING_LOAD)) &&
 		(pNMTreeView->itemNew.cChildren == 1))
 	{
 		HTREEITEM hChild = m_treeCtrl.GetChildItem(pNMTreeView->itemNew.hItem);
@@ -1752,30 +1815,55 @@ void CRelationsView::OnTVNItemexpandingTree(NMHDR *pNMHDR, LRESULT *pResult)
 				sdaiGetAttrDefinition(sdaiGetInstanceType(pAttributeData->GetInstance()), pAttributeData->GetName()),
 				pNMTreeView->itemNew.hItem);
 		}
-		else if (iImage == IMAGE_ATTRIBUTES)
+		else if (iImage == IMAGE_PENDING_LOAD)
 		{
-			auto pAttributeSet = (CAttributeSet*)m_treeCtrl.GetItemData(hChild);
-			ASSERT(pAttributeSet != nullptr);
-
-			HTREEITEM hParent = m_treeCtrl.GetParentItem(pNMTreeView->itemNew.hItem);
-			ASSERT(hParent != NULL);			
-
-			for (size_t iAttribute = 0; (iAttribute < pAttributeSet->Attributes().size()); iAttribute++)
+			auto pInstanceSet = dynamic_cast<CInstanceSet*>((CItemData*)m_treeCtrl.GetItemData(hChild));
+			if (pInstanceSet != nullptr)
 			{
-				const char* szAttributeName = nullptr;
-				engiGetEntityArgumentName(pAttributeSet->GetEntity(),
-					pAttributeSet->Attributes()[iAttribute].second,
-					sdaiSTRING,
-					&szAttributeName);
+				ASSERT(!pInstanceSet->Instances().empty());
 
-				LoadInstanceAttribute(
-					pAttributeSet->GetEntity(),
-					pAttributeSet->GetInstance(),
-					pAttributeSet->Attributes()[iAttribute].first,
-					szAttributeName,
-					hParent,
-					pNMTreeView->itemNew.hItem);
-			}
+				HTREEITEM hInsertAfter = m_treeCtrl.GetPrevVisibleItem(pNMTreeView->itemNew.hItem);
+				ASSERT(hInsertAfter != NULL);
+
+				SdaiEntity iEntity = CInstanceBase::GetEntity(pInstanceSet->Instances()[0]);
+				ASSERT(iEntity != 0);
+
+				LoadProperties(
+					iEntity, 
+					pInstanceSet->Instances(), 
+					false, 
+					hInsertAfter);
+			} // if (pInstanceSet != nullptr)
+			else
+			{
+				auto pAttributeSet = dynamic_cast<CAttributeSet*>((CItemData*)m_treeCtrl.GetItemData(hChild));
+				if (pAttributeSet != nullptr)
+				{
+					HTREEITEM hParent = m_treeCtrl.GetParentItem(pNMTreeView->itemNew.hItem);
+					ASSERT(hParent != NULL);
+
+					for (size_t iAttribute = 0; (iAttribute < pAttributeSet->Attributes().size()); iAttribute++)
+					{
+						const char* szAttributeName = nullptr;
+						engiGetEntityArgumentName(pAttributeSet->GetEntity(),
+							pAttributeSet->Attributes()[iAttribute].second,
+							sdaiSTRING,
+							&szAttributeName);
+
+						LoadInstanceAttribute(
+							pAttributeSet->GetEntity(),
+							pAttributeSet->GetInstance(),
+							pAttributeSet->Attributes()[iAttribute].first,
+							szAttributeName,
+							hParent,
+							pNMTreeView->itemNew.hItem);
+					}
+				} // if (pAttributeSet != nullptr)
+				else
+				{
+					ASSERT(FALSE); // Internal error!
+				}				
+			} // else if (pInstanceSet != nullptr)
 
 			m_treeCtrl.DeleteItem(pNMTreeView->itemNew.hItem);
 		} // else if (iImage == IMAGE_ATTRIBUTES)

@@ -51,9 +51,7 @@ enum class enumRelationsViewMode : int
 	Flat,
 };
 
-// ------------------------------------------------------------------------------------------------
-// ------------------------------------------------------------------------------------------------
-// ------------------------------------------------------------------------------------------------
+// ************************************************************************************************
 class CRelationsView 
 	: public CDockablePane
 	, public CViewBase
@@ -63,7 +61,7 @@ class CRelationsView
 
 private: // Classes
 
-	// -----------------------------------------------------------------------------------------------	
+	// ********************************************************************************************
 	class CItemData
 	{
 
@@ -73,6 +71,11 @@ private: // Classes
 		int_t m_iEntity;
 
 	public: // Methods
+
+		CItemData()
+			: m_iInstance(0)
+			, m_iEntity(0)
+		{}
 
 		CItemData(int_t iInstance, int_t iEntity)
 			: m_iInstance(iInstance)
@@ -89,7 +92,7 @@ private: // Classes
 		const wchar_t* GetEntityName() const { return CEntity::GetName(m_iEntity); }
 	};
 
-	// -----------------------------------------------------------------------------------------------
+	// ********************************************************************************************
 	class CInstanceData : public CItemData
 	{
 
@@ -102,7 +105,7 @@ private: // Classes
 		virtual ~CInstanceData() {}
 	};
 
-	// -----------------------------------------------------------------------------------------------
+	// ********************************************************************************************
 	class CAttributeData : public CItemData
 	{
 
@@ -122,7 +125,27 @@ private: // Classes
 		const char* GetName() const { return m_srtName.c_str(); }
 	};
 
-	// -----------------------------------------------------------------------------------------------
+	// ********************************************************************************************
+	class CInstanceSet : public CItemData
+	{
+
+	private: // Members
+
+		vector<SdaiInstance> m_vecInstances;
+
+	public: // Methods
+
+		CInstanceSet()
+			: CItemData()
+			, m_vecInstances()
+		{}
+
+		virtual ~CInstanceSet() {}
+
+		vector<SdaiInstance>& Instances() { return m_vecInstances; }
+	};
+
+	// ********************************************************************************************
 	class CAttributeSet : public CItemData
 	{
 
@@ -142,7 +165,7 @@ private: // Classes
 		vector<pair<SdaiAttr, SdaiInteger>>& Attributes() { return m_vecAttributes; }
 	};
 
-	// -----------------------------------------------------------------------------------------------
+	// ********************************************************************************************
 	enum class enumSearchFilter : int {
 		All = 0,
 		ExpressID,
@@ -193,9 +216,9 @@ private: // Methods
 
 	CModel* GetModel() const;
 	
-	void LoadInstances(const vector<int_t>& vecInstances);
-	void LoadProperties(int_t iEntity, const vector<int_t>& vecInstances, bool bResetView);
-	void LoadInstance(int_t iEntity, int_t iInstance, HTREEITEM hParent);
+	//void LoadInstances(const vector<int_t>& vecInstances);
+	void LoadProperties(int_t iEntity, const vector<int_t>& vecInstances, bool bResetView, HTREEITEM hInsertAfter);
+	void LoadInstance(int_t iEntity, int_t iInstance, HTREEITEM hParent, HTREEITEM hInsertAfter);
 	int_t GetInstanceAttributes(int_t iEntity, int_t iInstance, HTREEITEM hParent, CAttributeSet* pAttributeSet);
 	void LoadInstanceAttribute(int_t iEntity, int_t iInstance, SdaiAttr sdaiAttribute, const char* szAttributeName, HTREEITEM hParent, HTREEITEM hInsertAfter);
 	void AddInstanceAttribute(SdaiEntity iEntity, SdaiInstance iInstance, SdaiAttr iAttribute, const char* szAttributeName, HTREEITEM hParent, HTREEITEM hInsertAfter);
