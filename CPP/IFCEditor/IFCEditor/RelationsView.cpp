@@ -35,7 +35,7 @@ static char THIS_FILE[]=__FILE__;
 {
 	m_pEntity = nullptr;
 
-	LoadProperties(0, vector<int_t>(), true, NULL);
+	LoadProperties(vector<int_t>(), true, NULL);
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -82,14 +82,7 @@ static char THIS_FILE[]=__FILE__;
 		return;
 	}
 
-	vector<int_t> vecInstances;
-	vecInstances.push_back(iInstance);
-
-	LoadProperties(
-		CInstanceBase::GetEntity(iInstance),
-		vecInstances,
-		true,
-		NULL);
+	LoadProperties(vector<int_t>{ iInstance }, true, NULL);
 
 	ShowPane(TRUE, TRUE, TRUE);
 }
@@ -114,38 +107,32 @@ static char THIS_FILE[]=__FILE__;
 
 	if (vecInstances.empty())
 	{
-		map<CEntity*, vector<SdaiInstance>> mapEntityInstances;
-		GetAllInstances(pEntity, mapEntityInstances);
+		// Retrieve all instances
+		map<CEntity*, vector<SdaiInstance>> mapEntity2Instances;
+		GetAllInstances(pEntity, mapEntity2Instances);
 
-		int iIndex = 0;
-		for (const auto& itEntityInstances : mapEntityInstances)
+		// Sort
+		map<ExpressID, SdaiInstance> mapExpressID2Instance;
+		for (const auto& itEntity2Instances : mapEntity2Instances)
 		{
-			if (itEntityInstances.second.empty())
+			for (auto iInstance : itEntity2Instances.second)
 			{
-				continue;
+				auto iExpressID  = internalGetP21Line(iInstance);
+				ASSERT(mapExpressID2Instance.find(iExpressID) == mapExpressID2Instance.end());
+
+				mapExpressID2Instance[iExpressID] = iInstance;
 			}
-
-			LoadProperties(
-				itEntityInstances.first->GetEntity(),
-				itEntityInstances.second,
-				iIndex == 0,
-				NULL);
-
-			iIndex++;
 		}
 
-		if (iIndex > 0)
+		// Collect
+		for (const auto& itExpressID2Instance : mapExpressID2Instance)
 		{
-			// There is at least one Sub-Entity with Instances
-			return;
+			vecInstances.push_back(itExpressID2Instance.second);
 		}
 	} // if (vecInstances.empty())
-
-	LoadProperties(
-		pEntity->GetEntity(),
-		vecInstances,
-		true,
-		NULL);
+	
+	// Load
+	LoadProperties(vecInstances, true, NULL);
 	
 	ShowPane(TRUE, TRUE, TRUE);
 }
@@ -427,7 +414,7 @@ CModel* CRelationsView::GetModel() const
 //}
 
 // ------------------------------------------------------------------------------------------------
-void CRelationsView::LoadProperties(int_t iEntity, const vector<int_t>& vecInstances, bool bResetView, HTREEITEM hInsertAfter)
+void CRelationsView::LoadProperties(const vector<int_t>& vecInstances, bool bResetView, HTREEITEM hInsertAfter)
 {
 	auto pModel = GetModel();
 	if (pModel == nullptr)
@@ -467,7 +454,7 @@ void CRelationsView::LoadProperties(int_t iEntity, const vector<int_t>& vecInsta
 
 	for (size_t iInstance = iInstanceStart; (iInstance < iInstanceEnd); iInstance++)
 	{
-		LoadInstance(iEntity, vecInstances[iInstance], hModel, hInsertAfter);
+		LoadInstance(vecInstances[iInstance], hModel, hInsertAfter);
 
 		iInstanceStart++;
 	}
@@ -521,10 +508,12 @@ void CRelationsView::LoadProperties(int_t iEntity, const vector<int_t>& vecInsta
 }
 
 // ------------------------------------------------------------------------------------------------
-void CRelationsView::LoadInstance(int_t iEntity, int_t iInstance, HTREEITEM hParent, HTREEITEM hInsertAfter)
+void CRelationsView::LoadInstance(int_t iInstance, HTREEITEM hParent, HTREEITEM hInsertAfter)
 {	
+	ASSERT(iInstance != 0);
+
+	int_t iEntity = CInstanceBase::GetEntity(iInstance);
 	ASSERT(iEntity != 0);
-	ASSERT(iInstance != 0);	
 
 	/*
 	* Data
@@ -1405,12 +1394,7 @@ void CRelationsView::GetAttributeReferencesADB(SdaiADB ADB, HTREEITEM hParent)
             }
             else if (sdaiGetADBValue(ADB, sdaiINSTANCE, &iValueInstance)) 
 			{
-				int_t iEntity = sdaiGetInstanceType(iValueInstance);
-				LoadInstance(
-					iEntity,
-					iValueInstance,
-					hParent,
-					NULL);
+				LoadInstance(iValueInstance, hParent, NULL);
 			}
             else 
 			{
@@ -1425,12 +1409,7 @@ void CRelationsView::GetAttributeReferencesADB(SdaiADB ADB, HTREEITEM hParent)
             SdaiInstance iValue = 0;
             if (sdaiGetADBValue(ADB, sdaiINSTANCE, &iValue))
 			{
-				int_t iEntity = sdaiGetInstanceType(iValue);
-				LoadInstance(
-					iEntity,
-					iValue,
-					hParent,
-					NULL);
+				LoadInstance(iValue, hParent, NULL);
 			}
 			else
 			{
@@ -1477,13 +1456,9 @@ void CRelationsView::GetAttributeReferencesAggregationElement(SdaiAggr aggregati
             if (sdaiGetAggrByIndex(aggregation, iIndex, sdaiAGGR, &valueAggr)) {
 				GetAttributeReferencesAggregation(valueAggr, hParent);
             }
-            else if (sdaiGetAggrByIndex(aggregation, iIndex, sdaiINSTANCE, &iValueInstance)) {
-				int_t iEntity = sdaiGetInstanceType(iValueInstance);
-				LoadInstance(
-					iEntity,
-					iValueInstance,
-					hParent,
-					NULL);
+            else if (sdaiGetAggrByIndex(aggregation, iIndex, sdaiINSTANCE, &iValueInstance)) 
+			{
+				LoadInstance(iValueInstance, hParent, NULL);
             }
             else 
 			{
@@ -1498,12 +1473,7 @@ void CRelationsView::GetAttributeReferencesAggregationElement(SdaiAggr aggregati
             SdaiInstance iValue = 0;
             if (sdaiGetAggrByIndex(aggregation, iIndex, sdaiINSTANCE, &iValue)) 
 			{
-				int_t iEntity = sdaiGetInstanceType(iValue);
-				LoadInstance(
-					iEntity,
-					iValue,
-					hParent,
-					NULL);
+				LoadInstance(iValue, hParent, NULL);
 			}
 			else
 			{
@@ -1583,13 +1553,9 @@ void CRelationsView::GetAttributeReferences(SdaiInstance iInstance, SdaiAttr iAt
             if (sdaiGetAttr(iInstance, iAttribute, sdaiAGGR, &valueAggr)) {
 				GetAttributeReferencesAggregation(valueAggr, hParent);
             }
-            else if (sdaiGetAttr(iInstance, iAttribute, sdaiINSTANCE, &iValueInstance)) {
-				int_t iEntity = sdaiGetInstanceType(iValueInstance);
-				LoadInstance(
-					iEntity,
-					iValueInstance,
-					hParent,
-					NULL);
+            else if (sdaiGetAttr(iInstance, iAttribute, sdaiINSTANCE, &iValueInstance)) 
+			{
+				LoadInstance(iValueInstance, hParent, NULL);
 			}
 			else
 			{
@@ -1601,13 +1567,9 @@ void CRelationsView::GetAttributeReferences(SdaiInstance iInstance, SdaiAttr iAt
         case sdaiINSTANCE:
         {
             SdaiInstance iValue = 0;
-            if (sdaiGetAttr(iInstance, iAttribute, sdaiINSTANCE, &iValue)) {
-				int_t iEntity = sdaiGetInstanceType(iValue);
-				LoadInstance(
-					iEntity,
-					iValue,
-					hParent,
-					NULL);
+            if (sdaiGetAttr(iInstance, iAttribute, sdaiINSTANCE, &iValue))
+			{
+				LoadInstance(iValue, hParent, NULL);
             }
 			else
 			{
@@ -1828,11 +1790,7 @@ void CRelationsView::OnTVNItemexpandingTree(NMHDR *pNMHDR, LRESULT *pResult)
 				SdaiEntity iEntity = CInstanceBase::GetEntity(pInstanceSet->Instances()[0]);
 				ASSERT(iEntity != 0);
 
-				LoadProperties(
-					iEntity, 
-					pInstanceSet->Instances(), 
-					false, 
-					hInsertAfter);
+				LoadProperties(pInstanceSet->Instances(), false, hInsertAfter);
 			} // if (pInstanceSet != nullptr)
 			else
 			{
