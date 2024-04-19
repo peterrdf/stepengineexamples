@@ -35,7 +35,7 @@ static char THIS_FILE[]=__FILE__;
 {
 	m_pEntity = nullptr;
 
-	LoadProperties(vector<int_t>(), true, NULL);
+	LoadInstances(vector<SdaiInstance>(), true, NULL);
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -47,24 +47,7 @@ static char THIS_FILE[]=__FILE__;
 		return;
 	}
 
-	// OBSOLETE
-	/*auto pController = GetController();
-	if (pController == nullptr)
-	{
-		ASSERT(FALSE);
-
-		return;
-	}
-
-	vector<int_t> vecInstances;
-
-	auto pInstance = GetController()->GetSelectedInstance();
-	if (pInstance != nullptr)
-	{
-		vecInstances.push_back(pInstance->GetInstance());
-	}
-	
-	LoadInstances(vecInstances);*/
+	ASSERT(FALSE); // OBSOLETE	
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -82,7 +65,7 @@ static char THIS_FILE[]=__FILE__;
 		return;
 	}
 
-	LoadProperties(vector<int_t>{ iInstance }, true, NULL);
+	LoadInstances(vector<SdaiInstance>{ iInstance }, true, NULL);
 
 	ShowPane(TRUE, TRUE, TRUE);
 }
@@ -132,7 +115,7 @@ static char THIS_FILE[]=__FILE__;
 	} // if (vecInstances.empty())
 	
 	// Load
-	LoadProperties(vecInstances, true, NULL);
+	LoadInstances(vecInstances, true, NULL);
 	
 	ShowPane(TRUE, TRUE, TRUE);
 }
@@ -376,45 +359,7 @@ CModel* CRelationsView::GetModel() const
 }
 
 // ------------------------------------------------------------------------------------------------
-//void CRelationsView::LoadInstances(const vector<int_t>& vecInstances)
-//{
-//	ResetView();
-//
-//	auto pModel = GetModel();
-//	if (pModel == nullptr)
-//	{
-//		return;
-//	}
-//
-//	// ******************************************************************************************** //
-//	// Model
-//	TV_INSERTSTRUCT tvInsertStruct;
-//	tvInsertStruct.hParent = nullptr;
-//	tvInsertStruct.hInsertAfter = TVI_LAST;
-//	tvInsertStruct.item.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_TEXT | TVIF_PARAM;
-//	tvInsertStruct.item.pszText = (LPWSTR)pModel->GetModelName();
-//	tvInsertStruct.item.iImage = tvInsertStruct.item.iSelectedImage = IMAGE_MODEL;
-//	tvInsertStruct.item.lParam = NULL;
-//
-//	HTREEITEM hModel = m_treeCtrl.InsertItem(&tvInsertStruct);
-//	// ******************************************************************************************** //	
-//
-//	// ******************************************************************************************** //
-//	// Instances
-//	for (auto iInstance : vecInstances)
-//	{
-//		LoadInstance(
-//			CInstanceBase::GetEntity(iInstance),
-//			iInstance, 
-//			hModel);
-//	}
-//	// ******************************************************************************************** //
-//
-//	m_treeCtrl.Expand(hModel, TVE_EXPAND);
-//}
-
-// ------------------------------------------------------------------------------------------------
-void CRelationsView::LoadProperties(const vector<int_t>& vecInstances, bool bResetView, HTREEITEM hInsertAfter)
+void CRelationsView::LoadInstances(const vector<SdaiInstance>& vecInstances, bool bResetView, HTREEITEM hInsertAfter)
 {
 	auto pModel = GetModel();
 	if (pModel == nullptr)
@@ -1790,7 +1735,7 @@ void CRelationsView::OnTVNItemexpandingTree(NMHDR *pNMHDR, LRESULT *pResult)
 				SdaiEntity iEntity = CInstanceBase::GetEntity(pInstanceSet->Instances()[0]);
 				ASSERT(iEntity != 0);
 
-				LoadProperties(pInstanceSet->Instances(), false, hInsertAfter);
+				LoadInstances(pInstanceSet->Instances(), false, hInsertAfter);
 			} // if (pInstanceSet != nullptr)
 			else
 			{
