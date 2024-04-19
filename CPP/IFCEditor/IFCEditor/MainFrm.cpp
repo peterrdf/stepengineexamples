@@ -251,7 +251,7 @@ BOOL CMainFrame::CreateDockingWindows()
 	if (!m_schemaView.Create(
 		_T("Schema"),
 		this,
-		CRect(0, 0, 200, 200),
+		CRect(0, 0, 400, 200),
 		TRUE,
 		ID_VIEW_SCHEMA,
 		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT))
@@ -269,7 +269,7 @@ BOOL CMainFrame::CreateDockingWindows()
 	if (!m_relationsView.Create(
 		_T("Instances"),
 		this,
-		CRect(0, 0, 200, 200),
+		CRect(0, 0, 200, 400),
 		TRUE,
 		ID_VIEW_RELATIONS,
 		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_TOP))
@@ -287,7 +287,7 @@ BOOL CMainFrame::CreateDockingWindows()
 	if (!m_propertiesView.Create(
 		_T("Properties"),
 		this,
-		CRect(0, 0, 200, 200),
+		CRect(0, 0, 400, 200),
 		TRUE,
 		ID_VIEW_PROPERTIESWND,
 		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT))

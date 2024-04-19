@@ -214,11 +214,14 @@ void CIFCEditorApp::PreLoadState()
 }
 
 void CIFCEditorApp::LoadCustomState()
-{
-}
+{}
 
 void CIFCEditorApp::SaveCustomState()
+{}
+
+/*virtual*/ BOOL CIFCEditorApp::LoadState(LPCTSTR lpszSectionName/* = NULL*/, CFrameImpl* pFrameImpl/* = NULL*/) /*override*/
 {
+	return FALSE;
 }
 
 // CIFCEditorApp message handlers
