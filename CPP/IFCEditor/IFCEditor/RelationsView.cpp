@@ -399,7 +399,7 @@ void CRelationsView::LoadInstances(const vector<SdaiInstance>& vecInstances, boo
 
 	for (size_t iInstance = iInstanceStart; (iInstance < iInstanceEnd); iInstance++)
 	{
-		LoadInstance(vecInstances[iInstance], hModel, hInsertAfter);
+		hInsertAfter = LoadInstance(vecInstances[iInstance], hModel, hInsertAfter);
 
 		iInstanceStart++;
 	}
@@ -453,7 +453,7 @@ void CRelationsView::LoadInstances(const vector<SdaiInstance>& vecInstances, boo
 }
 
 // ------------------------------------------------------------------------------------------------
-void CRelationsView::LoadInstance(int_t iInstance, HTREEITEM hParent, HTREEITEM hInsertAfter)
+HTREEITEM CRelationsView::LoadInstance(int_t iInstance, HTREEITEM hParent, HTREEITEM hInsertAfter)
 {	
 	ASSERT(iInstance != 0);
 
@@ -565,6 +565,8 @@ void CRelationsView::LoadInstance(int_t iInstance, HTREEITEM hParent, HTREEITEM 
 
 		iAttributeStart = iAttributeEnd;
 	} // while (iAttributeStart < ...
+
+	return hInstance;
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -1731,9 +1733,6 @@ void CRelationsView::OnTVNItemexpandingTree(NMHDR *pNMHDR, LRESULT *pResult)
 
 				HTREEITEM hInsertAfter = m_treeCtrl.GetPrevVisibleItem(pNMTreeView->itemNew.hItem);
 				ASSERT(hInsertAfter != NULL);
-
-				SdaiEntity iEntity = CInstanceBase::GetEntity(pInstanceSet->Instances()[0]);
-				ASSERT(iEntity != 0);
 
 				LoadInstances(pInstanceSet->Instances(), false, hInsertAfter);
 			} // if (pInstanceSet != nullptr)
