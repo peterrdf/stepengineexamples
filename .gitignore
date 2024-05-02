@@ -140,3 +140,15 @@
 *.suo
 /C#/.vs
 /C#/IFCViewerSGL_v1/IFCViewerSGL/obj
+/C#/IFCViewerSGL/IFCViewerSGL/bin/x64/Debug/SharpGL.WinForms.dll
+/C#/IFCViewerSGL/IFCViewerSGL/bin/x64/Debug/SharpGL.SceneGraph.dll
+/C#/IFCViewerSGL/IFCViewerSGL/bin/x64/Debug/SharpGL.dll
+/C#/IFCViewerSGL/IFCViewerSGL/bin/x64/Debug/IFCViewerSGL.pdb
+/C#/IFCViewerSGL/IFCViewerSGL/bin/x64/Debug/IFCViewerSGL.exe.config
+/C#/IFCViewerSGL/IFCViewerSGL/bin/x64/Debug/IFCViewerSGL.exe
+/C#/IFCViewerSGL/IFCViewerSGL/bin/x64/Release/SharpGL.WinForms.dll
+/C#/IFCViewerSGL/IFCViewerSGL/bin/x64/Release/SharpGL.SceneGraph.dll
+/C#/IFCViewerSGL/IFCViewerSGL/bin/x64/Release/SharpGL.dll
+/C#/IFCViewerSGL/IFCViewerSGL/bin/x64/Release/IFCViewerSGL.pdb
+/C#/IFCViewerSGL/IFCViewerSGL/bin/x64/Release/IFCViewerSGL.exe.config
+/C#/IFCViewerSGL/IFCViewerSGL/bin/x64/Release/IFCViewerSGL.exe
