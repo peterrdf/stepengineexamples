@@ -138,3 +138,5 @@
 /C++/ifceditor_v1/ifceditor/ifceditor.aps
 /C++/ifceditor_v1/ifceditor.v12.suo
 *.suo
+/C#/.vs
+/C#/IFCViewerSGL_v1/IFCViewerSGL/obj
