@@ -105,3 +105,36 @@
 /EmbeddedGeometryKernel/C++/TTF2BIN/TTF2BIN/x64
 /EmbeddedGeometryKernel/C++/TTF2RDF/.vs/TTF2RDF/v16
 /EmbeddedGeometryKernel/C++/TTF2RDF/TTF2RDF/x64
+/C++/.vs
+/C++/CityGML2IFC/.vs/CityGML2IFC
+/C++/CityGML2IFC/CityGML2IFC/Debug
+/C++/CityGML2IFC/CityGML2IFC/Release
+/C++/CityGML2IFC/CityGML2IFC/x64
+/C++/CityGML2IFC/CityGML2IFC/CityGML2IFC.aps
+/C++/CityGML2IFC/x64/Debug/CityGML2IFC.exe
+/C++/CityGML2IFC/x64/Debug/CityGML2IFC.pdb
+/C++/CityGML2IFC/x64/Release/CityGML2IFC.exe
+/C++/CityGML2IFC/x64/Release/CityGML2IFC.pdb
+/C++/HelloHouse-IFC4/HelloHouse_2x4/.vs/miniExample
+/C++/HelloHouse-IFC4/HelloHouse_2x4/Debug
+/C++/HelloHouse-IFC4/HelloHouse_2x4/Release
+/C++/HelloHouse-IFC4/HelloHouse_2x4/miniExample.aps
+/C++/HelloHouse-IFC4/HelloHouse_2x4/miniExample.v12.suo
+/C++/HelloHouse-IFC4/HelloHouse_2x4/miniExample.suo
+/C++/HelloHouse-IFC4_v1/HelloHouse_2x4/miniExample.aps
+/C++/HelloHouse-IFC4_v1/HelloHouse_2x4/miniExample.v12.suo
+/C++/HelloHouse-IFC4_v1/HelloHouse_2x4/miniExample.suo
+/C++/HelloWall/.vs/HelloWall/v16
+/C++/HelloWall/HelloWall/x64/Debug Unicode
+/C++/HelloWall/HelloWall/x64/Release Unicode
+/C++/HelloWall/x64
+/C++/IFCEditor/.vs/IFCEditor/v16
+/C++/IFCEditor/IFCEditor/x64
+/C++/IFCEditor/IFCEditor/IFCEditor.aps
+/C++/ifceditor_v1/.vs/ifceditor
+/C++/ifceditor_v1/ifceditor/Debug
+/C++/ifceditor_v1/ifceditor/Release
+/C++/ifceditor_v1/ifceditor/x64
+/C++/ifceditor_v1/ifceditor/ifceditor.aps
+/C++/ifceditor_v1/ifceditor.v12.suo
+*.suo
