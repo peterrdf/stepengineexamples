@@ -152,3 +152,6 @@
 /C#/IFCViewerSGL/IFCViewerSGL/bin/x64/Release/IFCViewerSGL.pdb
 /C#/IFCViewerSGL/IFCViewerSGL/bin/x64/Release/IFCViewerSGL.exe.config
 /C#/IFCViewerSGL/IFCViewerSGL/bin/x64/Release/IFCViewerSGL.exe
+/C#/IFCViewerSGL/.vs
+/C#/IFCViewerSGL_NET80_x64/.vs
+/C#/IFCViewerSGL_NET80_x64/IFCViewerSGL/obj
