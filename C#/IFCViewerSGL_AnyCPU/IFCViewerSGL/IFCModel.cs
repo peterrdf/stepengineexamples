@@ -108,8 +108,8 @@ namespace IFCViewerSGL
 
             /////////////////////////////////////////////////////////////////////////////
             // BEGIN TEST 
-            CreateModelAnyCPU createModelAnyCPU = new CreateModelAnyCPU();
-            createModelAnyCPU.Run();
+            //CreateModelAnyCPU createModelAnyCPU = new CreateModelAnyCPU();
+            //createModelAnyCPU.Run();
             // END TEST 
             /////////////////////////////////////////////////////////////////////////////
         }        
