@@ -1181,7 +1181,7 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	m_iWindowClass = GetClassByName(getSite()->getOwlModel(), "class:Window");
 
 	// Feature
-	m_iVegetationObjectClass = GetClassByName(getSite()->getOwlModel(), "class:_VegtationObject");
+	m_iVegetationObjectClass = GetClassByName(getSite()->getOwlModel(), "class:_VegetationObject");
 }
 
 /*virtual*/ _citygml_exporter::~_citygml_exporter()
