@@ -208,7 +208,7 @@ SdaiInstance _exporter_base::getOwnerHistoryInstance()
 {
 	if (m_iOwnerHistoryInstance == 0)
 	{
-		int_t iTimeStamp = time(0);
+		int64_t iTimeStamp = time(0);
 
 		m_iOwnerHistoryInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCOWNERHISTORY");
 		assert(m_iOwnerHistoryInstance != 0);
