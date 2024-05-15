@@ -1160,6 +1160,9 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	, m_iWindowClass(0)
 	, m_mapBuildings()
 	, m_mapBuildingElements()
+	, m_iVegetationObjectClass()
+	, m_mapFeatures()
+	, m_mapFeatureElements()
 	, m_iCurrentOwlBuildingElementInstance(0)
 	, m_iDefaultWallSurfaceColorRgbInstance(0)
 	, m_iDefaultRoofSurfaceColorRgbInstance(0)
@@ -1167,12 +1170,18 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	, m_iDefaultWindowColorRgbInstance(0)
 	, m_iDefaultColorRgbInstance(0)
 {
+	// Geometry Kernel
 	m_iCollectionClass = GetClassByName(getSite()->getOwlModel(), "Collection");
+
+	// Building
 	m_iBuildingClass = GetClassByName(getSite()->getOwlModel(), "class:Building");
 	m_iWallSurfaceClass = GetClassByName(getSite()->getOwlModel(), "class:WallSurface");
 	m_iRoofSurfaceClass = GetClassByName(getSite()->getOwlModel(), "class:RoofSurface");
 	m_iDoorClass = GetClassByName(getSite()->getOwlModel(), "class:Door");
 	m_iWindowClass = GetClassByName(getSite()->getOwlModel(), "class:Window");
+
+	// Feature
+	m_iVegetationObjectClass = GetClassByName(getSite()->getOwlModel(), "class:_VegtationObject");
 }
 
 /*virtual*/ _citygml_exporter::~_citygml_exporter()
@@ -1299,7 +1308,7 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 
 			if (iInstanceClass != iSchemasClass)
 			{
-				if ((iInstanceClass == m_iBuildingClass) || IsClassAncestor(iInstanceClass, m_iBuildingClass))
+				if (isBuildingClass(iInstanceClass))
 				{
 					if (m_mapBuildings.find(iInstance) == m_mapBuildings.end())
 					{
@@ -1451,7 +1460,7 @@ void _citygml_exporter::createBuildingsRecursively(OwlInstance iInstance)
 				OwlClass iInstanceClass = GetInstanceClass(piValues[iValue]);
 				assert(iInstanceClass != 0);
 
-				if ((iInstanceClass == m_iBuildingClass) || IsClassAncestor(iInstanceClass, m_iBuildingClass))
+				if (isBuildingClass(iInstanceClass))
 				{
 					if (m_mapBuildings.find(piValues[iValue]) == m_mapBuildings.end())
 					{
@@ -2397,6 +2406,28 @@ bool _citygml_exporter::isWindowClass(OwlInstance iInstanceClass) const
 	assert(iInstanceClass != 0);
 
 	return (iInstanceClass == m_iWindowClass) || IsClassAncestor(iInstanceClass, m_iWindowClass);
+}
+
+bool _citygml_exporter::isFeatureElement(OwlInstance iInstance) const
+{
+	assert(iInstance != 0);
+
+	OwlClass iInstanceClass = GetInstanceClass(iInstance);
+	assert(iInstanceClass != 0);
+
+	if (isVegetationObjectClass(iInstanceClass))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool  _citygml_exporter::isVegetationObjectClass(OwlClass iInstanceClass) const
+{
+	assert(iInstanceClass != 0);
+
+	return (iInstanceClass == m_iVegetationObjectClass) || IsClassAncestor(iInstanceClass, m_iVegetationObjectClass);
 }
 
 // ************************************************************************************************

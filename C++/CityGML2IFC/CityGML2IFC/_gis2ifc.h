@@ -243,14 +243,22 @@ class _citygml_exporter : public _exporter_base
 
 private: // Members
 
+	// Geometry Kernel
 	OwlClass m_iCollectionClass;
+
+	// Building
 	OwlClass m_iBuildingClass;
 	OwlClass m_iWallSurfaceClass;
 	OwlClass m_iRoofSurfaceClass;
 	OwlClass m_iDoorClass;
 	OwlClass m_iWindowClass;
-	map<OwlInstance, vector<OwlInstance>> m_mapBuildings; // Building : Building Elements
-	map<OwlInstance, vector<OwlInstance>> m_mapBuildingElements; // Building Element : Geometries
+	map<OwlInstance, vector<OwlInstance>> m_mapBuildings; // Building : Supported Elements
+	map<OwlInstance, vector<OwlInstance>> m_mapBuildingElements; // Building (Supported) Element : Geometries
+
+	// Feature
+	OwlClass m_iVegetationObjectClass;
+	map<OwlInstance, vector<OwlInstance>> m_mapFeatures; // Feature : Supported Elements
+	map<OwlInstance, vector<OwlInstance>> m_mapFeatureElements; // Feature (Supported) Element : Geometries
 	
 	OwlInstance m_iCurrentOwlBuildingElementInstance; // Temp
 
@@ -298,12 +306,17 @@ protected:  // Methods
 		SdaiInstance& iBuildingElementInstancePlacement,
 		const vector<SdaiInstance>& vecRepresentations);
 	
+	// Building
 	bool isBuildingElement(OwlInstance iInstance) const;
 	bool isBuildingClass(OwlClass iInstanceClass) const;
 	bool isWallSurfaceClass(OwlClass iInstanceClass) const;
 	bool isRoofSurfaceClass(OwlInstance iInstanceClass) const;
 	bool isDoorClass(OwlInstance iInstanceClass) const;
 	bool isWindowClass(OwlInstance iInstanceClass) const;
+
+	// Feature
+	bool isFeatureElement(OwlInstance iInstance) const;
+	bool isVegetationObjectClass(OwlClass iInstanceClass) const;
 };
 
 // ************************************************************************************************
