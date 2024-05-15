@@ -1314,7 +1314,7 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 				}
 				else
 				{
-					createBuildingsRecursive(iInstance);
+					createBuildingsRecursively(iInstance);
 				}
 			}
 		} // if (GetInstanceInverseReferencesByIterator(iInstance, 0) == 0)
@@ -1428,7 +1428,7 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 		vecBuildingInstances);
 }
 
-void _citygml_exporter::createBuildingsRecursive(OwlInstance iInstance)
+void _citygml_exporter::createBuildingsRecursively(OwlInstance iInstance)
 {
 	assert(iInstance != 0);
 
@@ -1466,7 +1466,7 @@ void _citygml_exporter::createBuildingsRecursive(OwlInstance iInstance)
 				}
 				else
 				{
-					createBuildingsRecursive(piValues[iValue]);
+					createBuildingsRecursively(piValues[iValue]);
 				}
 			} // for (int64_t iValue = ...
 		} // if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)

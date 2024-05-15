@@ -273,7 +273,7 @@ protected:  // Methods
 	virtual void createDefaultStyledItemInstance(SdaiInstance iSdaiInstance) override;
 
 	void createBuildings(SdaiInstance iSiteInstance, SdaiInstance iSiteInstancePlacement);
-	void createBuildingsRecursive(OwlInstance iInstance);
+	void createBuildingsRecursively(OwlInstance iInstance);
 	void searchForBuildingElements(OwlInstance iBuildingInstance, OwlInstance iInstance);
 	void searchForProxyBuildingElements(OwlInstance iBuildingInstance, OwlInstance iInstance);
 	void searchForBuildingElementGeometry(OwlInstance iBuildingElementInstance, OwlInstance iInstance);
