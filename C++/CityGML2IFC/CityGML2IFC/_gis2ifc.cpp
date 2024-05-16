@@ -1733,20 +1733,12 @@ void _citygml_exporter::createFeatures(SdaiInstance iSiteInstance, SdaiInstance 
 	vector<SdaiInstance> vecFeatureInstances;
 	for (auto& itFeature : m_mapFeatures)
 	{
-		string strTag = getTag(itFeature.first);
-
-		OwlClass iInstanceClass = GetInstanceClass(itFeature.first);
-		assert(iInstanceClass != 0);
-
-		char* szClassName = nullptr;
-		GetNameOfClass(iInstanceClass, &szClassName);
-		assert(szClassName != nullptr);
-
 		if (itFeature.second.empty())
 		{
 			continue;
 		}
 
+		// Geometry
 		vector<SdaiInstance> vecSdaiFeatureElementGeometryInstances;
 		for (auto iOwlFeatureElementInstance : itFeature.second)
 		{
@@ -1763,6 +1755,22 @@ void _citygml_exporter::createFeatures(SdaiInstance iSiteInstance, SdaiInstance 
 
 			m_iCurrentOwlBuildingElementInstance = 0;
 		} // for (auto iOwlFeatureElementInstance : ...
+
+		if (vecSdaiFeatureElementGeometryInstances.empty())
+		{
+			// Not supported
+			continue;
+		}
+
+		// Feature
+		string strTag = getTag(itFeature.first);
+
+		OwlClass iInstanceClass = GetInstanceClass(itFeature.first);
+		assert(iInstanceClass != 0);
+
+		char* szClassName = nullptr;
+		GetNameOfClass(iInstanceClass, &szClassName);
+		assert(szClassName != nullptr);
 
 		SdaiInstance iFeatureInstancePlacement = 0;
 		SdaiInstance iFeatureInstance = buildFeatureInstance(
@@ -2678,7 +2686,7 @@ bool  _citygml_exporter::isVegetationObjectClass(OwlClass iInstanceClass) const
 {
 	assert(iInstanceClass != 0);
 
-	return false;// return (iInstanceClass == m_iVegetationObjectClass) || IsClassAncestor(iInstanceClass, m_iVegetationObjectClass);
+	return (iInstanceClass == m_iVegetationObjectClass) || IsClassAncestor(iInstanceClass, m_iVegetationObjectClass);
 }
 
 bool  _citygml_exporter::isWaterObjectClass(OwlClass iInstanceClass) const
