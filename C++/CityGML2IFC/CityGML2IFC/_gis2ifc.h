@@ -265,6 +265,7 @@ private: // Members
 	// Feature
 	OwlClass m_iVegetationObjectClass;
 	OwlClass m_iWaterObjectClass;
+	OwlClass m_iBridgeObjectClass;
 	map<OwlInstance, vector<OwlInstance>> m_mapFeatures; // Feature : Supported Elements
 	map<OwlInstance, vector<OwlInstance>> m_mapFeatureElements; // Feature (Supported) Element : Geometries
 	
@@ -335,6 +336,7 @@ protected:  // Methods
 	bool isFeatureClass(OwlInstance iInstanceClass) const;
 	bool isVegetationObjectClass(OwlClass iInstanceClass) const;
 	bool isWaterObjectClass(OwlClass iInstanceClass) const;
+	bool isBridgeObjectClass(OwlClass iInstanceClass) const;
 };
 
 // ************************************************************************************************
