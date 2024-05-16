@@ -1835,8 +1835,7 @@ void _citygml_exporter::createFeaturesRecursively(OwlInstance iInstance)
 					}
 					else
 					{
-						//#todo
-						//assert(false); // Not supported
+						//#todo - Mapped Items???					
 					}
 				}
 				else
