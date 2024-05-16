@@ -1194,6 +1194,7 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	, m_iVegetationObjectClass(0)
 	, m_iWaterObjectClass(0)
 	, m_iBridgeObjectClass(0)
+	, m_iTunnelObjectClass(0)
 	, m_mapFeatures()
 	, m_mapFeatureElements()
 	, m_iCurrentOwlBuildingElementInstance(0)
@@ -1217,6 +1218,7 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	m_iVegetationObjectClass = GetClassByName(getSite()->getOwlModel(), "class:_VegetationObject");
 	m_iWaterObjectClass = GetClassByName(getSite()->getOwlModel(), "class:_WaterObject");
 	m_iBridgeObjectClass = GetClassByName(getSite()->getOwlModel(), "class:_AbstractBridge");
+	m_iTunnelObjectClass = GetClassByName(getSite()->getOwlModel(), "class:_AbstractTunnel");
 }
 
 /*virtual*/ _citygml_exporter::~_citygml_exporter()
@@ -2677,7 +2679,8 @@ bool _citygml_exporter::isFeatureClass(OwlInstance iInstanceClass) const
 
 	if (isVegetationObjectClass(iInstanceClass) ||
 		isWaterObjectClass(iInstanceClass) ||
-		isBridgeObjectClass(iInstanceClass))
+		isBridgeObjectClass(iInstanceClass) ||
+		isTunnelObjectClass(iInstanceClass))
 	{
 		return true;
 	}
@@ -2706,6 +2709,12 @@ bool  _citygml_exporter::isBridgeObjectClass(OwlClass iInstanceClass) const
 	return (iInstanceClass == m_iBridgeObjectClass) || IsClassAncestor(iInstanceClass, m_iBridgeObjectClass);
 }
 
+bool  _citygml_exporter::isTunnelObjectClass(OwlClass iInstanceClass) const
+{
+	assert(iInstanceClass != 0);
+
+	return (iInstanceClass == m_iTunnelObjectClass) || IsClassAncestor(iInstanceClass, m_iTunnelObjectClass);
+}
 // ************************************************************************************************
 _cityjson_exporter::_cityjson_exporter(_gis2ifc* pSite)
 	: _citygml_exporter(pSite)
