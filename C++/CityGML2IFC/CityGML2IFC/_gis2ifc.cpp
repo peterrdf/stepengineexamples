@@ -1788,7 +1788,7 @@ void _citygml_exporter::createFeatures(SdaiInstance iSiteInstance, SdaiInstance 
 
 			createProperties(iOwlFeatureElementInstance, iSdaiFeatureElementInstance);
 
-			vecFeatureElementInstances.push_back(iSdaiFeatureElementInstance);/**/
+			vecFeatureElementInstances.push_back(iSdaiFeatureElementInstance);
 
 			m_iCurrentOwlBuildingElementInstance = 0;
 		} // for (auto iOwlFeatureElementInstance : ...
@@ -1817,11 +1817,12 @@ void _citygml_exporter::createFeatures(SdaiInstance iSiteInstance, SdaiInstance 
 			vecFeatureElementInstances);*/
 	} // for (auto& itFeature : ...
 
-	buildRelAggregatesInstance(
+	//#todo
+	/*buildRelAggregatesInstance(
 		"SiteContainer",
 		"SiteContainer For Features",
 		iSiteInstance,
-		vecFeatureInstances);/**/
+		vecFeatureInstances);*/
 }
 
 void _citygml_exporter::createFeaturesRecursively(OwlInstance iInstance)
