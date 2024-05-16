@@ -589,26 +589,30 @@ SdaiInstance _exporter_base::buildFeatureInstance(
 	const char* szDescription,
 	_matrix* pMatrix,
 	SdaiInstance iPlacementRelativeTo,
-	SdaiInstance& iBuildingInstancePlacement)
+	SdaiInstance& iBuildingInstancePlacement,
+	const vector<SdaiInstance>& vecRepresentations)
 {
+	assert(szName != nullptr);
+	assert(szDescription != nullptr);
 	assert(pMatrix != nullptr);
 	assert(iPlacementRelativeTo != 0);
+	assert(!vecRepresentations.empty());
 
-	SdaiInstance iBuildingInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCBUILDINGELEMENTPROXY");
-	assert(iBuildingInstance != 0);
+	SdaiInstance iBuildingElementInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCBUILDINGELEMENTPROXY");
+	assert(iBuildingElementInstance != 0);
 
-	sdaiPutAttrBN(iBuildingInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
-	sdaiPutAttrBN(iBuildingInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
-	sdaiPutAttrBN(iBuildingInstance, "Name", sdaiSTRING, szName);
-	sdaiPutAttrBN(iBuildingInstance, "Description", sdaiSTRING, szDescription);
+	sdaiPutAttrBN(iBuildingElementInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iBuildingElementInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+	sdaiPutAttrBN(iBuildingElementInstance, "Name", sdaiSTRING, szName);
+	sdaiPutAttrBN(iBuildingElementInstance, "Description", sdaiSTRING, szDescription);
 
 	iBuildingInstancePlacement = buildLocalPlacementInstance(pMatrix, iPlacementRelativeTo);
 	assert(iBuildingInstancePlacement != 0);
 
-	sdaiPutAttrBN(iBuildingInstance, "ObjectPlacement", sdaiINSTANCE, (void*)iBuildingInstancePlacement);
-	sdaiPutAttrBN(iBuildingInstance, "CompositionType", sdaiENUM, "ELEMENT");
+	sdaiPutAttrBN(iBuildingElementInstance, "ObjectPlacement", sdaiINSTANCE, (void*)iBuildingInstancePlacement);
+	sdaiPutAttrBN(iBuildingElementInstance, "Representation", sdaiINSTANCE, (void*)buildProductDefinitionShapeInstance(vecRepresentations));
 
-	return iBuildingInstance;
+	return iBuildingElementInstance;
 }
 
 SdaiInstance _exporter_base::buildBuildingStoreyInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo, SdaiInstance& iBuildingStoreyInstancePlacement)
@@ -1738,25 +1742,12 @@ void _citygml_exporter::createFeatures(SdaiInstance iSiteInstance, SdaiInstance 
 		GetNameOfClass(iInstanceClass, &szClassName);
 		assert(szClassName != nullptr);
 
-		SdaiInstance iFeatureInstancePlacement = 0;
-		SdaiInstance iFeatureInstance = buildFeatureInstance(
-			strTag.c_str(),
-			szClassName,
-			&mtxIdentity,
-			iSiteInstancePlacement,
-			iFeatureInstancePlacement);
-		assert(iFeatureInstance != 0);
-
-		createProperties(itFeature.first, iFeatureInstance);
-
-		vecFeatureInstances.push_back(iFeatureInstance);
-
 		if (itFeature.second.empty())
 		{
 			continue;
 		}
 
-		vector<SdaiInstance> vecFeatureElementInstances;
+		vector<SdaiInstance> vecSdaiFeatureElementGeometryInstances;
 		for (auto iOwlFeatureElementInstance : itFeature.second)
 		{
 			m_iCurrentOwlBuildingElementInstance = iOwlFeatureElementInstance;
@@ -1765,67 +1756,34 @@ void _citygml_exporter::createFeatures(SdaiInstance iSiteInstance, SdaiInstance 
 			assert(itFeatureElement != m_mapFeatureElements.end());
 			assert(!itFeatureElement->second.empty());
 
-			vector<SdaiInstance> vecSdaiFeatureElementGeometryInstances;
 			for (auto iOwlFeatureElementGeometryInstance : itFeatureElement->second)
 			{
 				createGeometry(iOwlFeatureElementGeometryInstance, vecSdaiFeatureElementGeometryInstances);
 			}
 
-			if (vecSdaiFeatureElementGeometryInstances.empty())
-			{
-				// Not supported
-				continue;
-			}
-
-			SdaiInstance iFeatureElementInstancePlacement = 0;
-			SdaiInstance iSdaiFeatureElementInstance = buildBuildingElementInstance(
-				itFeatureElement->first,
-				&mtxIdentity,
-				iFeatureInstancePlacement,
-				iFeatureElementInstancePlacement,
-				vecSdaiFeatureElementGeometryInstances);
-			assert(iSdaiFeatureElementInstance != 0);
-
-			createProperties(iOwlFeatureElementInstance, iSdaiFeatureElementInstance);
-
-			vecFeatureElementInstances.push_back(iSdaiFeatureElementInstance);
-
 			m_iCurrentOwlBuildingElementInstance = 0;
 		} // for (auto iOwlFeatureElementInstance : ...
 
-		//#todo
-		SdaiInstance iFeatureStoreyInstancePlacement = 0;
-		SdaiInstance iFeatureStoreyInstance = buildBuildingStoreyInstance(
-			&mtxIdentity, 
-			iFeatureInstancePlacement, 
-			iFeatureStoreyInstancePlacement);
-		assert(iFeatureStoreyInstance != 0);
+		SdaiInstance iFeatureInstancePlacement = 0;
+		SdaiInstance iFeatureInstance = buildFeatureInstance(
+			strTag.c_str(),
+			szClassName,
+			&mtxIdentity,
+			iSiteInstancePlacement,
+			iFeatureInstancePlacement,
+			vecSdaiFeatureElementGeometryInstances);
+		assert(iFeatureInstance != 0);
 
-		buildRelAggregatesInstance(
-			"FeatureContainer",
-			"FeatureContainer for BuildigStories",
-			iFeatureInstance,
-			vector<SdaiInstance>{ iFeatureStoreyInstance });
+		createProperties(itFeature.first, iFeatureInstance);
 
-		if (vecFeatureElementInstances.empty())
-		{
-			// Not supported
-			continue;
-		}
-
-		buildRelContainedInSpatialStructureInstance(
-			"FeatureStoreyContainer",
-			"FeatureStoreyContainer for Feature Elements",
-			iFeatureStoreyInstance,
-			vecFeatureElementInstances);/**/
+		vecFeatureInstances.push_back(iFeatureInstance);
 	} // for (auto& itFeature : ...
 
-	//#todo
 	buildRelAggregatesInstance(
 		"SiteContainer",
 		"SiteContainer For Features",
 		iSiteInstance,
-		vecFeatureInstances);/**/
+		vecFeatureInstances);
 }
 
 void _citygml_exporter::createFeaturesRecursively(OwlInstance iInstance)

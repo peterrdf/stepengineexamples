@@ -184,7 +184,8 @@ protected: // Methods
 		const char* szDescription,
 		_matrix* pMatrix,
 		SdaiInstance iPlacementRelativeTo,
-		SdaiInstance& iBuildingInstancePlacement);
+		SdaiInstance& iBuildingInstancePlacement,
+		const vector<SdaiInstance>& vecRepresentations);
 	SdaiInstance buildBuildingStoreyInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo, SdaiInstance& iBuildingStoreyInstancePlacement);	
 	SdaiInstance buildProductDefinitionShapeInstance(const vector<SdaiInstance>& vecRepresentations);
 	SdaiInstance buildRelAggregatesInstance(
