@@ -179,6 +179,12 @@ protected: // Methods
 		_matrix* pMatrix, 
 		SdaiInstance iPlacementRelativeTo, 
 		SdaiInstance& iBuildingInstancePlacement);
+	SdaiInstance buildFeatureInstance(
+		const char* szName,
+		const char* szDescription,
+		_matrix* pMatrix,
+		SdaiInstance iPlacementRelativeTo,
+		SdaiInstance& iBuildingInstancePlacement);
 	SdaiInstance buildBuildingStoreyInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo, SdaiInstance& iBuildingStoreyInstancePlacement);	
 	SdaiInstance buildProductDefinitionShapeInstance(const vector<SdaiInstance>& vecRepresentations);
 	SdaiInstance buildRelAggregatesInstance(
@@ -257,10 +263,12 @@ private: // Members
 
 	// Feature
 	OwlClass m_iVegetationObjectClass;
+	OwlClass m_iWaterObjectClass;
 	map<OwlInstance, vector<OwlInstance>> m_mapFeatures; // Feature : Supported Elements
 	map<OwlInstance, vector<OwlInstance>> m_mapFeatureElements; // Feature (Supported) Element : Geometries
 	
-	OwlInstance m_iCurrentOwlBuildingElementInstance; // Temp
+	 // Temp
+	OwlInstance m_iCurrentOwlBuildingElementInstance;
 
 	// Cache
 	SdaiInstance m_iDefaultWallSurfaceColorRgbInstance;
@@ -280,11 +288,19 @@ protected:  // Methods
 
 	virtual void createDefaultStyledItemInstance(SdaiInstance iSdaiInstance) override;
 
+	// Buildings
 	void createBuildings(SdaiInstance iSiteInstance, SdaiInstance iSiteInstancePlacement);
 	void createBuildingsRecursively(OwlInstance iInstance);
 	void searchForBuildingElements(OwlInstance iBuildingInstance, OwlInstance iInstance);
 	void searchForProxyBuildingElements(OwlInstance iBuildingInstance, OwlInstance iInstance);
 	void searchForBuildingElementGeometry(OwlInstance iBuildingElementInstance, OwlInstance iInstance);
+
+	// Features
+	void createFeatures(SdaiInstance iSiteInstance, SdaiInstance iSiteInstancePlacement);
+	void createFeaturesRecursively(OwlInstance iInstance);
+	void searchForFeatureElements(OwlInstance iFeatureInstance, OwlInstance iInstance);
+
+	// Geometry
 	void createGeometry(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createCompositeSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
@@ -315,8 +331,9 @@ protected:  // Methods
 	bool isWindowClass(OwlInstance iInstanceClass) const;
 
 	// Feature
-	bool isFeatureElement(OwlInstance iInstance) const;
+	bool isFeatureClass(OwlInstance iInstanceClass) const;
 	bool isVegetationObjectClass(OwlClass iInstanceClass) const;
+	bool isWaterObjectClass(OwlClass iInstanceClass) const;
 };
 
 // ************************************************************************************************

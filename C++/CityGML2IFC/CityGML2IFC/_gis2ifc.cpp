@@ -584,6 +584,33 @@ SdaiInstance _exporter_base::buildBuildingInstance(
 	return iBuildingInstance;
 }
 
+SdaiInstance _exporter_base::buildFeatureInstance(
+	const char* szName,
+	const char* szDescription,
+	_matrix* pMatrix,
+	SdaiInstance iPlacementRelativeTo,
+	SdaiInstance& iBuildingInstancePlacement)
+{
+	assert(pMatrix != nullptr);
+	assert(iPlacementRelativeTo != 0);
+
+	SdaiInstance iBuildingInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCBUILDINGELEMENTPROXY");
+	assert(iBuildingInstance != 0);
+
+	sdaiPutAttrBN(iBuildingInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iBuildingInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+	sdaiPutAttrBN(iBuildingInstance, "Name", sdaiSTRING, szName);
+	sdaiPutAttrBN(iBuildingInstance, "Description", sdaiSTRING, szDescription);
+
+	iBuildingInstancePlacement = buildLocalPlacementInstance(pMatrix, iPlacementRelativeTo);
+	assert(iBuildingInstancePlacement != 0);
+
+	sdaiPutAttrBN(iBuildingInstance, "ObjectPlacement", sdaiINSTANCE, (void*)iBuildingInstancePlacement);
+	sdaiPutAttrBN(iBuildingInstance, "CompositionType", sdaiENUM, "ELEMENT");
+
+	return iBuildingInstance;
+}
+
 SdaiInstance _exporter_base::buildBuildingStoreyInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo, SdaiInstance& iBuildingStoreyInstancePlacement)
 {
 	assert(pMatrix != nullptr);
@@ -1160,7 +1187,8 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	, m_iWindowClass(0)
 	, m_mapBuildings()
 	, m_mapBuildingElements()
-	, m_iVegetationObjectClass()
+	, m_iVegetationObjectClass(0)
+	, m_iWaterObjectClass(0)
 	, m_mapFeatures()
 	, m_mapFeatureElements()
 	, m_iCurrentOwlBuildingElementInstance(0)
@@ -1182,6 +1210,7 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 
 	// Feature
 	m_iVegetationObjectClass = GetClassByName(getSite()->getOwlModel(), "class:_VegetationObject");
+	m_iWaterObjectClass = GetClassByName(getSite()->getOwlModel(), "class:_WaterObject");
 }
 
 /*virtual*/ _citygml_exporter::~_citygml_exporter()
@@ -1231,6 +1260,7 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 		vector<SdaiInstance>{iSiteInstance});
 
 	createBuildings(iSiteInstance, iSiteInstancePlacement);
+	createFeatures(iSiteInstance, iSiteInstancePlacement);
 
 	saveIfcFile(strOuputFile.c_str());
 }
@@ -1564,7 +1594,9 @@ void _citygml_exporter::searchForProxyBuildingElements(OwlInstance iBuildingInst
 					}
 					else
 					{
-						m_mapBuildings[iBuildingInstance] = vector<OwlInstance>{ piValues[iValue] };
+						assert(false);
+						//#todo
+						//m_mapBuildings[iBuildingInstance] = vector<OwlInstance>{ piValues[iValue] };
 					}
 
 					auto itBuildingElement = m_mapBuildingElements.find(piValues[iValue]);
@@ -1639,6 +1671,265 @@ void _citygml_exporter::searchForBuildingElementGeometry(OwlInstance iBuildingEl
 				else
 				{
 					searchForBuildingElementGeometry(iBuildingElementInstance, piValues[iValue]);
+				}
+			} // for (int64_t iValue = ...
+		} // if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
+
+		iProperty = GetInstancePropertyByIterator(iInstance, iProperty);
+	} // while (iProperty != 0)
+}
+
+void _citygml_exporter::createFeatures(SdaiInstance iSiteInstance, SdaiInstance iSiteInstancePlacement)
+{
+	assert(iSiteInstance != 0);
+	assert(iSiteInstancePlacement != 0);
+
+	OwlClass iSchemasClass = GetClassByName(getSite()->getOwlModel(), "class:Schemas");
+	assert(iSchemasClass != 0);
+
+	OwlInstance iInstance = GetInstancesByIterator(getSite()->getOwlModel(), 0);
+	while (iInstance != 0)
+	{
+		if (GetInstanceInverseReferencesByIterator(iInstance, 0) == 0)
+		{
+			OwlClass iInstanceClass = GetInstanceClass(iInstance);
+			assert(iInstanceClass != 0);
+
+			if (iInstanceClass != iSchemasClass)
+			{
+				if (isFeatureClass(iInstanceClass))
+				{
+					if (m_mapFeatures.find(iInstance) == m_mapFeatures.end())
+					{
+						m_mapFeatures[iInstance] = vector<OwlInstance>();
+
+						searchForFeatureElements(iInstance, iInstance);
+					}
+					else
+					{
+						assert(false); // Not supported
+					}
+				}
+				else
+				{
+					createFeaturesRecursively(iInstance);
+				}
+			}
+		} // if (GetInstanceInverseReferencesByIterator(iInstance, 0) == 0)
+
+		iInstance = GetInstancesByIterator(getSite()->getOwlModel(), iInstance);
+	} // while (iInstance != 0)
+
+	if (m_mapFeatures.empty())
+	{
+		return;
+	}
+
+	_matrix mtxIdentity;
+	vector<SdaiInstance> vecFeatureInstances;
+	for (auto& itFeature : m_mapFeatures)
+	{
+		string strTag = getTag(itFeature.first);
+
+		OwlClass iInstanceClass = GetInstanceClass(itFeature.first);
+		assert(iInstanceClass != 0);
+
+		char* szClassName = nullptr;
+		GetNameOfClass(iInstanceClass, &szClassName);
+		assert(szClassName != nullptr);
+
+		SdaiInstance iFeatureInstancePlacement = 0;
+		SdaiInstance iFeatureInstance = buildFeatureInstance(
+			strTag.c_str(),
+			szClassName,
+			&mtxIdentity,
+			iSiteInstancePlacement,
+			iFeatureInstancePlacement);
+		assert(iFeatureInstance != 0);
+
+		createProperties(itFeature.first, iFeatureInstance);
+
+		vecFeatureInstances.push_back(iFeatureInstance);
+
+		if (itFeature.second.empty())
+		{
+			continue;
+		}
+
+		vector<SdaiInstance> vecFeatureElementInstances;
+		for (auto iOwlFeatureElementInstance : itFeature.second)
+		{
+			m_iCurrentOwlBuildingElementInstance = iOwlFeatureElementInstance;
+
+			auto itFeatureElement = m_mapFeatureElements.find(iOwlFeatureElementInstance);
+			assert(itFeatureElement != m_mapFeatureElements.end());
+			assert(!itFeatureElement->second.empty());
+
+			vector<SdaiInstance> vecSdaiFeatureElementGeometryInstances;
+			for (auto iOwlFeatureElementGeometryInstance : itFeatureElement->second)
+			{
+				createGeometry(iOwlFeatureElementGeometryInstance, vecSdaiFeatureElementGeometryInstances);
+			}
+
+			if (vecSdaiFeatureElementGeometryInstances.empty())
+			{
+				// Not supported
+				continue;
+			}
+
+			SdaiInstance iFeatureElementInstancePlacement = 0;
+			SdaiInstance iSdaiFeatureElementInstance = buildBuildingElementInstance(
+				itFeatureElement->first,
+				&mtxIdentity,
+				iFeatureInstancePlacement,
+				iFeatureElementInstancePlacement,
+				vecSdaiFeatureElementGeometryInstances);
+			assert(iSdaiFeatureElementInstance != 0);
+
+			createProperties(iOwlFeatureElementInstance, iSdaiFeatureElementInstance);
+
+			vecFeatureElementInstances.push_back(iSdaiFeatureElementInstance);/**/
+
+			m_iCurrentOwlBuildingElementInstance = 0;
+		} // for (auto iOwlFeatureElementInstance : ...
+
+		//#todo
+		//SdaiInstance iFeatureStoreyInstancePlacement = 0;
+		//SdaiInstance iFeatureStoreyInstance = buildFeatureStoreyInstance(&mtxIdentity, iFeatureInstancePlacement, iFeatureStoreyInstancePlacement);
+		//assert(iFeatureStoreyInstance != 0);
+
+		//buildRelAggregatesInstance(
+		//	"FeatureContainer",
+		//	"FeatureContainer for BuildigStories",
+		//	iFeatureInstance,
+		//	vector<SdaiInstance>{ iFeatureStoreyInstance });
+
+		//if (vecFeatureElementInstances.empty())
+		//{
+		//	// Not supported
+		//	continue;
+		//}
+
+		/*buildRelContainedInSpatialStructureInstance(
+			"FeatureStoreyContainer",
+			"FeatureStoreyContainer for Feature Elements",
+			iFeatureStoreyInstance,
+			vecFeatureElementInstances);*/
+	} // for (auto& itFeature : ...
+
+	buildRelAggregatesInstance(
+		"SiteContainer",
+		"SiteContainer For Features",
+		iSiteInstance,
+		vecFeatureInstances);/**/
+}
+
+void _citygml_exporter::createFeaturesRecursively(OwlInstance iInstance)
+{
+	assert(iInstance != 0);
+
+	RdfProperty iProperty = GetInstancePropertyByIterator(iInstance, 0);
+	while (iProperty != 0)
+	{
+		if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
+		{
+			int64_t iValuesCount = 0;
+			OwlInstance* piValues = nullptr;
+			GetObjectProperty(iInstance, iProperty, &piValues, &iValuesCount);
+
+			for (int64_t iValue = 0; iValue < iValuesCount; iValue++)
+			{
+				if (piValues[iValue] == 0)
+				{
+					continue;
+				}
+
+				OwlClass iInstanceClass = GetInstanceClass(piValues[iValue]);
+				assert(iInstanceClass != 0);
+
+				if (isFeatureClass(iInstanceClass))
+				{
+					if (m_mapFeatures.find(piValues[iValue]) == m_mapFeatures.end())
+					{
+						m_mapFeatures[piValues[iValue]] = vector<OwlInstance>();
+
+						searchForFeatureElements(piValues[iValue], piValues[iValue]);
+					}
+					else
+					{
+						//#todo
+						//assert(false); // Not supported
+					}
+				}
+				else
+				{
+					createFeaturesRecursively(piValues[iValue]);
+				}
+			} // for (int64_t iValue = ...
+		} // if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
+
+		iProperty = GetInstancePropertyByIterator(iInstance, iProperty);
+	} // while (iProperty != 0)
+}
+
+void _citygml_exporter::searchForFeatureElements(OwlInstance iFeatureInstance, OwlInstance iInstance)
+{
+	assert(iFeatureInstance != 0);
+	assert(iInstance != 0);
+
+	RdfProperty iProperty = GetInstancePropertyByIterator(iInstance, 0);
+	while (iProperty != 0)
+	{
+		if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
+		{
+			int64_t iValuesCount = 0;
+			OwlInstance* piValues = nullptr;
+			GetObjectProperty(iInstance, iProperty, &piValues, &iValuesCount);
+
+			for (int64_t iValue = 0; iValue < iValuesCount; iValue++)
+			{
+				if (piValues[iValue] == 0)
+				{
+					continue;
+				}
+
+				if (GetInstanceGeometryClass(piValues[iValue]) &&
+					GetBoundingBox(piValues[iValue], nullptr, nullptr))
+				{
+					auto itFeature = m_mapFeatures.find(iFeatureInstance);
+					if (itFeature != m_mapFeatures.end())
+					{
+						itFeature->second.push_back(piValues[iValue]);
+					}
+					else
+					{
+						assert(false);
+						//#todo
+						//m_mapFeatures[iFeatureInstance] = vector<OwlInstance>{ piValues[iValue] };
+					}
+
+					auto itFeatureElement = m_mapFeatureElements.find(piValues[iValue]);
+					if (itFeatureElement == m_mapFeatureElements.end())
+					{
+						m_mapFeatureElements[piValues[iValue]] = vector<OwlInstance>{ piValues[iValue] };
+					}
+					else
+					{
+						OwlClass iChildInstanceClass = GetInstanceClass(piValues[iValue]);
+						assert(iChildInstanceClass != 0);
+
+						wchar_t* szClassName = nullptr;
+						GetNameOfClassW(iChildInstanceClass, &szClassName);
+
+						string strEvent = "Duplicated Geometry: '";
+						strEvent += CW2A(szClassName);
+						strEvent += "'";
+						getSite()->logErr(strEvent);
+					}
+				}
+				else
+				{
+					searchForFeatureElements(iFeatureInstance, piValues[iValue]);
 				}
 			} // for (int64_t iValue = ...
 		} // if (GetPropertyType(iProperty) == OBJECTPROPERTY_TYPE)
@@ -2408,14 +2699,12 @@ bool _citygml_exporter::isWindowClass(OwlInstance iInstanceClass) const
 	return (iInstanceClass == m_iWindowClass) || IsClassAncestor(iInstanceClass, m_iWindowClass);
 }
 
-bool _citygml_exporter::isFeatureElement(OwlInstance iInstance) const
+bool _citygml_exporter::isFeatureClass(OwlInstance iInstanceClass) const
 {
-	assert(iInstance != 0);
-
-	OwlClass iInstanceClass = GetInstanceClass(iInstance);
 	assert(iInstanceClass != 0);
 
-	if (isVegetationObjectClass(iInstanceClass))
+	if (isVegetationObjectClass(iInstanceClass) ||
+		isWaterObjectClass(iInstanceClass))
 	{
 		return true;
 	}
@@ -2428,6 +2717,13 @@ bool  _citygml_exporter::isVegetationObjectClass(OwlClass iInstanceClass) const
 	assert(iInstanceClass != 0);
 
 	return (iInstanceClass == m_iVegetationObjectClass) || IsClassAncestor(iInstanceClass, m_iVegetationObjectClass);
+}
+
+bool  _citygml_exporter::isWaterObjectClass(OwlClass iInstanceClass) const
+{
+	assert(iInstanceClass != 0);
+
+	return (iInstanceClass == m_iWaterObjectClass) || IsClassAncestor(iInstanceClass, m_iWaterObjectClass);
 }
 
 // ************************************************************************************************
