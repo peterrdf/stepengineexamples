@@ -70,10 +70,10 @@ void STDCALL LogCallbackImpl(enumLogEvent enLogEvent, const char* szEvent)
 	}*/
 
 	/* TEST 2 */
-	/*{
+	{
 		wstring strInputFolder = L"D:\\Temp\\gisengine in";
 		pDialog->ExportFiles(strInputFolder);
-	}*/
+	}/**/
 
 	::EnableWindow(pDialog->GetDlgItem(IDOK)->GetSafeHwnd(), TRUE);
 

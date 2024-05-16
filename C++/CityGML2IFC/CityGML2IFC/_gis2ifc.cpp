@@ -1608,9 +1608,7 @@ void _citygml_exporter::searchForProxyBuildingElements(OwlInstance iBuildingInst
 					}
 					else
 					{
-						assert(false);
-						//#todo
-						//m_mapBuildings[iBuildingInstance] = vector<OwlInstance>{ piValues[iValue] };
+						assert(false); // Internal error!
 					}
 
 					auto itBuildingElement = m_mapBuildingElements.find(piValues[iValue]);
