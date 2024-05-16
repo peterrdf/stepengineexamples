@@ -267,6 +267,8 @@ private: // Members
 	OwlClass m_iWaterObjectClass;
 	OwlClass m_iBridgeObjectClass;
 	OwlClass m_iTunnelObjectClass;
+	OwlClass m_iTransportationObjectClass;
+	OwlClass m_iFurnitureObjectClass;
 	map<OwlInstance, vector<OwlInstance>> m_mapFeatures; // Feature : Supported Elements
 	map<OwlInstance, vector<OwlInstance>> m_mapFeatureElements; // Feature (Supported) Element : Geometries
 	
@@ -339,6 +341,8 @@ protected:  // Methods
 	bool isWaterObjectClass(OwlClass iInstanceClass) const;
 	bool isBridgeObjectClass(OwlClass iInstanceClass) const;
 	bool isTunnelObjectClass(OwlClass iInstanceClass) const;
+	bool isTransportationObjectClass(OwlClass iInstanceClass) const;
+	bool isFurnitureObjectClass(OwlClass iInstanceClass) const;
 };
 
 // ************************************************************************************************
