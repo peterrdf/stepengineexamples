@@ -1794,35 +1794,38 @@ void _citygml_exporter::createFeatures(SdaiInstance iSiteInstance, SdaiInstance 
 		} // for (auto iOwlFeatureElementInstance : ...
 
 		//#todo
-		//SdaiInstance iFeatureStoreyInstancePlacement = 0;
-		//SdaiInstance iFeatureStoreyInstance = buildFeatureStoreyInstance(&mtxIdentity, iFeatureInstancePlacement, iFeatureStoreyInstancePlacement);
-		//assert(iFeatureStoreyInstance != 0);
+		SdaiInstance iFeatureStoreyInstancePlacement = 0;
+		SdaiInstance iFeatureStoreyInstance = buildBuildingStoreyInstance(
+			&mtxIdentity, 
+			iFeatureInstancePlacement, 
+			iFeatureStoreyInstancePlacement);
+		assert(iFeatureStoreyInstance != 0);
 
-		//buildRelAggregatesInstance(
-		//	"FeatureContainer",
-		//	"FeatureContainer for BuildigStories",
-		//	iFeatureInstance,
-		//	vector<SdaiInstance>{ iFeatureStoreyInstance });
+		buildRelAggregatesInstance(
+			"FeatureContainer",
+			"FeatureContainer for BuildigStories",
+			iFeatureInstance,
+			vector<SdaiInstance>{ iFeatureStoreyInstance });
 
-		//if (vecFeatureElementInstances.empty())
-		//{
-		//	// Not supported
-		//	continue;
-		//}
+		if (vecFeatureElementInstances.empty())
+		{
+			// Not supported
+			continue;
+		}
 
-		/*buildRelContainedInSpatialStructureInstance(
+		buildRelContainedInSpatialStructureInstance(
 			"FeatureStoreyContainer",
 			"FeatureStoreyContainer for Feature Elements",
 			iFeatureStoreyInstance,
-			vecFeatureElementInstances);*/
+			vecFeatureElementInstances);/**/
 	} // for (auto& itFeature : ...
 
 	//#todo
-	/*buildRelAggregatesInstance(
+	buildRelAggregatesInstance(
 		"SiteContainer",
 		"SiteContainer For Features",
 		iSiteInstance,
-		vecFeatureInstances);*/
+		vecFeatureInstances);/**/
 }
 
 void _citygml_exporter::createFeaturesRecursively(OwlInstance iInstance)
@@ -2717,7 +2720,7 @@ bool  _citygml_exporter::isVegetationObjectClass(OwlClass iInstanceClass) const
 {
 	assert(iInstanceClass != 0);
 
-	return (iInstanceClass == m_iVegetationObjectClass) || IsClassAncestor(iInstanceClass, m_iVegetationObjectClass);
+	return false;// return (iInstanceClass == m_iVegetationObjectClass) || IsClassAncestor(iInstanceClass, m_iVegetationObjectClass);
 }
 
 bool  _citygml_exporter::isWaterObjectClass(OwlClass iInstanceClass) const
