@@ -253,6 +253,7 @@ private: // Members
 	// Geometry Kernel
 	OwlClass m_iCollectionClass;
 	OwlClass m_iTransformationClass;
+	map<OwlInstance, vector<OwlInstance>> m_mapMappedItems; // Instance : Transformations
 
 	// CityObjectGroup
 	OwlClass m_iCityObjectGroupMemberClass;

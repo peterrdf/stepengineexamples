@@ -1185,6 +1185,7 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	: _exporter_base(pSite)
 	, m_iCollectionClass(0)
 	, m_iTransformationClass(0)
+	, m_mapMappedItems()
 	, m_iCityObjectGroupMemberClass(0)
 	, m_iBuildingClass(0)
 	, m_iWallSurfaceClass(0)
@@ -1981,11 +1982,49 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	}
 	else if (isTransformationClass(iInstanceClass))
 	{
-		//#todo
+		// Reference Point (Anchor)
+		OwlInstance* piInstances = nullptr;
+		int64_t iInstancesCount = 0;
+		GetObjectProperty(
+			iInstance,
+			GetPropertyByName(getSite()->getOwlModel(), "object"),
+			&piInstances,
+			&iInstancesCount);
+		assert(iInstancesCount == 1);
+
+		// Transformation
+		OwlInstance iTransformationInstance = piInstances[0];
+
+		iInstanceClass = GetInstanceClass(iTransformationInstance);
+		assert(isTransformationClass(iInstanceClass));
+
+		piInstances = nullptr;
+		iInstancesCount = 0;
+		GetObjectProperty(
+			iTransformationInstance,
+			GetPropertyByName(getSite()->getOwlModel(), "object"),
+			&piInstances,
+			&iInstancesCount);
+		assert(iInstancesCount == 1);
+
+		OwlInstance iMappedItemInstance = piInstances[0];
+		assert(iMappedItemInstance != 0);
+
+		auto itMappedItem = m_mapMappedItems.find(iMappedItemInstance);
+		if (itMappedItem == m_mapMappedItems.end())
+		{
+			m_mapMappedItems[iMappedItemInstance] = vector<OwlInstance>{ iInstance };
+
+			//#test@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+			//createGeometry(iMappedItemInstance, vecGeometryInstances);
+		}
+		else
+		{
+			itMappedItem->second.push_back(iInstance);
+		}
 	}
 	else
 	{
-		//#todo
 		wchar_t* szClassName = nullptr;
 		GetNameOfClassW(iInstanceClass, &szClassName);
 
