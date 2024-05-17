@@ -1184,6 +1184,7 @@ bool _exporter_base::hasObjectProperty(OwlInstance iInstance, const string& strP
 _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	: _exporter_base(pSite)
 	, m_iCollectionClass(0)
+	, m_iCityObjectGroupMemberClass(0)
 	, m_iBuildingClass(0)
 	, m_iWallSurfaceClass(0)
 	, m_iRoofSurfaceClass(0)
@@ -1209,6 +1210,9 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 {
 	// Geometry Kernel
 	m_iCollectionClass = GetClassByName(getSite()->getOwlModel(), "Collection");
+
+	// CityObjectGroup
+	m_iCityObjectGroupMemberClass = GetClassByName(getSite()->getOwlModel(), "class:CityObjectGroupMemberType");
 
 	// Building
 	m_iBuildingClass = GetClassByName(getSite()->getOwlModel(), "class:Building");
@@ -1362,7 +1366,7 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 					}
 					else
 					{
-						assert(false); // Not supported
+						assert(false); // Internal error!
 					}
 				}
 				else
@@ -1504,6 +1508,11 @@ void _citygml_exporter::createBuildingsRecursively(OwlInstance iInstance)
 				OwlClass iInstanceClass = GetInstanceClass(piValues[iValue]);
 				assert(iInstanceClass != 0);
 
+				if ((iInstanceClass == m_iCityObjectGroupMemberClass) || IsClassAncestor(iInstanceClass, m_iCityObjectGroupMemberClass))
+				{
+					continue; // Ignore
+				}
+
 				if (isBuildingClass(iInstanceClass))
 				{
 					if (m_mapBuildings.find(piValues[iValue]) == m_mapBuildings.end())
@@ -1514,7 +1523,7 @@ void _citygml_exporter::createBuildingsRecursively(OwlInstance iInstance)
 					}
 					else
 					{
-						assert(false); // Not supported
+						assert(false); // Internal error!
 					}
 				}
 				else
@@ -1719,7 +1728,7 @@ void _citygml_exporter::createFeatures(SdaiInstance iSiteInstance, SdaiInstance 
 					}
 					else
 					{
-						assert(false); // Not supported
+						assert(false); // Internal error!
 					}
 				}
 				else
@@ -1825,6 +1834,11 @@ void _citygml_exporter::createFeaturesRecursively(OwlInstance iInstance)
 				OwlClass iInstanceClass = GetInstanceClass(piValues[iValue]);
 				assert(iInstanceClass != 0);
 
+				if ((iInstanceClass == m_iCityObjectGroupMemberClass) || IsClassAncestor(iInstanceClass, m_iCityObjectGroupMemberClass))
+				{					
+					continue; // Ignore
+				}
+
 				if (isFeatureClass(iInstanceClass))
 				{
 					if (m_mapFeatures.find(piValues[iValue]) == m_mapFeatures.end())
@@ -1835,7 +1849,7 @@ void _citygml_exporter::createFeaturesRecursively(OwlInstance iInstance)
 					}
 					else
 					{
-						//#todo - Mapped Items???					
+						assert(false); // Internal error!
 					}
 				}
 				else
@@ -1880,9 +1894,7 @@ void _citygml_exporter::searchForFeatureElements(OwlInstance iFeatureInstance, O
 					}
 					else
 					{
-						assert(false);
-						//#todo
-						//m_mapFeatures[iFeatureInstance] = vector<OwlInstance>{ piValues[iValue] };
+						assert(false); // Internal error!
 					}
 
 					auto itFeatureElement = m_mapFeatureElements.find(piValues[iValue]);

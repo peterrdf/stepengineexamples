@@ -253,6 +253,9 @@ private: // Members
 	// Geometry Kernel
 	OwlClass m_iCollectionClass;
 
+	// CityObjectGroup
+	OwlClass m_iCityObjectGroupMemberClass;
+
 	// Building
 	OwlClass m_iBuildingClass;
 	OwlClass m_iWallSurfaceClass;
