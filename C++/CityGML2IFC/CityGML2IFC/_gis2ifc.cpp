@@ -1184,6 +1184,7 @@ bool _exporter_base::hasObjectProperty(OwlInstance iInstance, const string& strP
 _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	: _exporter_base(pSite)
 	, m_iCollectionClass(0)
+	, m_iTransformationClass(0)
 	, m_iCityObjectGroupMemberClass(0)
 	, m_iBuildingClass(0)
 	, m_iWallSurfaceClass(0)
@@ -1210,6 +1211,7 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 {
 	// Geometry Kernel
 	m_iCollectionClass = GetClassByName(getSite()->getOwlModel(), "Collection");
+	m_iTransformationClass = GetClassByName(getSite()->getOwlModel(), "Transformation");
 
 	// CityObjectGroup
 	m_iCityObjectGroupMemberClass = GetClassByName(getSite()->getOwlModel(), "class:CityObjectGroupMemberType");
@@ -1962,7 +1964,7 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	{
 		createPolyLine3D(iInstance, vecGeometryInstances);
 	}
-	else if ((iInstanceClass == m_iCollectionClass) || IsClassAncestor(iInstanceClass, m_iCollectionClass))
+	else if (isCollectionClass(iInstanceClass))
 	{
 		OwlInstance* piInstances = nullptr;
 		int64_t iInstancesCount = 0;
@@ -1976,6 +1978,10 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 		{
 			createGeometry(piInstances[iInstanceIndex], vecGeometryInstances);
 		}
+	}
+	else if (isTransformationClass(iInstanceClass))
+	{
+		//#todo
 	}
 	else
 	{
@@ -2621,6 +2627,20 @@ SdaiInstance _citygml_exporter::buildBuildingElementInstance(
 		iPlacementRelativeTo,
 		iBuildingElementInstancePlacement,
 		vecRepresentations);
+}
+
+bool _citygml_exporter::isCollectionClass(OwlClass iInstanceClass) const
+{
+	assert(iInstanceClass != 0);
+
+	return (iInstanceClass == m_iCollectionClass) || IsClassAncestor(iInstanceClass, m_iCollectionClass);
+}
+
+bool _citygml_exporter::isTransformationClass(OwlClass iInstanceClass) const
+{
+	assert(iInstanceClass != 0);
+
+	return (iInstanceClass == m_iTransformationClass) || IsClassAncestor(iInstanceClass, m_iTransformationClass);
 }
 
 bool _citygml_exporter::isBuildingElement(OwlInstance iInstance) const

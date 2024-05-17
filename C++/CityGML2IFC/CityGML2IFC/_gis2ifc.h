@@ -252,6 +252,7 @@ private: // Members
 
 	// Geometry Kernel
 	OwlClass m_iCollectionClass;
+	OwlClass m_iTransformationClass;
 
 	// CityObjectGroup
 	OwlClass m_iCityObjectGroupMemberClass;
@@ -330,6 +331,10 @@ protected:  // Methods
 		SdaiInstance iPlacementRelativeTo,
 		SdaiInstance& iBuildingElementInstancePlacement,
 		const vector<SdaiInstance>& vecRepresentations);
+
+	// Geometry Kernel
+	bool isCollectionClass(OwlClass iInstanceClass) const;
+	bool isTransformationClass(OwlClass iInstanceClass) const;
 	
 	// Building
 	bool isBuildingElement(OwlInstance iInstance) const;
