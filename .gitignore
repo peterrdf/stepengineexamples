@@ -251,3 +251,5 @@
 /C#/IFCViewerSGL_AnyCPU_NET80/IFCViewerSGL/bin/x86/Release/net8.0-windows/SharpGL.SceneGraph.dll
 /C#/IFCViewerSGL_AnyCPU_NET80/IFCViewerSGL/bin/x86/Release/net8.0-windows/SharpGL.WinForms.dll
 /C++/CityGML2IFC/x64/Debug/schema/temp
+/C++/CityGML2IFC/Debug/CityGML2IFC.exe
+/C++/CityGML2IFC/Debug/CityGML2IFC.pdb
