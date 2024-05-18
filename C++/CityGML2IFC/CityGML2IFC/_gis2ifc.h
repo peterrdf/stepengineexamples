@@ -253,10 +253,13 @@ private: // Members
 	// Geometry Kernel
 	OwlClass m_iCollectionClass;
 	OwlClass m_iTransformationClass;
-	map<OwlInstance, vector<OwlInstance>> m_mapMappedItems; // Instance : Transformations
+	map<OwlInstance, vector<SdaiInstance>> m_mapMappedItems; // OwlInstance : Geometries
 
 	// CityObjectGroup
 	OwlClass m_iCityObjectGroupMemberClass;
+
+	// relativeGMLGeometry (class:GeometryPropertyType => class:geometryMember)
+	OwlClass m_iGeometryMemberClass;
 
 	// Building
 	OwlClass m_iBuildingClass;

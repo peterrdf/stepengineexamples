@@ -1187,6 +1187,7 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	, m_iTransformationClass(0)
 	, m_mapMappedItems()
 	, m_iCityObjectGroupMemberClass(0)
+	, m_iGeometryMemberClass(0)
 	, m_iBuildingClass(0)
 	, m_iWallSurfaceClass(0)
 	, m_iRoofSurfaceClass(0)
@@ -1216,6 +1217,9 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 
 	// CityObjectGroup
 	m_iCityObjectGroupMemberClass = GetClassByName(getSite()->getOwlModel(), "class:CityObjectGroupMemberType");
+
+	// relativeGMLGeometry
+	m_iGeometryMemberClass = GetClassByName(getSite()->getOwlModel(), "class:geometryMember");
 
 	// Building
 	m_iBuildingClass = GetClassByName(getSite()->getOwlModel(), "class:Building");
@@ -1983,10 +1987,12 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	else if (isTransformationClass(iInstanceClass))
 	{
 		// Reference Point (Anchor)
+		OwlInstance iReferencePointInstance = iInstance;
+
 		OwlInstance* piInstances = nullptr;
 		int64_t iInstancesCount = 0;
 		GetObjectProperty(
-			iInstance,
+			iReferencePointInstance,
 			GetPropertyByName(getSite()->getOwlModel(), "object"),
 			&piInstances,
 			&iInstancesCount);
@@ -2007,16 +2013,31 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 			&iInstancesCount);
 		assert(iInstancesCount == 1);
 
-		OwlInstance iMappedItemInstance = piInstances[0];
-		assert(iMappedItemInstance != 0);
+		OwlInstance iRelativeGMLGeometryInstance = piInstances[0];
+		assert(iRelativeGMLGeometryInstance != 0);
 
-		auto itMappedItem = m_mapMappedItems.find(iMappedItemInstance);
+		iInstanceClass = GetInstanceClass(iRelativeGMLGeometryInstance);
+		assert(isCollectionClass(iInstanceClass));
+
+		piInstances = nullptr;
+		iInstancesCount = 0;
+		GetObjectProperty(
+			iRelativeGMLGeometryInstance,
+			GetPropertyByName(getSite()->getOwlModel(), "objects"),
+			&piInstances,
+			&iInstancesCount);
+		assert(iInstancesCount == 1);
+
+		OwlInstance iMappedItemGeometryInstance = piInstances[0];
+		assert(iMappedItemGeometryInstance != 0);
+
+		auto itMappedItem = m_mapMappedItems.find(iMappedItemGeometryInstance);
 		if (itMappedItem == m_mapMappedItems.end())
 		{
-			m_mapMappedItems[iMappedItemInstance] = vector<OwlInstance>{ iInstance };
+			vector<SdaiInstance> vecMappedItemGeometryInstances;
+			createGeometry(iMappedItemGeometryInstance, vecMappedItemGeometryInstances);
 
-			//#test@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-			//createGeometry(iMappedItemInstance, vecGeometryInstances);
+			m_mapMappedItems[iMappedItemGeometryInstance] = vecMappedItemGeometryInstances;
 		}
 		else
 		{
