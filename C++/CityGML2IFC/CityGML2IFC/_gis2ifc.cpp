@@ -2038,10 +2038,14 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 			createGeometry(iMappedItemGeometryInstance, vecMappedItemGeometryInstances);
 
 			m_mapMappedItems[iMappedItemGeometryInstance] = vecMappedItemGeometryInstances;
+
+			//#todo
+			vecGeometryInstances.insert(vecGeometryInstances.end(), vecMappedItemGeometryInstances.begin(), vecMappedItemGeometryInstances.end());
 		}
 		else
 		{
-			itMappedItem->second.push_back(iInstance);
+			//#todo
+			vecGeometryInstances.insert(vecGeometryInstances.end(), itMappedItem->second.begin(), itMappedItem->second.end());
 		}
 	}
 	else
