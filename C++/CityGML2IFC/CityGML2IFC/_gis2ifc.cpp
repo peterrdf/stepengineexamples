@@ -749,6 +749,72 @@ SdaiInstance _exporter_base::buildBuildingElementInstance(
 	return iBuildingElementInstance;
 }
 
+SdaiInstance _exporter_base::buildRepresentationMap(_matrix* pMatrix, const vector<SdaiInstance>& vecMappedRepresentations)
+{
+	SdaiInstance iRepresentationMapInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCREPRESENTATIONMAP");
+	assert(iRepresentationMapInstance != 0);
+
+	sdaiPutAttrBN(iRepresentationMapInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iRepresentationMapInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+	sdaiPutAttrBN(iRepresentationMapInstance, "MappingOrigin", sdaiINSTANCE, (void*)buildAxis2Placement3DInstance(pMatrix));
+
+	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSHAPEREPRESENTATION");
+	assert(iShapeRepresentationInstance != 0);
+
+	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationIdentifier", sdaiSTRING, "Body");
+	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationType", sdaiSTRING, "Brep");
+	sdaiPutAttrBN(iShapeRepresentationInstance, "ContextOfItems", sdaiINSTANCE, (void*)getGeometricRepresentationContextInstance());
+
+	SdaiAggr pItems = sdaiCreateAggrBN(iShapeRepresentationInstance, "Items");
+	assert(pItems != 0);
+
+	for (auto iMappedRepresentation : vecMappedRepresentations)
+	{
+		sdaiAppend(pItems, sdaiINSTANCE, (void*)iMappedRepresentation);
+	}
+
+	sdaiPutAttrBN(iRepresentationMapInstance, "MappedRepresentation", sdaiINSTANCE, (void*)iShapeRepresentationInstance);	
+
+	return iRepresentationMapInstance;
+}
+
+SdaiInstance _exporter_base::buildMappedItem(_matrix* pMatrix, const vector<SdaiInstance>& vecRepresentations)
+{
+	SdaiInstance iMappedItemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCMAPPEDITEM");
+	assert(iMappedItemInstance != 0);
+
+	sdaiPutAttrBN(iMappedItemInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iMappedItemInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+
+	sdaiPutAttrBN(iMappedItemInstance, "MappingSource", sdaiINSTANCE, (void*)buildRepresentationMap(pMatrix, vecRepresentations));
+
+	SdaiInstance iCartesianTransformationOperator3DInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcCartesianTransformationOperator3D");
+	assert(iCartesianTransformationOperator3DInstance != 0);
+
+	sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis1", sdaiINSTANCE, (void*)nullptr);
+	sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis2", sdaiINSTANCE, (void*)nullptr);
+	SdaiInstance iLocationOriginInstance = buildCartesianPointInstance(0., 0., 0.);
+	sdaiPutAttrBN(iLocationOriginInstance, "Axis3", sdaiINSTANCE, (void*)nullptr);
+
+	sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "LocalOrigin", sdaiINSTANCE, (void*)iLocationOriginInstance);
+
+	sdaiPutAttrBN(iMappedItemInstance, "MappingTarget", sdaiINSTANCE, (void*)iCartesianTransformationOperator3DInstance);
+
+	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSHAPEREPRESENTATION");
+	assert(iShapeRepresentationInstance != 0);
+
+	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationIdentifier", sdaiSTRING, "Body");
+	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationType", sdaiSTRING, "MappedRepresentation");
+	sdaiPutAttrBN(iShapeRepresentationInstance, "ContextOfItems", sdaiINSTANCE, (void*)getGeometricRepresentationContextInstance());
+
+	SdaiAggr pItems = sdaiCreateAggrBN(iShapeRepresentationInstance, "Items");
+	assert(pItems != 0);
+
+	sdaiAppend(pItems, sdaiINSTANCE, (void*)iMappedItemInstance);
+
+	return iShapeRepresentationInstance;
+}
+
 void _exporter_base::createStyledItemInstance(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance)
 {
 	assert(iOwlInstance != 0);
@@ -2037,15 +2103,17 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 			vector<SdaiInstance> vecMappedItemGeometryInstances;
 			createGeometry(iMappedItemGeometryInstance, vecMappedItemGeometryInstances);
 
-			m_mapMappedItems[iMappedItemGeometryInstance] = vecMappedItemGeometryInstances;
+			m_mapMappedItems[iMappedItemGeometryInstance] = vecMappedItemGeometryInstances;			
 
-			//#todo
-			vecGeometryInstances.insert(vecGeometryInstances.end(), vecMappedItemGeometryInstances.begin(), vecMappedItemGeometryInstances.end());
+			//#todo transformations
+			_matrix mtxIdentity;
+			vecGeometryInstances.push_back(buildMappedItem(&mtxIdentity, vecMappedItemGeometryInstances));
 		}
 		else
 		{
-			//#todo
-			vecGeometryInstances.insert(vecGeometryInstances.end(), itMappedItem->second.begin(), itMappedItem->second.end());
+			//#todo transformations
+			_matrix mtxIdentity;
+			vecGeometryInstances.push_back(buildMappedItem(&mtxIdentity, itMappedItem->second));
 		}
 	}
 	else
