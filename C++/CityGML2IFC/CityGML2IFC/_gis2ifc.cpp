@@ -816,7 +816,7 @@ SdaiInstance _exporter_base::buildMappedItem(
 
 		dReferencePointX = pdValues[0];
 		dReferencePointY = pdValues[1];
-		dReferencePointZ = pdValues[0];
+		dReferencePointZ = pdValues[2];
 	}
 
 	// Transformation Matrix
