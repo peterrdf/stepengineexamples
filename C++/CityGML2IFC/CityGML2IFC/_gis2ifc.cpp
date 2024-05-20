@@ -778,7 +778,10 @@ SdaiInstance _exporter_base::buildRepresentationMap(_matrix* pMatrix, const vect
 	return iRepresentationMapInstance;
 }
 
-SdaiInstance _exporter_base::buildMappedItem(_matrix* pMatrix, const vector<SdaiInstance>& vecRepresentations)
+SdaiInstance _exporter_base::buildMappedItem(
+	_matrix* pMatrix, 
+	const vector<SdaiInstance>& vecRepresentations,
+	double dLocalOriginX, double dLocalOriginY, double dLocalOriginZ)
 {
 	SdaiInstance iMappedItemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCMAPPEDITEM");
 	assert(iMappedItemInstance != 0);
@@ -793,7 +796,7 @@ SdaiInstance _exporter_base::buildMappedItem(_matrix* pMatrix, const vector<Sdai
 
 	sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis1", sdaiINSTANCE, (void*)nullptr);
 	sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis2", sdaiINSTANCE, (void*)nullptr);
-	SdaiInstance iLocalOriginInstance = buildCartesianPointInstance(0., 0., 0.);
+	SdaiInstance iLocalOriginInstance = buildCartesianPointInstance(dLocalOriginX, dLocalOriginY, dLocalOriginZ);
 	sdaiPutAttrBN(iLocalOriginInstance, "Axis3", sdaiINSTANCE, (void*)nullptr);
 
 	sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "LocalOrigin", sdaiINSTANCE, (void*)iLocalOriginInstance);
@@ -2052,7 +2055,7 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	}
 	else if (isTransformationClass(iInstanceClass))
 	{
-		// Reference Point (Anchor)
+		// Reference Point (Anchor) Transformation
 		OwlInstance iReferencePointInstance = iInstance;
 
 		OwlInstance* piInstances = nullptr;
@@ -2064,12 +2067,40 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 			&iInstancesCount);
 		assert(iInstancesCount == 1);
 
-		// Transformation
 		OwlInstance iTransformationInstance = piInstances[0];
 
 		iInstanceClass = GetInstanceClass(iTransformationInstance);
 		assert(isTransformationClass(iInstanceClass));
 
+		// Reference Point - matrix
+		piInstances = nullptr;
+		iInstancesCount = 0;
+		GetObjectProperty(
+			iTransformationInstance,
+			GetPropertyByName(getSite()->getOwlModel(), "matrix"),
+			&piInstances,
+			&iInstancesCount);
+		assert(iInstancesCount == 1);
+
+		OwlInstance iMatrixInstance = piInstances[0];
+		//assert(isTransformationClass(iInstanceClass));??????????????????????????????????????????????
+
+		int64_t iValuesCount = 0;
+		double* pdValues = nullptr;
+		GetDatatypeProperty(
+			iMatrixInstance,
+			GetPropertyByName(getSite()->getOwlModel(), "coordinates"),
+			(void**)&pdValues,
+			&iValuesCount);
+		assert(iValuesCount == 12);
+
+		/**getOutputStream() << to_string(pdValue[9]).c_str();
+		*getOutputStream() << SPACE;
+		*getOutputStream() << to_string(pdValue[10]).c_str();
+		*getOutputStream() << SPACE;
+		*getOutputStream() << to_string(pdValue[11]).c_str();*/
+
+		// Reference Point - object
 		piInstances = nullptr;
 		iInstancesCount = 0;
 		GetObjectProperty(
@@ -2077,8 +2108,8 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 			GetPropertyByName(getSite()->getOwlModel(), "object"),
 			&piInstances,
 			&iInstancesCount);
-		assert(iInstancesCount == 1);
-
+		assert(iInstancesCount == 1);		
+		
 		OwlInstance iRelativeGMLGeometryInstance = piInstances[0];
 		assert(iRelativeGMLGeometryInstance != 0);
 
@@ -2107,13 +2138,22 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 
 			//#todo transformations
 			_matrix mtxIdentity;
-			vecGeometryInstances.push_back(buildMappedItem(&mtxIdentity, vecMappedItemGeometryInstances));
+			vecGeometryInstances.push_back(
+				buildMappedItem(
+					&mtxIdentity, 
+					vecMappedItemGeometryInstances,
+					pdValues[9], pdValues[10], pdValues[11])
+			);
 		}
 		else
 		{
 			//#todo transformations
 			_matrix mtxIdentity;
-			vecGeometryInstances.push_back(buildMappedItem(&mtxIdentity, itMappedItem->second));
+			vecGeometryInstances.push_back(
+				buildMappedItem(
+					&mtxIdentity, 
+					itMappedItem->second,
+					pdValues[9], pdValues[10], pdValues[11]));
 		}
 	}
 	else

@@ -207,7 +207,10 @@ protected: // Methods
 		SdaiInstance& iBuildingElementInstancePlacement,
 		const vector<SdaiInstance>& vecRepresentations);
 	SdaiInstance buildRepresentationMap(_matrix* pMatrix, const vector<SdaiInstance>& vecRepresentations);
-	SdaiInstance buildMappedItem(_matrix* pMatrix, const vector<SdaiInstance>& vecRepresentations);
+	SdaiInstance buildMappedItem(
+		_matrix* pMatrix, 
+		const vector<SdaiInstance>& vecRepresentations,
+		double dLocalOriginX, double dLocalOriginY, double dLocalOriginZ);
 
 	/* Style */
 	void createStyledItemInstance(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance);
