@@ -210,7 +210,8 @@ protected: // Methods
 	SdaiInstance buildMappedItem(
 		_matrix* pMatrix, 
 		const vector<SdaiInstance>& vecRepresentations,
-		double dLocalOriginX, double dLocalOriginY, double dLocalOriginZ);
+		OwlInstance iReferencePointMatrixInstance,
+		OwlInstance iTransformationMatrixInstance);
 
 	/* Style */
 	void createStyledItemInstance(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance);

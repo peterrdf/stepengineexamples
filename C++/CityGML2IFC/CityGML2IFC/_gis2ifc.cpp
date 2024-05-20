@@ -781,8 +781,14 @@ SdaiInstance _exporter_base::buildRepresentationMap(_matrix* pMatrix, const vect
 SdaiInstance _exporter_base::buildMappedItem(
 	_matrix* pMatrix, 
 	const vector<SdaiInstance>& vecRepresentations,
-	double dLocalOriginX, double dLocalOriginY, double dLocalOriginZ)
+	OwlInstance iReferencePointMatrixInstance,
+	OwlInstance iTransformationMatrixInstance)
 {
+	assert(pMatrix != nullptr);
+	assert(!vecRepresentations.empty());
+	assert(iReferencePointMatrixInstance != 0);
+	assert(iTransformationMatrixInstance != 0);
+
 	SdaiInstance iMappedItemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCMAPPEDITEM");
 	assert(iMappedItemInstance != 0);
 
@@ -793,13 +799,46 @@ SdaiInstance _exporter_base::buildMappedItem(
 
 	SdaiInstance iCartesianTransformationOperator3DInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcCartesianTransformationOperator3D");
 	assert(iCartesianTransformationOperator3DInstance != 0);
+	
+	// Reference Point (Anchor)
+	double dReferencePointX = 0.;
+	double dReferencePointY = 0.;
+	double dReferencePointZ = 0.;
+	{
+		int64_t iValuesCount = 0;
+		double* pdValues = nullptr;
+		GetDatatypeProperty(
+			iTransformationMatrixInstance,
+			GetPropertyByName(getSite()->getOwlModel(), "coordinates"),
+			(void**)&pdValues,
+			&iValuesCount);
+		assert(iValuesCount == 12);
 
-	sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis1", sdaiINSTANCE, (void*)nullptr);
-	sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis2", sdaiINSTANCE, (void*)nullptr);
-	SdaiInstance iLocalOriginInstance = buildCartesianPointInstance(dLocalOriginX, dLocalOriginY, dLocalOriginZ);
-	sdaiPutAttrBN(iLocalOriginInstance, "Axis3", sdaiINSTANCE, (void*)nullptr);
+		dReferencePointX = pdValues[0];
+		dReferencePointY = pdValues[1];
+		dReferencePointZ = pdValues[0];
+	}
 
-	sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "LocalOrigin", sdaiINSTANCE, (void*)iLocalOriginInstance);
+	// Transformation Matrix
+	{
+		int64_t iValuesCount = 0;
+		double* pdValues = nullptr;
+		GetDatatypeProperty(
+			iTransformationMatrixInstance,
+			GetPropertyByName(getSite()->getOwlModel(), "coordinates"),
+			(void**)&pdValues,
+			&iValuesCount);
+		assert(iValuesCount == 12);
+
+		SdaiInstance iLocalOriginInstance = buildCartesianPointInstance(pdValues[9], pdValues[10], pdValues[11]);
+		assert(iLocalOriginInstance != 0);
+
+		sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "LocalOrigin", sdaiINSTANCE, (void*)iLocalOriginInstance);
+
+		sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis1", sdaiINSTANCE, (void*)buildDirectionInstance(pdValues[0], pdValues[1], pdValues[2]));
+		sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis2", sdaiINSTANCE, (void*)buildDirectionInstance(pdValues[3], pdValues[4], pdValues[5]));
+		sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis3", sdaiINSTANCE, (void*)buildDirectionInstance(pdValues[6], pdValues[7], pdValues[8]));
+	}	
 
 	sdaiPutAttrBN(iMappedItemInstance, "MappingTarget", sdaiINSTANCE, (void*)iCartesianTransformationOperator3DInstance);
 
@@ -2056,55 +2095,53 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	else if (isTransformationClass(iInstanceClass))
 	{
 		// Reference Point (Anchor) Transformation
-		OwlInstance iReferencePointInstance = iInstance;
+		OwlInstance iReferencePointTransformationInstance = iInstance;
 
+		// Reference Point Transformation - matrix
 		OwlInstance* piInstances = nullptr;
 		int64_t iInstancesCount = 0;
 		GetObjectProperty(
-			iReferencePointInstance,
-			GetPropertyByName(getSite()->getOwlModel(), "object"),
-			&piInstances,
-			&iInstancesCount);
-		assert(iInstancesCount == 1);
-
-		OwlInstance iTransformationInstance = piInstances[0];
-
-		iInstanceClass = GetInstanceClass(iTransformationInstance);
-		assert(isTransformationClass(iInstanceClass));
-
-		// Reference Point - matrix
-		piInstances = nullptr;
-		iInstancesCount = 0;
-		GetObjectProperty(
-			iTransformationInstance,
+			iReferencePointTransformationInstance,
 			GetPropertyByName(getSite()->getOwlModel(), "matrix"),
 			&piInstances,
 			&iInstancesCount);
 		assert(iInstancesCount == 1);
 
-		OwlInstance iMatrixInstance = piInstances[0];
-		//assert(isTransformationClass(iInstanceClass));??????????????????????????????????????????????
+		OwlInstance iReferencePointMatrixInstance = piInstances[0];
+		assert(iReferencePointMatrixInstance != 0);	
 
-		int64_t iValuesCount = 0;
-		double* pdValues = nullptr;
-		GetDatatypeProperty(
-			iMatrixInstance,
-			GetPropertyByName(getSite()->getOwlModel(), "coordinates"),
-			(void**)&pdValues,
-			&iValuesCount);
-		assert(iValuesCount == 12);
-
-		/**getOutputStream() << to_string(pdValue[9]).c_str();
-		*getOutputStream() << SPACE;
-		*getOutputStream() << to_string(pdValue[10]).c_str();
-		*getOutputStream() << SPACE;
-		*getOutputStream() << to_string(pdValue[11]).c_str();*/
-
-		// Reference Point - object
+		// Transformation Matrix Transformation
 		piInstances = nullptr;
 		iInstancesCount = 0;
 		GetObjectProperty(
-			iTransformationInstance,
+			iReferencePointTransformationInstance,
+			GetPropertyByName(getSite()->getOwlModel(), "object"),
+			&piInstances,
+			&iInstancesCount);
+		assert(iInstancesCount == 1);
+
+		OwlInstance iTransformationMatrixTransformationInstance = piInstances[0];
+		assert(iTransformationMatrixTransformationInstance != 0);
+		assert(isTransformationClass(GetInstanceClass(iTransformationMatrixTransformationInstance)));
+
+		// Transformation Matrix Transformation - matrix
+		piInstances = nullptr;
+		iInstancesCount = 0;
+		GetObjectProperty(
+			iTransformationMatrixTransformationInstance,
+			GetPropertyByName(getSite()->getOwlModel(), "matrix"),
+			&piInstances,
+			&iInstancesCount);
+		assert(iInstancesCount == 1);
+
+		OwlInstance iTransformationMatrixInstance = piInstances[0];
+		assert(iTransformationMatrixInstance != 0);
+
+		// Reference Point Transformation - object
+		piInstances = nullptr;
+		iInstancesCount = 0;
+		GetObjectProperty(
+			iTransformationMatrixTransformationInstance,
 			GetPropertyByName(getSite()->getOwlModel(), "object"),
 			&piInstances,
 			&iInstancesCount);
@@ -2136,24 +2173,24 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 
 			m_mapMappedItems[iMappedItemGeometryInstance] = vecMappedItemGeometryInstances;			
 
-			//#todo transformations
 			_matrix mtxIdentity;
 			vecGeometryInstances.push_back(
 				buildMappedItem(
 					&mtxIdentity, 
 					vecMappedItemGeometryInstances,
-					pdValues[9], pdValues[10], pdValues[11])
+					iReferencePointMatrixInstance,
+					iTransformationMatrixInstance)
 			);
 		}
 		else
 		{
-			//#todo transformations
 			_matrix mtxIdentity;
 			vecGeometryInstances.push_back(
 				buildMappedItem(
 					&mtxIdentity, 
 					itMappedItem->second,
-					pdValues[9], pdValues[10], pdValues[11]));
+					iReferencePointMatrixInstance,
+					iTransformationMatrixInstance));
 		}
 	}
 	else
