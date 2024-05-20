@@ -1271,7 +1271,6 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	, m_mapFeatures()
 	, m_mapFeatureElements()
 	, m_iCurrentOwlBuildingElementInstance(0)
-	, m_bCreateIfcShapeRepresentation(true)
 	, m_iDefaultWallSurfaceColorRgbInstance(0)
 	, m_iDefaultRoofSurfaceColorRgbInstance(0)
 	, m_iDefaultDoorColorRgbInstance(0)
@@ -1504,7 +1503,7 @@ void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance
 			vector<SdaiInstance> vecSdaiBuildingElementGeometryInstances;
 			for (auto iOwlBuildingElementGeometryInstance : itBuildingElement->second)
 			{
-				createGeometry(iOwlBuildingElementGeometryInstance, vecSdaiBuildingElementGeometryInstances);
+				createGeometry(iOwlBuildingElementGeometryInstance, vecSdaiBuildingElementGeometryInstances, true);
 			}
 
 			if (vecSdaiBuildingElementGeometryInstances.empty())
@@ -1841,7 +1840,7 @@ void _citygml_exporter::createFeatures(SdaiInstance iSiteInstance, SdaiInstance 
 
 			for (auto iOwlFeatureElementGeometryInstance : itFeatureElement->second)
 			{
-				createGeometry(iOwlFeatureElementGeometryInstance, vecSdaiFeatureElementGeometryInstances);
+				createGeometry(iOwlFeatureElementGeometryInstance, vecSdaiFeatureElementGeometryInstances, true);
 			}
 
 			m_iCurrentOwlBuildingElementInstance = 0;
@@ -2001,7 +2000,7 @@ void _citygml_exporter::searchForFeatureElements(OwlInstance iFeatureInstance, O
 	} // while (iProperty != 0)
 }
 
-void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
+void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation)
 {
 	assert(iInstance != 0);
 
@@ -2010,19 +2009,19 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 
 	if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:MultiSurfaceType"))
 	{
-		createMultiSurface(iInstance, vecGeometryInstances);
+		createMultiSurface(iInstance, vecGeometryInstances, bCreateIfcShapeRepresentation);
 	}
 	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:SolidType"))
 	{
-		createSolid(iInstance, vecGeometryInstances);
+		createSolid(iInstance, vecGeometryInstances, bCreateIfcShapeRepresentation);
 	}
 	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:CompositeSolidType"))
 	{
-		createCompositeSolid(iInstance, vecGeometryInstances);
+		createCompositeSolid(iInstance, vecGeometryInstances, bCreateIfcShapeRepresentation);
 	}
 	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "BoundaryRepresentation"))
 	{
-		createBoundaryRepresentation(iInstance, vecGeometryInstances);
+		createBoundaryRepresentation(iInstance, vecGeometryInstances, bCreateIfcShapeRepresentation);
 	}
 	else if (iInstanceClass == GetClassByName(getSite()->getOwlModel(), "Point3D"))
 	{
@@ -2048,7 +2047,7 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 
 		for (int64_t iInstanceIndex = 0; iInstanceIndex < iInstancesCount; iInstanceIndex++)
 		{
-			createGeometry(piInstances[iInstanceIndex], vecGeometryInstances);
+			createGeometry(piInstances[iInstanceIndex], vecGeometryInstances, bCreateIfcShapeRepresentation);
 		}
 	}
 	else if (isTransformationClass(iInstanceClass))
@@ -2101,12 +2100,8 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 		auto itMappedItem = m_mapMappedItems.find(iMappedItemGeometryInstance);
 		if (itMappedItem == m_mapMappedItems.end())
 		{
-			m_bCreateIfcShapeRepresentation = false;
-
 			vector<SdaiInstance> vecMappedItemGeometryInstances;
-			createGeometry(iMappedItemGeometryInstance, vecMappedItemGeometryInstances);
-
-			m_bCreateIfcShapeRepresentation = true;
+			createGeometry(iMappedItemGeometryInstance, vecMappedItemGeometryInstances, false);
 
 			m_mapMappedItems[iMappedItemGeometryInstance] = vecMappedItemGeometryInstances;			
 
@@ -2133,7 +2128,7 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 	}
 }
 
-void _citygml_exporter::createSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
+void _citygml_exporter::createSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation)
 {
 	assert(iInstance != 0);
 
@@ -2152,15 +2147,15 @@ void _citygml_exporter::createSolid(OwlInstance iInstance, vector<SdaiInstance>&
 
 		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:SolidType"))
 		{
-			createSolid(iInstance, vecGeometryInstances);
+			createSolid(iInstance, vecGeometryInstances, bCreateIfcShapeRepresentation);
 		}
 		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:CompositeSurfaceType"))
 		{
-			createCompositeSurface(piInstances[iInstanceIndex], vecGeometryInstances);
+			createCompositeSurface(piInstances[iInstanceIndex], vecGeometryInstances, bCreateIfcShapeRepresentation);
 		}
 		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:ShellType"))
 		{
-			createMultiSurface(piInstances[iInstanceIndex], vecGeometryInstances);
+			createMultiSurface(piInstances[iInstanceIndex], vecGeometryInstances, bCreateIfcShapeRepresentation);
 		}
 		else
 		{
@@ -2176,12 +2171,12 @@ void _citygml_exporter::createSolid(OwlInstance iInstance, vector<SdaiInstance>&
 	} // for (int64_t iInstanceIndex = ...
 }
 
-void _citygml_exporter::createCompositeSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
+void _citygml_exporter::createCompositeSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation)
 {
-	createMultiSolid(iInstance, vecGeometryInstances);
+	createMultiSolid(iInstance, vecGeometryInstances, bCreateIfcShapeRepresentation);
 }
 
-void _citygml_exporter::createMultiSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
+void _citygml_exporter::createMultiSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation)
 {
 	assert(iInstance != 0);
 
@@ -2200,7 +2195,7 @@ void _citygml_exporter::createMultiSolid(OwlInstance iInstance, vector<SdaiInsta
 
 		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:SolidType"))
 		{
-			createSolid(piInstances[iInstanceIndex], vecGeometryInstances);
+			createSolid(piInstances[iInstanceIndex], vecGeometryInstances, bCreateIfcShapeRepresentation);
 		}
 		else
 		{
@@ -2216,7 +2211,7 @@ void _citygml_exporter::createMultiSolid(OwlInstance iInstance, vector<SdaiInsta
 	} // for (int64_t iInstanceIndex = ...
 }
 
-void _citygml_exporter::createMultiSurface(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
+void _citygml_exporter::createMultiSurface(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation)
 {
 	assert(iInstance != 0);
 
@@ -2235,15 +2230,15 @@ void _citygml_exporter::createMultiSurface(OwlInstance iInstance, vector<SdaiIns
 
 		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:CompositeSurfaceType"))
 		{
-			createCompositeSurface(piInstances[iInstanceIndex], vecGeometryInstances);
+			createCompositeSurface(piInstances[iInstanceIndex], vecGeometryInstances, bCreateIfcShapeRepresentation);
 		}
 		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:SurfacePropertyType"))
 		{
-			createSurfaceMember(piInstances[iInstanceIndex], vecGeometryInstances);
+			createSurfaceMember(piInstances[iInstanceIndex], vecGeometryInstances, bCreateIfcShapeRepresentation);
 		}
 		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "BoundaryRepresentation"))
 		{
-			createBoundaryRepresentation(piInstances[iInstanceIndex], vecGeometryInstances);			
+			createBoundaryRepresentation(piInstances[iInstanceIndex], vecGeometryInstances, bCreateIfcShapeRepresentation);			
 		}
 		else 
 		{
@@ -2259,7 +2254,7 @@ void _citygml_exporter::createMultiSurface(OwlInstance iInstance, vector<SdaiIns
 	} // for (int64_t iInstanceIndex = ...
 }
 
-void _citygml_exporter::createCompositeSurface(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
+void _citygml_exporter::createCompositeSurface(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation)
 {
 	assert(iInstance != 0);
 
@@ -2278,7 +2273,7 @@ void _citygml_exporter::createCompositeSurface(OwlInstance iInstance, vector<Sda
 
 		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:CompositeSurfaceType"))
 		{
-			createCompositeSurface(piInstances[iInstanceIndex], vecGeometryInstances);
+			createCompositeSurface(piInstances[iInstanceIndex], vecGeometryInstances, bCreateIfcShapeRepresentation);
 		}
 		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:OrientableSurfaceType"))
 		{
@@ -2287,11 +2282,11 @@ void _citygml_exporter::createCompositeSurface(OwlInstance iInstance, vector<Sda
 		}
 		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:SurfacePropertyType"))
 		{
-			createSurfaceMember(piInstances[iInstanceIndex], vecGeometryInstances);
+			createSurfaceMember(piInstances[iInstanceIndex], vecGeometryInstances, bCreateIfcShapeRepresentation);
 		}
 		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "BoundaryRepresentation"))
 		{
-			createBoundaryRepresentation(piInstances[iInstanceIndex], vecGeometryInstances);
+			createBoundaryRepresentation(piInstances[iInstanceIndex], vecGeometryInstances, bCreateIfcShapeRepresentation);
 		}
 		else
 		{
@@ -2307,7 +2302,7 @@ void _citygml_exporter::createCompositeSurface(OwlInstance iInstance, vector<Sda
 	} // for (int64_t iInstanceIndex = ...
 }
 
-void _citygml_exporter::createSurfaceMember(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
+void _citygml_exporter::createSurfaceMember(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation)
 {
 	assert(iInstance != 0);
 
@@ -2326,11 +2321,11 @@ void _citygml_exporter::createSurfaceMember(OwlInstance iInstance, vector<SdaiIn
 
 		if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "class:CompositeSurfaceType"))
 		{
-			createCompositeSurface(piInstances[iInstanceIndex], vecGeometryInstances);
+			createCompositeSurface(piInstances[iInstanceIndex], vecGeometryInstances, bCreateIfcShapeRepresentation);
 		}
 		else if (iChildInstanceClass == GetClassByName(getSite()->getOwlModel(), "BoundaryRepresentation"))
 		{
-			createBoundaryRepresentation(piInstances[iInstanceIndex], vecGeometryInstances);
+			createBoundaryRepresentation(piInstances[iInstanceIndex], vecGeometryInstances, bCreateIfcShapeRepresentation);
 		}
 		else
 		{
@@ -2346,7 +2341,7 @@ void _citygml_exporter::createSurfaceMember(OwlInstance iInstance, vector<SdaiIn
 	} // for (int64_t iInstanceIndex = ...
 }
 
-void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
+void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation)
 {
 	assert(iInstance != 0);
 
@@ -2477,7 +2472,7 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 
 	createStyledItemInstance(iInstance, iFacetedBrepInstance);
 
-	if (m_bCreateIfcShapeRepresentation)
+	if (bCreateIfcShapeRepresentation)
 	{
 		SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IfcShapeRepresentation");
 		assert(iShapeRepresentationInstance != 0);

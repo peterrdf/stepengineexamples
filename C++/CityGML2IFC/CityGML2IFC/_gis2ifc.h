@@ -285,7 +285,6 @@ private: // Members
 	
 	 // Temp
 	OwlInstance m_iCurrentOwlBuildingElementInstance;
-	bool m_bCreateIfcShapeRepresentation;
 
 	// Cache
 	SdaiInstance m_iDefaultWallSurfaceColorRgbInstance;
@@ -318,14 +317,14 @@ protected:  // Methods
 	void searchForFeatureElements(OwlInstance iFeatureInstance, OwlInstance iInstance);
 
 	// Geometry
-	void createGeometry(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
-	void createSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
-	void createCompositeSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
-	void createMultiSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
-	void createMultiSurface(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
-	void createCompositeSurface(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
-	void createSurfaceMember(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);	
-	void createBoundaryRepresentation(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
+	void createGeometry(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation);
+	void createSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation);
+	void createCompositeSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation);
+	void createMultiSolid(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation);
+	void createMultiSurface(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation);
+	void createCompositeSurface(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation);
+	void createSurfaceMember(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation);
+	void createBoundaryRepresentation(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation);
 	void createPoint3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createPoint3DSet(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
 	void createPolyLine3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
