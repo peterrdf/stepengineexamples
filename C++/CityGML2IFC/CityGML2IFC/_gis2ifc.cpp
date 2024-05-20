@@ -830,14 +830,14 @@ SdaiInstance _exporter_base::buildMappedItem(
 			&iValuesCount);
 		assert(iValuesCount == 12);
 
+		sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis1", sdaiINSTANCE, (void*)buildDirectionInstance(pdValues[0], pdValues[1], pdValues[2]));
+		sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis2", sdaiINSTANCE, (void*)buildDirectionInstance(pdValues[3], pdValues[4], pdValues[5]));
+		sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis3", sdaiINSTANCE, (void*)buildDirectionInstance(pdValues[6], pdValues[7], pdValues[8]));
+
 		SdaiInstance iLocalOriginInstance = buildCartesianPointInstance(pdValues[9], pdValues[10], pdValues[11]);
 		assert(iLocalOriginInstance != 0);
 
 		sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "LocalOrigin", sdaiINSTANCE, (void*)iLocalOriginInstance);
-
-		sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis1", sdaiINSTANCE, (void*)buildDirectionInstance(pdValues[0], pdValues[1], pdValues[2]));
-		sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis2", sdaiINSTANCE, (void*)buildDirectionInstance(pdValues[3], pdValues[4], pdValues[5]));
-		sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis3", sdaiINSTANCE, (void*)buildDirectionInstance(pdValues[6], pdValues[7], pdValues[8]));
 	}	
 
 	sdaiPutAttrBN(iMappedItemInstance, "MappingTarget", sdaiINSTANCE, (void*)iCartesianTransformationOperator3DInstance);
