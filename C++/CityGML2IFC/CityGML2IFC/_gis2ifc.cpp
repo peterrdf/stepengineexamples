@@ -758,7 +758,7 @@ SdaiInstance _exporter_base::buildRepresentationMap(_matrix* pMatrix, const vect
 	sdaiPutAttrBN(iRepresentationMapInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
 	sdaiPutAttrBN(iRepresentationMapInstance, "MappingOrigin", sdaiINSTANCE, (void*)buildAxis2Placement3DInstance(pMatrix));
 
-	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSHAPEREPRESENTATION");
+	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcShapeRepresentation");
 	assert(iShapeRepresentationInstance != 0);
 
 	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationIdentifier", sdaiSTRING, "Body");
@@ -793,14 +793,14 @@ SdaiInstance _exporter_base::buildMappedItem(_matrix* pMatrix, const vector<Sdai
 
 	sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis1", sdaiINSTANCE, (void*)nullptr);
 	sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "Axis2", sdaiINSTANCE, (void*)nullptr);
-	SdaiInstance iLocationOriginInstance = buildCartesianPointInstance(0., 0., 0.);
-	sdaiPutAttrBN(iLocationOriginInstance, "Axis3", sdaiINSTANCE, (void*)nullptr);
+	SdaiInstance iLocalOriginInstance = buildCartesianPointInstance(0., 0., 0.);
+	sdaiPutAttrBN(iLocalOriginInstance, "Axis3", sdaiINSTANCE, (void*)nullptr);
 
-	sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "LocalOrigin", sdaiINSTANCE, (void*)iLocationOriginInstance);
+	sdaiPutAttrBN(iCartesianTransformationOperator3DInstance, "LocalOrigin", sdaiINSTANCE, (void*)iLocalOriginInstance);
 
 	sdaiPutAttrBN(iMappedItemInstance, "MappingTarget", sdaiINSTANCE, (void*)iCartesianTransformationOperator3DInstance);
 
-	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSHAPEREPRESENTATION");
+	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcShapeRepresentation");
 	assert(iShapeRepresentationInstance != 0);
 
 	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationIdentifier", sdaiSTRING, "Body");
@@ -2371,7 +2371,7 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 	{
 		if (piIndices[iIndex] < 0)
 		{
-			SdaiInstance iPolyLoopInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCPOLYLOOP");
+			SdaiInstance iPolyLoopInstance = sdaiCreateInstanceBN(getIfcModel(), "IfcPolyLoop");
 			assert(iPolyLoopInstance != 0);
 
 			SdaiAggr pPolygon = sdaiCreateAggrBN(iPolyLoopInstance, "Polygon");
@@ -2425,7 +2425,7 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 	assert(vecPolygonIndices.empty());
 	assert(!vecOuterPolygons.empty());
 
-	SdaiInstance iClosedShellInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCCLOSEDSHELL");
+	SdaiInstance iClosedShellInstance = sdaiCreateInstanceBN(getIfcModel(), "IfcClosedShell");
 	assert(iClosedShellInstance != 0);
 
 	SdaiAggr pCfsFaces = sdaiCreateAggrBN(iClosedShellInstance, "CfsFaces");
@@ -2434,13 +2434,13 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 	for (auto iOuterPolygon : vecOuterPolygons)
 	{
 		// Outer Polygon
-		SdaiInstance iFaceOuterBoundInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACEOUTERBOUND");
+		SdaiInstance iFaceOuterBoundInstance = sdaiCreateInstanceBN(getIfcModel(), "IfcFaceOuterBound");
 		assert(iFaceOuterBoundInstance != 0);
 
 		sdaiPutAttrBN(iFaceOuterBoundInstance, "Bound", sdaiINSTANCE, (void*)iOuterPolygon);
 		sdaiPutAttrBN(iFaceOuterBoundInstance, "Orientation", sdaiENUM, "T");
 
-		SdaiInstance iFaceInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACE");
+		SdaiInstance iFaceInstance = sdaiCreateInstanceBN(getIfcModel(), "IfcFace");
 		assert(iFaceInstance != 0);
 
 		SdaiAggr pBounds = sdaiCreateAggrBN(iFaceInstance, "Bounds");
@@ -2454,7 +2454,7 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 		{
 			for (auto iInnerPolygon : itOuter2InnerPolygons->second)
 			{
-				SdaiInstance iFaceBoundInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACEBOUND");
+				SdaiInstance iFaceBoundInstance = sdaiCreateInstanceBN(getIfcModel(), "IfcFaceBound");
 				assert(iFaceBoundInstance != 0);
 
 				sdaiPutAttrBN(iFaceBoundInstance, "Bound", sdaiINSTANCE, (void*)iInnerPolygon);
@@ -2465,14 +2465,14 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 		}
 	} // auto iOuterPolygon : ...
 
-	SdaiInstance iFacetedBrepInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCFACETEDBREP");
+	SdaiInstance iFacetedBrepInstance = sdaiCreateInstanceBN(getIfcModel(), "IfcFacetedBrep");
 	assert(iFacetedBrepInstance != 0);
 
 	sdaiPutAttrBN(iFacetedBrepInstance, "Outer", sdaiINSTANCE, (void*)iClosedShellInstance);
 
 	createStyledItemInstance(iInstance, iFacetedBrepInstance);
 
-	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCSHAPEREPRESENTATION");
+	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IfcShapeRepresentation");
 	assert(iShapeRepresentationInstance != 0);
 
 	SdaiAggr pItems = sdaiCreateAggrBN(iShapeRepresentationInstance, "Items");
@@ -2507,7 +2507,7 @@ void _citygml_exporter::createPoint3D(OwlInstance iInstance, vector<SdaiInstance
 		pdValue[2]);
 	assert(iCartesianPointInstance != 0);
 
-	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCSHAPEREPRESENTATION");
+	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IfcShapeRepresentation");
 	assert(iShapeRepresentationInstance != 0);
 
 	SdaiAggr pItems = sdaiCreateAggrBN(iShapeRepresentationInstance, "Items");
@@ -2536,7 +2536,7 @@ void _citygml_exporter::createPoint3DSet(OwlInstance iInstance, vector<SdaiInsta
 
 	assert(iValuesCount >= 3);
 
-	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCSHAPEREPRESENTATION");
+	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IfcShapeRepresentation");
 	assert(iShapeRepresentationInstance != 0);
 
 	SdaiAggr pItems = sdaiCreateAggrBN(iShapeRepresentationInstance, "Items");
@@ -2591,7 +2591,7 @@ void _citygml_exporter::createPolyLine3D(OwlInstance iInstance, vector<SdaiInsta
 		sdaiAppend(pPoints, sdaiINSTANCE, (void*)iCartesianPointInstance);
 	} // for (int64_t iValue = ...
 
-	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCSHAPEREPRESENTATION");
+	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IfcShapeRepresentation");
 	assert(iShapeRepresentationInstance != 0);
 
 	SdaiAggr pItems = sdaiCreateAggrBN(iShapeRepresentationInstance, "Items");
