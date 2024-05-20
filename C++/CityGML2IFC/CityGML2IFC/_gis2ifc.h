@@ -325,9 +325,9 @@ protected:  // Methods
 	void createCompositeSurface(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation);
 	void createSurfaceMember(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation);
 	void createBoundaryRepresentation(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation);
-	void createPoint3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
-	void createPoint3DSet(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
-	void createPolyLine3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances);
+	void createPoint3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation);
+	void createPoint3DSet(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation);
+	void createPolyLine3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances, bool bCreateIfcShapeRepresentation);
 
 	void createProperties(OwlInstance iOwlInstance, SdaiInstance iSdaiInstance);
 
