@@ -285,6 +285,7 @@ private: // Members
 	
 	 // Temp
 	OwlInstance m_iCurrentOwlBuildingElementInstance;
+	bool m_bCreateIfcShapeRepresentation;
 
 	// Cache
 	SdaiInstance m_iDefaultWallSurfaceColorRgbInstance;

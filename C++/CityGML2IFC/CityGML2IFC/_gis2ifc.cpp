@@ -1271,6 +1271,7 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 	, m_mapFeatures()
 	, m_mapFeatureElements()
 	, m_iCurrentOwlBuildingElementInstance(0)
+	, m_bCreateIfcShapeRepresentation(true)
 	, m_iDefaultWallSurfaceColorRgbInstance(0)
 	, m_iDefaultRoofSurfaceColorRgbInstance(0)
 	, m_iDefaultDoorColorRgbInstance(0)
@@ -2100,8 +2101,12 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 		auto itMappedItem = m_mapMappedItems.find(iMappedItemGeometryInstance);
 		if (itMappedItem == m_mapMappedItems.end())
 		{
+			m_bCreateIfcShapeRepresentation = false;
+
 			vector<SdaiInstance> vecMappedItemGeometryInstances;
 			createGeometry(iMappedItemGeometryInstance, vecMappedItemGeometryInstances);
+
+			m_bCreateIfcShapeRepresentation = true;
 
 			m_mapMappedItems[iMappedItemGeometryInstance] = vecMappedItemGeometryInstances;			
 
@@ -2472,19 +2477,26 @@ void _citygml_exporter::createBoundaryRepresentation(OwlInstance iInstance, vect
 
 	createStyledItemInstance(iInstance, iFacetedBrepInstance);
 
-	SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IfcShapeRepresentation");
-	assert(iShapeRepresentationInstance != 0);
+	if (m_bCreateIfcShapeRepresentation)
+	{
+		SdaiInstance iShapeRepresentationInstance = sdaiCreateInstanceBN(getIfcModel(), "IfcShapeRepresentation");
+		assert(iShapeRepresentationInstance != 0);
 
-	SdaiAggr pItems = sdaiCreateAggrBN(iShapeRepresentationInstance, "Items");
-	assert(pItems != 0);
+		SdaiAggr pItems = sdaiCreateAggrBN(iShapeRepresentationInstance, "Items");
+		assert(pItems != 0);
 
-	sdaiAppend(pItems, sdaiINSTANCE, (void*)iFacetedBrepInstance);
+		sdaiAppend(pItems, sdaiINSTANCE, (void*)iFacetedBrepInstance);
 
-	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationIdentifier", sdaiSTRING, "Body");
-	sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationType", sdaiSTRING, "Brep");
-	sdaiPutAttrBN(iShapeRepresentationInstance, "ContextOfItems", sdaiINSTANCE, (void*)getGeometricRepresentationContextInstance());
+		sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationIdentifier", sdaiSTRING, "Body");
+		sdaiPutAttrBN(iShapeRepresentationInstance, "RepresentationType", sdaiSTRING, "Brep");
+		sdaiPutAttrBN(iShapeRepresentationInstance, "ContextOfItems", sdaiINSTANCE, (void*)getGeometricRepresentationContextInstance());
 
-	vecGeometryInstances.push_back(iShapeRepresentationInstance);
+		vecGeometryInstances.push_back(iShapeRepresentationInstance);
+	}
+	else
+	{
+		vecGeometryInstances.push_back(iFacetedBrepInstance);
+	}	
 }
 
 void _citygml_exporter::createPoint3D(OwlInstance iInstance, vector<SdaiInstance>& vecGeometryInstances)
