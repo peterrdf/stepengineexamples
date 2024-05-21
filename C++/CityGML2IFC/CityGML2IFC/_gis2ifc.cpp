@@ -2679,7 +2679,7 @@ void _citygml_exporter::createPolyLine3D(OwlInstance iInstance, vector<SdaiInsta
 
 	assert(iValuesCount >= 6);
 
-	SdaiInstance iPolyLineInstance = sdaiCreateInstanceBN(getIfcModel(), "IFCPOLYLINE");
+	SdaiInstance iPolyLineInstance = sdaiCreateInstanceBN(getIfcModel(), "IfcPolyline");
 	assert(iPolyLineInstance != 0);
 
 	SdaiAggr pPoints = sdaiCreateAggrBN(iPolyLineInstance, "Points");
@@ -2841,22 +2841,22 @@ SdaiInstance _citygml_exporter::buildBuildingElementInstance(
 
 	string strClass = szClassName;
 
-	string strEntity = "IFCBUILDINGELEMENT";
+	string strEntity = "IfcBuildingElement";
 	if (isWallSurfaceClass(iInstanceClass))
 	{
-		strEntity = "IFCWALL";
+		strEntity = "IfcWall";
 	}
 	else if (isRoofSurfaceClass(iInstanceClass))
 	{
-		strEntity = "IFCROOF";
+		strEntity = "IfcRoof";
 	}
 	else if (isDoorClass(iInstanceClass))
 	{
-		strEntity = "IFCDOOR";
+		strEntity = "IfcDoor";
 	}
 	else if (isWindowClass(iInstanceClass))
 	{
-		strEntity = "IFCWINDOW";
+		strEntity = "IfcWindow";
 	} 
 	else
 	{
