@@ -1047,7 +1047,7 @@ void _exporter_base::createStyledItemInstance(SdaiInstance iSdaiInstance, SdaiIn
 
 SdaiInstance _exporter_base::buildPresentationStyleAssignmentInstance()
 {
-	SdaiInstance iPresentationStyleAssignmentInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPRESENTATIONSTYLEASSIGNMENT");
+	SdaiInstance iPresentationStyleAssignmentInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcPresentationStyleAssignment");
 	assert(iPresentationStyleAssignmentInstance != 0);
 
 	sdaiPutAttrBN(iPresentationStyleAssignmentInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
@@ -1058,7 +1058,7 @@ SdaiInstance _exporter_base::buildPresentationStyleAssignmentInstance()
 
 SdaiInstance _exporter_base::buildSurfaceStyleInstance()
 {
-	SdaiInstance iSurfaceStyleInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSURFACESTYLE");
+	SdaiInstance iSurfaceStyleInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcSurfaceStyle");
 	assert(iSurfaceStyleInstance != 0);
 
 	sdaiPutAttrBN(iSurfaceStyleInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
@@ -1069,7 +1069,7 @@ SdaiInstance _exporter_base::buildSurfaceStyleInstance()
 
 SdaiInstance _exporter_base::buildSurfaceStyleRenderingInstance()
 {
-	SdaiInstance iSurfaceStyleRenderingInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSURFACESTYLERENDERING");
+	SdaiInstance iSurfaceStyleRenderingInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcSurfaceStyleRendering");
 	assert(iSurfaceStyleRenderingInstance != 0);
 
 	sdaiPutAttrBN(iSurfaceStyleRenderingInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
@@ -1095,7 +1095,7 @@ SdaiInstance _exporter_base::buildColorRgbInstance(double dR, double dG, double 
 
 SdaiInstance _exporter_base::buildPropertySet(char* szName, SdaiAggr& pHasProperties)
 {
-	SdaiInstance iPropertySetInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPROPERTYSET");
+	SdaiInstance iPropertySetInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcPropertySet");
 	assert(iPropertySetInstance != 0);
 
 	sdaiPutAttrBN(iPropertySetInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
@@ -1134,7 +1134,7 @@ SdaiInstance _exporter_base::buildPropertySingleValueText(
 	const char* szNominalValue,
 	const char* szTypePath)
 {
-	SdaiInstance iPropertySingleValueInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPROPERTYSINGLEVALUE");
+	SdaiInstance iPropertySingleValueInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcPropertySingleValue");
 	assert(iPropertySingleValueInstance != 0);
 
 	sdaiPutAttrBN(iPropertySingleValueInstance, "Name", sdaiSTRING, szName);
@@ -1155,7 +1155,7 @@ SdaiInstance _exporter_base::buildPropertySingleValueReal(
 	double dNominalValue,
 	const char* szTypePath)
 {
-	SdaiInstance iPropertySingleValueInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPROPERTYSINGLEVALUE");
+	SdaiInstance iPropertySingleValueInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcPropertySingleValue");
 	assert(iPropertySingleValueInstance != 0);
 
 	sdaiPutAttrBN(iPropertySingleValueInstance, "Name", sdaiSTRING, szName);
@@ -1172,7 +1172,7 @@ SdaiInstance _exporter_base::buildPropertySingleValueReal(
 
 SdaiInstance _exporter_base::buildMaterial()
 {
-	SdaiInstance iMaterialInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCMATERIAL");
+	SdaiInstance iMaterialInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcMaterial");
 	assert(iMaterialInstance != 0);
 
 	sdaiPutAttrBN(iMaterialInstance, "Name", sdaiSTRING, (void*)"Material");
@@ -1182,7 +1182,7 @@ SdaiInstance _exporter_base::buildMaterial()
 
 SdaiInstance _exporter_base::buildMaterialLayer(double dThickness)
 {
-	SdaiInstance iMaterialLayerInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCMATERIALLAYER");
+	SdaiInstance iMaterialLayerInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcMaterialLayer");
 	assert(iMaterialLayerInstance != 0);
 
 	sdaiPutAttrBN(iMaterialLayerInstance, "Material", sdaiINSTANCE, (void*)buildMaterial());
@@ -1193,7 +1193,7 @@ SdaiInstance _exporter_base::buildMaterialLayer(double dThickness)
 
 SdaiInstance _exporter_base::buildMaterialLayerSet(double dThickness)
 {
-	SdaiInstance iMaterialLayerSetInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCMATERIALLAYERSET");
+	SdaiInstance iMaterialLayerSetInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcMaterialLayerSet");
 	assert(iMaterialLayerSetInstance != 0);
 
 	SdaiAggr pMaterialLayers = sdaiCreateAggrBN(iMaterialLayerSetInstance, "MaterialLayers");
@@ -1223,7 +1223,7 @@ SdaiInstance _exporter_base::buildRelAssociatesMaterial(SdaiInstance iBuildingEl
 {
 	assert(iBuildingElementInstance != 0);
 
-	SdaiInstance iRelAssociatesMaterialInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCRELASSOCIATESMATERIAL");
+	SdaiInstance iRelAssociatesMaterialInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcRelAssociatesMaterial");
 	assert(iRelAssociatesMaterialInstance != 0);
 
 	sdaiPutAttrBN(iRelAssociatesMaterialInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
