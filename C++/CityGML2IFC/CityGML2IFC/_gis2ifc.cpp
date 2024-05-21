@@ -270,7 +270,7 @@ SdaiInstance _exporter_base::getUnitAssignmentInstance()
 {
 	if (m_iUnitAssignmentInstance == 0)
 	{
-		m_iUnitAssignmentInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCUNITASSIGNMENT");
+		m_iUnitAssignmentInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcUnitAssignment");
 		assert(m_iUnitAssignmentInstance != 0);
 
 		SdaiAggr pUnits = sdaiCreateAggrBN(m_iUnitAssignmentInstance, "Units");
@@ -294,7 +294,7 @@ SdaiInstance _exporter_base::getWorldCoordinateSystemInstance()
 {
 	if (m_iWorldCoordinateSystemInstance == 0)
 	{
-		m_iWorldCoordinateSystemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCAXIS2PLACEMENT3D");
+		m_iWorldCoordinateSystemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcAxis2Placement3D");
 		assert(m_iWorldCoordinateSystemInstance != 0);
 
 		sdaiPutAttrBN(m_iWorldCoordinateSystemInstance, "Location", sdaiINSTANCE, (void*)buildCartesianPointInstance(0., 0., 0.));
@@ -310,7 +310,7 @@ SdaiInstance _exporter_base::getGeometricRepresentationContextInstance()
 		double dPrecision = 0.00001;
 		int_t iCoordinateSpaceDimension = 3;
 
-		m_iGeometricRepresentationContextInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCGEOMETRICREPRESENTATIONCONTEXT");
+		m_iGeometricRepresentationContextInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcGeometricRepresentationContext");
 		assert(m_iGeometricRepresentationContextInstance != 0);
 
 		sdaiPutAttrBN(m_iGeometricRepresentationContextInstance, "ContextType", sdaiSTRING, "Model");
@@ -327,7 +327,7 @@ SdaiInstance _exporter_base::getProjectInstance()
 {
 	if (m_iProjectInstance == 0) 
 	{
-		m_iProjectInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPROJECT");
+		m_iProjectInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcProject");
 		assert(m_iProjectInstance != 0);
 
 		sdaiPutAttrBN(m_iProjectInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
@@ -426,7 +426,7 @@ SdaiInstance _exporter_base::buildSIUnitInstance(const char* szUnitType, const c
 	assert(szUnitType != nullptr);
 	assert(szName != nullptr);
 
-	SdaiInstance iSIUnitInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSIUNIT");
+	SdaiInstance iSIUnitInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcSIUnit");
 	assert(iSIUnitInstance != 0);
 
 	sdaiPutAttrBN(iSIUnitInstance, "Dimensions", sdaiINTEGER, (void*)nullptr);
@@ -446,10 +446,10 @@ SdaiInstance _exporter_base::buildMeasureWithUnitInstance()
 	SdaiADB pValueComponentADB = sdaiCreateADB(sdaiREAL, &dValueComponent);
 	assert(pValueComponentADB != nullptr);
 
-	SdaiInstance iMeasureWithUnitInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCMEASUREWITHUNIT");
+	SdaiInstance iMeasureWithUnitInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcMeasureWithUnit");
 	assert(iMeasureWithUnitInstance != 0);	
 
-	sdaiPutADBTypePath(pValueComponentADB, 1, "IFCPLANEANGLEMEASURE");
+	sdaiPutADBTypePath(pValueComponentADB, 1, "IfcPlaneAngleMeasure");
 	sdaiPutAttrBN(iMeasureWithUnitInstance, "ValueComponent", sdaiADB, (void*)pValueComponentADB);
 	sdaiPutAttrBN(iMeasureWithUnitInstance, "UnitComponent", sdaiINSTANCE, (void*)buildSIUnitInstance("PLANEANGLEUNIT", NULL, "RADIAN"));
 	
@@ -458,7 +458,7 @@ SdaiInstance _exporter_base::buildMeasureWithUnitInstance()
 
 SdaiInstance _exporter_base::buildDirectionInstance(double dX, double dY, double dZ)
 {
-	SdaiInstance iDirectionInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCDIRECTION");
+	SdaiInstance iDirectionInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcDirection");
 	assert(iDirectionInstance != 0);
 
 	SdaiAggr pDirectionRatios = sdaiCreateAggrBN(iDirectionInstance, "DirectionRatios");
@@ -473,7 +473,7 @@ SdaiInstance _exporter_base::buildDirectionInstance(double dX, double dY, double
 
 SdaiInstance _exporter_base::buildCartesianPointInstance(double dX, double dY, double dZ)
 {
-	SdaiInstance iCartesianPointInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCCARTESIANPOINT");
+	SdaiInstance iCartesianPointInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcCartesianPoint");
 	assert(iCartesianPointInstance != 0);
 
 	SdaiAggr pCoordinates = sdaiCreateAggrBN(iCartesianPointInstance, "Coordinates");
@@ -494,7 +494,7 @@ SdaiInstance _exporter_base::buildSiteInstance(
 {
 	assert(pMatrix != nullptr);
 
-	SdaiInstance iSiteInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSITE");
+	SdaiInstance iSiteInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcSite");
 	assert(iSiteInstance != 0);
 
 	sdaiPutAttrBN(iSiteInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
@@ -532,7 +532,7 @@ SdaiInstance _exporter_base::buildSiteInstance(
 
 SdaiInstance _exporter_base::buildLocalPlacementInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo)
 {
-	SdaiInstance iLocalPlacementInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCLOCALPLACEMENT");
+	SdaiInstance iLocalPlacementInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcLocalPlacement");
 	assert(iLocalPlacementInstance != 0);
 
 	if (iPlacementRelativeTo != 0) 
@@ -546,7 +546,7 @@ SdaiInstance _exporter_base::buildLocalPlacementInstance(_matrix* pMatrix, SdaiI
 
 SdaiInstance _exporter_base::buildAxis2Placement3DInstance(_matrix* pMatrix)
 {
-	SdaiInstance iAxis2Placement3DInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCAXIS2PLACEMENT3D");
+	SdaiInstance iAxis2Placement3DInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcAxis2Placement3D");
 	assert(iAxis2Placement3DInstance != 0);
 
 	sdaiPutAttrBN(iAxis2Placement3DInstance, "Location", sdaiINSTANCE, (void*)buildCartesianPointInstance(pMatrix->_41, pMatrix->_42, pMatrix->_43));
@@ -566,7 +566,7 @@ SdaiInstance _exporter_base::buildBuildingInstance(
 	assert(pMatrix != nullptr);
 	assert(iPlacementRelativeTo != 0);
 
-	SdaiInstance iBuildingInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCBUILDING");
+	SdaiInstance iBuildingInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcBuilding");
 	assert(iBuildingInstance != 0);
 
 	sdaiPutAttrBN(iBuildingInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
@@ -598,7 +598,7 @@ SdaiInstance _exporter_base::buildFeatureInstance(
 	assert(iPlacementRelativeTo != 0);
 	assert(!vecRepresentations.empty());
 
-	SdaiInstance iBuildingElementInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCBUILDINGELEMENTPROXY");
+	SdaiInstance iBuildingElementInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcBuildingElementProxy");
 	assert(iBuildingElementInstance != 0);
 
 	sdaiPutAttrBN(iBuildingElementInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
@@ -620,7 +620,7 @@ SdaiInstance _exporter_base::buildBuildingStoreyInstance(_matrix* pMatrix, SdaiI
 	assert(pMatrix != nullptr);
 	assert(iPlacementRelativeTo != 0);
 
-	SdaiInstance iBuildingStoreyInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCBUILDINGSTOREY");
+	SdaiInstance iBuildingStoreyInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcBuildingStorey");
 	assert(iBuildingStoreyInstance != 0);
 
 	sdaiPutAttrBN(iBuildingStoreyInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
@@ -2860,7 +2860,7 @@ SdaiInstance _citygml_exporter::buildBuildingElementInstance(
 	} 
 	else
 	{
-		strEntity = "IFCBUILDINGELEMENTPROXY"; // Proxy/Unknown Building Element
+		strEntity = "IfcBuildingElementProxy"; // Proxy/Unknown Building Element
 	}
 
 	return _exporter_base::buildBuildingElementInstance(
