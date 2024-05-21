@@ -208,7 +208,6 @@ protected: // Methods
 		const vector<SdaiInstance>& vecRepresentations);
 	SdaiInstance buildRepresentationMap(_matrix* pMatrix, const vector<SdaiInstance>& vecRepresentations);
 	SdaiInstance buildMappedItem(
-		_matrix* pMatrix, 
 		const vector<SdaiInstance>& vecRepresentations,
 		OwlInstance iReferencePointMatrixInstance,
 		OwlInstance iTransformationMatrixInstance);

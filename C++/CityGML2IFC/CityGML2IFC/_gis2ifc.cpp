@@ -150,7 +150,7 @@ SdaiInstance _exporter_base::getPersonInstance()
 {
 	if (m_iPersonInstance == 0) 
 	{
-		m_iPersonInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPERSON");
+		m_iPersonInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcPerson");
 		assert(m_iPersonInstance != 0);
 
 		sdaiPutAttrBN(m_iPersonInstance, "GivenName", sdaiSTRING, "Peter");
@@ -164,7 +164,7 @@ SdaiInstance _exporter_base::getOrganizationInstance()
 {
 	if (m_iOrganizationInstance == 0) 
 	{
-		m_iOrganizationInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCORGANIZATION");
+		m_iOrganizationInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcOrganization");
 		assert(m_iOrganizationInstance != 0);
 
 		sdaiPutAttrBN(m_iOrganizationInstance, "Name", sdaiSTRING, "RDF");
@@ -178,7 +178,7 @@ SdaiInstance _exporter_base::getPersonAndOrganizationInstance()
 {
 	if (m_iPersonAndOrganizationInstance == 0) 
 	{
-		m_iPersonAndOrganizationInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPERSONANDORGANIZATION");
+		m_iPersonAndOrganizationInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcPersonAndOrganization");
 		assert(m_iPersonAndOrganizationInstance != 0);
 
 		sdaiPutAttrBN(m_iPersonAndOrganizationInstance, "ThePerson", sdaiINSTANCE, (void*)getPersonInstance());
@@ -192,7 +192,7 @@ SdaiInstance _exporter_base::getApplicationInstance()
 {
 	if (m_iApplicationInstance == 0)
 	{
-		m_iApplicationInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCAPPLICATION");
+		m_iApplicationInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcApplication");
 		assert(m_iApplicationInstance != 0);
 
 		sdaiPutAttrBN(m_iApplicationInstance, "ApplicationDeveloper", sdaiINSTANCE, (void*)getOrganizationInstance());
@@ -210,7 +210,7 @@ SdaiInstance _exporter_base::getOwnerHistoryInstance()
 	{
 		int64_t iTimeStamp = time(0);
 
-		m_iOwnerHistoryInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCOWNERHISTORY");
+		m_iOwnerHistoryInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcOwnerHistory");
 		assert(m_iOwnerHistoryInstance != 0);
 
 		sdaiPutAttrBN(m_iOwnerHistoryInstance, "OwningUser", sdaiINSTANCE, (void*)getPersonAndOrganizationInstance());
@@ -235,7 +235,7 @@ SdaiInstance _exporter_base::getDimensionalExponentsInstance()
 			AmountOfSubstanceExponent = 0,
 			LuminousIntensityExponent = 0;
 
-		m_iDimensionalExponentsInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCDIMENSIONALEXPONENTS");
+		m_iDimensionalExponentsInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcDimensionalExponents");
 		assert(m_iDimensionalExponentsInstance != 0);
 
 		sdaiPutAttrBN(m_iDimensionalExponentsInstance, "LengthExponent", sdaiINTEGER, &LengthExponent);
@@ -254,7 +254,7 @@ SdaiInstance _exporter_base::getConversionBasedUnitInstance()
 {
 	if (m_iConversionBasedUnitInstance == 0)
 	{
-		m_iConversionBasedUnitInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCCONVERSIONBASEDUNIT");
+		m_iConversionBasedUnitInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcConversionBasedUnit");
 		assert(m_iConversionBasedUnitInstance != 0);
 
 		sdaiPutAttrBN(m_iConversionBasedUnitInstance, "Dimensions", sdaiINSTANCE, (void*)getDimensionalExponentsInstance());
@@ -779,12 +779,10 @@ SdaiInstance _exporter_base::buildRepresentationMap(_matrix* pMatrix, const vect
 }
 
 SdaiInstance _exporter_base::buildMappedItem(
-	_matrix* pMatrix, 
 	const vector<SdaiInstance>& vecRepresentations,
 	OwlInstance iReferencePointMatrixInstance,
 	OwlInstance iTransformationMatrixInstance)
 {
-	assert(pMatrix != nullptr);
 	assert(!vecRepresentations.empty());
 	assert(iReferencePointMatrixInstance != 0);
 	assert(iTransformationMatrixInstance != 0);
@@ -814,10 +812,11 @@ SdaiInstance _exporter_base::buildMappedItem(
 		dReferencePointZ = pdValues[11];
 	}
 
-	pMatrix->_41 = dReferencePointX;
-	pMatrix->_42 = dReferencePointY;
-	pMatrix->_43 = dReferencePointZ;
-	sdaiPutAttrBN(iMappedItemInstance, "MappingSource", sdaiINSTANCE, (void*)buildRepresentationMap(pMatrix, vecRepresentations));
+	_matrix mtxReferencePoint;
+	mtxReferencePoint._41 = dReferencePointX;
+	mtxReferencePoint._42 = dReferencePointY;
+	mtxReferencePoint._43 = dReferencePointZ;
+	sdaiPutAttrBN(iMappedItemInstance, "MappingSource", sdaiINSTANCE, (void*)buildRepresentationMap(&mtxReferencePoint, vecRepresentations));
 
 	SdaiInstance iCartesianTransformationOperator3DInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcCartesianTransformationOperator3D");
 	assert(iCartesianTransformationOperator3DInstance != 0);	
@@ -2176,10 +2175,8 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 
 			m_mapMappedItems[iMappedItemGeometryInstance] = vecMappedItemGeometryInstances;			
 
-			_matrix mtxIdentity;
 			vecGeometryInstances.push_back(
 				buildMappedItem(
-					&mtxIdentity, 
 					vecMappedItemGeometryInstances,
 					iReferencePointMatrixInstance,
 					iTransformationMatrixInstance)
@@ -2187,10 +2184,8 @@ void _citygml_exporter::createGeometry(OwlInstance iInstance, vector<SdaiInstanc
 		}
 		else
 		{
-			_matrix mtxIdentity;
 			vecGeometryInstances.push_back(
 				buildMappedItem(
-					&mtxIdentity, 
 					itMappedItem->second,
 					iReferencePointMatrixInstance,
 					iTransformationMatrixInstance));
