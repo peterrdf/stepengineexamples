@@ -449,7 +449,7 @@ SdaiInstance _exporter_base::buildMeasureWithUnitInstance()
 	SdaiInstance iMeasureWithUnitInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcMeasureWithUnit");
 	assert(iMeasureWithUnitInstance != 0);	
 
-	sdaiPutADBTypePath(pValueComponentADB, 1, "IfcPlaneAngleMeasure");
+	sdaiPutADBTypePath(pValueComponentADB, 1, "IFCREAL");
 	sdaiPutAttrBN(iMeasureWithUnitInstance, "ValueComponent", sdaiADB, (void*)pValueComponentADB);
 	sdaiPutAttrBN(iMeasureWithUnitInstance, "UnitComponent", sdaiINSTANCE, (void*)buildSIUnitInstance("PLANEANGLEUNIT", NULL, "RADIAN"));
 	
@@ -644,7 +644,7 @@ SdaiInstance _exporter_base::buildProductDefinitionShapeInstance(const vector<Sd
 {
 	assert(!vecRepresentations.empty());
 
-	SdaiInstance iProductDefinitionShapeInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCPRODUCTDEFINITIONSHAPE");
+	SdaiInstance iProductDefinitionShapeInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcProductDefinitionShape");
 	assert(iProductDefinitionShapeInstance != 0);
 
 	SdaiAggr pRepresentations = sdaiCreateAggrBN(iProductDefinitionShapeInstance, "Representations");
@@ -667,7 +667,7 @@ SdaiInstance _exporter_base::buildRelAggregatesInstance(
 	assert(iRelatingObjectInstance != 0);
 	assert(!vecRelatedObjects.empty());
 
-	SdaiInstance iRelAggregatesInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCRELAGGREGATES");
+	SdaiInstance iRelAggregatesInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcRelAggregates");
 	assert(iRelAggregatesInstance != 0);
 
 	sdaiPutAttrBN(iRelAggregatesInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
@@ -696,7 +696,7 @@ SdaiInstance _exporter_base::buildRelContainedInSpatialStructureInstance(
 	assert(iRelatingStructureInstance != 0);
 	assert(!vecRelatedElements.empty());
 
-	SdaiInstance iRelContainedInSpatialStructureInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCRELCONTAINEDINSPATIALSTRUCTURE");
+	SdaiInstance iRelContainedInSpatialStructureInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcRelContainedInSpatialStructure");
 	assert(iRelContainedInSpatialStructureInstance != 0);
 
 	sdaiPutAttrBN(iRelContainedInSpatialStructureInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
@@ -751,7 +751,7 @@ SdaiInstance _exporter_base::buildBuildingElementInstance(
 
 SdaiInstance _exporter_base::buildRepresentationMap(_matrix* pMatrix, const vector<SdaiInstance>& vecMappedRepresentations)
 {
-	SdaiInstance iRepresentationMapInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCREPRESENTATIONMAP");
+	SdaiInstance iRepresentationMapInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcRepresentationMap");
 	assert(iRepresentationMapInstance != 0);
 
 	sdaiPutAttrBN(iRepresentationMapInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
@@ -787,7 +787,7 @@ SdaiInstance _exporter_base::buildMappedItem(
 	assert(iReferencePointMatrixInstance != 0);
 	assert(iTransformationMatrixInstance != 0);
 
-	SdaiInstance iMappedItemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCMAPPEDITEM");
+	SdaiInstance iMappedItemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcMappedItem");
 	assert(iMappedItemInstance != 0);
 
 	sdaiPutAttrBN(iMappedItemInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
@@ -975,7 +975,7 @@ void _exporter_base::createStyledItemInstance(SdaiInstance iSdaiInstance, double
 {
 	assert(iSdaiInstance != 0);
 
-	SdaiInstance iStyledItemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSTYLEDITEM");
+	SdaiInstance iStyledItemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcStyledItem");
 	assert(iStyledItemInstance != 0);
 
 	sdaiPutAttrBN(iStyledItemInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
@@ -1013,7 +1013,7 @@ void _exporter_base::createStyledItemInstance(SdaiInstance iSdaiInstance, SdaiIn
 	assert(iSdaiInstance != 0);
 	assert(iColorRgbInstance != 0);
 
-	SdaiInstance iStyledItemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCSTYLEDITEM");
+	SdaiInstance iStyledItemInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcStyledItem");
 	assert(iStyledItemInstance != 0);
 
 	sdaiPutAttrBN(iStyledItemInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
@@ -1080,7 +1080,7 @@ SdaiInstance _exporter_base::buildSurfaceStyleRenderingInstance()
 
 SdaiInstance _exporter_base::buildColorRgbInstance(double dR, double dG, double dB)
 {
-	SdaiInstance iColorRgbInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCCOLOURRGB");
+	SdaiInstance iColorRgbInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcColourRgb");
 	assert(iColorRgbInstance != 0);
 
 	sdaiPutAttrBN(iColorRgbInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
@@ -1208,7 +1208,7 @@ SdaiInstance _exporter_base::buildMaterialLayerSetUsage(double dThickness)
 {
 	double dOffsetFromReferenceLine = -dThickness / 2.;
 
-	SdaiInstance iMaterialLayerSetUsageInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCMATERIALLAYERSETUSAGE");
+	SdaiInstance iMaterialLayerSetUsageInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcMaterialLayerSetUsage");
 	assert(iMaterialLayerSetUsageInstance != 0);
 
 	sdaiPutAttrBN(iMaterialLayerSetUsageInstance, "ForLayerSet", sdaiINSTANCE, (void*)buildMaterialLayerSet(dThickness));
