@@ -1113,7 +1113,7 @@ SdaiInstance _exporter_base::buildRelDefinesByProperties(SdaiInstance iRelatedOb
 	assert(iRelatedObject != 0);
 	assert(iRelatingPropertyDefinition != 0);
 
-	SdaiInstance iRelDefinesByPropertiesInstance = sdaiCreateInstanceBN(m_iIfcModel, "IFCRELDEFINESBYPROPERTIES");
+	SdaiInstance iRelDefinesByPropertiesInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcRelDefinesByProperties");
 	assert(iRelDefinesByPropertiesInstance != 0);
 
 	sdaiPutAttrBN(iRelDefinesByPropertiesInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
