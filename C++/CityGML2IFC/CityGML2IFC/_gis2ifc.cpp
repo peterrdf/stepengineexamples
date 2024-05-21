@@ -795,11 +795,6 @@ SdaiInstance _exporter_base::buildMappedItem(
 	sdaiPutAttrBN(iMappedItemInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
 	sdaiPutAttrBN(iMappedItemInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
 
-	sdaiPutAttrBN(iMappedItemInstance, "MappingSource", sdaiINSTANCE, (void*)buildRepresentationMap(pMatrix, vecRepresentations));
-
-	SdaiInstance iCartesianTransformationOperator3DInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcCartesianTransformationOperator3D");
-	assert(iCartesianTransformationOperator3DInstance != 0);
-	
 	// Reference Point (Anchor)
 	double dReferencePointX = 0.;
 	double dReferencePointY = 0.;
@@ -808,16 +803,24 @@ SdaiInstance _exporter_base::buildMappedItem(
 		int64_t iValuesCount = 0;
 		double* pdValues = nullptr;
 		GetDatatypeProperty(
-			iTransformationMatrixInstance,
+			iReferencePointMatrixInstance,
 			GetPropertyByName(getSite()->getOwlModel(), "coordinates"),
 			(void**)&pdValues,
 			&iValuesCount);
 		assert(iValuesCount == 12);
 
-		dReferencePointX = pdValues[0];
-		dReferencePointY = pdValues[1];
-		dReferencePointZ = pdValues[2];
+		dReferencePointX = pdValues[9];
+		dReferencePointY = pdValues[10];
+		dReferencePointZ = pdValues[11];
 	}
+
+	pMatrix->_41 = dReferencePointX;
+	pMatrix->_42 = dReferencePointY;
+	pMatrix->_43 = dReferencePointZ;
+	sdaiPutAttrBN(iMappedItemInstance, "MappingSource", sdaiINSTANCE, (void*)buildRepresentationMap(pMatrix, vecRepresentations));
+
+	SdaiInstance iCartesianTransformationOperator3DInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcCartesianTransformationOperator3D");
+	assert(iCartesianTransformationOperator3DInstance != 0);	
 
 	// Transformation Matrix
 	{
