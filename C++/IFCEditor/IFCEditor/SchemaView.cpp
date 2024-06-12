@@ -160,7 +160,7 @@ void CSchemaView::LoadModel(CModel* pModel)
 // ------------------------------------------------------------------------------------------------
 void CSchemaView::LoadAttributes(CEntity* pEntity, HTREEITEM hParent)
 {
-	if (pEntity->GetAttributesCount() == 0)
+	if (pEntity->GetAttributes().empty())
 	{
 		return;
 	}
@@ -245,12 +245,12 @@ void CSchemaView::LoadEntity(CEntity* pEntity, HTREEITEM hParent)
 // ------------------------------------------------------------------------------------------------
 pair<int, int> CSchemaView::GetInstancesCount(CEntity* pEntity) const
 {
-	int iInstancesCount = (int)pEntity->GetInstancesCount();
+	int iInstancesCount = (int)pEntity->GetInstances().size();
 
 	int iSubInstancesCount = 0;
 	for (size_t iSubType = 0; iSubType < pEntity->GetSubTypes().size(); iSubType++)
 	{
-		iSubInstancesCount += (int)pEntity->GetSubTypes()[iSubType]->GetInstancesCount();
+		iSubInstancesCount += (int)pEntity->GetSubTypes()[iSubType]->GetInstances().size();
 
 		iSubInstancesCount += GetInstancesCount(pEntity->GetSubTypes()[iSubType]).second;
 	}

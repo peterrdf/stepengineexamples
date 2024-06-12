@@ -172,7 +172,7 @@ CIFCInstanceAttribute::CIFCInstanceAttribute(const CString& strName, const COleV
 }
 
 // ------------------------------------------------------------------------------------------------
-/*virtual*/ void CPropertiesWnd::OnViewRelations(CViewBase* pSender, int64_t iInstance) /*override*/
+/*virtual*/ void CPropertiesWnd::OnViewRelations(CViewBase* pSender, SdaiInstance iInstance) /*override*/
 {
 	m_wndObjectCombo.SetCurSel(0 /*Attributes*/); // Application and Properties are disabled!!!
 

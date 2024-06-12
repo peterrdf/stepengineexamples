@@ -49,7 +49,7 @@ static char THIS_FILE[]=__FILE__;
 }
 
 // ------------------------------------------------------------------------------------------------
-/*virtual*/ void CRelationsView::OnViewRelations(CViewBase* pSender, int64_t iInstance) /*override*/
+/*virtual*/ void CRelationsView::OnViewRelations(CViewBase* pSender, SdaiInstance iInstance) /*override*/
 {
 	if (pSender == this)
 	{
@@ -2012,7 +2012,7 @@ void CRelationsView::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
 		return;
 	}
 
-	SdaiInstance iInstance = 0;
+	int64_t iInstance = 0;
 	owlBuildInstance(engiGetEntityModel(sdaiGetInstanceType(pInstanceData->GetInstance())), pInstanceData->GetInstance(), &iInstance);
 
 	if (iInstance == 0)
