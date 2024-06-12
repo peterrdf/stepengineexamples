@@ -1,9 +1,6 @@
-#include "pch.h"
+#include "stdafx.h"
 
 #include "InstanceBase.h"
-
-#include "engine.h"
-#include "ifcengine.h"
 
 // --------------------------------------------------------------------------------------------
 CInstanceBase::CInstanceBase()
