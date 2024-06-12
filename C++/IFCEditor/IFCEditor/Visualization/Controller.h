@@ -1,36 +1,32 @@
 #pragma once
 
+#include "_mvc.h"
 #include "InstanceBase.h"
 #include "Entity.h"
 
 #include <set>
 #include <vector>
-
 using namespace std;
 
-// ------------------------------------------------------------------------------------------------
+// ************************************************************************************************
 class CModel;
 class CViewBase;
 enum class enumApplicationProperty;
 
-// ------------------------------------------------------------------------------------------------
+// ************************************************************************************************
 // Controller - MVC
-class CController
+class CController : public _controller
 {
-
-protected: // Members
-
-	CModel* m_pModel; // Model - MVC
 
 private: // Members	
 	
 	bool m_bUpdatingModel; // Updating model - disable all notifications	
 	
 	set<CViewBase*> m_setViews; // Views - MVC	
-
+	
 	// Target
 	CInstanceBase* m_pTargetInstance;
-	
+
 	// Selection
 	CInstanceBase* m_pSelectedInstance;
 	
@@ -92,7 +88,7 @@ public: // Methods
 	// Events
 	void OnInstancesEnabledStateChanged(CViewBase* pSender);
 	void OnApplicationPropertyChanged(CViewBase* pSender, enumApplicationProperty enApplicationProperty);
-	void OnViewRelations(CViewBase* pSender, int64_t iInstance);
+	void OnViewRelations(CViewBase* pSender, SdaiInstance iInstance);
 	void OnViewRelations(CViewBase* pSender, CEntity* pEntity);
 	void OnInstanceAttributeEdited(CViewBase* pSender, SdaiInstance iInstance, SdaiAttr pAttribute);
 };

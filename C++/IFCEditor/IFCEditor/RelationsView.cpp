@@ -282,7 +282,7 @@ static char THIS_FILE[]=__FILE__;
 				}
 				else
 				{
-					int_t iInstance = internalGetInstanceFromP21Line(pIFCmodel->GetSdaiModel(), iExpressID);
+					int_t iInstance = internalGetInstanceFromP21Line(pIFCmodel->GetInstance(), iExpressID);
 					if (iInstance != 0)
 					{
 						pController->OnViewRelations(
@@ -374,7 +374,7 @@ void CRelationsView::LoadInstances(const vector<SdaiInstance>& vecInstances, boo
 		tvInsertStruct.hParent = nullptr;
 		tvInsertStruct.hInsertAfter = TVI_LAST;
 		tvInsertStruct.item.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_TEXT | TVIF_PARAM;
-		tvInsertStruct.item.pszText = (LPWSTR)pModel->GetModelName();
+		tvInsertStruct.item.pszText = (LPWSTR)pModel->getPath();
 		tvInsertStruct.item.iImage = tvInsertStruct.item.iSelectedImage = IMAGE_MODEL;
 		tvInsertStruct.item.lParam = NULL;
 

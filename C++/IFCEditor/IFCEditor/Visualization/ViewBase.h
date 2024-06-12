@@ -3,20 +3,30 @@
 #include "IFCInstance.h"
 #include "Entity.h"
 
-// ------------------------------------------------------------------------------------------------
+// ************************************************************************************************
 class CController;
 class CModel;
 
-// ------------------------------------------------------------------------------------------------
+// ************************************************************************************************
 enum class enumApplicationProperty : int
 {
 	Projection,
 	View,
 	ShowFaces,
+	CullFaces,
+	ShowFacesWireframes,
 	ShowConceptualFacesWireframes,
 	ShowLines,
 	ShowPoints,
+	ShowNormalVectors,
+	ShowTangenVectors,
+	ShowBiNormalVectors,
+	ScaleVectors,
+	ShowBoundingBoxes,
 	RotationMode,
+	ShowCoordinateSystem,
+	CoordinateSystemType,
+	ShowNavigator,
 	PointLightingLocation,
 	AmbientLightWeighting,
 	SpecularLightWeighting,
@@ -25,9 +35,11 @@ enum class enumApplicationProperty : int
 	Contrast,
 	Brightness,
 	Gamma,
+	VisibleValuesCountLimit,
+	ScalelAndCenter,
 };
 
-// ------------------------------------------------------------------------------------------------
+// ************************************************************************************************
 // View - MVC
 class CViewBase
 {
@@ -55,7 +67,7 @@ public: // Methods
 	virtual void OnInstanceSelected(CViewBase* pSender);
 	virtual void OnInstancesEnabledStateChanged(CViewBase* pSender);
 	virtual void OnInstanceAttributeEdited(CViewBase* pSender, SdaiInstance iInstance, SdaiAttr pAttribute);
-	virtual void OnViewRelations(CViewBase* pSender, int64_t iInstance);
+	virtual void OnViewRelations(CViewBase* pSender, SdaiInstance iInstance);
 	virtual void OnViewRelations(CViewBase* pSender, CEntity* pEntity);
 	virtual void OnApplicationPropertyChanged(CViewBase* pSender, enumApplicationProperty enApplicationProperty);
 

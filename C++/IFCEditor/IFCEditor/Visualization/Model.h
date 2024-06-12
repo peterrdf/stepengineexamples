@@ -1,7 +1,6 @@
 #pragma once
 
-#include "ifcengine.h"
-
+#include "_mvc.h"
 #include "InstanceBase.h"
 #include "Entity.h"
 
@@ -9,7 +8,7 @@
 
 using namespace std;
 
-// ------------------------------------------------------------------------------------------------
+// ************************************************************************************************
 enum class enumModelType : int
 {
 	Unknown = -1,
@@ -17,16 +16,14 @@ enum class enumModelType : int
 	IFC = 1
 };
 
-// ------------------------------------------------------------------------------------------------
-class CModel
+// ************************************************************************************************
+class CModel : public _model
 {
 
 protected: // Members
 
-	// --------------------------------------------------------------------------------------------
-	wstring		  m_strFilePath; // Input file	
-	enumModelType m_enModelType;
-	SdaiModel	  m_iModel; // Model
+	// Model
+	enumModelType m_enModelType;	
 
 	// World's dimensions
 	float m_fXmin;
@@ -35,6 +32,7 @@ protected: // Members
 	float m_fYmax;
 	float m_fZmin;
 	float m_fZmax;
+	float m_dOriginalBoundingSphereDiameter;
 	float m_fBoundingSphereDiameter;
 
 	float m_fXTranslation;
@@ -43,42 +41,26 @@ protected: // Members
 
 public: // Methods
 
-	// --------------------------------------------------------------------------------------------
 	CModel(enumModelType enModelType);
+	virtual ~CModel()
+	{}
 
-	// --------------------------------------------------------------------------------------------
-	virtual ~CModel();
+	virtual CEntityProvider* GetEntityProvider() const PURE;
+	virtual CInstanceBase* GetInstanceByExpressID(int64_t iExpressID) const PURE;
+	virtual void ZoomToInstance(CInstanceBase* pInstance) PURE;
+	virtual void ZoomOut() PURE;
+	virtual CInstanceBase* LoadInstance(OwlInstance iInstance) PURE;
 
-	// --------------------------------------------------------------------------------------------
-	const wchar_t* GetModelName() const;
+	// Model
+	SdaiModel GetInstance() const { return (SdaiModel)m_iModel; }
+	enumModelType GetType() const { return m_enModelType; }
 
-	// --------------------------------------------------------------------------------------------	
-	enumModelType GetType() const;
-
-	// --------------------------------------------------------------------------------------------	
-	SdaiModel GetSdaiModel() const;
-
-	// --------------------------------------------------------------------------------------------	
-	virtual CInstanceBase* LoadInstance(OwlInstance iInstance) = 0;
-
-	// --------------------------------------------------------------------------------------------	
+	// World's dimensions
+	double GetOriginalBoundingSphereDiameter() const { return m_dOriginalBoundingSphereDiameter; }
+	float GetBoundingSphereDiameter() const { return m_fBoundingSphereDiameter; }
 	void GetWorldDimensions(float& fXmin, float& fXmax, float& fYmin, float& fYmax, float& fZmin, float& fZmax) const;
 	void GetWorldTranslations(float& fXTranslation, float& fYTranslation, float& fZTranslation) const;
-	float GetBoundingSphereDiameter() const;
-
-	// --------------------------------------------------------------------------------------------	
-	virtual CEntityProvider* GetEntityProvider() const PURE;
-
-	// --------------------------------------------------------------------------------------------	
-	virtual CInstanceBase* GetInstanceByExpressID(int64_t iExpressID) const PURE;
-
-	// --------------------------------------------------------------------------------------------
-	virtual void ZoomToInstance(CInstanceBase* pInstance) PURE;
-
-	// --------------------------------------------------------------------------------------------
-	virtual void ZoomOut() PURE;
-
-	// --------------------------------------------------------------------------------------------	
+	
 	template<typename T>
 	T* As()
 	{

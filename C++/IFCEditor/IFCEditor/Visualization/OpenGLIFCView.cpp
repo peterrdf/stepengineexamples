@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "stdafx.h"
 
 #include "OpenGLIFCView.h"
 #include "Controller.h"
@@ -7,13 +7,12 @@
 
 #include <chrono>
 
-// ------------------------------------------------------------------------------------------------
+// ************************************************************************************************
 static const int MIN_VIEW_PORT_LENGTH = 100;
 
-// ------------------------------------------------------------------------------------------------
+// ************************************************************************************************
 COpenGLIFCView::COpenGLIFCView(CWnd* pWnd)
-	:  COpenGLView()
-	, _oglRenderer()
+	: COpenGLView()
 	, m_ptStartMousePosition(-1, -1)
 	, m_ptPrevMousePosition(-1, -1)
 	, m_pInstanceSelectionFrameBuffer(new _oglSelectionFramebuffer())
@@ -49,7 +48,6 @@ COpenGLIFCView::COpenGLIFCView(CWnd* pWnd)
 		nullptr);
 }
 
-// ------------------------------------------------------------------------------------------------
 COpenGLIFCView::~COpenGLIFCView()
 {
 	GetController()->UnRegisterView(this);	
@@ -63,159 +61,32 @@ COpenGLIFCView::~COpenGLIFCView()
 	m_pPointedInstanceMaterial = nullptr;
 }
 
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ void COpenGLIFCView::OnWorldDimensionsChanged() /*override*/
+/*virtual*/ _controller* COpenGLIFCView::getController() const /*override*/
 {
-	auto pModel = GetModel<CIFCModel>();
-	if (pModel == nullptr)
-	{
-		ASSERT(FALSE);
-
-		return;
-	}
-
-	/*
-	* Center
-	*/
-	float fXmin = -1.f;
-	float fXmax = 1.f;
-	float fYmin = -1.f;
-	float fYmax = 1.f;
-	float fZmin = -1.f;
-	float fZmax = 1.f;
-	pModel->GetWorldDimensions(fXmin, fXmax, fYmin, fYmax, fZmin, fZmax);
-
-	m_fXTranslation = fXmin;
-	m_fXTranslation += (fXmax - fXmin) / 2.f;
-	m_fXTranslation = -m_fXTranslation;
-
-	m_fYTranslation = fYmin;
-	m_fYTranslation += (fYmax - fYmin) / 2.f;
-	m_fYTranslation = -m_fYTranslation;
-
-	m_fZTranslation = fZmin;
-	m_fZTranslation += (fZmax - fZmin) / 2.f;
-	m_fZTranslation = -m_fZTranslation;
-	m_fZTranslation -= (pModel->GetBoundingSphereDiameter() * 2.f);
-
-	m_fScaleFactor = pModel->GetBoundingSphereDiameter();
-
-#ifdef _LINUX
-	m_pWnd->Refresh(false);
-#else
-	_redraw();
-#endif // _LINUX
+	return GetController();
 }
 
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ void COpenGLIFCView::OnInstanceSelected(CViewBase* pSender) /*override*/
+/*virtual*/ _model* COpenGLIFCView::getModel() const /*override*/
 {
-	if (pSender == this)
-	{
-		return;
-	}
-
-	if (GetController() == nullptr)
-	{
-		ASSERT(FALSE);
-
-		return;
-	}
-
-	auto pSelectedInstance = GetController()->GetSelectedInstance() != nullptr ?
-		dynamic_cast<CIFCInstance*>(GetController()->GetSelectedInstance()) :
-		nullptr;
-
-	if (m_pSelectedInstance != pSelectedInstance)
-	{
-		m_pSelectedInstance = pSelectedInstance;
-
-#ifdef _LINUX
-		m_pWnd->Refresh(false);
-#else
-		_redraw();
-#endif // _LINUX
-	}
+	return GetController()->getModel();
 }
 
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ void COpenGLIFCView::OnInstancesEnabledStateChanged(CViewBase* pSender) /*override*/
+/*virtual*/ void COpenGLIFCView::saveSetting(const string& strName, const string& strValue) /*override*/
 {
-	if (pSender == this)
-	{
-		return;
-	}
-
-	_redraw();
+	GetController()->getSettingsStorage()->setSetting(strName, strValue);
 }
 
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ void COpenGLIFCView::OnApplicationPropertyChanged(CViewBase* pSender, enumApplicationProperty enApplicationProperty) /*override*/
+/*virtual*/ string COpenGLIFCView::loadSetting(const string& strName) /*override*/
 {
-	if (pSender == this)
-	{
-		return;
-	}
-
-	switch (enApplicationProperty)
-	{
-		case enumApplicationProperty::Projection:
-		case enumApplicationProperty::View:
-		case enumApplicationProperty::ShowFaces:
-		case enumApplicationProperty::ShowConceptualFacesWireframes:
-		case enumApplicationProperty::ShowLines:
-		case enumApplicationProperty::ShowPoints:
-		case enumApplicationProperty::RotationMode:
-		case enumApplicationProperty::PointLightingLocation:
-		case enumApplicationProperty::AmbientLightWeighting:
-		case enumApplicationProperty::SpecularLightWeighting:
-		case enumApplicationProperty::DiffuseLightWeighting:
-		case enumApplicationProperty::MaterialShininess:
-		case enumApplicationProperty::Contrast:
-		case enumApplicationProperty::Brightness:
-		case enumApplicationProperty::Gamma:
-		{
-			_redraw();
-		}
-		break;
-
-		default:
-		{
-			ASSERT(FALSE); // Internal error!
-		}
-		break;
-	} // switch (enApplicationProperty)
+	return GetController()->getSettingsStorage()->getSetting(strName);
 }
 
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ void COpenGLIFCView::OnControllerChanged() /*override*/
-{
-	auto pController = GetController();
-	if (pController != nullptr)
-	{
-		pController->RegisterView(this);
-
-		// OpenGL
-		m_pOGLProgram->_setAmbientLightWeighting(
-			0.4f,
-			0.4f,
-			0.4f);
-
-		pController->OnApplicationPropertyChanged(this, enumApplicationProperty::AmbientLightWeighting);
-	}
-}
-
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ void COpenGLIFCView::Load() /*override*/
+/*virtual*/ void COpenGLIFCView::_load() /*override*/
 {
 	CWaitCursor waitCursor;
 
-#ifdef _LINUX
-	m_pOGLContext->SetCurrent(*m_pWnd);
-#else
 	BOOL bResult = m_pOGLContext->makeCurrent();
 	VERIFY(bResult);
-#endif // _LINUX
 
 	// OpenGL buffers
 	m_oglBuffers.clear();
@@ -270,7 +141,7 @@ COpenGLIFCView::~COpenGLIFCView()
 
 	// VBO
 	GLuint iVerticesCount = 0;
-	vector<CIFCInstance*> vecInstancesCohort;
+	vector<_geometry*> vecInstancesCohort;
 
 	// IBO - Conceptual faces
 	GLuint iConcFacesIndicesCount = 0;
@@ -291,7 +162,7 @@ COpenGLIFCView::~COpenGLIFCView()
 	for (auto itIinstance = mapInstances.begin(); itIinstance != mapInstances.end(); itIinstance++)
 	{
 		auto pInstance = itIinstance->second;
-		if (pInstance->GetVerticesCount() == 0)
+		if (pInstance->getVerticesCount() == 0)
 		{
 			continue;
 		}
@@ -303,9 +174,9 @@ COpenGLIFCView::~COpenGLIFCView()
 		/**
 		* VBO - Conceptual faces, polygons, etc.
 		*/
-		if (((int_t)iVerticesCount + pInstance->GetVerticesCount()) > (int_t)VERTICES_MAX_COUNT)
+		if (((int_t)iVerticesCount + pInstance->getVerticesCount()) > (int_t)VERTICES_MAX_COUNT)
 		{
-			if (m_oglBuffers.createInstancesCohort(vecInstancesCohort, m_pOGLProgram) != iVerticesCount)
+			if (m_oglBuffers.createCohort(vecInstancesCohort, m_pOGLProgram) != iVerticesCount)
 			{
 				ASSERT(FALSE);
 
@@ -319,9 +190,9 @@ COpenGLIFCView::~COpenGLIFCView()
 		/*
 		* IBO - Conceptual faces
 		*/
-		for (size_t iFacesCohort = 0; iFacesCohort < pInstance->ConcFacesCohorts().size(); iFacesCohort++)
+		for (size_t iFacesCohort = 0; iFacesCohort < pInstance->concFacesCohorts().size(); iFacesCohort++)
 		{
-			if ((int_t)(iConcFacesIndicesCount + pInstance->ConcFacesCohorts()[iFacesCohort]->indices().size()) > (int_t)INDICES_MAX_COUNT)
+			if ((int_t)(iConcFacesIndicesCount + pInstance->concFacesCohorts()[iFacesCohort]->indices().size()) > (int_t)INDICES_MAX_COUNT)
 			{
 				if (m_oglBuffers.createIBO(vecConcFacesCohorts) != iConcFacesIndicesCount)
 				{
@@ -334,16 +205,16 @@ COpenGLIFCView::~COpenGLIFCView()
 				vecConcFacesCohorts.clear();
 			}
 
-			iConcFacesIndicesCount += (GLsizei)pInstance->ConcFacesCohorts()[iFacesCohort]->indices().size();
-			vecConcFacesCohorts.push_back(pInstance->ConcFacesCohorts()[iFacesCohort]);
+			iConcFacesIndicesCount += (GLsizei)pInstance->concFacesCohorts()[iFacesCohort]->indices().size();
+			vecConcFacesCohorts.push_back(pInstance->concFacesCohorts()[iFacesCohort]);
 		}
 
 		/*
 		* IBO - Conceptual face polygons
 		*/
-		for (size_t iConcFacePolygonsCohort = 0; iConcFacePolygonsCohort < pInstance->ConcFacePolygonsCohorts().size(); iConcFacePolygonsCohort++)
+		for (size_t iConcFacePolygonsCohort = 0; iConcFacePolygonsCohort < pInstance->concFacePolygonsCohorts().size(); iConcFacePolygonsCohort++)
 		{
-			if ((int_t)(iConcFacePolygonsIndicesCount + pInstance->ConcFacePolygonsCohorts()[iConcFacePolygonsCohort]->indices().size()) > (int_t)INDICES_MAX_COUNT)
+			if ((int_t)(iConcFacePolygonsIndicesCount + pInstance->concFacePolygonsCohorts()[iConcFacePolygonsCohort]->indices().size()) > (int_t)INDICES_MAX_COUNT)
 			{
 				if (m_oglBuffers.createIBO(vecConcFacePolygonsCohorts) != iConcFacePolygonsIndicesCount)
 				{
@@ -356,16 +227,16 @@ COpenGLIFCView::~COpenGLIFCView()
 				vecConcFacePolygonsCohorts.clear();
 			}
 
-			iConcFacePolygonsIndicesCount += (GLsizei)pInstance->ConcFacePolygonsCohorts()[iConcFacePolygonsCohort]->indices().size();
-			vecConcFacePolygonsCohorts.push_back(pInstance->ConcFacePolygonsCohorts()[iConcFacePolygonsCohort]);
+			iConcFacePolygonsIndicesCount += (GLsizei)pInstance->concFacePolygonsCohorts()[iConcFacePolygonsCohort]->indices().size();
+			vecConcFacePolygonsCohorts.push_back(pInstance->concFacePolygonsCohorts()[iConcFacePolygonsCohort]);
 		}
 
 		/*
 		* IBO - Lines
 		*/
-		for (size_t iLinesCohort = 0; iLinesCohort < pInstance->LinesCohorts().size(); iLinesCohort++)
+		for (size_t iLinesCohort = 0; iLinesCohort < pInstance->linesCohorts().size(); iLinesCohort++)
 		{
-			if ((int_t)(iLinesIndicesCount + pInstance->LinesCohorts()[iLinesCohort]->indices().size()) > (int_t)INDICES_MAX_COUNT)
+			if ((int_t)(iLinesIndicesCount + pInstance->linesCohorts()[iLinesCohort]->indices().size()) > (int_t)INDICES_MAX_COUNT)
 			{
 				if (m_oglBuffers.createIBO(vecLinesCohorts) != iLinesIndicesCount)
 				{
@@ -378,16 +249,16 @@ COpenGLIFCView::~COpenGLIFCView()
 				vecLinesCohorts.clear();
 			}
 
-			iLinesIndicesCount += (GLsizei)pInstance->LinesCohorts()[iLinesCohort]->indices().size();
-			vecLinesCohorts.push_back(pInstance->LinesCohorts()[iLinesCohort]);
+			iLinesIndicesCount += (GLsizei)pInstance->linesCohorts()[iLinesCohort]->indices().size();
+			vecLinesCohorts.push_back(pInstance->linesCohorts()[iLinesCohort]);
 		}
 
 		/*
 		* IBO - Points
 		*/
-		for (size_t iPointsCohort = 0; iPointsCohort < pInstance->PointsCohorts().size(); iPointsCohort++)
+		for (size_t iPointsCohort = 0; iPointsCohort < pInstance->pointsCohorts().size(); iPointsCohort++)
 		{
-			if ((int_t)(iPointsIndicesCount + pInstance->PointsCohorts()[iPointsCohort]->indices().size()) > (int_t)INDICES_MAX_COUNT)
+			if ((int_t)(iPointsIndicesCount + pInstance->pointsCohorts()[iPointsCohort]->indices().size()) > (int_t)INDICES_MAX_COUNT)
 			{
 				if (m_oglBuffers.createIBO(vecPointsCohorts) != iPointsIndicesCount)
 				{
@@ -400,11 +271,11 @@ COpenGLIFCView::~COpenGLIFCView()
 				vecPointsCohorts.clear();
 			}
 
-			iPointsIndicesCount += (GLsizei)pInstance->PointsCohorts()[iPointsCohort]->indices().size();
-			vecPointsCohorts.push_back(pInstance->PointsCohorts()[iPointsCohort]);
+			iPointsIndicesCount += (GLsizei)pInstance->pointsCohorts()[iPointsCohort]->indices().size();
+			vecPointsCohorts.push_back(pInstance->pointsCohorts()[iPointsCohort]);
 		}
 
-		iVerticesCount += (GLsizei)pInstance->GetVerticesCount();
+		iVerticesCount += (GLsizei)pInstance->getVerticesCount();
 		vecInstancesCohort.push_back(pInstance);
 	} // for (; itIinstances != ...
 
@@ -417,7 +288,7 @@ COpenGLIFCView::~COpenGLIFCView()
 	*/
 	if (iVerticesCount > 0)
 	{
-		if (m_oglBuffers.createInstancesCohort(vecInstancesCohort, m_pOGLProgram) != iVerticesCount)
+		if (m_oglBuffers.createCohort(vecInstancesCohort, m_pOGLProgram) != iVerticesCount)
 		{
 			ASSERT(FALSE);
 
@@ -492,116 +363,10 @@ COpenGLIFCView::~COpenGLIFCView()
 		vecPointsCohorts.clear();
 	}
 
-#ifdef _LINUX
-	m_pWnd->Refresh(false);
-#else
 	_redraw();
-#endif // _LINUX
 }
 
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ void COpenGLIFCView::SetProjection(enumProjection enProjection) /*override*/
-{
-	_setProjection(enProjection);
-}
-
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ enumProjection COpenGLIFCView::GetProjection() const /*override*/
-{
-	return _getProjection();
-}
-
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ void COpenGLIFCView::SetView(enumView enView) /*override*/
-{
-	_setView(enView);
-}
-
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ enumRotationMode COpenGLIFCView::GetRotationMode() const /*override*/
-{
-	return _getRotationMode();
-}
-
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ void COpenGLIFCView::SetRotationMode(enumRotationMode enRotationMode) /*override*/
-{
-	_setRotationMode(enRotationMode);
-}
-
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ void COpenGLIFCView::OnMouseEvent(enumMouseEvent enEvent, UINT nFlags, CPoint point) /*override*/
-{
-	if (enEvent == enumMouseEvent::LBtnUp)
-	{
-		/*
-		* OnSelectedItemChanged() notification
-		*/
-		if (point == m_ptStartMousePosition)
-		{
-			if (m_pSelectedInstance != m_pPointedInstance)
-			{
-				m_pSelectedInstance = m_pPointedInstance;
-#ifdef _LINUX
-				m_pWnd->Refresh(false);
-#else
-				_redraw();
-#endif // _LINUX
-
-				ASSERT(GetController() != nullptr);
-				GetController()->SelectInstance(this, m_pSelectedInstance);
-			} // if (m_pSelectedInstance != ...
-		}
-	} // if (enEvent == meLBtnDown)
-
-	switch (enEvent)
-	{
-	case enumMouseEvent::Move:
-	{
-		OnMouseMoveEvent(nFlags, point);
-	}
-	break;
-
-	case enumMouseEvent::LBtnDown:
-	case enumMouseEvent::MBtnDown:
-	case enumMouseEvent::RBtnDown:
-	{
-		m_ptStartMousePosition = point;
-		m_ptPrevMousePosition = point;
-	}
-	break;
-
-	case enumMouseEvent::LBtnUp:
-	case enumMouseEvent::MBtnUp:
-	case enumMouseEvent::RBtnUp:
-	{
-		m_ptStartMousePosition.x = -1;
-		m_ptStartMousePosition.y = -1;
-		m_ptPrevMousePosition.x = -1;
-		m_ptPrevMousePosition.y = -1;
-	}
-	break;
-
-	default:
-		ASSERT(FALSE);
-		break;
-	} // switch (enEvent)
-}
-
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ void COpenGLIFCView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) /*override*/
-{
-	_onMouseWheel(nFlags, zDelta, pt);
-}
-
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ void COpenGLIFCView::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags) /*override*/
-{
-	_onKeyUp(nChar, nRepCnt, nFlags);
-}
-
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ void COpenGLIFCView::Draw(CDC* pDC) /*override*/
+/*virtual*/ void COpenGLIFCView::_draw(CDC* pDC) /*override*/
 {
 	auto pModel = GetModel<CIFCModel>();
 	if (pModel == nullptr)
@@ -640,48 +405,230 @@ COpenGLIFCView::~COpenGLIFCView()
 		true);
 
 	/* Non-transparent faces */
-	DrawFaces(false);
+	DrawFaces(pModel, false);
 
 	/* Transparent faces */
-	DrawFaces(true);
+	DrawFaces(pModel, true);
 
 	/* Conceptual faces polygons */
-	DrawConceptualFacesPolygons();
+	DrawConceptualFacesPolygons(pModel);
 
 	/* Lines */
-	DrawLines();
+	DrawLines(pModel);
 
 	/* Points */
-	DrawPoints();
+	DrawPoints(pModel);
 
 	/* End */
-#ifdef _LINUX
-	m_pWnd->SwapBuffers();
-#else
 	SwapBuffers(*pDC);
-#endif // _LINUX
 
 	/* Selection support */
 	DrawInstancesFrameBuffer();
 }
 
-// ------------------------------------------------------------------------------------------------
-void COpenGLIFCView::DrawFaces(bool bTransparent)
+/*virtual*/ void COpenGLIFCView::OnWorldDimensionsChanged() /*override*/
 {
-	if (!m_bShowFaces)
-	{
-		return;
-	}
-
 	auto pModel = GetModel<CIFCModel>();
 	if (pModel == nullptr)
 	{
 		ASSERT(FALSE);
 
 		return;
-	}	
+	}
+
+	/*
+	* Center
+	*/
+	float fXmin = -1.f;
+	float fXmax = 1.f;
+	float fYmin = -1.f;
+	float fYmax = 1.f;
+	float fZmin = -1.f;
+	float fZmax = 1.f;
+	pModel->GetWorldDimensions(fXmin, fXmax, fYmin, fYmax, fZmin, fZmax);
+
+	m_fXTranslation = fXmin;
+	m_fXTranslation += (fXmax - fXmin) / 2.f;
+	m_fXTranslation = -m_fXTranslation;
+
+	m_fYTranslation = fYmin;
+	m_fYTranslation += (fYmax - fYmin) / 2.f;
+	m_fYTranslation = -m_fYTranslation;
+
+	m_fZTranslation = fZmin;
+	m_fZTranslation += (fZmax - fZmin) / 2.f;
+	m_fZTranslation = -m_fZTranslation;
+	m_fZTranslation -= (pModel->GetBoundingSphereDiameter() * 2.f);
+
+	m_fScaleFactor = pModel->GetBoundingSphereDiameter();
+
+	_redraw();
+}
+
+/*virtual*/ void COpenGLIFCView::OnInstanceSelected(CViewBase* pSender) /*override*/
+{
+	if (pSender == this)
+	{
+		return;
+	}
+
+	if (GetController() == nullptr)
+	{
+		ASSERT(FALSE);
+
+		return;
+	}
+
+	auto pSelectedInstance = GetController()->GetSelectedInstance() != nullptr ?
+		dynamic_cast<CIFCInstance*>(GetController()->GetSelectedInstance()) :
+		nullptr;
+
+	if (m_pSelectedInstance != pSelectedInstance)
+	{
+		m_pSelectedInstance = pSelectedInstance;
+
+		_redraw();
+	}
+}
+
+/*virtual*/ void COpenGLIFCView::OnInstancesEnabledStateChanged(CViewBase* pSender) /*override*/
+{
+	if (pSender == this)
+	{
+		return;
+	}
+
+	_redraw();
+}
+
+/*virtual*/ void COpenGLIFCView::OnApplicationPropertyChanged(CViewBase* pSender, enumApplicationProperty enApplicationProperty) /*override*/
+{
+	if (pSender == this)
+	{
+		return;
+	}
+
+	switch (enApplicationProperty)
+	{
+		case enumApplicationProperty::Projection:
+		case enumApplicationProperty::View:
+		case enumApplicationProperty::ShowFaces:
+		case enumApplicationProperty::CullFaces:
+		case enumApplicationProperty::ShowConceptualFacesWireframes:
+		case enumApplicationProperty::ShowLines:
+		case enumApplicationProperty::ShowPoints:
+		case enumApplicationProperty::RotationMode:
+		case enumApplicationProperty::PointLightingLocation:
+		case enumApplicationProperty::AmbientLightWeighting:
+		case enumApplicationProperty::SpecularLightWeighting:
+		case enumApplicationProperty::DiffuseLightWeighting:
+		case enumApplicationProperty::MaterialShininess:
+		case enumApplicationProperty::Contrast:
+		case enumApplicationProperty::Brightness:
+		case enumApplicationProperty::Gamma:
+		{
+			_redraw();
+		}
+		break;
+
+		default:
+		{
+			ASSERT(FALSE); // Internal error!
+		}
+		break;
+	} // switch (enApplicationProperty)
+}
+
+/*virtual*/ void COpenGLIFCView::OnControllerChanged() /*override*/
+{
+	auto pController = GetController();
+	if (pController != nullptr)
+	{
+		pController->RegisterView(this);
+
+		// OpenGL
+		m_pOGLProgram->_setAmbientLightWeighting(
+			0.4f,
+			0.4f,
+			0.4f);
+
+		pController->OnApplicationPropertyChanged(this, enumApplicationProperty::AmbientLightWeighting);
+
+		loadSettings();
+	}
+}
+
+/*virtual*/ void COpenGLIFCView::OnMouseEvent(enumMouseEvent enEvent, UINT nFlags, CPoint point) /*override*/
+{
+	if (enEvent == enumMouseEvent::LBtnUp)
+	{
+		/*
+		* OnSelectedItemChanged() notification
+		*/
+		if (point == m_ptStartMousePosition)
+		{
+			if (m_pSelectedInstance != m_pPointedInstance)
+			{
+				m_pSelectedInstance = m_pPointedInstance;
+
+				_redraw();
+
+				ASSERT(GetController() != nullptr);
+				GetController()->SelectInstance(this, m_pSelectedInstance);
+			} // if (m_pSelectedInstance != ...
+		}
+	} // if (enEvent == meLBtnDown)
+
+	switch (enEvent)
+	{
+		case enumMouseEvent::Move:
+		{
+			OnMouseMoveEvent(nFlags, point);
+		}
+		break;
+
+		case enumMouseEvent::LBtnDown:
+		case enumMouseEvent::MBtnDown:
+		case enumMouseEvent::RBtnDown:
+		{
+			m_ptStartMousePosition = point;
+			m_ptPrevMousePosition = point;
+		}
+		break;
+
+		case enumMouseEvent::LBtnUp:
+		case enumMouseEvent::MBtnUp:
+		case enumMouseEvent::RBtnUp:
+		{
+			m_ptStartMousePosition.x = -1;
+			m_ptStartMousePosition.y = -1;
+			m_ptPrevMousePosition.x = -1;
+			m_ptPrevMousePosition.y = -1;
+		}
+		break;
+
+		default:
+			ASSERT(FALSE);
+			break;
+	} // switch (enEvent)
+}
+
+void COpenGLIFCView::DrawFaces(_model* pM, bool bTransparent)
+{
+	auto pModel = dynamic_cast<CIFCModel*>(pM);
+	if (pModel == nullptr)
+	{
+		return;
+	}
+
+	if (!getShowFaces(pModel))
+	{
+		return;
+	}
 
 	auto begin = std::chrono::steady_clock::now();
+
+	CString strCullFaces = getCullFacesMode(pModel);
 
 	if (bTransparent)
 	{
@@ -689,21 +636,29 @@ void COpenGLIFCView::DrawFaces(bool bTransparent)
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
+	else
+	{
+		if ((strCullFaces == CULL_FACES_FRONT) || (strCullFaces == CULL_FACES_BACK))
+		{
+			glEnable(GL_CULL_FACE);
+			glCullFace(strCullFaces == CULL_FACES_FRONT ? GL_FRONT : GL_BACK);
+		}
+	}
 
 	m_pOGLProgram->_enableBlinnPhongModel(true);
 
-	for (auto itCohort : m_oglBuffers.instancesCohorts())
+	for (auto itCohort : m_oglBuffers.cohorts())
 	{
 		glBindVertexArray(itCohort.first);
 
 		for (auto pInstance : itCohort.second)
 		{
-			if (!pInstance->GetEnable())
+			if (!pInstance->getEnable())
 			{
 				continue;
 			}
 
-			for (auto pConcFacesCohort : pInstance->ConcFacesCohorts())
+			for (auto pConcFacesCohort : pInstance->concFacesCohorts())
 			{
 				const _material* pMaterial =
 					pInstance == m_pSelectedInstance ? m_pSelectedInstanceMaterial :
@@ -727,11 +682,11 @@ void COpenGLIFCView::DrawFaces(bool bTransparent)
 
 				m_pOGLProgram->_setMaterial(pMaterial);
 
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pConcFacesCohort->ibo());
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pConcFacesCohort->IBO());
 				glDrawElementsBaseVertex(GL_TRIANGLES,
 					(GLsizei)pConcFacesCohort->indices().size(),
 					GL_UNSIGNED_INT,
-					(void*)(sizeof(GLuint) * pConcFacesCohort->iboOffset()),
+					(void*)(sizeof(GLuint) * pConcFacesCohort->IBOOffset()),
 					pInstance->VBOOffset());
 			} // for (auto pConcFacesCohort ...
 		} // for (auto pInstance ...
@@ -743,6 +698,13 @@ void COpenGLIFCView::DrawFaces(bool bTransparent)
 	{
 		glDisable(GL_BLEND);
 	}
+	else
+	{
+		if ((strCullFaces == CULL_FACES_FRONT) || (strCullFaces == CULL_FACES_BACK))
+		{
+			glDisable(GL_CULL_FACE);
+		}
+	}
 
 	_oglUtils::checkForErrors();
 
@@ -750,19 +712,15 @@ void COpenGLIFCView::DrawFaces(bool bTransparent)
 	TRACE(L"\n*** DrawFaces() : %lld [탎]", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
 }
 
-// ------------------------------------------------------------------------------------------------
-void COpenGLIFCView::DrawConceptualFacesPolygons()
+void COpenGLIFCView::DrawConceptualFacesPolygons(_model* pM)
 {
-	if (!m_bShowConceptualFacesPolygons)
+	if (pM == nullptr)
 	{
 		return;
 	}
 
-	auto pModel = GetModel<CIFCModel>();
-	if (pModel == nullptr)
+	if (!getShowConceptualFacesPolygons(pM))
 	{
-		ASSERT(FALSE);
-
 		return;
 	}
 
@@ -772,24 +730,24 @@ void COpenGLIFCView::DrawConceptualFacesPolygons()
 	m_pOGLProgram->_setAmbientColor(0.f, 0.f, 0.f);
 	m_pOGLProgram->_setTransparency(1.f);
 
-	for (auto itCohort : m_oglBuffers.instancesCohorts())
+	for (auto itCohort : m_oglBuffers.cohorts())
 	{
 		glBindVertexArray(itCohort.first);
 
 		for (auto pInstance : itCohort.second)
 		{
-			if (!pInstance->GetEnable())
+			if (!pInstance->getEnable())
 			{
 				continue;
 			}
 
-			for (auto pCohort : pInstance->ConcFacePolygonsCohorts())
+			for (auto pCohort : pInstance->concFacePolygonsCohorts())
 			{
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pCohort->ibo());
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pCohort->IBO());
 				glDrawElementsBaseVertex(GL_LINES,
 					(GLsizei)pCohort->indices().size(),
 					GL_UNSIGNED_INT,
-					(void*)(sizeof(GLuint) * pCohort->iboOffset()),
+					(void*)(sizeof(GLuint) * pCohort->IBOOffset()),
 					pInstance->VBOOffset());
 			}
 		} // for (auto pInstance ...
@@ -803,19 +761,15 @@ void COpenGLIFCView::DrawConceptualFacesPolygons()
 	TRACE(L"\n*** DrawConceptualFacesPolygons() : %lld [탎]", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
 }
 
-// ------------------------------------------------------------------------------------------------
-void COpenGLIFCView::DrawLines()
+void COpenGLIFCView::DrawLines(_model* pM)
 {
-	if (!m_bShowLines)
+	if (pM == nullptr)
 	{
 		return;
 	}
 
-	auto pModel = GetModel<CIFCModel>();
-	if (pModel == nullptr)
+	if (!getShowLines(pM))
 	{
-		ASSERT(FALSE);
-
 		return;
 	}
 
@@ -825,24 +779,24 @@ void COpenGLIFCView::DrawLines()
 	m_pOGLProgram->_setAmbientColor(0.f, 0.f, 0.f);
 	m_pOGLProgram->_setTransparency(1.f);
 
-	for (auto itCohort : m_oglBuffers.instancesCohorts())
+	for (auto itCohort : m_oglBuffers.cohorts())
 	{
 		glBindVertexArray(itCohort.first);
 
 		for (auto pInstance : itCohort.second)
 		{
-			if (!pInstance->GetEnable())
+			if (!pInstance->getEnable())
 			{
 				continue;
 			}
 
-			for (auto pCohort : pInstance->LinesCohorts())
+			for (auto pCohort : pInstance->linesCohorts())
 			{
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pCohort->ibo());
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pCohort->IBO());
 				glDrawElementsBaseVertex(GL_LINES,
 					(GLsizei)pCohort->indices().size(),
 					GL_UNSIGNED_INT,
-					(void*)(sizeof(GLuint) * pCohort->iboOffset()),
+					(void*)(sizeof(GLuint) * pCohort->IBOOffset()),
 					pInstance->VBOOffset());
 			}
 		} // for (auto pInstance ...
@@ -856,19 +810,15 @@ void COpenGLIFCView::DrawLines()
 	TRACE(L"\n*** DrawLines() : %lld [탎]", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
 }
 
-// ------------------------------------------------------------------------------------------------
-void COpenGLIFCView::DrawPoints()
+void COpenGLIFCView::DrawPoints(_model* pM)
 {
-	if (!m_bShowPoints)
+	if (pM == nullptr)
 	{
 		return;
 	}
 
-	auto pModel = GetModel<CIFCModel>();
-	if (pModel == nullptr)
+	if (!getShowPoints(pM))
 	{
-		ASSERT(FALSE);
-
 		return;
 	}
 
@@ -879,20 +829,20 @@ void COpenGLIFCView::DrawPoints()
 	m_pOGLProgram->_enableBlinnPhongModel(false);
 	m_pOGLProgram->_setTransparency(1.f);
 
-	for (auto itCohort : m_oglBuffers.instancesCohorts())
+	for (auto itCohort : m_oglBuffers.cohorts())
 	{
 		glBindVertexArray(itCohort.first);
 
 		for (auto pInstance : itCohort.second)
 		{
-			if (!pInstance->GetEnable())
+			if (!pInstance->getEnable())
 			{
 				continue;
 			}
 
-			for (size_t iPointsCohort = 0; iPointsCohort < pInstance->PointsCohorts().size(); iPointsCohort++)
+			for (size_t iPointsCohort = 0; iPointsCohort < pInstance->pointsCohorts().size(); iPointsCohort++)
 			{
-				auto pCohort = pInstance->PointsCohorts()[iPointsCohort];
+				auto pCohort = pInstance->pointsCohorts()[iPointsCohort];
 
 				const _material* pMaterial =
 					pInstance == m_pSelectedInstance ? m_pSelectedInstanceMaterial :
@@ -904,11 +854,11 @@ void COpenGLIFCView::DrawPoints()
 					pMaterial->getDiffuseColor().g(),
 					pMaterial->getDiffuseColor().b());
 
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pCohort->ibo());
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pCohort->IBO());
 				glDrawElementsBaseVertex(GL_POINTS,
 					(GLsizei)pCohort->indices().size(),
 					GL_UNSIGNED_INT,
-					(void*)(sizeof(GLuint) * pCohort->iboOffset()),
+					(void*)(sizeof(GLuint) * pCohort->IBOOffset()),
 					pInstance->VBOOffset());
 			} // for (size_t iPointsCohort = ...		
 		} // for (auto itInstance ...
@@ -924,7 +874,6 @@ void COpenGLIFCView::DrawPoints()
 	TRACE(L"\n*** DrawPoints() : %lld [탎]", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
 }
 
-// ------------------------------------------------------------------------------------------------
 void COpenGLIFCView::DrawInstancesFrameBuffer()
 {
 	auto pModel = GetModel<CIFCModel>();
@@ -941,18 +890,11 @@ void COpenGLIFCView::DrawInstancesFrameBuffer()
 	int iWidth = 0;
 	int iHeight = 0;
 
-#ifdef _LINUX
-	const wxSize szClient = m_pWnd->GetClientSize();
-
-	iWidth = szClient.GetWidth();
-	iHeight = szClient.GetHeight();
-#else
 	CRect rcClient;
 	m_pWnd->GetClientRect(&rcClient);
 
 	iWidth = rcClient.Width();
 	iHeight = rcClient.Height();
-#endif // _LINUX
 
 	if ((iWidth < MIN_VIEW_PORT_LENGTH) || (iHeight < MIN_VIEW_PORT_LENGTH))
 	{
@@ -977,14 +919,14 @@ void COpenGLIFCView::DrawInstancesFrameBuffer()
 		{
 			auto pInstance = itInstance->second;
 
-			auto& vecTriangles = pInstance->GetTriangles();
+			auto& vecTriangles = pInstance->getTriangles();
 			if (vecTriangles.empty())
 			{
 				continue;
 			}
 
 			float fR, fG, fB;
-			_i64RGBCoder::encode(pInstance->ID(), fR, fG, fB);
+			_i64RGBCoder::encode(pInstance->getID(), fR, fG, fB);
 
 			m_pInstanceSelectionFrameBuffer->encoding()[pInstance->GetInstance()] = _color(fR, fG, fB);
 		}
@@ -1008,24 +950,24 @@ void COpenGLIFCView::DrawInstancesFrameBuffer()
 	m_pOGLProgram->_enableBlinnPhongModel(false);
 	m_pOGLProgram->_setTransparency(1.f);
 
-	for (auto itCohort : m_oglBuffers.instancesCohorts())
+	for (auto itCohort : m_oglBuffers.cohorts())
 	{
 		glBindVertexArray(itCohort.first);
 
 		for (auto pInstance : itCohort.second)
 		{
-			if (!pInstance->GetEnable())
+			if (!pInstance->getEnable())
 			{
 				continue;
 			}
 
-			auto& vecTriangles = pInstance->GetTriangles();
+			auto& vecTriangles = pInstance->getTriangles();
 			if (vecTriangles.empty())
 			{
 				continue;
 			}
 
-			auto itSelectionColor = m_pInstanceSelectionFrameBuffer->encoding().find(pInstance->GetInstance());
+			auto itSelectionColor = m_pInstanceSelectionFrameBuffer->encoding().find(pInstance->getInstance());
 			ASSERT(itSelectionColor != m_pInstanceSelectionFrameBuffer->encoding().end());
 
 			m_pOGLProgram->_setAmbientColor(
@@ -1033,15 +975,15 @@ void COpenGLIFCView::DrawInstancesFrameBuffer()
 				itSelectionColor->second.g(),
 				itSelectionColor->second.b());
 
-			for (size_t iConcFacesCohort = 0; iConcFacesCohort < pInstance->ConcFacesCohorts().size(); iConcFacesCohort++)
+			for (size_t iConcFacesCohort = 0; iConcFacesCohort < pInstance->concFacesCohorts().size(); iConcFacesCohort++)
 			{
-				auto pConcFacesCohort = pInstance->ConcFacesCohorts()[iConcFacesCohort];
+				auto pConcFacesCohort = pInstance->concFacesCohorts()[iConcFacesCohort];
 
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pConcFacesCohort->ibo());
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pConcFacesCohort->IBO());
 				glDrawElementsBaseVertex(GL_TRIANGLES,
 					(GLsizei)pConcFacesCohort->indices().size(),
 					GL_UNSIGNED_INT,
-					(void*)(sizeof(GLuint) * pConcFacesCohort->iboOffset()),
+					(void*)(sizeof(GLuint) * pConcFacesCohort->IBOOffset()),
 					pInstance->VBOOffset());
 			}
 		} // for (auto pInstance ...
@@ -1054,7 +996,6 @@ void COpenGLIFCView::DrawInstancesFrameBuffer()
 	_oglUtils::checkForErrors();
 }
 
-// ------------------------------------------------------------------------------------------------
 void COpenGLIFCView::OnMouseMoveEvent(UINT nFlags, CPoint point)
 {
 	auto pModel = GetModel<CIFCModel>();
@@ -1074,14 +1015,6 @@ void COpenGLIFCView::OnMouseMoveEvent(UINT nFlags, CPoint point)
 		int iWidth = 0;
 		int iHeight = 0;
 
-#ifdef _LINUX
-		m_pOGLContext->SetCurrent(*m_pWnd);
-
-		const wxSize szClient = m_pWnd->GetClientSize();
-
-		iWidth = szClient.GetWidth();
-		iHeight = szClient.GetHeight();
-#else
 		BOOL bResult = m_pOGLContext->makeCurrent();
 		VERIFY(bResult);
 
@@ -1090,7 +1023,6 @@ void COpenGLIFCView::OnMouseMoveEvent(UINT nFlags, CPoint point)
 
 		iWidth = rcClient.Width();
 		iHeight = rcClient.Height();
-#endif // _LINUX
 
 		GLubyte arPixels[4];
 		memset(arPixels, 0, sizeof(GLubyte) * 4);
@@ -1114,7 +1046,7 @@ void COpenGLIFCView::OnMouseMoveEvent(UINT nFlags, CPoint point)
 		if (arPixels[3] != 0)
 		{
 			int64_t iInstanceID = _i64RGBCoder::decode(arPixels[0], arPixels[1], arPixels[2]);
-			pPointedInstance = pModel->GetInstanceByID(iInstanceID);
+			pPointedInstance = pModel->GetInstanceByID((int_t)iInstanceID);
 			ASSERT(pPointedInstance != nullptr);
 		}
 
@@ -1122,11 +1054,7 @@ void COpenGLIFCView::OnMouseMoveEvent(UINT nFlags, CPoint point)
 		{
 			m_pPointedInstance = pPointedInstance;
 
-#ifdef _LINUX
-			m_pWnd->Refresh(false);
-#else
 			_redraw();
-#endif // _LINUX
 		}
 	} // if (((nFlags & MK_LBUTTON) != MK_LBUTTON) && ...
 

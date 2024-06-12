@@ -144,6 +144,15 @@
     <ClInclude Include="IFCAttribute.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Visualization\_mvc.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\_settings_storage.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\stdafx.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IFCEditor.cpp">

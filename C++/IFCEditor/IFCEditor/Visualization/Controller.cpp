@@ -1,28 +1,35 @@
-#include "pch.h"
+#include "stdafx.h"
 #include "Controller.h"
 #include "Model.h"
 #include "ViewBase.h"
 
-// ------------------------------------------------------------------------------------------------
+// ************************************************************************************************
 CController::CController()
-	: m_pModel(nullptr)
+	: _controller()
 	, m_bUpdatingModel(false)
 	, m_setViews()
-	, m_pTargetInstance(nullptr)
 	, m_pSelectedInstance(nullptr)
 	, m_bScaleAndCenter(FALSE)
 {
+	wchar_t szAppPath[_MAX_PATH];
+	::GetModuleFileName(::GetModuleHandle(nullptr), szAppPath, sizeof(szAppPath));
+
+	fs::path pthExe = szAppPath;
+	auto pthRootFolder = pthExe.parent_path();
+
+	wstring strSettingsFile = pthRootFolder.wstring();
+	strSettingsFile += L"\\STEPViewer_STEP.settings";
+
+	m_pSettingsStorage->loadSettings(strSettingsFile);
 }
 
-// ------------------------------------------------------------------------------------------------
-CController::~CController()
-{
-}
+/*virtual*/ CController::~CController()
+{}
 
 // ------------------------------------------------------------------------------------------------
 CModel* CController::GetModel() const
 {
-	return m_pModel;
+	return dynamic_cast<CModel*>(getModel());
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -33,7 +40,6 @@ void CController::SetModel(CModel* pModel)
 	m_pModel = pModel;
 
 	m_pSelectedInstance = nullptr;
-	m_pTargetInstance = nullptr;
 
 	m_bUpdatingModel = true;
 
@@ -62,7 +68,7 @@ CInstanceBase* CController::LoadInstance(OwlInstance iInstance)
 
 	m_bUpdatingModel = true;
 
-	auto pInstance = m_pModel->LoadInstance(iInstance);
+	auto pInstance = dynamic_cast<CModel*>(m_pModel)->LoadInstance(iInstance);
 
 	auto itView = m_setViews.begin();
 	for (; itView != m_setViews.end(); itView++)
@@ -105,7 +111,7 @@ void CController::ZoomToInstance()
 	ASSERT(m_pModel != nullptr);
 	ASSERT(m_pSelectedInstance != nullptr);
 
-	m_pModel->ZoomToInstance(m_pSelectedInstance);
+	GetModel()->ZoomToInstance(m_pSelectedInstance);
 
 	auto itView = m_setViews.begin();
 	for (; itView != m_setViews.end(); itView++)
@@ -119,7 +125,7 @@ void CController::ZoomOut()
 {
 	ASSERT(m_pModel != nullptr);
 
-	m_pModel->ZoomOut();
+	GetModel()->ZoomOut();
 
 	auto itView = m_setViews.begin();
 	for (; itView != m_setViews.end(); itView++)
@@ -152,7 +158,7 @@ void CController::SaveInstance(OwlInstance iInstance)
 
 	wstring strName;
 	wstring strUniqueName;
-	CInstanceBase::BuildInstanceNames(m_pModel->GetSdaiModel(), iInstance, strName, strUniqueName);
+	CInstanceBase::BuildInstanceNames(m_pModel->getInstance(), iInstance, strName, strUniqueName);
 
 	TCHAR szFilters[] = _T("BIN Files (*.bin)|*.bin|All Files (*.*)|*.*||");
 	CFileDialog dlgFile(FALSE, _T("bin"), strUniqueName.c_str(),
@@ -213,7 +219,7 @@ CInstanceBase* CController::GetTargetInstance() const
 	return m_pTargetInstance;
 }
 
-// ------------------------------------------------------------------------------------------------
+
 void CController::SelectInstance(CViewBase* pSender, CInstanceBase* pInstance)
 {
 	if (m_bUpdatingModel)
@@ -269,7 +275,7 @@ void CController::OnApplicationPropertyChanged(CViewBase* pSender, enumApplicati
 }
 
 // ------------------------------------------------------------------------------------------------
-void CController::OnViewRelations(CViewBase* pSender, int64_t iInstance)
+void CController::OnViewRelations(CViewBase* pSender, SdaiInstance iInstance)
 {
 	auto itView = m_setViews.begin();
 	for (; itView != m_setViews.end(); itView++)
@@ -290,7 +296,7 @@ void CController::OnViewRelations(CViewBase* pSender, CEntity* pEntity)
 	}
 }
 
-// ------------------------------------------------------------------------------------------------
+
 void CController::OnInstanceAttributeEdited(CViewBase* pSender, SdaiInstance iInstance, SdaiAttr pAttribute)
 {
 	auto itView = m_setViews.begin();

@@ -596,8 +596,8 @@ void CPropertiesWnd::LoadApplicationProperties()
 		return;
 	}
 
-	auto pOpenGLView = GetController()->GetView<COpenGLView>();
-	if (pOpenGLView == nullptr)
+	auto pRenderer = GetController()->GetView<_oglRenderer>();
+	if (pRenderer == nullptr)
 	{
 		return;
 	}
@@ -607,7 +607,7 @@ void CPropertiesWnd::LoadApplicationProperties()
 
 	{
 		auto pProperty = new CApplicationProperty(_T("Faces"),
-			pOpenGLView->AreFacesShown() ? TRUE_VALUE_PROPERTY : FALSE_VALUE_PROPERTY, _T("Faces"),
+			pRenderer->getShowFaces(nullptr) ? TRUE_VALUE_PROPERTY : FALSE_VALUE_PROPERTY, _T("Faces"),
 			(DWORD_PTR)new CApplicationPropertyData(enumApplicationProperty::ShowFaces));
 		pProperty->AddOption(TRUE_VALUE_PROPERTY);
 		pProperty->AddOption(FALSE_VALUE_PROPERTY);
@@ -618,7 +618,7 @@ void CPropertiesWnd::LoadApplicationProperties()
 
 	{
 		auto pProperty = new CApplicationProperty(_T("Conceptual faces wireframes"),
-			pOpenGLView->AreConceptualFacesPolygonsShown() ? TRUE_VALUE_PROPERTY : FALSE_VALUE_PROPERTY,
+			pRenderer->getShowConceptualFacesPolygons(nullptr) ? TRUE_VALUE_PROPERTY : FALSE_VALUE_PROPERTY,
 			_T("Conceptual faces wireframes"),
 			(DWORD_PTR)new CApplicationPropertyData(enumApplicationProperty::ShowConceptualFacesWireframes));
 		pProperty->AddOption(TRUE_VALUE_PROPERTY);
@@ -629,7 +629,7 @@ void CPropertiesWnd::LoadApplicationProperties()
 	}
 
 	{
-		auto pProperty = new CApplicationProperty(_T("Lines"), pOpenGLView->AreLinesShown() ? TRUE_VALUE_PROPERTY : FALSE_VALUE_PROPERTY,
+		auto pProperty = new CApplicationProperty(_T("Lines"), pRenderer->getShowLines(nullptr) ? TRUE_VALUE_PROPERTY : FALSE_VALUE_PROPERTY,
 			_T("Lines"),
 			(DWORD_PTR)new CApplicationPropertyData(enumApplicationProperty::ShowLines));
 		pProperty->AddOption(TRUE_VALUE_PROPERTY);
@@ -640,7 +640,7 @@ void CPropertiesWnd::LoadApplicationProperties()
 	}
 
 	{
-		auto pProperty = new CApplicationProperty(_T("Points"), pOpenGLView->ArePointsShown() ? TRUE_VALUE_PROPERTY : FALSE_VALUE_PROPERTY,
+		auto pProperty = new CApplicationProperty(_T("Points"), pRenderer->getShowPoints(nullptr) ? TRUE_VALUE_PROPERTY : FALSE_VALUE_PROPERTY,
 			_T("Points"),
 			(DWORD_PTR)new CApplicationPropertyData(enumApplicationProperty::ShowPoints));
 		pProperty->AddOption(TRUE_VALUE_PROPERTY);
@@ -653,7 +653,7 @@ void CPropertiesWnd::LoadApplicationProperties()
 	{
 		auto pProperty = new CApplicationProperty(
 			_T("Rotation mode"),
-			pOpenGLView->GetRotationMode() == enumRotationMode::XY ? ROTATION_MODE_XY : ROTATION_MODE_XYZ,
+			pRenderer->_getRotationMode() == enumRotationMode::XY ? ROTATION_MODE_XY : ROTATION_MODE_XYZ,
 			_T("XY/XYZ"),
 			(DWORD_PTR)new CApplicationPropertyData(enumApplicationProperty::RotationMode));
 		pProperty->AddOption(ROTATION_MODE_XY);
@@ -665,10 +665,7 @@ void CPropertiesWnd::LoadApplicationProperties()
 #pragma endregion
 
 #pragma region OpenGL
-	auto ioglRender = dynamic_cast<_ioglRenderer*>(pOpenGLView);
-	ASSERT(ioglRender != nullptr);
-
-	auto pBlinnPhongProgram = ioglRender->_getOGLProgramAs<_oglBlinnPhongProgram>();
+	auto pBlinnPhongProgram = pRenderer->_getOGLProgramAs<_oglBlinnPhongProgram>();
 	if (pBlinnPhongProgram != nullptr)
 	{
 		auto pOpenGL = new CMFCPropertyGridProperty(_T("OpenGL"));

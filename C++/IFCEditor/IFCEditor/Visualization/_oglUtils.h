@@ -1,7 +1,6 @@
 #pragma once
 
-#include "engdef.h"
-
+#include "_mvc.h"
 #include "_geometry.h"
 #include "_quaterniond.h"
 
@@ -41,6 +40,7 @@ public: // Methods
 		return 64800;
 	}
 
+#if defined _MFC_VER || defined _AFXDLL
 	static void checkForErrors()
 	{
 		GLenum errLast = GL_NO_ERROR;
@@ -56,26 +56,19 @@ public: // Methods
 			// so check that we get a different error than the last time
 			if (err == errLast)
 			{
-#ifdef _LINUX
-				wxLogError(wxT("OpenGL error state couldn't be reset."));
-#else
 				::MessageBox(
-					::AfxGetMainWnd()->GetSafeHwnd(), 
-					_T("OpenGL error state couldn't be reset."), 
-					_T("OpenGL"), 
+					::AfxGetMainWnd()->GetSafeHwnd(),
+					_T("OpenGL error state couldn't be reset."),
+					_T("OpenGL"),
 					MB_ICONERROR | MB_OK);
 
 				PostQuitMessage(0);
-#endif // _LINUX
 
 				return;
 			}
 
 			errLast = err;
 
-#ifdef _LINUX
-			wxLogError(wxT("OpenGL error %d"), err);
-#else
 #ifdef UNICODE
 			::MessageBoxW(
 				::AfxGetMainWnd()->GetSafeHwnd(),
@@ -90,11 +83,12 @@ public: // Methods
 				MB_ICONERROR | MB_OK);
 #endif
 			PostQuitMessage(0);
-#endif // _LINUX
 		}
 	}
+#endif // #if defined(_MFC_VER) || defined(_AFXDLL)
 };
 
+#if defined _MFC_VER || defined _AFXDLL
 // ************************************************************************************************
 class _oglShader
 {
@@ -112,7 +106,7 @@ public: // Methods
 		, m_szCode(nullptr)
 	{
 		m_iID = glCreateShader(m_iType);
-		ASSERT(m_iID != 0);
+		assert(m_iID != 0);
 	}
 
 	virtual ~_oglShader(void)
@@ -220,7 +214,7 @@ public: // Methods
 	_oglProgram(void)
 	{
 		m_iID = glCreateProgram();
-		ASSERT(m_iID > 0);
+		assert(m_iID > 0);
 	}
 
 	virtual ~_oglProgram()
@@ -284,7 +278,7 @@ protected: // Methods
 		GLint iLocation = glGetUniformLocation(m_iID, szName);
 		if (iLocation == -1)
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return;
 		}			
@@ -303,7 +297,7 @@ protected: // Methods
 	{
 		if (iLocation == -1)
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return;
 		}
@@ -323,7 +317,7 @@ protected: // Methods
 		GLint iLocation = glGetUniformLocation(m_iID, szName);
 		if (iLocation == -1)
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return;
 		}
@@ -335,7 +329,7 @@ protected: // Methods
 	{
 		if (iLocation == -1)
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return;
 		}
@@ -348,7 +342,7 @@ protected: // Methods
 		GLint iLocation = glGetUniformLocation(m_iID, szName);
 		if (iLocation == -1)
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return;
 		}			
@@ -368,7 +362,7 @@ protected: // Methods
 		GLint iLocation = glGetUniformLocation(m_iID, szName);
 		if (iLocation == -1)
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return;
 		}
@@ -379,7 +373,7 @@ protected: // Methods
 		}
 		else
 		{
-			ASSERT(FALSE);
+			assert(false);
 		}			
 	}
 
@@ -387,7 +381,7 @@ protected: // Methods
 	{
 		if (iLocation == -1)
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return;
 		}
@@ -398,7 +392,7 @@ protected: // Methods
 		}
 		else
 		{
-			ASSERT(FALSE);
+			assert(false);
 		}
 	}
 
@@ -406,7 +400,7 @@ protected: // Methods
 	{
 		if (iLocation == -1)
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return;
 		}
@@ -430,7 +424,7 @@ protected: // Methods
 	{ 
 		if (iLocation == -1)
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return;
 		}
@@ -442,7 +436,7 @@ protected: // Methods
 	{
 		if (iLocation == -1)
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return;
 		}
@@ -635,8 +629,7 @@ public: // Methods
 	}
 
 	virtual ~_oglBlinnPhongProgram(void)
-	{
-	}
+	{}
 
 	bool _getSupportsTexture() const
 	{
@@ -652,7 +645,7 @@ public: // Methods
 
 	void _enableTexture(bool bEnable)
 	{
-		ASSERT(m_bSupportsTexture);
+		assert(m_bSupportsTexture);
 
 		_setUniform1f(
 			m_iUseTexture,
@@ -678,7 +671,7 @@ public: // Methods
 
 	void _setAmbientLightWeighting(float fX, float fY, float fZ) const
 	{
-		ASSERT(m_iAmbientLightWeighting >= 0);
+		assert(m_iAmbientLightWeighting >= 0);
 
 		_setUniform3f(
 			m_iAmbientLightWeighting,
@@ -774,7 +767,7 @@ public: // Methods
 
 	void _setAmbientColor(const _material* pMaterial)
 	{
-		ASSERT(pMaterial != nullptr);
+		assert(pMaterial != nullptr);
 
 		_setAmbientColor(
 			pMaterial->getAmbientColor().r(),
@@ -791,7 +784,7 @@ public: // Methods
 
 	void _setDiffuseColor(const _material* pMaterial)
 	{
-		ASSERT(pMaterial != nullptr);
+		assert(pMaterial != nullptr);
 
 		_setUniform3f(
 			m_iMaterialDiffuseColor,
@@ -802,7 +795,7 @@ public: // Methods
 
 	void _setSpecularColor(const _material* pMaterial)
 	{
-		ASSERT(pMaterial != nullptr);
+		assert(pMaterial != nullptr);
 
 		_setUniform3f(
 			m_iMaterialSpecularColor,
@@ -813,7 +806,7 @@ public: // Methods
 
 	void _setEmissiveColor(const _material* pMaterial)
 	{
-		ASSERT(pMaterial != nullptr);
+		assert(pMaterial != nullptr);
 
 		_setUniform3f(
 			m_iMaterialEmissiveColor,
@@ -824,7 +817,7 @@ public: // Methods
 
 	void _setMaterial(const _material* pMaterial)
 	{
-		ASSERT(pMaterial != nullptr);
+		assert(pMaterial != nullptr);
 
 		_setAmbientColor(pMaterial);
 		_setTransparency(pMaterial->getA());
@@ -837,81 +830,81 @@ public: // Methods
 	{
 		if (!_oglProgram::_link())
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return false;
 		}
 
 		m_iUseBlinnPhongModel = glGetUniformLocation(_getID(), "uUseBlinnPhongModel");
-		ASSERT(m_iUseBlinnPhongModel >= 0);
+		assert(m_iUseBlinnPhongModel >= 0);
 
 		if (m_bSupportsTexture)
 		{
 			m_iUseTexture = glGetUniformLocation(_getID(), "uUseTexture");
-			ASSERT(m_iUseTexture >= 0);
+			assert(m_iUseTexture >= 0);
 
 			m_iSampler = glGetUniformLocation(_getID(), "uSampler");
-			ASSERT(m_iSampler >= 0);
+			assert(m_iSampler >= 0);
 		}
 
 		m_iMVMatrix = glGetUniformLocation(_getID(), "uMVMatrix");
-		ASSERT(m_iMVMatrix >= 0);
+		assert(m_iMVMatrix >= 0);
 
 		m_iPMatrix = glGetUniformLocation(_getID(), "uPMatrix");
-		ASSERT(m_iPMatrix >= 0);
+		assert(m_iPMatrix >= 0);
 
 		m_iNMatrix = glGetUniformLocation(_getID(), "uNMatrix");
-		ASSERT(m_iNMatrix >= 0);
+		assert(m_iNMatrix >= 0);
 
 		m_iPointLightingLocation = glGetUniformLocation(_getID(), "uPointLightingLocation");
-		ASSERT(m_iPointLightingLocation >= 0);
+		assert(m_iPointLightingLocation >= 0);
 
 		m_iAmbientLightWeighting = glGetUniformLocation(_getID(), "uAmbientLightWeighting");
-		ASSERT(m_iAmbientLightWeighting >= 0);
+		assert(m_iAmbientLightWeighting >= 0);
 
 		m_iSpecularLightWeighting = glGetUniformLocation(_getID(), "uSpecularLightWeighting");
-		ASSERT(m_iSpecularLightWeighting >= 0);
+		assert(m_iSpecularLightWeighting >= 0);
 
 		m_iDiffuseLightWeighting = glGetUniformLocation(_getID(), "uDiffuseLightWeighting");
-		ASSERT(m_iDiffuseLightWeighting >= 0);
+		assert(m_iDiffuseLightWeighting >= 0);
 
 		m_iMaterialShininess = glGetUniformLocation(_getID(), "uMaterialShininess");
-		ASSERT(m_iMaterialShininess >= 0);
+		assert(m_iMaterialShininess >= 0);
 
 		m_iContrast = glGetUniformLocation(_getID(), "uContrast");
-		ASSERT(m_iContrast >= 0);
+		assert(m_iContrast >= 0);
 
 		m_iBrightness = glGetUniformLocation(_getID(), "uBrightness");
-		ASSERT(m_iBrightness >= 0);
+		assert(m_iBrightness >= 0);
 
 		m_iGamma = glGetUniformLocation(_getID(), "uGamma");
-		ASSERT(m_iGamma >= 0);
+		assert(m_iGamma >= 0);
 
 		m_iMaterialAmbientColor = glGetUniformLocation(_getID(), "uMaterialAmbientColor");
-		ASSERT(m_iMaterialAmbientColor >= 0);
+		assert(m_iMaterialAmbientColor >= 0);
 
 		m_iTransparency = glGetUniformLocation(_getID(), "uTransparency");
-		ASSERT(m_iTransparency >= 0);
+		assert(m_iTransparency >= 0);
 
 		m_iMaterialDiffuseColor = glGetUniformLocation(_getID(), "uMaterialDiffuseColor");
-		ASSERT(m_iMaterialDiffuseColor >= 0);
+		assert(m_iMaterialDiffuseColor >= 0);
 
 		m_iMaterialSpecularColor = glGetUniformLocation(_getID(), "uMaterialSpecularColor");
-		ASSERT(m_iMaterialSpecularColor >= 0);
+		assert(m_iMaterialSpecularColor >= 0);
 
 		m_iMaterialEmissiveColor = glGetUniformLocation(_getID(), "uMaterialEmissiveColor");
-		ASSERT(m_iMaterialEmissiveColor >= 0);
+		assert(m_iMaterialEmissiveColor >= 0);
 
 		m_iVertexPosition = glGetAttribLocation(_getID(), "aVertexPosition");
-		ASSERT(m_iVertexPosition >= 0);
+		assert(m_iVertexPosition >= 0);
 
 		m_iVertexNormal = glGetAttribLocation(_getID(), "aVertexNormal");
-		ASSERT(m_iVertexNormal >= 0);
+		assert(m_iVertexNormal >= 0);
 
 		if (m_bSupportsTexture)
 		{
 			m_iTextureCoord = glGetAttribLocation(_getID(), "aTextureCoord");
-			ASSERT(m_iTextureCoord >= 0);
+			assert(m_iTextureCoord >= 0);
 		}
 
 		return true;
@@ -929,7 +922,7 @@ public: // Methods
 
 	GLint _getTextureCoord() const
 	{
-		ASSERT(m_bSupportsTexture);
+		assert(m_bSupportsTexture);
 
 		return m_iTextureCoord;
 	}
@@ -966,7 +959,7 @@ public: // Methods
 
 	void _setSampler(int iSampler) const
 	{
-		ASSERT(m_bSupportsTexture);
+		assert(m_bSupportsTexture);
 
 		glProgramUniform1i(
 			_getID(),
@@ -1014,7 +1007,7 @@ public: // Methods
 		, m_hGLContext(nullptr)
 		, m_iSamples(iSamples)
 	{
-		ASSERT(m_hDC != nullptr);
+		assert(m_hDC != nullptr);
 
 		create();
 	}
@@ -1024,17 +1017,17 @@ public: // Methods
 		if (m_hGLContext != nullptr)
 		{
 			BOOL bResult = wglMakeCurrent(m_hDC, nullptr);
-			ASSERT(bResult);
+			assert(bResult);
 
 			bResult = wglDeleteContext(m_hGLContext);
-			ASSERT(bResult);
+			assert(bResult);
 		}
 	}
 
 	BOOL makeCurrent()
 	{
-		ASSERT(m_hDC != nullptr);
-		ASSERT(m_hGLContext != nullptr);
+		assert(m_hDC != nullptr);
+		assert(m_hGLContext != nullptr);
 
 		return wglMakeCurrent(m_hDC, m_hGLContext);
 	}
@@ -1105,17 +1098,17 @@ public: // Methods
 
 		// Get the best available match of pixel format for the device context   
 		int iPixelFormat = ChoosePixelFormat(hDCTemp, &pfd);
-		ASSERT(iPixelFormat > 0);
+		assert(iPixelFormat > 0);
 
 		// Make that the pixel format of the device context  
 		BOOL bResult = SetPixelFormat(hDCTemp, iPixelFormat, &pfd);
-		ASSERT(bResult);
+		assert(bResult);
 
 		HGLRC hTempGLContext = wglCreateContext(hDCTemp);
-		ASSERT(hTempGLContext);
+		assert(hTempGLContext);
 
 		bResult = wglMakeCurrent(hDCTemp, hTempGLContext);
-		ASSERT(bResult);
+		assert(bResult);
 
 		_oglUtils::checkForErrors();
 
@@ -1197,15 +1190,15 @@ public: // Methods
 		}
 
 		bResult = wglMakeCurrent(nullptr, nullptr);
-		ASSERT(bResult);
+		assert(bResult);
 
 		bResult = wglDeleteContext(hTempGLContext);
-		ASSERT(bResult);
+		assert(bResult);
 
 		if (bMSAASupport)
 		{
 			bResult = SetPixelFormat(m_hDC, iPixelFormat, &pfd);
-			ASSERT(bResult);
+			assert(bResult);
 
 			int arContextAttributes[] = {
 				WGL_CONTEXT_MAJOR_VERSION_ARB, MIN_GL_MAJOR_VERSION,
@@ -1218,18 +1211,18 @@ public: // Methods
 			};
 
 			m_hGLContext = wglCreateContextAttribsARB(m_hDC, 0, arContextAttributes);
-			ASSERT(m_hGLContext);
+			assert(m_hGLContext);
 		}
 		else
 		{
 			iPixelFormat = ChoosePixelFormat(m_hDC, &pfd);
-			ASSERT(iPixelFormat > 0);
+			assert(iPixelFormat > 0);
 
 			bResult = SetPixelFormat(m_hDC, iPixelFormat, &pfd);
-			ASSERT(bResult);
+			assert(bResult);
 
 			m_hGLContext = wglCreateContext(m_hDC);
-			ASSERT(m_hGLContext);
+			assert(m_hGLContext);
 		}
 
 		::ReleaseDC(hWndTemp, hDCTemp);
@@ -1349,14 +1342,14 @@ public: // Methods
 	{
 		if (m_iFrameBuffer == 0)
 		{
-			ASSERT(m_iTextureBuffer == 0);
-			ASSERT(m_iRenderBuffer == 0);
+			assert(m_iTextureBuffer == 0);
+			assert(m_iRenderBuffer == 0);
 
 			/*
 			* Frame buffer
 			*/
 			glGenFramebuffers(1, &m_iFrameBuffer);
-			ASSERT(m_iFrameBuffer != 0);
+			assert(m_iFrameBuffer != 0);
 
 			glBindFramebuffer(GL_FRAMEBUFFER, m_iFrameBuffer);
 
@@ -1364,7 +1357,7 @@ public: // Methods
 			* Texture buffer
 			*/
 			glGenTextures(1, &m_iTextureBuffer);
-			ASSERT(m_iTextureBuffer != 0);
+			assert(m_iTextureBuffer != 0);
 
 			glBindTexture(GL_TEXTURE_2D, m_iTextureBuffer);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -1382,7 +1375,7 @@ public: // Methods
 			* Depth buffer
 			*/
 			glGenRenderbuffers(1, &m_iRenderBuffer);
-			ASSERT(m_iRenderBuffer != 0);
+			assert(m_iRenderBuffer != 0);
 
 			glBindRenderbuffer(GL_RENDERBUFFER, m_iRenderBuffer);
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, iWidth, iHeight);
@@ -1407,14 +1400,14 @@ public: // Methods
 
 	void bind()
 	{
-		ASSERT(m_iFrameBuffer != 0);
+		assert(m_iFrameBuffer != 0);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, m_iFrameBuffer);
 	}
 
 	void unbind()
 	{
-		ASSERT(m_iFrameBuffer != 0);
+		assert(m_iFrameBuffer != 0);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
@@ -1501,51 +1494,37 @@ public: // Methods
 };
 
 // ************************************************************************************************
-template <class Instance>
 class _oglBuffers
 {
 
 private: // Members
 
-	map<GLuint, vector<Instance*>> m_mapInstancesCohorts;
+	map<GLuint, vector<_geometry*>> m_mapCohorts;
 	map<wstring, GLuint> m_mapVAOs;
 	map<wstring, GLuint> m_mapBuffers;
 
 public: // Methods
 
 	_oglBuffers()
-		: m_mapInstancesCohorts()
+		: m_mapCohorts()
 		, m_mapVAOs()
 		, m_mapBuffers()
-	{
-	}
+	{}
 
 	virtual ~_oglBuffers()
-	{
-	}
+	{}
 
-	map<GLuint, vector<Instance*>>& instancesCohorts()
-	{
-		return m_mapInstancesCohorts;
-	}
+	map<GLuint, vector<_geometry*>>& cohorts() { return m_mapCohorts; }
+	map<wstring, GLuint>& VAOs() { return m_mapVAOs; }
+	map<wstring, GLuint>& buffers() { return m_mapBuffers; }
 
-	map<wstring, GLuint>& VAOs()
+	GLuint findVAO(_geometry* pTargetGeometry)
 	{
-		return m_mapVAOs;
-	}
-
-	map<wstring, GLuint>& buffers()
-	{
-		return m_mapBuffers;
-	}
-
-	GLuint findVAO(Instance* pInstance)
-	{
-		for (auto itCohort : m_mapInstancesCohorts)
+		for (auto itCohort : m_mapCohorts)
 		{
-			for (auto itInstance : itCohort.second)
+			for (auto pGeometry : itCohort.second)
 			{
-				if (pInstance == itInstance)
+				if (pGeometry == pTargetGeometry)
 				{
 					return itCohort.first;
 				}
@@ -1576,7 +1555,7 @@ public: // Methods
 			glGenVertexArrays(1, &iVAO);
 			if (iVAO == 0)
 			{
-				ASSERT(FALSE);
+				assert(false);
 
 				return 0;
 			}
@@ -1611,7 +1590,7 @@ public: // Methods
 			glGenBuffers(1, &iBuffer);
 			if (iBuffer == 0)
 			{
-				ASSERT(FALSE);
+				assert(false);
 
 				return 0;
 			}
@@ -1629,7 +1608,7 @@ public: // Methods
 	{
 		if (vecCohorts.empty())
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return 0;
 		}
@@ -1639,19 +1618,19 @@ public: // Methods
 
 		if (iIBO == 0)
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return 0;
 		}
 
 		m_mapBuffers[to_wstring(iIBO)] = iIBO;
 
-		int_t iIndicesCount = 0;
+		uint32_t iIndicesCount = 0;
 		unsigned int* pIndices = _cohort::merge(vecCohorts, iIndicesCount);
 
 		if ((pIndices == nullptr) || (iIndicesCount == 0))
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return 0;
 		}
@@ -1667,8 +1646,8 @@ public: // Methods
 		GLsizei iIBOOffset = 0;
 		for (auto pCohort : vecCohorts)
 		{
-			pCohort->ibo() = iIBO;
-			pCohort->iboOffset() = iIBOOffset;
+			pCohort->IBO() = iIBO;
+			pCohort->IBOOffset() = iIBOOffset;
 
 			iIBOOffset += (GLsizei)pCohort->indices().size();
 		}
@@ -1676,21 +1655,21 @@ public: // Methods
 		return iIndicesCount;
 	}
 
-	int64_t createInstancesCohort(const vector<Instance*>& vecInstances, _oglBlinnPhongProgram* pProgram)
+	int64_t createCohort(const vector<_geometry*>& vecGeometries, _oglBlinnPhongProgram* pProgram)
 	{
-		if (vecInstances.empty() || (pProgram == nullptr))
+		if (vecGeometries.empty() || (pProgram == nullptr))
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return 0;
 		}
 
-		int_t iVerticesCount = 0;
-		float* pVertices = getVertices(vecInstances, pProgram->_getSupportsTexture(), iVerticesCount);
+		int64_t iVerticesCount = 0;
+		float* pVertices = getVertices(vecGeometries, pProgram->_getSupportsTexture(), iVerticesCount);
 
 		if ((pVertices == nullptr) || (iVerticesCount == 0))
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return 0;
 		}
@@ -1700,7 +1679,7 @@ public: // Methods
 
 		if (iVAO == 0)
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return 0;
 		}
@@ -1714,48 +1693,48 @@ public: // Methods
 
 		if (iVBO == 0)
 		{
-			ASSERT(FALSE);
+			assert(false);
 
 			return 0;
 		}
 
 		m_mapBuffers[to_wstring(iVBO)] = iVBO;
 
-		const int64_t _VERTEX_LENGTH = 6 + (pProgram->_getSupportsTexture() ? 2 : 0);
+		const size_t VERTEX_LENGTH = 6 + (pProgram->_getSupportsTexture() ? 2 : 0);
 
 		glBindBuffer(GL_ARRAY_BUFFER, iVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * iVerticesCount * _VERTEX_LENGTH, pVertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * (size_t)iVerticesCount * VERTEX_LENGTH, pVertices, GL_STATIC_DRAW);
 		delete[] pVertices;
 
 		setVBOAttributes(pProgram);
 
 		GLsizei iVBOOffset = 0;
-		for (auto pInstance : vecInstances)
+		for (auto pGeometry : vecGeometries)
 		{
-			pInstance->VBO() = iVBO;
-			pInstance->VBOOffset() = iVBOOffset;
+			pGeometry->VBO() = iVBO;
+			pGeometry->VBOOffset() = iVBOOffset;
 
-			iVBOOffset += (GLsizei)pInstance->GetVerticesCount();
+			iVBOOffset += (GLsizei)pGeometry->getVerticesCount();
 		}
 
 		glBindVertexArray(0);
 
 		_oglUtils::checkForErrors();
 
-		m_mapInstancesCohorts[iVAO] = vecInstances;
+		m_mapCohorts[iVAO] = vecGeometries;
 
 		return iVerticesCount;
 	}
 
 	void setVBOAttributes(_oglBlinnPhongProgram* pProgram) const
 	{
-		const int64_t _VERTEX_LENGTH = 6 + (pProgram->_getSupportsTexture() ? 2 : 0);
+		const int64_t VERTEX_LENGTH = 6 + (pProgram->_getSupportsTexture() ? 2 : 0);
 
-		glVertexAttribPointer(pProgram->_getVertexPosition(), 3, GL_FLOAT, false, (GLsizei)(sizeof(GLfloat) * _VERTEX_LENGTH), 0);
-		glVertexAttribPointer(pProgram->_getVertexNormal(), 3, GL_FLOAT, false, (GLsizei)(sizeof(GLfloat) * _VERTEX_LENGTH), (void*)(sizeof(GLfloat) * 3));
+		glVertexAttribPointer(pProgram->_getVertexPosition(), 3, GL_FLOAT, false, (GLsizei)(sizeof(GLfloat) * VERTEX_LENGTH), 0);
+		glVertexAttribPointer(pProgram->_getVertexNormal(), 3, GL_FLOAT, false, (GLsizei)(sizeof(GLfloat) * VERTEX_LENGTH), (void*)(sizeof(GLfloat) * 3));
 		if (pProgram->_getSupportsTexture())
 		{
-			glVertexAttribPointer(pProgram->_getTextureCoord(), 2, GL_FLOAT, false, (GLsizei)(sizeof(GLfloat) * _VERTEX_LENGTH), (void*)(sizeof(GLfloat) * 6));
+			glVertexAttribPointer(pProgram->_getTextureCoord(), 2, GL_FLOAT, false, (GLsizei)(sizeof(GLfloat) * VERTEX_LENGTH), (void*)(sizeof(GLfloat) * 6));
 		}
 
 		glEnableVertexAttribArray(pProgram->_getVertexPosition());
@@ -1769,60 +1748,60 @@ public: // Methods
 	}
 
 	// X, Y, Z, Nx, Ny, Nz, [Tx, Ty]
-	static float* getVertices(const vector<Instance*>& vecInstances, bool bSupportsTexture, int_t& iVerticesCount)
+	static float* getVertices(const vector<_geometry*>& vecGeometries, bool bSupportsTexture, int64_t& iVerticesCount)
 	{
-		const int64_t _VERTEX_LENGTH = 6 + (bSupportsTexture ? 2 : 0);
+		const size_t VERTEX_LENGTH = 6 + (bSupportsTexture ? 2 : 0);
 
 		iVerticesCount = 0;
-		for (size_t i = 0; i < vecInstances.size(); i++)
+		for (size_t i = 0; i < vecGeometries.size(); i++)
 		{
-			iVerticesCount += vecInstances[i]->GetVerticesCount();
+			iVerticesCount += vecGeometries[i]->getVerticesCount();
 		}
 
-		float* pVertices = new float[iVerticesCount * _VERTEX_LENGTH];
+		float* pVertices = new float[(size_t)iVerticesCount * VERTEX_LENGTH];
 
-		int_t iOffset = 0;
-		for (size_t i = 0; i < vecInstances.size(); i++)
+		int64_t iOffset = 0;
+		for (size_t i = 0; i < vecGeometries.size(); i++)
 		{
-			float* pSrcVertices = getVertices(vecInstances[i], bSupportsTexture);
+			float* pSrcVertices = getVertices(vecGeometries[i], bSupportsTexture);
 
 			memcpy((float*)pVertices + iOffset, pSrcVertices,
-				vecInstances[i]->GetVerticesCount() * _VERTEX_LENGTH * sizeof(float));
+				(size_t)vecGeometries[i]->getVerticesCount() * VERTEX_LENGTH * sizeof(float));
 
 			delete[] pSrcVertices;
 
-			iOffset += vecInstances[i]->GetVerticesCount() * _VERTEX_LENGTH;
+			iOffset += vecGeometries[i]->getVerticesCount() * VERTEX_LENGTH;
 		}
 
 		return pVertices;
 	}
 
 	// X, Y, Z, Nx, Ny, Nz, [Tx, Ty]
-	static float* getVertices(Instance* pInstance, bool bSupportsTexture)
+	static float* getVertices(_geometry* pGeometry, bool bSupportsTexture)
 	{
-		const int64_t _SRC_VERTEX_LENGTH = pInstance->GetVertexLength();
-		const int64_t _DEST_VERTEX_LENGTH = 6 + (bSupportsTexture ? 2 : 0);
+		const size_t _SRC_VERTEX_LENGTH = (size_t)pGeometry->getVertexLength();
+		const size_t _DEST_VERTEX_LENGTH = 6 + (bSupportsTexture ? 2 : 0);
 
-		float* pVertices = new float[pInstance->GetVerticesCount() * _DEST_VERTEX_LENGTH];
-		memset(pVertices, 0, pInstance->GetVerticesCount() * _DEST_VERTEX_LENGTH * sizeof(float));
+		float* pVertices = new float[(size_t)pGeometry->getVerticesCount() * _DEST_VERTEX_LENGTH];
+		memset(pVertices, 0, (size_t)pGeometry->getVerticesCount() * _DEST_VERTEX_LENGTH * sizeof(float));
 
-		for (int64_t iVertex = 0; iVertex < pInstance->GetVerticesCount(); iVertex++)
+		for (int64_t iVertex = 0; iVertex < pGeometry->getVerticesCount(); iVertex++)
 		{
 			// X, Y, Z
-			pVertices[(iVertex * _DEST_VERTEX_LENGTH) + 0] = pInstance->GetVertices()[(iVertex * _SRC_VERTEX_LENGTH) + 0];
-			pVertices[(iVertex * _DEST_VERTEX_LENGTH) + 1] = pInstance->GetVertices()[(iVertex * _SRC_VERTEX_LENGTH) + 1];
-			pVertices[(iVertex * _DEST_VERTEX_LENGTH) + 2] = pInstance->GetVertices()[(iVertex * _SRC_VERTEX_LENGTH) + 2];
+			pVertices[(iVertex * _DEST_VERTEX_LENGTH) + 0] = pGeometry->getVertices()[(iVertex * _SRC_VERTEX_LENGTH) + 0];
+			pVertices[(iVertex * _DEST_VERTEX_LENGTH) + 1] = pGeometry->getVertices()[(iVertex * _SRC_VERTEX_LENGTH) + 1];
+			pVertices[(iVertex * _DEST_VERTEX_LENGTH) + 2] = pGeometry->getVertices()[(iVertex * _SRC_VERTEX_LENGTH) + 2];
 
 			// Nx, Ny, Nz
-			pVertices[(iVertex * _DEST_VERTEX_LENGTH) + 3] = pInstance->GetVertices()[(iVertex * _SRC_VERTEX_LENGTH) + 3];
-			pVertices[(iVertex * _DEST_VERTEX_LENGTH) + 4] = pInstance->GetVertices()[(iVertex * _SRC_VERTEX_LENGTH) + 4];
-			pVertices[(iVertex * _DEST_VERTEX_LENGTH) + 5] = pInstance->GetVertices()[(iVertex * _SRC_VERTEX_LENGTH) + 5];
+			pVertices[(iVertex * _DEST_VERTEX_LENGTH) + 3] = pGeometry->getVertices()[(iVertex * _SRC_VERTEX_LENGTH) + 3];
+			pVertices[(iVertex * _DEST_VERTEX_LENGTH) + 4] = pGeometry->getVertices()[(iVertex * _SRC_VERTEX_LENGTH) + 4];
+			pVertices[(iVertex * _DEST_VERTEX_LENGTH) + 5] = pGeometry->getVertices()[(iVertex * _SRC_VERTEX_LENGTH) + 5];
 
 			// Tx, Ty
 			if (bSupportsTexture)
 			{
-				pVertices[(iVertex * _DEST_VERTEX_LENGTH) + 6] = pInstance->GetVertices()[(iVertex * _SRC_VERTEX_LENGTH) + 6];
-				pVertices[(iVertex * _DEST_VERTEX_LENGTH) + 7] = pInstance->GetVertices()[(iVertex * _SRC_VERTEX_LENGTH) + 7];
+				pVertices[(iVertex * _DEST_VERTEX_LENGTH) + 6] = pGeometry->getVertices()[(iVertex * _SRC_VERTEX_LENGTH) + 6];
+				pVertices[(iVertex * _DEST_VERTEX_LENGTH) + 7] = pGeometry->getVertices()[(iVertex * _SRC_VERTEX_LENGTH) + 7];
 			}
 		}
 
@@ -1831,7 +1810,7 @@ public: // Methods
 
 	void clear()
 	{
-		m_mapInstancesCohorts.clear();
+		m_mapCohorts.clear();
 
 		for (auto itVAO = m_mapVAOs.begin(); itVAO != m_mapVAOs.end(); itVAO++)
 		{
@@ -1876,24 +1855,11 @@ enum class enumView : int64_t
 	Isometric,
 };
 
+// ************************************************************************************************
 enum class enumRotationMode : int
 {
 	XY = 0, // Standard
 	XYZ,	// Quaternions
-};
-
-// ************************************************************************************************
-struct _ioglRenderer
-{
-	virtual _oglProgram* _getOGLProgram() const PURE;
-
-	template<class Program>
-	Program* _getOGLProgramAs() const
-	{
-		return dynamic_cast<Program*>(_getOGLProgram());
-	}
-
-	virtual void _redraw() PURE;
 };
 
 // ************************************************************************************************
@@ -1914,34 +1880,829 @@ const wchar_t COORDINATE_SYSTEM_VBO[] = L"COORDINATE_SYSTEM_VBO";
 const wchar_t COORDINATE_SYSTEM_IBO[] = L"COORDINATE_SYSTEM_IBO";
 
 // ************************************************************************************************
-template <class Instance>
-class _oglRenderer : public _ioglRenderer
+enum class enumMouseEvent : int
+{
+	Move = 0,
+	LBtnDown,
+	LBtnUp,
+	MBtnDown,
+	MBtnUp,
+	RBtnDown,
+	RBtnUp,
+};
+
+// ************************************************************************************************
+#define CULL_FACES_NONE L"<none>"
+#define CULL_FACES_FRONT L"Front"
+#define CULL_FACES_BACK L"Back"
+
+// ************************************************************************************************
+// X, Y, Z, Nx, Ny, Nz
+#define GEOMETRY_VBO_VERTEX_LENGTH  6
+
+// ************************************************************************************************
+class _oglRendererSettings
 {
 
 protected: // Members
 
-	CWnd* m_pWnd;
-	CMFCToolTipCtrl m_toolTipCtrl;
-
-	_oglContext* m_pOGLContext;
-	_oglBlinnPhongProgram* m_pOGLProgram;
-	_oglShader* m_pVertexShader;
-	_oglShader* m_pFragmentShader;
+	// Mode
 	enumProjection m_enProjection;
-	glm::mat4 m_matModelView;	
-
-	_oglBuffers<Instance> m_oglBuffers;
 
 	// Rotation
 	enumRotationMode m_enRotationMode;
 
-	// degrees
+	// 2D Rotation
 	float m_fXAngle;
 	float m_fYAngle;
 	float m_fZAngle;
 
-	// radians
+	// 3D Rotation
 	_quaterniond m_rotation;
+
+	// View
+	BOOL m_bShowFaces;
+	CString m_strCullFaces;
+	BOOL m_bShowFacesPolygons;
+	BOOL m_bShowConceptualFacesPolygons;
+	BOOL m_bShowLines;
+	GLfloat m_fLineWidth;
+	BOOL m_bShowPoints;
+	GLfloat m_fPointSize;
+	BOOL m_bShowBoundingBoxes;
+	BOOL m_bShowNormalVectors;
+	BOOL m_bShowTangenVectors;
+	BOOL m_bShowBiNormalVectors;
+	BOOL m_bScaleVectors;
+	BOOL m_bShowCoordinateSystem;
+	BOOL m_bShowNavigator;
+
+public: // Methods
+
+	_oglRendererSettings()
+		: m_enProjection(enumProjection::Perspective)
+		, m_enRotationMode(enumRotationMode::XYZ)
+		, m_fXAngle(0.f)
+		, m_fYAngle(0.f)
+		, m_fZAngle(0.f)
+		, m_rotation(_quaterniond::toQuaternion(0., 0., 0.))
+		, m_bShowFaces(TRUE)
+		, m_strCullFaces(CULL_FACES_NONE)
+		, m_bShowFacesPolygons(FALSE)
+		, m_bShowConceptualFacesPolygons(TRUE)
+		, m_bShowLines(TRUE)
+		, m_fLineWidth(1.f)
+		, m_bShowPoints(TRUE)
+		, m_fPointSize(1.f)
+		, m_bShowBoundingBoxes(FALSE)
+		, m_bShowNormalVectors(FALSE)
+		, m_bShowTangenVectors(FALSE)
+		, m_bShowBiNormalVectors(FALSE)
+		, m_bScaleVectors(FALSE)
+		, m_bShowCoordinateSystem(TRUE)
+		, m_bShowNavigator(TRUE)
+	{}
+
+	virtual ~_oglRendererSettings()
+	{}
+
+	enumProjection _getProjection() const { return m_enProjection; }
+	void _setProjection(enumProjection enProjection)
+	{
+		m_enProjection = enProjection;
+
+		_setView(enumView::Isometric);
+	}
+
+	enumRotationMode _getRotationMode() const { return m_enRotationMode; }
+	void _setRotationMode(enumRotationMode enRotationMode)
+	{
+		m_enRotationMode = enRotationMode;
+
+		_setView(enumView::Isometric);
+	}
+
+	void _setView(enumView enView)
+	{
+		// Note: OpenGL/Quaternions - CW/CCW
+
+		m_fXAngle = 0.f;
+		m_fYAngle = 0.f;
+		m_fZAngle = 0.f;
+		m_rotation = _quaterniond::toQuaternion(0., 0., 0.);
+
+		switch (enView)
+		{
+			case enumView::Front:
+			{
+				if (m_enRotationMode == enumRotationMode::XY)
+				{
+					m_fXAngle = 270.f;
+				}
+				else if (m_enRotationMode == enumRotationMode::XYZ)
+				{
+					m_rotation = _quaterniond::toQuaternion(0., 0., glm::radians(90.));
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+			break;
+
+			case enumView::Back:
+			{
+				if (m_enRotationMode == enumRotationMode::XY)
+				{
+					m_fXAngle = 90.f;
+					m_fYAngle = 180.f;
+				}
+				else if (m_enRotationMode == enumRotationMode::XYZ)
+				{
+					m_rotation = _quaterniond::toQuaternion(glm::radians(180.), 0., glm::radians(90.));
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+			break;
+
+			case enumView::Left:
+			{
+				if (m_enRotationMode == enumRotationMode::XY)
+				{
+					m_fXAngle = 270.f;
+					m_fZAngle = 90.f;
+				}
+				else if (m_enRotationMode == enumRotationMode::XYZ)
+				{
+					m_rotation = _quaterniond::toQuaternion(glm::radians(270.), 0., glm::radians(90.));
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+			break;
+
+			case enumView::Right:
+			{
+				if (m_enRotationMode == enumRotationMode::XY)
+				{
+					m_fXAngle = 270.f;
+					m_fZAngle = 270.f;
+				}
+				else if (m_enRotationMode == enumRotationMode::XYZ)
+				{
+					m_rotation = _quaterniond::toQuaternion(glm::radians(90.), 0., glm::radians(90.));
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+			break;
+
+			case enumView::Top:
+			{
+				m_fXAngle = 0.f;
+				m_fYAngle = 0.f;
+				m_fZAngle = 0.f;
+			}
+			break;
+
+			case enumView::Bottom:
+			{
+				if (m_enRotationMode == enumRotationMode::XY)
+				{
+					m_fYAngle = 180.f;
+				}
+				else if (m_enRotationMode == enumRotationMode::XYZ)
+				{
+					m_rotation = _quaterniond::toQuaternion(0., glm::radians(180.), 0.);
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+			break;
+
+			case enumView::FrontTopLeft:
+			{
+				if (m_enRotationMode == enumRotationMode::XY)
+				{
+					m_fXAngle = 315.f;
+					m_fZAngle = 45.f;
+				}
+				else if (m_enRotationMode == enumRotationMode::XYZ)
+				{
+					m_rotation = _quaterniond::toQuaternion(glm::radians(-45.), 0., glm::radians(-315.));
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+			break;
+
+			case enumView::FrontTopRight:
+			{
+				if (m_enRotationMode == enumRotationMode::XY)
+				{
+					m_fXAngle = 315.f;
+					m_fZAngle = 315.f;
+				}
+				else if (m_enRotationMode == enumRotationMode::XYZ)
+				{
+					m_rotation = _quaterniond::toQuaternion(glm::radians(-315.), 0., glm::radians(-315.));
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+			break;
+
+			case enumView::FrontBottomLeft:
+			{
+				if (m_enRotationMode == enumRotationMode::XY)
+				{
+					m_fXAngle = 225.f;
+					m_fZAngle = 45.f;
+				}
+				else if (m_enRotationMode == enumRotationMode::XYZ)
+				{
+					m_rotation = _quaterniond::toQuaternion(glm::radians(-45.), 0., glm::radians(-225.));
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+			break;
+
+			case enumView::FrontBottomRight:
+			{
+				if (m_enRotationMode == enumRotationMode::XY)
+				{
+					m_fXAngle = 225.f;
+					m_fZAngle = 315.f;
+				}
+				else if (m_enRotationMode == enumRotationMode::XYZ)
+				{
+					m_rotation = _quaterniond::toQuaternion(glm::radians(-315.), 0., glm::radians(-225.));
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+			break;
+
+			case enumView::BackTopLeft:
+			{
+				if (m_enRotationMode == enumRotationMode::XY)
+				{
+					m_fXAngle = 315.f;
+					m_fZAngle = 225.f;
+				}
+				else if (m_enRotationMode == enumRotationMode::XYZ)
+				{
+					m_rotation = _quaterniond::toQuaternion(glm::radians(-225.), 0., glm::radians(-315.));
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+			break;
+
+			case enumView::BackTopRight:
+			{
+				if (m_enRotationMode == enumRotationMode::XY)
+				{
+					m_fXAngle = 315.f;
+					m_fZAngle = 135.f;
+				}
+				else if (m_enRotationMode == enumRotationMode::XYZ)
+				{
+					m_rotation = _quaterniond::toQuaternion(glm::radians(-135.), 0., glm::radians(-315.f));
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+			break;
+
+			case enumView::BackBottomLeft:
+			{
+				if (m_enRotationMode == enumRotationMode::XY)
+				{
+					m_fXAngle = 225.f;
+					m_fZAngle = 225.f;
+				}
+				else if (m_enRotationMode == enumRotationMode::XYZ)
+				{
+					m_rotation = _quaterniond::toQuaternion(glm::radians(-225.), 0., glm::radians(-225.));
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+			break;
+
+			case enumView::BackBottomRight:
+			{
+				if (m_enRotationMode == enumRotationMode::XY)
+				{
+					m_fXAngle = 225.f;
+					m_fZAngle = 135.f;
+				}
+				else if (m_enRotationMode == enumRotationMode::XYZ)
+				{
+					m_rotation = _quaterniond::toQuaternion(glm::radians(-135.), 0., glm::radians(-225.));
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+			break;
+
+			case enumView::Isometric:
+			{
+				if (m_enRotationMode == enumRotationMode::XY)
+				{
+					m_fXAngle = 315.f;
+					m_fYAngle = 0.f;
+					m_fZAngle = 45.f;
+				}
+				else if (m_enRotationMode == enumRotationMode::XYZ)
+				{
+					m_rotation = _quaterniond::toQuaternion(glm::radians(-45.), 0., glm::radians(45.));
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+			break;
+
+			default:
+			{
+				assert(false);
+			}
+			break;
+		} // switch (enView)
+	}
+
+	void setShowFaces(BOOL bValue)
+	{
+		m_bShowFaces = bValue;
+
+		string strSettingName(typeid(this).raw_name());
+		strSettingName += NAMEOFVAR(m_bShowFaces);
+
+		saveSetting(strSettingName, bValue ? "TRUE" : "FALSE");
+	}
+
+	BOOL getShowFaces(_model* pModel)
+	{
+		if ((pModel == nullptr) || (pModel == getModel()))
+		{
+			return m_bShowFaces;
+		}
+
+		return TRUE;
+	}
+
+	void setCullFacesMode(LPCTSTR szMode)
+	{
+		m_strCullFaces = szMode;
+
+		string strSettingName(typeid(this).raw_name());
+		strSettingName += NAMEOFVAR(m_strCullFaces);
+
+		saveSetting(strSettingName, (LPCSTR)CW2A(szMode));
+	}
+
+	LPCTSTR getCullFacesMode(_model* pModel) const
+	{
+		if ((pModel == nullptr) || (pModel == getController()->getModel()))
+		{
+			return m_strCullFaces;
+		}
+
+		return CULL_FACES_NONE;
+	}
+
+	void setShowFacesPolygons(BOOL bValue)
+	{
+		m_bShowFacesPolygons = bValue;
+
+		string strSettingName(typeid(this).raw_name());
+		strSettingName += NAMEOFVAR(m_bShowFacesPolygons);
+
+		saveSetting(strSettingName, bValue ? "TRUE" : "FALSE");
+	}
+
+	BOOL getShowFacesPolygons(_model* pModel) const
+	{
+		if ((pModel == nullptr) || (pModel == getController()->getModel()))
+		{
+			return m_bShowFacesPolygons;
+		}
+
+		return FALSE;
+	}
+
+	void setShowConceptualFacesPolygons(BOOL bValue)
+	{
+		m_bShowConceptualFacesPolygons = bValue;
+
+		string strSettingName(typeid(this).raw_name());
+		strSettingName += NAMEOFVAR(m_bShowConceptualFacesPolygons);
+
+		saveSetting(strSettingName, bValue ? "TRUE" : "FALSE");
+	}
+
+	BOOL getShowConceptualFacesPolygons(_model* pModel) const
+	{
+		if ((pModel == nullptr) || (pModel == getController()->getModel()))
+		{
+			return m_bShowConceptualFacesPolygons;
+		}
+
+		return TRUE;
+	}
+
+	void setShowLines(BOOL bValue)
+	{
+		m_bShowLines = bValue;
+
+		string strSettingName(typeid(this).raw_name());
+		strSettingName += NAMEOFVAR(m_bShowLines);
+
+		saveSetting(strSettingName, bValue ? "TRUE" : "FALSE");
+	}
+
+	BOOL getShowLines(_model* pModel) const
+	{
+		if ((pModel == nullptr) || (pModel == getController()->getModel()))
+		{
+			return m_bShowLines;
+		}
+
+		return TRUE;
+	}
+
+	void setLineWidth(GLfloat fWidth)
+	{
+		m_fLineWidth = fWidth;
+	}
+
+	GLfloat getLineWidth() const
+	{
+		return m_fLineWidth;
+	}
+
+	void setShowPoints(BOOL bValue)
+	{
+		m_bShowPoints = bValue;
+
+		string strSettingName(typeid(this).raw_name());
+		strSettingName += NAMEOFVAR(m_bShowPoints);
+
+		saveSetting(strSettingName, bValue ? "TRUE" : "FALSE");
+	}
+
+	BOOL getShowPoints(_model* pModel) const
+	{
+		if ((pModel == nullptr) || (pModel == getController()->getModel()))
+		{
+			return m_bShowPoints;
+		}
+
+		return TRUE;
+	}
+
+	void setPointSize(GLfloat fSize)
+	{
+		m_fPointSize = fSize;
+	}
+
+	GLfloat getPointSize() const
+	{
+		return m_fPointSize;
+	}
+
+	void setShowBoundingBoxes(BOOL bValue)
+	{
+		m_bShowBoundingBoxes = bValue;
+
+		string strSettingName(typeid(this).raw_name());
+		strSettingName += NAMEOFVAR(m_bShowBoundingBoxes);
+
+		saveSetting(strSettingName, bValue ? "TRUE" : "FALSE");
+	}
+
+	BOOL getShowBoundingBoxes(_model* pModel) const
+	{
+		if ((pModel == nullptr) || (pModel == getController()->getModel()))
+		{
+			return m_bShowBoundingBoxes;
+		}
+
+		return FALSE;
+	}
+
+	void setShowNormalVectors(BOOL bValue)
+	{
+		m_bShowNormalVectors = bValue;
+
+		string strSettingName(typeid(this).raw_name());
+		strSettingName += NAMEOFVAR(m_bShowNormalVectors);
+
+		saveSetting(strSettingName, bValue ? "TRUE" : "FALSE");
+	}
+
+	BOOL getShowNormalVectors(_model* pModel) const
+	{
+		if ((pModel == nullptr) || (pModel == getController()->getModel()))
+		{
+			return m_bShowNormalVectors;
+		}
+
+		return FALSE;
+	}
+
+	void setShowTangentVectors(BOOL bValue)
+	{
+		m_bShowTangenVectors = bValue;
+
+		string strSettingName(typeid(this).raw_name());
+		strSettingName += NAMEOFVAR(m_bShowTangenVectors);
+
+		saveSetting(strSettingName, bValue ? "TRUE" : "FALSE");
+	}
+
+	BOOL getShowTangentVectors(_model* pModel) const
+	{
+		if ((pModel == nullptr) || (pModel == getController()->getModel()))
+		{
+			return m_bShowTangenVectors;
+		}
+
+		return FALSE;
+	}
+
+	void setShowBiNormalVectors(BOOL bValue)
+	{
+		m_bShowBiNormalVectors = bValue;
+
+		string strSettingName(typeid(this).raw_name());
+		strSettingName += NAMEOFVAR(m_bShowBiNormalVectors);
+
+		saveSetting(strSettingName, bValue ? "TRUE" : "FALSE");
+	}
+
+	BOOL getShowBiNormalVectors(_model* pModel) const
+	{
+		if ((pModel == nullptr) || (pModel == getController()->getModel()))
+		{
+			return m_bShowBiNormalVectors;
+		}
+
+		return FALSE;
+	}
+
+	void setScaleVectors(BOOL bValue)
+	{
+		m_bScaleVectors = bValue;
+
+		string strSettingName(typeid(this).raw_name());
+		strSettingName += NAMEOFVAR(m_bScaleVectors);
+
+		saveSetting(strSettingName, bValue ? "TRUE" : "FALSE");
+	}
+
+	BOOL getScaleVectors(_model* pModel) const
+	{
+		if ((pModel == nullptr) || (pModel == getController()->getModel()))
+		{
+			return m_bScaleVectors;
+		}
+
+		return FALSE;
+	}
+
+	void setShowCoordinateSystem(BOOL bValue)
+	{
+		m_bShowCoordinateSystem = bValue;
+
+		string strSettingName(typeid(this).raw_name());
+		strSettingName += NAMEOFVAR(m_bShowCoordinateSystem);
+
+		saveSetting(strSettingName, bValue ? "TRUE" : "FALSE");
+	}
+
+	BOOL getShowCoordinateSystem() const
+	{
+		return m_bShowCoordinateSystem;
+	}
+
+	void setShowNavigator(BOOL bValue)
+	{
+		m_bShowNavigator = bValue;
+
+		string strSettingName(typeid(this).raw_name());
+		strSettingName += NAMEOFVAR(m_bShowNavigator);
+
+		saveSetting(strSettingName, bValue ? "TRUE" : "FALSE");
+	}
+
+	BOOL getShowNavigator() const
+	{
+		return m_bShowNavigator;
+	}
+
+protected: // Methods
+
+	virtual _controller* getController() const PURE;
+	virtual _model* getModel() const PURE;
+	virtual void saveSetting(const string& strName, const string& strValue) PURE;
+	virtual string loadSetting(const string& strName) PURE;
+	virtual void loadSettings()
+	{
+		{
+			string strSettingName(typeid(this).raw_name());
+			strSettingName += NAMEOFVAR(m_bShowFaces);
+
+			string strValue = loadSetting(strSettingName);
+			if (!strValue.empty())
+			{
+				m_bShowFaces = strValue == "TRUE";
+			}			
+		}
+
+		{
+			string strSettingName(typeid(this).raw_name());
+			strSettingName += NAMEOFVAR(m_strCullFaces);
+
+			string strValue = loadSetting(strSettingName);
+			if (!strValue.empty())
+			{
+				m_strCullFaces = CA2W(strValue.c_str());
+			}
+		}
+
+		{
+			string strSettingName(typeid(this).raw_name());
+			strSettingName += NAMEOFVAR(m_bShowFacesPolygons);
+
+			string strValue = loadSetting(strSettingName);
+			if (!strValue.empty())
+			{
+				m_bShowFacesPolygons = strValue == "TRUE";
+			}			
+		}
+
+		{
+			string strSettingName(typeid(this).raw_name());
+			strSettingName += NAMEOFVAR(m_bShowConceptualFacesPolygons);
+
+			string strValue = loadSetting(strSettingName);
+			if (!strValue.empty())
+			{
+				m_bShowConceptualFacesPolygons = strValue == "TRUE";
+			}			
+		}
+
+		{
+			string strSettingName(typeid(this).raw_name());
+			strSettingName += NAMEOFVAR(m_bShowLines);
+
+			string strValue = loadSetting(strSettingName);
+			if (!strValue.empty())
+			{
+				m_bShowLines = strValue == "TRUE";
+			}
+		}
+
+		{
+			string strSettingName(typeid(this).raw_name());
+			strSettingName += NAMEOFVAR(m_bShowPoints);
+
+			string strValue = loadSetting(strSettingName);
+			if (!strValue.empty())
+			{
+				m_bShowPoints = strValue == "TRUE";
+			}			
+		}
+
+		{
+			string strSettingName(typeid(this).raw_name());
+			strSettingName += NAMEOFVAR(m_bShowBoundingBoxes);
+
+			string strValue = loadSetting(strSettingName);
+			if (!strValue.empty())
+			{
+				m_bShowBoundingBoxes = strValue == "TRUE";
+			}			
+		}
+
+		{
+			string strSettingName(typeid(this).raw_name());
+			strSettingName += NAMEOFVAR(m_bShowNormalVectors);
+
+			string strValue = loadSetting(strSettingName);
+			if (!strValue.empty())
+			{
+				m_bShowNormalVectors = strValue == "TRUE";
+			}
+		}
+
+		{
+			string strSettingName(typeid(this).raw_name());
+			strSettingName += NAMEOFVAR(m_bShowTangenVectors);
+
+			string strValue = loadSetting(strSettingName);
+			if (!strValue.empty())
+			{
+				m_bShowTangenVectors = strValue == "TRUE";
+			}			
+		}
+
+		{
+			string strSettingName(typeid(this).raw_name());
+			strSettingName += NAMEOFVAR(m_bShowBiNormalVectors);
+
+			string strValue = loadSetting(strSettingName);
+			if (!strValue.empty())
+			{
+				m_bShowBiNormalVectors = strValue == "TRUE";
+			}
+		}
+
+		{
+			string strSettingName(typeid(this).raw_name());
+			strSettingName += NAMEOFVAR(m_bScaleVectors);
+
+			string strValue = loadSetting(strSettingName);
+			if (!strValue.empty())
+			{
+				m_bScaleVectors = strValue == "TRUE";
+			}		
+		}
+
+		{
+			string strSettingName(typeid(this).raw_name());
+			strSettingName += NAMEOFVAR(m_bShowCoordinateSystem);
+
+			string strValue = loadSetting(strSettingName);
+			if (!strValue.empty())
+			{
+				m_bShowCoordinateSystem = strValue == "TRUE";
+			}			
+		}
+
+		{
+			string strSettingName(typeid(this).raw_name());
+			strSettingName += NAMEOFVAR(m_bShowNavigator);
+
+			string strValue = loadSetting(strSettingName);
+			if (!strValue.empty())
+			{
+				m_bShowNavigator = strValue == "TRUE";
+			}			
+		}
+	}
+};
+
+// ************************************************************************************************
+class _oglRenderer 
+	: public _oglRendererSettings
+{
+
+protected: // Members
+
+	// MFC
+	CWnd* m_pWnd;
+	CMFCToolTipCtrl m_toolTipCtrl;
+
+	// OpenGL
+	_oglContext* m_pOGLContext;
+	_oglBlinnPhongProgram* m_pOGLProgram;
+	_oglShader* m_pVertexShader;
+	_oglShader* m_pFragmentShader;	
+	glm::mat4 m_matModelView;	
+
+	// Cache
+	_oglBuffers m_oglBuffers;	
 
 	// World
 	float m_fXmin;
@@ -1965,7 +2726,6 @@ protected: // Members
 	// Translation
 	float m_fXTranslation; // Perspective & Orthographic
 	float m_fYTranslation; // Perspective & Orthographic
-
 	float m_fZTranslation; // Perspective
 
 	// Orthographic
@@ -1983,14 +2743,8 @@ public: // Methods
 		, m_pOGLProgram(nullptr)
 		, m_pVertexShader(nullptr)
 		, m_pFragmentShader(nullptr)
-		, m_enProjection(enumProjection::Perspective)
 		, m_matModelView()
-		, m_oglBuffers()
-		, m_enRotationMode(enumRotationMode::XYZ)
-		, m_fXAngle(0.f)
-		, m_fYAngle(0.f)
-		, m_fZAngle(0.f)
-		, m_rotation(_quaterniond::toQuaternion(0., 0., 0.))
+		, m_oglBuffers()		
 		, m_fXmin(-1.f)
 		, m_fXmax(1.f)
 		, m_fYmin(-1.f)
@@ -2018,21 +2772,7 @@ public: // Methods
 	}	
 
 	virtual ~_oglRenderer()
-	{
-	}
-
-	// _ioglRenderer
-	virtual _oglProgram* _getOGLProgram() const override { return m_pOGLProgram; }
-	
-	// _ioglRenderer
-	virtual void _redraw() override
-	{
-#ifdef _LINUX
-		m_pWnd->Refresh(false);
-#else
-		m_pWnd->RedrawWindow();
-#endif // _LINUX		
-	}
+	{}
 
 	void _initialize(CWnd* pWnd,
 		int iSamples, 
@@ -2042,7 +2782,7 @@ public: // Methods
 		bool bSupportsTexture)
 	{
 		m_pWnd = pWnd;
-		ASSERT(m_pWnd != nullptr);
+		assert(m_pWnd != nullptr);
 
 		m_toolTipCtrl.Create(m_pWnd, WS_POPUP | WS_CLIPSIBLINGS | TTS_NOANIMATE | TTS_NOFADE | TTS_ALWAYSTIP);
 		m_toolTipCtrl.SetDelayTime(TTDT_INITIAL, 0);
@@ -2240,7 +2980,7 @@ public: // Methods
 
 			default:
 			{
-				ASSERT(FALSE);
+				assert(false);
 			}
 			break;
 		} // switch (m_enProjection)
@@ -2294,7 +3034,7 @@ public: // Methods
 		}
 		else
 		{
-			ASSERT(FALSE);
+			assert(false);
 		}
 
 		m_matModelView = glm::translate(m_matModelView, glm::vec3(fXTranslation, fYTranslation, fZTranslation));
@@ -2310,9 +3050,11 @@ public: // Methods
 		m_pOGLProgram->_enableBlinnPhongModel(true);
 	}
 
+	void _redraw() { m_pWnd->RedrawWindow(); }
+
 	void _showTooltip(LPCTSTR szTitle, LPCTSTR szText)
 	{
-		ASSERT(m_toolTipCtrl.GetToolCount() <= 1);
+		assert(m_toolTipCtrl.GetToolCount() <= 1);
 
 		if (m_toolTipCtrl.GetToolCount() == 1)
 		{
@@ -2353,7 +3095,7 @@ public: // Methods
 
 	void _hideTooltip()
 	{
-		ASSERT(m_toolTipCtrl.GetToolCount() <= 1);
+		assert(m_toolTipCtrl.GetToolCount() <= 1);
 
 		if (m_toolTipCtrl.GetToolCount() == 1)
 		{
@@ -2361,299 +3103,9 @@ public: // Methods
 		}
 	}
 
-	enumProjection _getProjection() const { return m_enProjection; }
-	void _setProjection(enumProjection enProjection) 
-	{
-		m_enProjection = enProjection;
-
-		_setView(enumView::Isometric);
-	}
-
-	enumRotationMode _getRotationMode() const { return m_enRotationMode; }
-	void _setRotationMode(enumRotationMode enRotationMode)
-	{
-		m_enRotationMode = enRotationMode;
-
-		_setView(enumView::Isometric);
-	}
-
-	void _setView(enumView enView)
-	{
-		// Note: OpenGL/Quaternions - CW/CCW
-
-		m_fXAngle = 0.f;
-		m_fYAngle = 0.f;
-		m_fZAngle = 0.f;
-		m_rotation = _quaterniond::toQuaternion(0., 0., 0.);
-
-		switch (enView)
-		{
-			case enumView::Front:
-			{
-				if (m_enRotationMode == enumRotationMode::XY)
-				{
-					m_fXAngle = 270.f;
-				}
-				else if (m_enRotationMode == enumRotationMode::XYZ)
-				{
-					m_rotation = _quaterniond::toQuaternion(0., 0., glm::radians(90.));
-				}
-				else
-				{
-					ASSERT(FALSE);
-				}				
-			}
-			break;
-
-			case enumView::Back:
-			{
-				if (m_enRotationMode == enumRotationMode::XY)
-				{
-					m_fXAngle = 90.f;
-					m_fYAngle = 180.f;
-				}
-				else if (m_enRotationMode == enumRotationMode::XYZ)
-				{
-					m_rotation = _quaterniond::toQuaternion(glm::radians(180.), 0., glm::radians(90.));
-				}
-				else
-				{
-					ASSERT(FALSE);
-				}
-			}
-			break;			
-
-			case enumView::Left:
-			{
-				if (m_enRotationMode == enumRotationMode::XY)
-				{
-					m_fXAngle = 270.f;
-					m_fZAngle = 90.f;
-				}
-				else if (m_enRotationMode == enumRotationMode::XYZ)
-				{
-					m_rotation = _quaterniond::toQuaternion(glm::radians(270.), 0., glm::radians(90.));
-				}
-				else
-				{
-					ASSERT(FALSE);
-				}
-			}
-			break;
-
-			case enumView::Right:
-			{
-				if (m_enRotationMode == enumRotationMode::XY)
-				{
-					m_fXAngle = 270.f;
-					m_fZAngle = 270.f;
-				}
-				else if (m_enRotationMode == enumRotationMode::XYZ)
-				{
-					m_rotation = _quaterniond::toQuaternion(glm::radians(90.), 0., glm::radians(90.));
-				}
-				else
-				{
-					ASSERT(FALSE);
-				}				
-			}
-			break;
-
-			case enumView::Top:
-			{
-				m_fXAngle = 0.f;
-				m_fYAngle = 0.f;
-				m_fZAngle = 0.f;
-			}
-			break;
-
-			case enumView::Bottom:
-			{
-				if (m_enRotationMode == enumRotationMode::XY)
-				{
-					m_fYAngle = 180.f;
-				}
-				else if (m_enRotationMode == enumRotationMode::XYZ)
-				{
-					m_rotation = _quaterniond::toQuaternion(0., glm::radians(180.), 0.);
-				}
-				else
-				{
-					ASSERT(FALSE);
-				}
-			}
-			break;
-
-			case enumView::FrontTopLeft:
-			{
-				if (m_enRotationMode == enumRotationMode::XY)
-				{
-					m_fXAngle = 315.f;
-					m_fZAngle = 45.f;
-				}
-				else if (m_enRotationMode == enumRotationMode::XYZ)
-				{
-					m_rotation = _quaterniond::toQuaternion(glm::radians(-45.), 0., glm::radians(-315.));
-				}
-				else
-				{
-					ASSERT(FALSE);
-				}
-			}
-			break;
-
-			case enumView::FrontTopRight:
-			{
-				if (m_enRotationMode == enumRotationMode::XY)
-				{
-					m_fXAngle = 315.f;
-					m_fZAngle = 315.f;
-				}
-				else if (m_enRotationMode == enumRotationMode::XYZ)
-				{
-					m_rotation = _quaterniond::toQuaternion(glm::radians(-315.), 0., glm::radians(-315.));
-				}
-				else
-				{
-					ASSERT(FALSE);
-				}
-			}
-			break;
-
-			case enumView::FrontBottomLeft:
-			{
-				if (m_enRotationMode == enumRotationMode::XY)
-				{
-					m_fXAngle = 225.f;
-					m_fZAngle = 45.f;
-				}
-				else if (m_enRotationMode == enumRotationMode::XYZ)
-				{
-					m_rotation = _quaterniond::toQuaternion(glm::radians(-45.), 0., glm::radians(-225.));
-				}
-				else
-				{
-					ASSERT(FALSE);
-				}
-			}
-			break;
-
-			case enumView::FrontBottomRight:
-			{
-				if (m_enRotationMode == enumRotationMode::XY)
-				{
-					m_fXAngle = 225.f;
-					m_fZAngle = 315.f;
-				}
-				else if (m_enRotationMode == enumRotationMode::XYZ)
-				{
-					m_rotation = _quaterniond::toQuaternion(glm::radians(-315.), 0., glm::radians(-225.));
-				}
-				else
-				{
-					ASSERT(FALSE);
-				}
-			}
-			break;
-
-			case enumView::BackTopLeft:
-			{
-				if (m_enRotationMode == enumRotationMode::XY)
-				{
-					m_fXAngle = 315.f;
-					m_fZAngle = 225.f;
-				}
-				else if (m_enRotationMode == enumRotationMode::XYZ)
-				{
-					m_rotation = _quaterniond::toQuaternion(glm::radians(-225.), 0., glm::radians(-315.));
-				}
-				else
-				{
-					ASSERT(FALSE);
-				}
-			}
-			break;
-
-			case enumView::BackTopRight:
-			{
-				if (m_enRotationMode == enumRotationMode::XY)
-				{
-					m_fXAngle = 315.f;
-					m_fZAngle = 135.f;
-				}
-				else if (m_enRotationMode == enumRotationMode::XYZ)
-				{
-					m_rotation = _quaterniond::toQuaternion(glm::radians(-135.), 0., glm::radians(-315.f));
-				}
-				else
-				{
-					ASSERT(FALSE);
-				}
-			}
-			break;
-
-			case enumView::BackBottomLeft:
-			{
-				if (m_enRotationMode == enumRotationMode::XY)
-				{
-					m_fXAngle = 225.f;
-					m_fZAngle = 225.f;
-				}
-				else if (m_enRotationMode == enumRotationMode::XYZ)
-				{
-					m_rotation = _quaterniond::toQuaternion(glm::radians(-225.), 0., glm::radians(-225.));
-				}
-				else
-				{
-					ASSERT(FALSE);
-				}
-			}
-			break;
-
-			case enumView::BackBottomRight:
-			{
-				if (m_enRotationMode == enumRotationMode::XY)
-				{
-					m_fXAngle = 225.f;
-					m_fZAngle = 135.f;
-				}
-				else if (m_enRotationMode == enumRotationMode::XYZ)
-				{
-					m_rotation = _quaterniond::toQuaternion(glm::radians(-135.), 0., glm::radians(-225.));
-				}
-				else
-				{
-					ASSERT(FALSE);
-				}
-			}
-			break;
-
-			case enumView::Isometric:
-			{
-				if (m_enRotationMode == enumRotationMode::XY)
-				{
-					m_fXAngle = 315.f;
-					m_fYAngle = 0.f;
-					m_fZAngle = 45.f;
-				}
-				else if (m_enRotationMode == enumRotationMode::XYZ)
-				{
-					m_rotation = _quaterniond::toQuaternion(glm::radians(-45.), 0., glm::radians(45.));
-				}
-				else
-				{
-					ASSERT(FALSE);
-				}
-			}
-			break;			
-
-			default:
-			{
-				ASSERT(FALSE);
-			}
-			break;
-		} // switch (enView)
-	}		
+	_oglProgram* _getOGLProgram() const { return m_pOGLProgram; }
+	template<class Program>
+	Program* _getOGLProgramAs() const { return dynamic_cast<Program*>(_getOGLProgram()); }
 
 	void _rotateMouseLButton(float fXAngle, float fYAngle)
 	{
@@ -2683,7 +3135,7 @@ public: // Methods
 		}
 		else
 		{
-			ASSERT(FALSE);
+			assert(false);
 		}
 	}
 
@@ -2716,7 +3168,7 @@ public: // Methods
 
 			default:
 			{
-				ASSERT(FALSE);
+				assert(false);
 			}
 			break;
 		} // switch (m_enProjection)
@@ -2752,7 +3204,7 @@ public: // Methods
 
 			default:
 			{
-				ASSERT(FALSE);
+				assert(false);
 			}
 			break;
 		} // switch (m_enProjection)
@@ -2809,6 +3261,42 @@ public: // Methods
 			}
 			break;
 		} // switch (nChar)
+	}
+
+	void _reset()
+	{
+		// Projection
+		m_enProjection = enumProjection::Perspective;
+
+		// Rotation
+		m_enRotationMode = enumRotationMode::XYZ;
+		m_fXAngle = 0.f;
+		m_fYAngle = 0.f;
+		m_fZAngle = 0.f;
+		m_rotation = _quaterniond::toQuaternion(0., 0., 0.);
+
+		// Translation
+		m_fXTranslation = 0.f;
+		m_fYTranslation = 0.f;
+		m_fZTranslation = -5.f;
+		m_fScaleFactor = 2.f;
+
+		// UI
+		m_bShowFaces = TRUE;
+		m_strCullFaces = CULL_FACES_NONE;
+		m_bShowFacesPolygons = FALSE;
+		m_bShowConceptualFacesPolygons = TRUE;
+		m_bShowLines = TRUE;
+		m_bShowPoints = TRUE;
+		m_bShowBoundingBoxes = FALSE;
+		m_bShowNormalVectors = FALSE;
+		m_bShowTangenVectors = FALSE;
+		m_bShowBiNormalVectors = FALSE;
+		m_bScaleVectors = FALSE;
+		m_bShowCoordinateSystem = TRUE;
+		m_bShowNavigator = TRUE;
+
+		_redraw();
 	}	
 
 private: //  Methods
@@ -2870,7 +3358,7 @@ private: //  Methods
 
 			default:
 			{
-				ASSERT(FALSE);
+				assert(false);
 			}
 			break;
 		} // switch (m_enProjection)
@@ -2906,3 +3394,20 @@ private: //  Methods
 		}
 	}
 };
+
+// ************************************************************************************************
+class _oglView : public _oglRenderer
+{
+
+public: // Methods
+
+	_oglView()
+	{}
+
+	virtual ~_oglView()
+	{}
+
+	virtual void _load() PURE;
+	virtual void _draw(CDC* pDC) PURE;
+};
+#endif // #if defined _MFC_VER || defined _AFXDLL

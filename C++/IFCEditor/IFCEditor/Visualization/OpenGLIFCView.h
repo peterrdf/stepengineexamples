@@ -1,24 +1,21 @@
 #ifndef _OPEN_GL_IFC_VIEW_H_
 #define _OPEN_GL_IFC_VIEW_H_
 
-#include "Generic.h"
 #include "IFCInstance.h"
 #include "_oglUtils.h"
 #include "OpenGLView.h"
 
-// ------------------------------------------------------------------------------------------------
+// ************************************************************************************************
 class CIFCModel;
 
-// ------------------------------------------------------------------------------------------------
+// ************************************************************************************************
 // Open GL View
 class COpenGLIFCView 
 	: public COpenGLView
-	, public _oglRenderer<CIFCInstance>
 {
 
 private: // Members
 
-	// --------------------------------------------------------------------------------------------
 	// Mouse
 	CPoint m_ptStartMousePosition;
 	CPoint m_ptPrevMousePosition;
@@ -36,7 +33,17 @@ public: // Methods
 	
 	// ctor/dtor
 	COpenGLIFCView(CWnd * pWnd);
-	virtual ~COpenGLIFCView();	
+	virtual ~COpenGLIFCView();
+
+	// _oglRendererSettings
+	virtual _controller* getController() const override;
+	virtual _model* getModel() const override;
+	virtual void saveSetting(const string& strName, const string& strValue) override;
+	virtual string loadSetting(const string& strName) override;
+
+	// _oglView
+	virtual void _load() override;
+	virtual void _draw(CDC* pDC) override;
 
 	// CViewBase	
 	virtual void OnWorldDimensionsChanged() override;
@@ -49,28 +56,17 @@ protected: // Methods
 	virtual void OnControllerChanged() override;
 
 public: // Methods
-		
-	// COpenGLView
-	virtual void Load();
 
 	// COpenGLView
-	virtual void SetProjection(enumProjection enProjection) override;
-	virtual enumProjection GetProjection() const override;
-	virtual void SetView(enumView enView) override;
-	virtual enumRotationMode GetRotationMode() const override;
-	virtual void SetRotationMode(enumRotationMode enRotationMode) override;
 	virtual void OnMouseEvent(enumMouseEvent enEvent, UINT nFlags, CPoint point) override;
-	virtual void OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) override;
-	virtual void OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags) override;
-	virtual void Draw(CDC* pDC) override;
 
 private: // Methods
 	
 	// UI
-	void DrawFaces(bool bTransparent);
-	void DrawConceptualFacesPolygons();
-	void DrawLines();
-	void DrawPoints();
+	void DrawFaces(_model* pM, bool bTransparent);
+	void DrawConceptualFacesPolygons(_model* pM);
+	void DrawLines(_model* pM);
+	void DrawPoints(_model* pM);
 	
 	// Selection
 	void DrawInstancesFrameBuffer();

@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "stdafx.h"
 
 #include "_3DUtils.h"
 #include "_oglUtils.h"
@@ -8,10 +8,24 @@
 #include <cfloat>
 #include <math.h>
 
-// ------------------------------------------------------------------------------------------------
+// ************************************************************************************************
+#define DEFAULT_CIRCLE_SEGMENTS 36
+
+// ************************************************************************************************
 /*static*/ int_t CIFCModel::s_iInstanceID = 1;
 
-// ------------------------------------------------------------------------------------------------
+// ************************************************************************************************
+static uint32_t DEFAULT_COLOR_R = 10;
+static uint32_t DEFAULT_COLOR_G = 150;
+static uint32_t DEFAULT_COLOR_B = 10;
+static uint32_t DEFAULT_COLOR_A = 255;
+/*static*/ uint32_t CIFCModel::DEFAULT_COLOR =
+	256 * 256 * 256 * DEFAULT_COLOR_R +
+	256 * 256 * DEFAULT_COLOR_G +
+	256 * DEFAULT_COLOR_B +
+	DEFAULT_COLOR_A;
+
+// ************************************************************************************************
 CIFCModel::CIFCModel(bool bLoadInstancesOnDemand/* = false*/)
 	: CModel(enumModelType::IFC)
 	, m_bLoadInstancesOnDemand(bLoadInstancesOnDemand)
@@ -38,10 +52,9 @@ CIFCModel::CIFCModel(bool bLoadInstancesOnDemand/* = false*/)
 	, m_pEntityProvider(nullptr)
 	, m_pAttributeProvider(nullptr)
 	, m_bUpdteVertexBuffers(true)
-{
-}
+{}
 
-// ------------------------------------------------------------------------------------------------
+
 CIFCModel::~CIFCModel()
 {
 	Clean();
@@ -79,13 +92,6 @@ void CIFCModel::PreLoadInstance(SdaiInstance iInstance)
 	} // if (m_bUpdteVertexBuffers)
 }
 
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ CEntityProvider* CIFCModel::GetEntityProvider() const /*override*/
-{
-	return m_pEntityProvider;
-}
-
-// ------------------------------------------------------------------------------------------------
 /*virtual*/ void CIFCModel::ZoomToInstance(CInstanceBase* pInstance) /*override*/
 {
 	ASSERT(pInstance != nullptr);
@@ -150,7 +156,6 @@ void CIFCModel::PreLoadInstance(SdaiInstance iInstance)
 	m_fZTranslation /= (m_fBoundingSphereDiameter / 2.0f);
 }
 
-// ------------------------------------------------------------------------------------------------
 /*virtual*/ void CIFCModel::ZoomOut() /*override*/
 {
 	m_fBoundingSphereDiameter = 0.f;
@@ -169,7 +174,7 @@ void CIFCModel::PreLoadInstance(SdaiInstance iInstance)
 	auto itInstance = m_mapInstances.begin();
 	for (; itInstance != m_mapInstances.end(); itInstance++)
 	{
-		if (!itInstance->second->GetEnable())
+		if (!itInstance->second->getEnable())
 		{
 			continue;
 		}
@@ -215,9 +220,7 @@ void CIFCModel::PreLoadInstance(SdaiInstance iInstance)
 	m_fZTranslation /= (m_fBoundingSphereDiameter / 2.0f);
 }
 
-
-// ------------------------------------------------------------------------------------------------
-void CIFCModel::Load(const wchar_t* szIFCFile, int64_t iModel)
+void CIFCModel::Load(const wchar_t* szIFCFile, SdaiModel iModel)
 {
 	ASSERT(szIFCFile != nullptr);
 	ASSERT(iModel != 0);
@@ -231,71 +234,59 @@ void CIFCModel::Load(const wchar_t* szIFCFile, int64_t iModel)
 	* Model
 	*/
 	m_iModel = iModel;
-	m_strFilePath = szIFCFile;
+	m_strPath = szIFCFile;
 
 	/*
 	* Entities
 	*/
-	int_t ifcObjectEntity = sdaiGetEntity(m_iModel, "IFCOBJECT");
-	m_ifcProjectEntity = sdaiGetEntity(m_iModel, "IFCPROJECT");
-	m_ifcSpaceEntity = sdaiGetEntity(m_iModel, "IFCSPACE");
-	m_ifcOpeningElementEntity = sdaiGetEntity(m_iModel, "IFCOPENINGELEMENT");
-	m_ifcDistributionElementEntity = sdaiGetEntity(m_iModel, "IFCDISTRIBUTIONELEMENT");
-	m_ifcElectricalElementEntity = sdaiGetEntity(m_iModel, "IFCELECTRICALELEMENT");
-	m_ifcElementAssemblyEntity = sdaiGetEntity(m_iModel, "IFCELEMENTASSEMBLY");
-	m_ifcElementComponentEntity = sdaiGetEntity(m_iModel, "IFCELEMENTCOMPONENT");
-	m_ifcEquipmentElementEntity = sdaiGetEntity(m_iModel, "IFCEQUIPMENTELEMENT");
-	m_ifcFeatureElementEntity = sdaiGetEntity(m_iModel, "IFCFEATUREELEMENT");
-	m_ifcFeatureElementSubtractionEntity = sdaiGetEntity(m_iModel, "IFCFEATUREELEMENTSUBTRACTION");
-	m_ifcFurnishingElementEntity = sdaiGetEntity(m_iModel, "IFCFURNISHINGELEMENT");
-	m_ifcReinforcingElementEntity = sdaiGetEntity(m_iModel, "IFCREINFORCINGELEMENT");
-	m_ifcTransportElementEntity = sdaiGetEntity(m_iModel, "IFCTRANSPORTELEMENT");
-	m_ifcVirtualElementEntity = sdaiGetEntity(m_iModel, "IFCVIRTUALELEMENT");
+	SdaiEntity ifcObjectEntity = sdaiGetEntity(GetInstance(), "IFCOBJECT");
+	m_ifcProjectEntity = sdaiGetEntity(GetInstance(), "IFCPROJECT");
+	m_ifcSpaceEntity = sdaiGetEntity(GetInstance(), "IFCSPACE");
+	m_ifcOpeningElementEntity = sdaiGetEntity(GetInstance(), "IFCOPENINGELEMENT");
+	m_ifcDistributionElementEntity = sdaiGetEntity(GetInstance(), "IFCDISTRIBUTIONELEMENT");
+	m_ifcElectricalElementEntity = sdaiGetEntity(GetInstance(), "IFCELECTRICALELEMENT");
+	m_ifcElementAssemblyEntity = sdaiGetEntity(GetInstance(), "IFCELEMENTASSEMBLY");
+	m_ifcElementComponentEntity = sdaiGetEntity(GetInstance(), "IFCELEMENTCOMPONENT");
+	m_ifcEquipmentElementEntity = sdaiGetEntity(GetInstance(), "IFCEQUIPMENTELEMENT");
+	m_ifcFeatureElementEntity = sdaiGetEntity(GetInstance(), "IFCFEATUREELEMENT");
+	m_ifcFeatureElementSubtractionEntity = sdaiGetEntity(GetInstance(), "IFCFEATUREELEMENTSUBTRACTION");
+	m_ifcFurnishingElementEntity = sdaiGetEntity(GetInstance(), "IFCFURNISHINGELEMENT");
+	m_ifcReinforcingElementEntity = sdaiGetEntity(GetInstance(), "IFCREINFORCINGELEMENT");
+	m_ifcTransportElementEntity = sdaiGetEntity(GetInstance(), "IFCTRANSPORTELEMENT");
+	m_ifcVirtualElementEntity = sdaiGetEntity(GetInstance(), "IFCVIRTUALELEMENT");
 
-	/*
-	* Retrieve the objects recursively
-	*/
+	// Objects & Unreferenced
 	if (!m_bLoadInstancesOnDemand)
-	{	
-		RetrieveObjects__depth(ifcObjectEntity, DEFAULT_CIRCLE_SEGMENTS, 0);	
-		//#test
+	{
+		RetrieveObjectsRecursively(ifcObjectEntity, DEFAULT_CIRCLE_SEGMENTS);
+
 		RetrieveObjects("IFCPROJECT", L"IFCPROJECT", DEFAULT_CIRCLE_SEGMENTS);
 		RetrieveObjects("IFCRELSPACEBOUNDARY", L"IFCRELSPACEBOUNDARY", DEFAULT_CIRCLE_SEGMENTS);
-	}
-	
-	/*
-	* Units
-	*/
-	m_pUnitProvider = new CIFCUnitProvider(m_iModel);
 
-	/*
-	* Properties
-	*/
-	m_pPropertyProvider = new CIFCPropertyProvider(m_iModel, m_pUnitProvider);
+		GetObjectsReferencedState();
+	}	
 
-	/*
-	* Entities
-	*/
-	m_pEntityProvider = new CEntityProvider(m_iModel);
+	// Units
+	m_pUnitProvider = new CIFCUnitProvider(GetInstance());
 
-	/*
-	* Attributes
-	*/
+	// Properties
+	m_pPropertyProvider = new CIFCPropertyProvider(GetInstance(), m_pUnitProvider);
+
+	// Entities
+	m_pEntityProvider = new CEntityProvider(GetInstance());
+
+	// Attributes
 	m_pAttributeProvider = new CIFCAttributeProvider();
 
-	/*
-	* Helper data structures
-	*/
+	// Helper data structures
 	for (auto pInstance : m_vecInstances)
 	{
-		m_mapID2Instance[pInstance->ID()] = pInstance;
+		m_mapID2Instance[pInstance->getID()] = pInstance;
 		m_mapExpressID2Instance[pInstance->ExpressID()] = pInstance;
 	}
 
-	/*
-	* Scale and Center
-	*/
-	ScaleAndCenter();
+	// Scale
+	Scale();
 }
 
 /*virtual*/ CInstanceBase* CIFCModel::LoadInstance(OwlInstance iInstance) /*override*/
@@ -314,37 +305,27 @@ void CIFCModel::Load(const wchar_t* szIFCFile, int64_t iModel)
 	m_mapID2Instance.clear();
 	m_mapExpressID2Instance.clear();
 
-	wchar_t* szInstanceGUID = nullptr;
-	sdaiGetAttrBN(iInstance, "GlobalId", sdaiUNICODE, &szInstanceGUID);
-
-	auto pInstance = RetrieveGeometry(szInstanceGUID, iInstance, DEFAULT_CIRCLE_SEGMENTS);
-	pInstance->ID() = s_iInstanceID++;
-
-	pInstance->SetEnable(true);
+	auto pInstance = RetrieveGeometry(iInstance, DEFAULT_CIRCLE_SEGMENTS);
+	pInstance->setEnable(true);
 
 	m_vecInstances.push_back(pInstance);
 	m_mapInstances[iInstance] = pInstance;
 
-	/*
-	* Helper data structures
-	*/
-	m_mapID2Instance[pInstance->ID()] = pInstance;
+	// Helper data structures
+	m_mapID2Instance[pInstance->getID()] = pInstance;
 	m_mapExpressID2Instance[pInstance->ExpressID()] = pInstance;
 
-	/*
-	* Scale and Center
-	*/
-	ScaleAndCenter();
+	// Scale
+	Scale();
 
 	return pInstance;
 }
 
-// ------------------------------------------------------------------------------------------------
 void CIFCModel::Clean()
 {
 	if (m_iModel != 0)
 	{
-		sdaiCloseModel(m_iModel);
+		sdaiCloseModel((SdaiModel)m_iModel);
 		m_iModel = 0;
 	}
 
@@ -354,10 +335,6 @@ void CIFCModel::Clean()
 	}
 	m_vecInstances.clear();
 
-	m_mapInstances.clear();
-	m_mapID2Instance.clear();
-	m_mapExpressID2Instance.clear();
-
 	delete m_pUnitProvider;
 	m_pUnitProvider = nullptr;
 
@@ -366,16 +343,13 @@ void CIFCModel::Clean()
 
 	delete m_pEntityProvider;
 	m_pEntityProvider = nullptr;
-
-	delete m_pAttributeProvider;
-	m_pAttributeProvider = nullptr;
 }
 
-// ------------------------------------------------------------------------------------------------
-void CIFCModel::ScaleAndCenter()
+void CIFCModel::Scale()
 {
 	/* World */
-	m_fBoundingSphereDiameter = 0.f;
+	m_dOriginalBoundingSphereDiameter = 2.;
+	m_fBoundingSphereDiameter = 2.f;
 
 	m_fXTranslation = 0.f;
 	m_fYTranslation = 0.f;
@@ -414,28 +388,26 @@ void CIFCModel::ScaleAndCenter()
 	}
 
 	/* World */
-	m_fBoundingSphereDiameter = m_fXmax - m_fXmin;
-	m_fBoundingSphereDiameter = max(m_fBoundingSphereDiameter, m_fYmax - m_fYmin);
-	m_fBoundingSphereDiameter = max(m_fBoundingSphereDiameter, m_fZmax - m_fZmin);
+	m_dOriginalBoundingSphereDiameter = m_fXmax - m_fXmin;
+	m_dOriginalBoundingSphereDiameter = max(m_dOriginalBoundingSphereDiameter, m_fYmax - m_fYmin);
+	m_dOriginalBoundingSphereDiameter = max(m_dOriginalBoundingSphereDiameter, m_fZmax - m_fZmin);
 
-	TRACE(L"\n*** Scale and Center I *** => Xmin/max, Ymin/max, Zmin/max: %.16f, %.16f, %.16f, %.16f, %.16f, %.16f",
+	m_fBoundingSphereDiameter = m_dOriginalBoundingSphereDiameter;
+
+	TRACE(L"\n*** Scale I *** => Xmin/max, Ymin/max, Zmin/max: %.16f, %.16f, %.16f, %.16f, %.16f, %.16f",
 		m_fXmin,
 		m_fXmax,
 		m_fYmin,
 		m_fYmax,
 		m_fZmin,
 		m_fZmax);
-	TRACE(L"\n*** Scale and Center, Bounding sphere I *** =>  %.16f", m_fBoundingSphereDiameter);
+	TRACE(L"\n*** Scale, Bounding sphere I *** =>  %.16f", m_fBoundingSphereDiameter);
 
-	/* Scale and Center */
+	/* Scale */
 	itIinstance = m_mapInstances.begin();
 	for (; itIinstance != m_mapInstances.end(); itIinstance++)
 	{
-		itIinstance->second->ScaleAndCenter(
-			m_fXmin, m_fXmax, 
-			m_fYmin, m_fYmax, 
-			m_fZmin, m_fZmax, 
-			m_fBoundingSphereDiameter, true);
+		itIinstance->second->Scale(m_fBoundingSphereDiameter / 2.f);
 	}
 
 	/* Min/Max */
@@ -449,7 +421,7 @@ void CIFCModel::ScaleAndCenter()
 	itIinstance = m_mapInstances.begin();
 	for (; itIinstance != m_mapInstances.end(); itIinstance++)
 	{
-		if (itIinstance->second->GetEnable())
+		if (itIinstance->second->getEnable())
 		{
 			itIinstance->second->CalculateMinMax(
 				m_fXmin, m_fXmax, 
@@ -478,14 +450,14 @@ void CIFCModel::ScaleAndCenter()
 	m_fBoundingSphereDiameter = max(m_fBoundingSphereDiameter, m_fYmax - m_fYmin);
 	m_fBoundingSphereDiameter = max(m_fBoundingSphereDiameter, m_fZmax - m_fZmin);
 
-	TRACE(L"\n*** Scale and Center II *** => Xmin/max, Ymin/max, Zmin/max: %.16f, %.16f, %.16f, %.16f, %.16f, %.16f",
+	TRACE(L"\n*** Scale II *** => Xmin/max, Ymin/max, Zmin/max: %.16f, %.16f, %.16f, %.16f, %.16f, %.16f",
 		m_fXmin,
 		m_fXmax,
 		m_fYmin,
 		m_fYmax,
 		m_fZmin,
 		m_fZmax);
-	TRACE(L"\n*** Scale and Center, Bounding sphere II *** =>  %.16f", m_fBoundingSphereDiameter);
+	TRACE(L"\n*** Scale, Bounding sphere II *** =>  %.16f", m_fBoundingSphereDiameter);
 
 	// [0.0 -> X/Y/Zmin + X/Y/Zmax]
 	m_fXTranslation -= m_fXmin;
@@ -503,33 +475,7 @@ void CIFCModel::ScaleAndCenter()
 	m_fZTranslation /= (m_fBoundingSphereDiameter / 2.0f);
 }
 
-
-// ------------------------------------------------------------------------------------------------
-const map<SdaiInstance, CIFCInstance *>& CIFCModel::GetInstances() const
-{
-	return m_mapInstances;
-}
-
-// ------------------------------------------------------------------------------------------------
-CIFCUnitProvider* CIFCModel::GetUnitProvider() const
-{
-	return m_pUnitProvider;
-}
-
-// ------------------------------------------------------------------------------------------------
-CIFCPropertyProvider* CIFCModel::GetPropertyProvider() const
-{
-	return m_pPropertyProvider;
-}
-
-// ------------------------------------------------------------------------------------------------
-CIFCAttributeProvider* CIFCModel::GetAttributeProvider() const
-{
-	return m_pAttributeProvider;
-}
-
-// ------------------------------------------------------------------------------------------------
-CIFCInstance* CIFCModel::GetInstanceByID(int_t iID)
+CIFCInstance* CIFCModel::GetInstanceByID(int64_t iID)
 {
 	auto itID2Instance = m_mapID2Instance.find(iID);
 	if (itID2Instance != m_mapID2Instance.end())
@@ -540,8 +486,7 @@ CIFCInstance* CIFCModel::GetInstanceByID(int_t iID)
 	return nullptr;
 }
 
-// ------------------------------------------------------------------------------------------------
-/*virtual*/ CInstanceBase* CIFCModel::GetInstanceByExpressID(int64_t iExpressID) const /*override*/
+/*virtual*/ CInstanceBase* CIFCModel::GetInstanceByExpressID(ExpressID iExpressID) const /*override*/
 {
 	auto itExpressID2Instance = m_mapExpressID2Instance.find(iExpressID);
 	if (itExpressID2Instance != m_mapExpressID2Instance.end())
@@ -552,7 +497,6 @@ CIFCInstance* CIFCModel::GetInstanceByID(int_t iID)
 	return nullptr;
 }
 
-// ------------------------------------------------------------------------------------------------
 void CIFCModel::GetInstancesByType(const wchar_t* szType, vector<CIFCInstance*>& vecInstances)
 {
 	vecInstances.clear();
@@ -572,10 +516,9 @@ void CIFCModel::GetInstancesByType(const wchar_t* szType, vector<CIFCInstance*>&
 	}
 }
 
-// ------------------------------------------------------------------------------------------------
 void CIFCModel::RetrieveObjects(const char * szEntityName, const wchar_t * szEntityNameW, int_t iCircleSegements)
 {
-	SdaiAggr iIFCInstances = sdaiGetEntityExtentBN(m_iModel, (char *) szEntityName);
+	SdaiAggr iIFCInstances = sdaiGetEntityExtentBN(GetInstance(), (char *) szEntityName);
 
 	int_t iIFCInstancesCount = sdaiGetMemberCount(iIFCInstances);
 	if (iIFCInstancesCount == 0)
@@ -588,24 +531,185 @@ void CIFCModel::RetrieveObjects(const char * szEntityName, const wchar_t * szEnt
 		SdaiInstance iInstance = 0;
 		engiGetAggrElement(iIFCInstances, i, sdaiINSTANCE, &iInstance);
 
-		wchar_t* szInstanceGUID = nullptr;
-		sdaiGetAttrBN(iInstance, "GlobalId", sdaiUNICODE, &szInstanceGUID);
-
-		auto pInstance = RetrieveGeometry(szInstanceGUID, iInstance, iCircleSegements);
-		pInstance->ID() = s_iInstanceID++;
+		auto pInstance = RetrieveGeometry(iInstance, iCircleSegements);
 
 		CString strEntity = szEntityNameW;
 		strEntity.MakeUpper();
 
-		pInstance->SetEnable((strEntity != L"IFCSPACE") && (strEntity != L"IFCRELSPACEBOUNDARY") && (strEntity != L"IFCOPENINGELEMENT"));
+		pInstance->setEnable(
+			(strEntity == L"IFCSPACE") || 
+			(strEntity == L"IFCRELSPACEBOUNDARY") ||
+			(strEntity == L"IFCOPENINGELEMENT") ||
+			(strEntity == L"IFCALIGNMENTVERTICAL") ||
+			(strEntity == L"IFCALIGNMENTHORIZONTAL") ||
+			(strEntity == L"IFCALIGNMENTSEGMENT") ||
+			(strEntity == L"IFCALIGNMENTCANT") ? false : true);
 		
 		m_vecInstances.push_back(pInstance);
 		m_mapInstances[iInstance] = pInstance;
 	}
 }
 
-// ------------------------------------------------------------------------------------------------
-void CIFCModel::RetrieveObjects__depth(int_t iParentEntity, int_t iCircleSegments, int_t depth)
+void CIFCModel::GetObjectsReferencedState()
+{
+	SdaiAggr pAggr = sdaiGetEntityExtentBN(m_iModel, (char*)"IFCPROJECT");
+
+	SdaiInteger iMembersCount = sdaiGetMemberCount(pAggr);
+	if (iMembersCount > 0)
+	{
+		SdaiInstance iProjectInstance = 0;
+		engiGetAggrElement(pAggr, 0, sdaiINSTANCE, &iProjectInstance);
+
+		GetObjectsReferencedStateIsDecomposedBy(iProjectInstance);
+		GetObjectsReferencedStateIsNestedBy(iProjectInstance);
+		GetObjectsReferencedStateContainsElements(iProjectInstance);
+
+		// Disable Unreferenced instances
+		for (auto itInstance : m_mapInstances)
+		{
+			if (!itInstance.second->Referenced())
+			{
+				itInstance.second->setEnable(false);
+			}
+		}
+	} // if (iIFCProjectInstancesCount > 0)
+}
+
+void CIFCModel::GetObjectsReferencedStateRecursively(SdaiInstance iInstance)
+{
+	ASSERT(iInstance != 0);
+
+	auto itInstance = m_mapInstances.find(iInstance);
+	if (itInstance != m_mapInstances.end())
+	{
+		itInstance->second->Referenced() = true;
+
+		GetObjectsReferencedStateIsDecomposedBy(iInstance);
+		GetObjectsReferencedStateIsNestedBy(iInstance);
+		GetObjectsReferencedStateContainsElements(iInstance);
+	}
+	else
+	{
+		ASSERT(FALSE);
+	}
+}
+
+void CIFCModel::GetObjectsReferencedStateIsDecomposedBy(SdaiInstance iInstance)
+{
+	SdaiAggr piIsDecomposedByInstances = nullptr;
+	sdaiGetAttrBN(iInstance, "IsDecomposedBy", sdaiAGGR, &piIsDecomposedByInstances);
+
+	if (piIsDecomposedByInstances == nullptr)
+	{
+		return;
+	}
+
+	SdaiEntity iIFCRelAggregatesEntity = sdaiGetEntity(m_iModel, "IFCRELAGGREGATES");
+
+	SdaiInteger iIFCIsDecomposedByInstancesCount = sdaiGetMemberCount(piIsDecomposedByInstances);
+	for (SdaiInteger i = 0; i < iIFCIsDecomposedByInstancesCount; ++i)
+	{
+		SdaiInstance iIFCIsDecomposedByInstance = 0;
+		engiGetAggrElement(piIsDecomposedByInstances, i, sdaiINSTANCE, &iIFCIsDecomposedByInstance);
+
+		if (sdaiGetInstanceType(iIFCIsDecomposedByInstance) != iIFCRelAggregatesEntity)
+		{
+			continue;
+		}
+
+		SdaiAggr piIFCRelatedObjectsInstances = 0;
+		sdaiGetAttrBN(iIFCIsDecomposedByInstance, "RelatedObjects", sdaiAGGR, &piIFCRelatedObjectsInstances);
+
+		SdaiInteger iIFCRelatedObjectsInstancesCount = sdaiGetMemberCount(piIFCRelatedObjectsInstances);
+		for (SdaiInteger j = 0; j < iIFCRelatedObjectsInstancesCount; ++j)
+		{
+			SdaiInstance iRelatedObjectsInstance = 0;
+			engiGetAggrElement(piIFCRelatedObjectsInstances, j, sdaiINSTANCE, &iRelatedObjectsInstance);
+
+			GetObjectsReferencedStateRecursively(iRelatedObjectsInstance);
+		} // for (int_t j = ...
+	} // for (int64_t i = ...
+}
+
+void CIFCModel::GetObjectsReferencedStateIsNestedBy(SdaiInstance iInstance)
+{
+	ASSERT(iInstance != 0);
+
+	SdaiAggr piIsDecomposedByInstances = nullptr;
+	sdaiGetAttrBN(iInstance, "IsNestedBy", sdaiAGGR, &piIsDecomposedByInstances);
+
+	if (piIsDecomposedByInstances == nullptr)
+	{
+		return;
+	}
+
+	SdaiEntity iIFCRelNestsEntity = sdaiGetEntity(m_iModel, "IFCRELNESTS");
+
+	SdaiInteger iIFCIsDecomposedByInstancesCount = sdaiGetMemberCount(piIsDecomposedByInstances);
+	for (SdaiInteger i = 0; i < iIFCIsDecomposedByInstancesCount; ++i)
+	{
+		SdaiInstance iIFCIsDecomposedByInstance = 0;
+		engiGetAggrElement(piIsDecomposedByInstances, i, sdaiINSTANCE, &iIFCIsDecomposedByInstance);
+
+		if (sdaiGetInstanceType(iIFCIsDecomposedByInstance) != iIFCRelNestsEntity)
+		{
+			continue;
+		}
+
+		SdaiAggr piIFCRelatedObjectsInstances = 0;
+		sdaiGetAttrBN(iIFCIsDecomposedByInstance, "RelatedObjects", sdaiAGGR, &piIFCRelatedObjectsInstances);
+
+		SdaiInteger iIFCRelatedObjectsInstancesCount = sdaiGetMemberCount(piIFCRelatedObjectsInstances);
+		for (SdaiInteger j = 0; j < iIFCRelatedObjectsInstancesCount; ++j)
+		{
+			SdaiInstance iIFCRelatedObjectsInstance = 0;
+			engiGetAggrElement(piIFCRelatedObjectsInstances, j, sdaiINSTANCE, &iIFCRelatedObjectsInstance);
+
+			GetObjectsReferencedStateRecursively(iIFCRelatedObjectsInstance);
+		} // for (int_t j = ...
+	} // for (int64_t i = ...
+}
+
+void CIFCModel::GetObjectsReferencedStateContainsElements(SdaiInstance iInstance)
+{
+	ASSERT(iInstance != 0);
+
+	SdaiAggr piContainsElementsInstances = nullptr;
+	sdaiGetAttrBN(iInstance, "ContainsElements", sdaiAGGR, &piContainsElementsInstances);
+
+	if (piContainsElementsInstances == nullptr)
+	{
+		return;
+	}
+
+	SdaiEntity iIFCRelContainedInSpatialStructureEntity = sdaiGetEntity(m_iModel, "IFCRELCONTAINEDINSPATIALSTRUCTURE");
+
+	SdaiInteger iIFCContainsElementsInstancesCount = sdaiGetMemberCount(piContainsElementsInstances);
+	for (SdaiInteger i = 0; i < iIFCContainsElementsInstancesCount; ++i)
+	{
+		SdaiInstance iIFCContainsElementsInstance = 0;
+		engiGetAggrElement(piContainsElementsInstances, i, sdaiINSTANCE, &iIFCContainsElementsInstance);
+
+		if (sdaiGetInstanceType(iIFCContainsElementsInstance) != iIFCRelContainedInSpatialStructureEntity)
+		{
+			continue;
+		}
+
+		SdaiAggr piIFCRelatedElementsInstances = 0;
+		sdaiGetAttrBN(iIFCContainsElementsInstance, "RelatedElements", sdaiAGGR, &piIFCRelatedElementsInstances);
+
+		SdaiInteger iIFCRelatedElementsInstancesCount = sdaiGetMemberCount(piIFCRelatedElementsInstances);
+		for (SdaiInteger j = 0; j < iIFCRelatedElementsInstancesCount; ++j)
+		{
+			SdaiInstance iIFCRelatedElementsInstance = 0;
+			engiGetAggrElement(piIFCRelatedElementsInstances, j, sdaiINSTANCE, &iIFCRelatedElementsInstance);
+
+			GetObjectsReferencedStateRecursively(iIFCRelatedElementsInstance);
+		} // for (int_t j = ...
+	} // for (int64_t i = ...
+}
+
+void CIFCModel::RetrieveObjectsRecursively(int_t iParentEntity, int_t iCircleSegments)
 {
 	if ((iParentEntity == m_ifcDistributionElementEntity) ||
 		(iParentEntity == m_ifcElectricalElementEntity) ||
@@ -625,7 +729,7 @@ void CIFCModel::RetrieveObjects__depth(int_t iParentEntity, int_t iCircleSegment
 		iCircleSegments = 6;
 	}
 
-	int_t* piInstances = sdaiGetEntityExtent(m_iModel, iParentEntity);
+	int_t* piInstances = sdaiGetEntityExtent(GetInstance(), iParentEntity);
 	int_t iIntancesCount = sdaiGetMemberCount(piInstances);
 
 	if (iIntancesCount != 0)
@@ -634,677 +738,39 @@ void CIFCModel::RetrieveObjects__depth(int_t iParentEntity, int_t iCircleSegment
 		engiGetEntityName(iParentEntity, sdaiSTRING, (const char**)&szParenEntityName);
 
 		wchar_t* szParentEntityNameW = CEntity::GetName(iParentEntity);
-
 		RetrieveObjects(szParenEntityName, szParentEntityNameW, iCircleSegments);
-
-		//#test
-		///*if (iParentEntity == m_ifcProjectEntity) {
-		//	for (int_t i = 0; i < iIntancesCount; i++) {
-		//		SdaiInstance iInstance = 0;
-		//		engiGetAggrElement(piInstances, i, sdaiINSTANCE, &iInstance);
-
-		//		wchar_t* szInstanceGUIDW = nullptr;
-		//		sdaiGetAttrBN(iInstance, "GlobalId", sdaiUNICODE, &szInstanceGUIDW);
-
-		//		CIFCInstance * pInstance = RetrieveGeometry(szInstanceGUIDW, iInstance, iCircleSegments);
-		//		pInstance->ID() = s_iInstanceID++;
-
-		//		CString strEntity = szParentEntityNameW;
-		//		strEntity.MakeUpper();
-
-		//		pInstance->SetEnable((strEntity != "IFCSPACE") && (strEntity != "IFCRELSPACEBOUNDARY") && (strEntity != "IFCOPENINGELEMENT"));
-
-		//		m_vecInstances.push_back(pInstance);
-		//		m_mapInstances[iInstance] = pInstance;
-		//	}
-		//}*/
 	} // if (iIntancesCount != 0)
 
-	iIntancesCount = engiGetEntityCount(m_iModel);
+	iIntancesCount = engiGetEntityCount(GetInstance());
 	for (int_t i = 0; i < iIntancesCount; i++)
 	{
-		SdaiEntity iEntity = engiGetEntityElement(m_iModel, i);
+		SdaiEntity iEntity = engiGetEntityElement(GetInstance(), i);
 		if (engiGetEntityParent(iEntity) == iParentEntity)
 		{
-			RetrieveObjects__depth(iEntity, iCircleSegments, depth + 1);
+			RetrieveObjectsRecursively(iEntity, iCircleSegments);
 		}
 	}
 }
 
-// ------------------------------------------------------------------------------------------------
-CIFCInstance* CIFCModel::RetrieveGeometry(const wchar_t* szInstanceGUIDW, SdaiInstance iInstance, int_t iCircleSegments)
+CIFCInstance* CIFCModel::RetrieveGeometry(SdaiInstance iInstance, int_t iCircleSegments)
 {
-	PreLoadInstance(iInstance);
+	PreLoadInstance(iInstance);		
 
-	/*
-	* Set up format
-	*/
-	int_t setting = 0, mask = 0;
-	mask += flagbit2;        // PRECISION (32/64 bit)
-	mask += flagbit3;        //	INDEX ARRAY (32/64 bit)
-	mask += flagbit5;        // NORMALS
-	mask += flagbit6;        // TEXTURE
-	mask += flagbit8;        // TRIANGLES
-	mask += flagbit9;        // LINES
-	mask += flagbit10;       // POINTS
-	mask += flagbit13;       // CONCEPTUAL FACE POLYGONS
-	mask += flagbit17;       // OPENGL
-	mask += flagbit24;		 //	AMBIENT
-	mask += flagbit25;		 //	DIFFUSE
-	mask += flagbit26;		 //	EMISSIVE
-	mask += flagbit27;		 //	SPECULAR
-
-	setting += 0;		     // SINGLE PRECISION (float)
-	setting += 0;            // 32 BIT INDEX ARRAY (Int32)
-	setting += flagbit5;     // NORMALS ON
-	setting += 0;			 // TEXTURE OFF
-	setting += flagbit8;     // TRIANGLES ON
-	setting += flagbit9;     // LINES ON
-	setting += flagbit10;    // POINTS ON
-	setting += flagbit13;    // CONCEPTUAL FACE POLYGONS ON
-	setting += 0;		     // OPENGL
-	setting += flagbit24;	 //	AMBIENT
-	setting += flagbit25;	 //	DIFFUSE
-	setting += flagbit26;	 //	EMISSIVE
-	setting += flagbit27;	 //	SPECULAR
-	setFormat(m_iModel, setting, mask);
-	setFilter(m_iModel, flagbit1, flagbit1);
-
-	/*
-	* Default color
-	*/
-	int32_t	iR = 10,
-		iG = 150,
-		iB = 10,
-		iA = 255;
-	int32_t	iDefaultColor = 256 * 256 * 256 * iR +
-		256 * 256 * iG +
-		256 * iB +
-		iA;
-	SetDefaultColor(m_iModel, iDefaultColor, iDefaultColor, iDefaultColor, iDefaultColor);
-
-	setSegmentation(m_iModel, 16, 0.);
-
-	/*
-	* Set up circleSegments()
-	*/
+	// Set up circleSegments()
 	if (iCircleSegments != DEFAULT_CIRCLE_SEGMENTS)
 	{
 		circleSegments(iCircleSegments, 5);
 	}
 
-	auto pInstance = new CIFCInstance(this, iInstance, szInstanceGUIDW);
+	auto pInstance = new CIFCInstance(s_iInstanceID++, iInstance);	
 
-	ASSERT(pInstance->m_pVertexBuffer == nullptr);
-	pInstance->m_pVertexBuffer = new _vertices_f();
-
-	ASSERT(pInstance->m_pIndexBuffer == nullptr);
-	pInstance->m_pIndexBuffer = new _indices_i32();
-
-	CalculateInstance(iInstance, &pInstance->m_pVertexBuffer->size(), &pInstance->m_pIndexBuffer->size(), nullptr);
-	if ((pInstance->m_pVertexBuffer->size() == 0) || (pInstance->m_pIndexBuffer->size() == 0))
-	{
-		return pInstance;
-	}
-
-	int64_t iOWLModel = 0;
-	owlGetModel(m_iModel, &iOWLModel);
-
-	int64_t iOWLInstance = 0;
-	owlGetInstance(m_iModel, iInstance, &iOWLInstance);
-
-	/**
-	* Retrieves the vertices
-	*/
-	pInstance->m_pVertexBuffer->vertexLength() = SetFormat(m_iModel, 0, 0) / sizeof(float);
-
-	pInstance->m_pVertexBuffer->data() = new float[pInstance->m_pVertexBuffer->size() * pInstance->m_pVertexBuffer->vertexLength()];
-	memset(pInstance->m_pVertexBuffer->data(), 0, pInstance->m_pVertexBuffer->size() * pInstance->m_pVertexBuffer->vertexLength() * sizeof(float));
-
-	UpdateInstanceVertexBuffer(iOWLInstance, pInstance->m_pVertexBuffer->data());
-
-	/**
-	* Retrieves the indices
-	*/
-	pInstance->m_pIndexBuffer->data() = new int32_t[pInstance->m_pIndexBuffer->size()];
-	memset(pInstance->m_pIndexBuffer->data(), 0, pInstance->m_pIndexBuffer->size() * sizeof(int32_t));
-
-	UpdateInstanceIndexBuffer(iOWLInstance, pInstance->m_pIndexBuffer->data());
-
-	// MATERIAL : FACE INDEX, START INDEX, INIDCES COUNT, etc.
-	MATERIALS mapMaterial2ConcFaces;
-	MATERIALS mapMaterial2ConcFacePoints; // MATERIAL : FACE INDEX, START INDEX, INIDCES COUNT, etc.
-
-	//	http://rdf.bg/gkdoc/CP64/GetConceptualFaceCnt.html
-	pInstance->m_iConceptualFacesCount = GetConceptualFaceCnt(iInstance);
-	for (int64_t iConceptualFace = 0; iConceptualFace < pInstance->m_iConceptualFacesCount; iConceptualFace++)
-	{
-		//	http://rdf.bg/gkdoc/CP64/GetConceptualFaceEx.html
-		int64_t iStartIndexTriangles = 0;
-		int64_t iIndicesCountTriangles = 0;
-		int64_t iStartIndexLines = 0;
-		int64_t iIndicesCountLines = 0;
-		int64_t iStartIndexPoints = 0;
-		int64_t iIndicesCountPoints = 0;
-		int64_t iStartIndexConceptualFacePolygons = 0;
-		int64_t iIndicesCountConceptualFacePolygons = 0;
-		GetConceptualFaceEx(iInstance, iConceptualFace,
-			&iStartIndexTriangles, &iIndicesCountTriangles,
-			&iStartIndexLines, &iIndicesCountLines,
-			&iStartIndexPoints, &iIndicesCountPoints,
-			0, 0,
-			&iStartIndexConceptualFacePolygons, &iIndicesCountConceptualFacePolygons);
-
-		if (iIndicesCountTriangles > 0)
-		{
-			/*
-			* Material
-			*/
-			int32_t iIndexValue = *(pInstance->m_pIndexBuffer->data() + iStartIndexTriangles);
-			iIndexValue *= VERTEX_LENGTH;
-
-			float fColor = *(pInstance->m_pVertexBuffer->data() + iIndexValue + 6);
-			unsigned int iAmbientColor = *(reinterpret_cast<unsigned int*>(&fColor));
-			float fTransparency = (float)(iAmbientColor & (255)) / (float)255;
-
-			fColor = *(pInstance->m_pVertexBuffer->data() + iIndexValue + 7);
-			unsigned int iDiffuseColor = *(reinterpret_cast<unsigned int*>(&fColor));
-
-			fColor = *(pInstance->m_pVertexBuffer->data() + iIndexValue + 8);
-			unsigned int iEmissiveColor = *(reinterpret_cast<unsigned int*>(&fColor));
-
-			fColor = *(pInstance->m_pVertexBuffer->data() + iIndexValue + 9);
-			unsigned int iSpecularColor = *(reinterpret_cast<unsigned int*>(&fColor));
-
-			/*
-			* Material
-			*/
-			_material material(
-				iAmbientColor,
-				iDiffuseColor,
-				iEmissiveColor,
-				iSpecularColor,
-				fTransparency,
-				nullptr);
-
-			auto itMaterial2ConceptualFaces = mapMaterial2ConcFaces.find(material);
-			if (itMaterial2ConceptualFaces == mapMaterial2ConcFaces.end())
-			{
-				mapMaterial2ConcFaces[material] = vector<_face>{ _face(iConceptualFace, iStartIndexTriangles, iIndicesCountTriangles) };
-			}
-			else
-			{
-				itMaterial2ConceptualFaces->second.push_back(_face(iConceptualFace, iStartIndexTriangles, iIndicesCountTriangles));
-			}
-		}
-
-		if (iIndicesCountTriangles > 0)
-		{
-			pInstance->m_vecTriangles.push_back(_primitives(iStartIndexTriangles, iIndicesCountTriangles));
-		}
-
-		if (iIndicesCountConceptualFacePolygons > 0)
-		{
-			pInstance->m_vecConcFacePolygons.push_back(_primitives(iStartIndexConceptualFacePolygons, iIndicesCountConceptualFacePolygons));
-		}
-
-		if (iIndicesCountLines > 0)
-		{
-			pInstance->m_vecLines.push_back(_primitives(iStartIndexLines, iIndicesCountLines));
-		}
-
-		if (iIndicesCountPoints > 0)
-		{
-			int32_t iIndexValue = *(pInstance->m_pIndexBuffer->data() + iStartIndexTriangles);
-			iIndexValue *= VERTEX_LENGTH;
-
-			float fColor = *(pInstance->m_pVertexBuffer->data() + iIndexValue + 6);
-			unsigned int iAmbientColor = *(reinterpret_cast<unsigned int*>(&fColor));
-			float fTransparency = (float)(iAmbientColor & (255)) / (float)255;
-
-			fColor = *(pInstance->m_pVertexBuffer->data() + iIndexValue + 7);
-			unsigned int iDiffuseColor = *(reinterpret_cast<unsigned int*>(&fColor));
-
-			fColor = *(pInstance->m_pVertexBuffer->data() + iIndexValue + 8);
-			unsigned int iEmissiveColor = *(reinterpret_cast<unsigned int*>(&fColor));
-
-			fColor = *(pInstance->m_pVertexBuffer->data() + iIndexValue + 9);
-			unsigned int iSpecularColor = *(reinterpret_cast<unsigned int*>(&fColor));
-
-			/*
-			* Material
-			*/
-			_material material(
-				iAmbientColor,
-				iDiffuseColor,
-				iEmissiveColor,
-				iSpecularColor,
-				fTransparency,
-				nullptr);
-
-			auto itMaterial2ConcFacePoints = mapMaterial2ConcFacePoints.find(material);
-			if (itMaterial2ConcFacePoints == mapMaterial2ConcFacePoints.end())
-			{
-				mapMaterial2ConcFacePoints[material] = vector<_face>{ _face(iConceptualFace, iStartIndexPoints, iIndicesCountPoints) };
-			}
-			else
-			{
-				itMaterial2ConcFacePoints->second.push_back(_face(iConceptualFace, iStartIndexPoints, iIndicesCountPoints));
-			}
-
-			pInstance->m_vecPoints.push_back(_primitives(iStartIndexPoints, iIndicesCountPoints));
-		} // if (iIndicesCountPoints > 0)
-	} // for (int64_t iConceptualFace = ...	
-
-	/*
-	* Group the faces
-	*/
-	auto itMaterial2ConcFaces = mapMaterial2ConcFaces.begin();
-	for (; itMaterial2ConcFaces != mapMaterial2ConcFaces.end(); itMaterial2ConcFaces++)
-	{
-		_facesCohort* pCohort = nullptr;
-
-		for (size_t iConcFace = 0; iConcFace < itMaterial2ConcFaces->second.size(); iConcFace++)
-		{
-			_face& concFace = itMaterial2ConcFaces->second[iConcFace];
-
-			int_t iStartIndex = concFace.startIndex();
-			int_t iIndicesCount = concFace.indicesCount();
-
-			/*
-			* Split the conceptual face - isolated case
-			*/
-			if (iIndicesCount > _oglUtils::getIndicesCountLimit())
-			{
-				while (iIndicesCount > _oglUtils::getIndicesCountLimit())
-				{
-					auto pNewCohort = new _facesCohort(itMaterial2ConcFaces->first);
-					for (int_t iIndex = iStartIndex;
-						iIndex < iStartIndex + _oglUtils::getIndicesCountLimit();
-						iIndex++)
-					{
-						pNewCohort->indices().push_back(pInstance->m_pIndexBuffer->data()[iIndex]);
-					}
-
-					pInstance->ConcFacesCohorts().push_back(pNewCohort);
-
-					/*
-					* Update Conceptual face start index
-					*/
-					concFace.startIndex() = 0;
-
-					// Conceptual faces
-					pNewCohort->faces().push_back(concFace);
-
-					iIndicesCount -= _oglUtils::getIndicesCountLimit();
-					iStartIndex += _oglUtils::getIndicesCountLimit();
-				}
-
-				if (iIndicesCount > 0)
-				{
-					auto pNewCohort = new _facesCohort(itMaterial2ConcFaces->first);
-					for (int_t iIndex = iStartIndex;
-						iIndex < iStartIndex + iIndicesCount;
-						iIndex++)
-					{
-						pNewCohort->indices().push_back(pInstance->m_pIndexBuffer->data()[iIndex]);
-					}
-
-					pInstance->ConcFacesCohorts().push_back(pNewCohort);
-
-					/*
-					* Update Conceptual face start index
-					*/
-					concFace.startIndex() = 0;
-
-					// Conceptual faces
-					pNewCohort->faces().push_back(concFace);
-				}
-
-				continue;
-			} // if (iIndicesCount > _oglUtils::GetIndicesCountLimit())	
-
-			/*
-			* Create material
-			*/
-			if (pCohort == nullptr)
-			{
-				pCohort = new _facesCohort(itMaterial2ConcFaces->first);
-
-				pInstance->ConcFacesCohorts().push_back(pCohort);
-			}
-
-			/*
-			* Check the limit
-			*/
-			if (pCohort->indices().size() + iIndicesCount > _oglUtils::getIndicesCountLimit())
-			{
-				pCohort = new _facesCohort(itMaterial2ConcFaces->first);
-
-				pInstance->ConcFacesCohorts().push_back(pCohort);
-			}
-
-			/*
-			* Update Conceptual face start index
-			*/
-			concFace.startIndex() = pCohort->indices().size();
-
-			/*
-			* Add the indices
-			*/
-			for (int_t iIndex = iStartIndex;
-				iIndex < iStartIndex + iIndicesCount;
-				iIndex++)
-			{
-				pCohort->indices().push_back(pInstance->m_pIndexBuffer->data()[iIndex]);
-			}
-
-			// Conceptual faces
-			pCohort->faces().push_back(concFace);
-		} // for (size_t iConcFace = ...
-	} // for (; itMaterial2ConceptualFaces != ...
-
-	/*
-	* Group the polygons
-	*/
-	if (!pInstance->m_vecConcFacePolygons.empty())
-	{
-		/*
-		* Use the last cohort (if any)
-		*/
-		_cohort* pCohort = pInstance->ConcFacePolygonsCohorts().empty() ? 
-			nullptr : pInstance->ConcFacePolygonsCohorts()[pInstance->ConcFacePolygonsCohorts().size() - 1];
-
-		/*
-		* Create the cohort
-		*/
-		if (pCohort == nullptr)
-		{
-			pCohort = new _cohort();
-			pInstance->ConcFacePolygonsCohorts().push_back(pCohort);
-		}
-
-		for (size_t iFace = 0; iFace < pInstance->m_vecConcFacePolygons.size(); iFace++)
-		{
-			int_t iStartIndex = pInstance->m_vecConcFacePolygons[iFace].startIndex();
-			int_t iIndicesCount = pInstance->m_vecConcFacePolygons[iFace].indicesCount();
-
-			/*
-			* Split the conceptual face - isolated case
-			*/
-			if (iIndicesCount > _oglUtils::getIndicesCountLimit() / 2)
-			{
-				while (iIndicesCount > _oglUtils::getIndicesCountLimit() / 2)
-				{
-					pCohort = new _cohort();
-					pInstance->ConcFacePolygonsCohorts().push_back(pCohort);
-
-					int_t iPreviousIndex = -1;
-					for (int_t iIndex = iStartIndex;
-						iIndex < iStartIndex + _oglUtils::getIndicesCountLimit() / 2;
-						iIndex++)
-					{
-						if (pInstance->m_pIndexBuffer->data()[iIndex] < 0)
-						{
-							iPreviousIndex = -1;
-
-							continue;
-						}
-
-						if (iPreviousIndex != -1)
-						{
-							pCohort->indices().push_back(pInstance->m_pIndexBuffer->data()[iPreviousIndex]);
-							pCohort->indices().push_back(pInstance->m_pIndexBuffer->data()[iIndex]);
-						} // if (iPreviousIndex != -1)
-
-						iPreviousIndex = iIndex;
-					} // for (int_t iIndex = ...
-
-					iIndicesCount -= _oglUtils::getIndicesCountLimit() / 2;
-					iStartIndex += _oglUtils::getIndicesCountLimit() / 2;
-				} // while (iIndicesCount > _oglUtils::GetIndicesCountLimit() / 2)
-
-				if (iIndicesCount > 0)
-				{
-					pCohort = new _cohort();
-					pInstance->ConcFacePolygonsCohorts().push_back(pCohort);
-
-					int_t iPreviousIndex = -1;
-					for (int_t iIndex = iStartIndex;
-						iIndex < iStartIndex + iIndicesCount;
-						iIndex++)
-					{
-						if (pInstance->m_pIndexBuffer->data()[iIndex] < 0)
-						{
-							iPreviousIndex = -1;
-
-							continue;
-						}
-
-						if (iPreviousIndex != -1)
-						{
-							pCohort->indices().push_back(pInstance->m_pIndexBuffer->data()[iPreviousIndex]);
-							pCohort->indices().push_back(pInstance->m_pIndexBuffer->data()[iIndex]);
-						} // if (iPreviousIndex != -1)
-
-						iPreviousIndex = iIndex;
-					} // for (int_t iIndex = ...
-				}
-
-				continue;
-			} // if (iIndicesCount > _oglUtils::GetIndicesCountLimit() / 2)
-
-			/*
-			* Check the limit
-			*/
-			if ((pCohort->indices().size() + (iIndicesCount * 2)) > _oglUtils::getIndicesCountLimit())
-			{
-				pCohort = new _cohort();
-				pInstance->ConcFacePolygonsCohorts().push_back(pCohort);
-			}
-
-			int_t iPreviousIndex = -1;
-			for (int_t iIndex = iStartIndex;
-				iIndex < iStartIndex + iIndicesCount;
-				iIndex++)
-			{
-				if (pInstance->m_pIndexBuffer->data()[iIndex] < 0)
-				{
-					iPreviousIndex = -1;
-
-					continue;
-				}
-
-				if (iPreviousIndex != -1)
-				{
-					pCohort->indices().push_back(pInstance->m_pIndexBuffer->data()[iPreviousIndex]);
-					pCohort->indices().push_back(pInstance->m_pIndexBuffer->data()[iIndex]);
-				} // if (iPreviousIndex != -1)
-
-				iPreviousIndex = iIndex;
-			} // for (int_t iIndex = ...
-		} // for (size_t iFace = ...
-
-#ifdef _DEBUG
-		for (size_t iCohort = 0; iCohort < pInstance->ConcFacePolygonsCohorts().size(); iCohort++)
-		{
-			ASSERT(pInstance->ConcFacePolygonsCohorts()[iCohort]->indices().size() <= _oglUtils::getIndicesCountLimit());
-		}
-#endif
-	} // if (!m_vecConcFacePolygons.empty())
-
-	/*
-	* Group the lines
-	*/
-	if (!pInstance->m_vecLines.empty())
-	{
-		/*
-		* Use the last cohort (if any)
-		*/
-		auto pCohort = pInstance->LinesCohorts().empty() ? 
-			nullptr : pInstance->LinesCohorts()[pInstance->LinesCohorts().size() - 1];
-
-		/*
-		* Create the cohort
-		*/
-		if (pCohort == nullptr)
-		{
-			pCohort = new _cohort();
-			pInstance->LinesCohorts().push_back(pCohort);
-		}
-
-		for (size_t iFace = 0; iFace < pInstance->m_vecLines.size(); iFace++)
-		{
-			int_t iStartIndex = pInstance->m_vecLines[iFace].startIndex();
-			int_t iIndicesCount = pInstance->m_vecLines[iFace].indicesCount();
-
-			/*
-			* Check the limit
-			*/
-			if (pCohort->indices().size() + iIndicesCount > _oglUtils::getIndicesCountLimit())
-			{
-				pCohort = new _cohort();
-				pInstance->LinesCohorts().push_back(pCohort);
-			}
-
-			for (int_t iIndex = iStartIndex;
-				iIndex < iStartIndex + iIndicesCount;
-				iIndex++)
-			{
-				if (pInstance->m_pIndexBuffer->data()[iIndex] < 0)
-				{
-					continue;
-				}
-
-				pCohort->indices().push_back(pInstance->m_pIndexBuffer->data()[iIndex]);
-			} // for (int_t iIndex = ...
-		} // for (size_t iFace = ...
-
-#ifdef _DEBUG
-		for (size_t iCohort = 0; iCohort < pInstance->LinesCohorts().size(); iCohort++)
-		{
-			ASSERT(pInstance->LinesCohorts()[iCohort]->indices().size() <= _oglUtils::getIndicesCountLimit());
-		}
-#endif
-	} // if (!m_vecLines.empty())		
-
-	/*
-	* Group the points
-	*/
-	auto itMaterial2ConcFacePoints = mapMaterial2ConcFacePoints.begin();
-	for (; itMaterial2ConcFacePoints != mapMaterial2ConcFacePoints.end(); itMaterial2ConcFacePoints++)
-	{
-		_facesCohort* pCohort = nullptr;
-
-		for (size_t iConcFace = 0; iConcFace < itMaterial2ConcFacePoints->second.size(); iConcFace++)
-		{
-			_face& concFace = itMaterial2ConcFacePoints->second[iConcFace];
-
-			int_t iStartIndex = concFace.startIndex();
-			int_t iIndicesCount = concFace.indicesCount();
-
-			/*
-			* Split the conceptual face - isolated case
-			*/
-			if (iIndicesCount > _oglUtils::getIndicesCountLimit())
-			{
-				while (iIndicesCount > _oglUtils::getIndicesCountLimit())
-				{
-					auto pNewCohort = new _facesCohort(itMaterial2ConcFacePoints->first);
-					for (int_t iIndex = iStartIndex;
-						iIndex < iStartIndex + _oglUtils::getIndicesCountLimit();
-						iIndex++)
-					{
-						pNewCohort->indices().push_back(pInstance->m_pIndexBuffer->data()[iIndex]);
-					}
-
-					pInstance->PointsCohorts().push_back(pNewCohort);
-
-					/*
-					* Update Conceptual face start index
-					*/
-					concFace.startIndex() = 0;
-
-					// Conceptual faces
-					pNewCohort->faces().push_back(concFace);
-
-					iIndicesCount -= _oglUtils::getIndicesCountLimit();
-					iStartIndex += _oglUtils::getIndicesCountLimit();
-				}
-
-				if (iIndicesCount > 0)
-				{
-					auto pNewCohort = new _facesCohort(itMaterial2ConcFacePoints->first);
-					for (int_t iIndex = iStartIndex;
-						iIndex < iStartIndex + iIndicesCount;
-						iIndex++)
-					{
-						pNewCohort->indices().push_back(pInstance->m_pIndexBuffer->data()[iIndex]);
-					}
-
-					pInstance->PointsCohorts().push_back(pNewCohort);
-
-					/*
-					* Update Conceptual face start index
-					*/
-					concFace.startIndex() = 0;
-
-					// Conceptual faces
-					pNewCohort->faces().push_back(concFace);
-				}
-
-				continue;
-			} // if (iIndicesCountTriangles > _oglUtils::GetIndicesCountLimit())	
-
-			/*
-			* Create material
-			*/
-			if (pCohort == nullptr)
-			{
-				pCohort = new _facesCohort(itMaterial2ConcFacePoints->first);
-
-				pInstance->PointsCohorts().push_back(pCohort);
-			}
-
-			/*
-			* Check the limit
-			*/
-			if (pCohort->indices().size() + iIndicesCount > _oglUtils::getIndicesCountLimit())
-			{
-				pCohort = new _facesCohort(itMaterial2ConcFacePoints->first);
-
-				pInstance->PointsCohorts().push_back(pCohort);
-			}
-
-			/*
-			* Update Conceptual face start index
-			*/
-			concFace.startIndex() = pCohort->indices().size();
-
-			/*
-			* Add the indices
-			*/
-			for (int_t iIndex = iStartIndex;
-				iIndex < iStartIndex + iIndicesCount;
-				iIndex++)
-			{
-				pCohort->indices().push_back(pInstance->m_pIndexBuffer->data()[iIndex]);
-			}
-
-			// Conceptual faces
-			pCohort->faces().push_back(concFace);
-		} // for (size_t iConcFace = ...
-	} // for (; itMaterial2ConceptualFaces != ...
-
-	/*
-	* Restore circleSegments()
-	*/
+	// Restore circleSegments()
 	if (iCircleSegments != DEFAULT_CIRCLE_SEGMENTS)
 	{
 		circleSegments(DEFAULT_CIRCLE_SEGMENTS, 5);
 	}
 
-	cleanMemory(m_iModel, 0);
+	cleanMemory(GetInstance(), 0);
 
 	return pInstance;
 }
