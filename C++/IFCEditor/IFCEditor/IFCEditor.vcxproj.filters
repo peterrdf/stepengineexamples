@@ -141,9 +141,6 @@
     <ClInclude Include="RelationsView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IFCAttribute.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Visualization\_mvc.h">
       <Filter>Visualization</Filter>
     </ClInclude>
@@ -151,6 +148,9 @@
       <Filter>Visualization</Filter>
     </ClInclude>
     <ClInclude Include="Visualization\stdafx.h">
+      <Filter>Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Visualization\IFCAttribute.h">
       <Filter>Visualization</Filter>
     </ClInclude>
   </ItemGroup>
@@ -227,8 +227,8 @@
     <ClCompile Include="RelationsView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IFCAttribute.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Visualization\IFCAttribute.cpp">
+      <Filter>Visualization</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

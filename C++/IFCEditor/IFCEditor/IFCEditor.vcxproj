@@ -197,7 +197,6 @@
     <ClInclude Include="..\include\wglext.h" />
     <ClInclude Include="calendarbar.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="IFCAttribute.h" />
     <ClInclude Include="IFCEditor.h" />
     <ClInclude Include="IFCEditorDoc.h" />
     <ClInclude Include="IFCEditorView.h" />
@@ -217,6 +216,7 @@
     <ClInclude Include="Visualization\Controller.h" />
     <ClInclude Include="Visualization\Entity.h" />
     <ClInclude Include="Visualization\Generic.h" />
+    <ClInclude Include="Visualization\IFCAttribute.h" />
     <ClInclude Include="Visualization\IFCInstance.h" />
     <ClInclude Include="Visualization\IFCModel.h" />
     <ClInclude Include="Visualization\IFCProperty.h" />
@@ -237,7 +237,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="calendarbar.cpp" />
-    <ClCompile Include="IFCAttribute.cpp" />
     <ClCompile Include="IFCEditor.cpp" />
     <ClCompile Include="IFCEditorDoc.cpp" />
     <ClCompile Include="IFCEditorView.cpp" />
@@ -257,6 +256,7 @@
     <ClCompile Include="ViewTree.cpp" />
     <ClCompile Include="Visualization\Controller.cpp" />
     <ClCompile Include="Visualization\Entity.cpp" />
+    <ClCompile Include="Visualization\IFCAttribute.cpp" />
     <ClCompile Include="Visualization\IFCInstance.cpp" />
     <ClCompile Include="Visualization\IFCModel.cpp" />
     <ClCompile Include="Visualization\IFCProperty.cpp" />
