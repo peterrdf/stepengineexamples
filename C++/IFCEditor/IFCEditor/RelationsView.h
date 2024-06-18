@@ -276,8 +276,8 @@ protected:
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg void OnPaint();
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
-	afx_msg void OnNMClickTree(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnNMRClickTree(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnSelectedItemChanged(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnTVNItemexpandingTree(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnTVNGetInfoTip(NMHDR* pNMHDR, LRESULT* pResult);
 

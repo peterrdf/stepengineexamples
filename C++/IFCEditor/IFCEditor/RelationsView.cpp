@@ -1602,7 +1602,7 @@ void CRelationsView::ResetView()
 }
 
 // ------------------------------------------------------------------------------------------------
-void CRelationsView::OnNMClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
+void CRelationsView::OnNMRClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
 	*pResult = 0;
 
@@ -1619,6 +1619,19 @@ void CRelationsView::OnNMClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 	}
 
 	m_treeCtrl.SelectItem(hItem);
+}
+
+void CRelationsView::OnSelectedItemChanged(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	*pResult = 0;
+
+	auto pNMTreeView = (NM_TREEVIEW*)pNMHDR;
+
+	HTREEITEM hItem = pNMTreeView->itemNew.hItem;
+	if (hItem == nullptr)
+	{
+		return;
+	}
 
 	auto pController = GetController();
 	if (pController == nullptr)
@@ -1646,40 +1659,11 @@ void CRelationsView::OnNMClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 		return;
 	}
 
-	//#tbd
-	//int64_t iInstance = 0;
-	//owlBuildInstance(engiGetEntityModel(sdaiGetInstanceType(pInstanceData->GetInstance())), pInstanceData->GetInstance(), &iInstance);
-
-	/*if (iInstance == 0)
-	{
-		return;
-	}*/
-
 	auto pInstance = pController->LoadInstance(pInstanceData->GetInstance());
 	if (pInstance != nullptr)
 	{
 		pController->SetTargetInstance(this, pInstance);
 	}
-}
-
-// ------------------------------------------------------------------------------------------------
-void CRelationsView::OnNMRClickTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
-{
-	*pResult = 0;
-
-	DWORD dwPosition = GetMessagePos();
-	CPoint point(LOWORD(dwPosition), HIWORD(dwPosition));
-	m_treeCtrl.ScreenToClient(&point);
-
-	UINT uFlags = 0;
-	HTREEITEM hItem = m_treeCtrl.HitTest(point, &uFlags);
-
-	if (hItem == nullptr)
-	{
-		return;
-	}
-
-	m_treeCtrl.SelectItem(hItem);
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -1865,8 +1849,8 @@ BEGIN_MESSAGE_MAP(CRelationsView, CDockablePane)
 	ON_WM_CONTEXTMENU()
 	ON_WM_PAINT()
 	ON_WM_SETFOCUS()
-	ON_NOTIFY(NM_CLICK, IDC_TREE_IFC, &CRelationsView::OnNMClickTree)
-	ON_NOTIFY(NM_RCLICK, IDC_TREE_IFC, &CRelationsView::OnNMRClickTree)
+	//ON_NOTIFY(NM_RCLICK, IDC_TREE_IFC, &CRelationsView::OnNMRClickTree)
+	ON_NOTIFY(TVN_SELCHANGED, IDC_TREE_IFC, OnSelectedItemChanged)
 	ON_NOTIFY(TVN_ITEMEXPANDING, IDC_TREE_IFC, &CRelationsView::OnTVNItemexpandingTree)
 	ON_NOTIFY(TVN_GETINFOTIP, IDC_TREE_IFC, &CRelationsView::OnTVNGetInfoTip)
 	ON_WM_DESTROY()
