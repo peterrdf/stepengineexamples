@@ -258,24 +258,25 @@ pair<int, int> CSchemaView::GetInstancesCount(CEntity* pEntity) const
 	return pair<int, int>(iInstancesCount, iSubInstancesCount);
 }
 
-// ----------------------------------------------------------------------------
-void CSchemaView::OnNMClickTree(NMHDR* /*pNMHDR*/, LRESULT * pResult)
+void CSchemaView::OnSelectedItemChanged(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	*pResult = 0;
 
-	DWORD dwPosition = GetMessagePos();
-	CPoint point(LOWORD(dwPosition), HIWORD(dwPosition));
-	m_treeCtrl.ScreenToClient(&point);
+	auto pNMTreeView = (NM_TREEVIEW*)pNMHDR;
 
-	UINT uFlags = 0;
-	HTREEITEM hItem = m_treeCtrl.HitTest(point, &uFlags);
-
+	HTREEITEM hItem = pNMTreeView->itemNew.hItem;
 	if (hItem == nullptr)
 	{
 		return;
 	}
 
-	m_treeCtrl.SelectItem(hItem);
+	auto pController = GetController();
+	if (pController == nullptr)
+	{
+		ASSERT(FALSE);
+
+		return;
+	}
 
 	if (m_treeCtrl.GetItemData(hItem) != NULL)
 	{
@@ -328,8 +329,8 @@ BEGIN_MESSAGE_MAP(CSchemaView, CDockablePane)
 	ON_WM_CONTEXTMENU()
 	ON_WM_PAINT()
 	ON_WM_SETFOCUS()
-	ON_NOTIFY(NM_CLICK, IDC_TREE_IFC, &CSchemaView::OnNMClickTree)
-	ON_NOTIFY(NM_RCLICK, IDC_TREE_IFC, &CSchemaView::OnNMRClickTree)
+	ON_NOTIFY(TVN_SELCHANGED, IDC_TREE_IFC, OnSelectedItemChanged)
+	ON_NOTIFY(NM_RCLICK, IDC_TREE_IFC, &CSchemaView::OnNMRClickTree)	
 	ON_NOTIFY(TVN_ITEMEXPANDING, IDC_TREE_IFC, &CSchemaView::OnTVNItemexpandingTree)
 	ON_WM_DESTROY()
 	ON_WM_SHOWWINDOW()
