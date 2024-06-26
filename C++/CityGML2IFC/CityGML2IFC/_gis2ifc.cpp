@@ -615,6 +615,37 @@ SdaiInstance _exporter_base::buildFeatureInstance(
 	return iBuildingElementInstance;
 }
 
+SdaiInstance _exporter_base::buildTransportElementInstance(
+	const char* szName,
+	const char* szDescription,
+	_matrix* pMatrix,
+	SdaiInstance iPlacementRelativeTo,
+	SdaiInstance& iBuildingInstancePlacement,
+	const vector<SdaiInstance>& vecRepresentations)
+{
+	assert(szName != nullptr);
+	assert(szDescription != nullptr);
+	assert(pMatrix != nullptr);
+	assert(iPlacementRelativeTo != 0);
+	assert(!vecRepresentations.empty());
+
+	SdaiInstance iBuildingElementInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcTransportElement");
+	assert(iBuildingElementInstance != 0);
+
+	sdaiPutAttrBN(iBuildingElementInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iBuildingElementInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+	sdaiPutAttrBN(iBuildingElementInstance, "Name", sdaiSTRING, szName);
+	sdaiPutAttrBN(iBuildingElementInstance, "Description", sdaiSTRING, szDescription);
+
+	iBuildingInstancePlacement = buildLocalPlacementInstance(pMatrix, iPlacementRelativeTo);
+	assert(iBuildingInstancePlacement != 0);
+
+	sdaiPutAttrBN(iBuildingElementInstance, "ObjectPlacement", sdaiINSTANCE, (void*)iBuildingInstancePlacement);
+	sdaiPutAttrBN(iBuildingElementInstance, "Representation", sdaiINSTANCE, (void*)buildProductDefinitionShapeInstance(vecRepresentations));
+
+	return iBuildingElementInstance;
+}
+
 SdaiInstance _exporter_base::buildBuildingStoreyInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo, SdaiInstance& iBuildingStoreyInstancePlacement)
 {
 	assert(pMatrix != nullptr);
@@ -1452,7 +1483,7 @@ _citygml_exporter::_citygml_exporter(_gis2ifc* pSite)
 		}
 
 		createStyledItemInstance(iSdaiInstance, m_iDefaultColorRgbInstance, 0.75);
-	}
+	}	
 }
 
 void _citygml_exporter::createBuildings(SdaiInstance iSiteInstance, SdaiInstance iSiteInstancePlacement)
@@ -1907,18 +1938,36 @@ void _citygml_exporter::createFeatures(SdaiInstance iSiteInstance, SdaiInstance 
 		assert(szClassName != nullptr);
 
 		SdaiInstance iFeatureInstancePlacement = 0;
-		SdaiInstance iFeatureInstance = buildFeatureInstance(
-			strTag.c_str(),
-			szClassName,
-			&mtxIdentity,
-			iSiteInstancePlacement,
-			iFeatureInstancePlacement,
-			vecSdaiFeatureElementGeometryInstances);
-		assert(iFeatureInstance != 0);
+		if (isTransportationObjectClass(iInstanceClass))
+		{			
+			SdaiInstance iFeatureInstance = buildTransportElementInstance(
+				strTag.c_str(),
+				szClassName,
+				&mtxIdentity,
+				iSiteInstancePlacement,
+				iFeatureInstancePlacement,
+				vecSdaiFeatureElementGeometryInstances);
+			assert(iFeatureInstance != 0);
 
-		createProperties(itFeature.first, iFeatureInstance);
+			createProperties(itFeature.first, iFeatureInstance);
 
-		vecFeatureInstances.push_back(iFeatureInstance);
+			vecFeatureInstances.push_back(iFeatureInstance);
+		}
+		else
+		{
+			SdaiInstance iFeatureInstance = buildFeatureInstance(
+				strTag.c_str(),
+				szClassName,
+				&mtxIdentity,
+				iSiteInstancePlacement,
+				iFeatureInstancePlacement,
+				vecSdaiFeatureElementGeometryInstances);
+			assert(iFeatureInstance != 0);
+
+			createProperties(itFeature.first, iFeatureInstance);
+
+			vecFeatureInstances.push_back(iFeatureInstance);
+		}		
 	} // for (auto& itFeature : ...
 
 	buildRelAggregatesInstance(
@@ -2857,7 +2906,7 @@ SdaiInstance _citygml_exporter::buildBuildingElementInstance(
 	else if (isWindowClass(iInstanceClass))
 	{
 		strEntity = "IfcWindow";
-	} 
+	}
 	else
 	{
 		strEntity = "IfcBuildingElementProxy"; // Proxy/Unknown Building Element
