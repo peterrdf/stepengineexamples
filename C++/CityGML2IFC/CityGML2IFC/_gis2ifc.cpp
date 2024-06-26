@@ -1938,7 +1938,9 @@ void _citygml_exporter::createFeatures(SdaiInstance iSiteInstance, SdaiInstance 
 		assert(szClassName != nullptr);
 
 		SdaiInstance iFeatureInstancePlacement = 0;
-		if (isTransportationObjectClass(iInstanceClass))
+		if (isTransportationObjectClass(iInstanceClass) ||
+			isBridgeObjectClass(iInstanceClass) ||
+			isTunnelObjectClass(iInstanceClass))
 		{			
 			SdaiInstance iFeatureInstance = buildTransportElementInstance(
 				strTag.c_str(),
