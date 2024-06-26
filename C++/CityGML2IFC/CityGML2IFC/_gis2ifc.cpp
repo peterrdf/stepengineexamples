@@ -677,6 +677,37 @@ SdaiInstance _exporter_base::buildFurnitureObjectInstance(
 	return iBuildingElementInstance;
 }
 
+SdaiInstance _exporter_base::buildGeographicElementInstance(
+	const char* szName,
+	const char* szDescription,
+	_matrix* pMatrix,
+	SdaiInstance iPlacementRelativeTo,
+	SdaiInstance& iBuildingInstancePlacement,
+	const vector<SdaiInstance>& vecRepresentations)
+{
+	assert(szName != nullptr);
+	assert(szDescription != nullptr);
+	assert(pMatrix != nullptr);
+	assert(iPlacementRelativeTo != 0);
+	assert(!vecRepresentations.empty());
+
+	SdaiInstance iBuildingElementInstance = sdaiCreateInstanceBN(m_iIfcModel, "IfcGeographicElement");
+	assert(iBuildingElementInstance != 0);
+
+	sdaiPutAttrBN(iBuildingElementInstance, "GlobalId", sdaiSTRING, (void*)_guid::createGlobalId().c_str());
+	sdaiPutAttrBN(iBuildingElementInstance, "OwnerHistory", sdaiINSTANCE, (void*)getOwnerHistoryInstance());
+	sdaiPutAttrBN(iBuildingElementInstance, "Name", sdaiSTRING, szName);
+	sdaiPutAttrBN(iBuildingElementInstance, "Description", sdaiSTRING, szDescription);
+
+	iBuildingInstancePlacement = buildLocalPlacementInstance(pMatrix, iPlacementRelativeTo);
+	assert(iBuildingInstancePlacement != 0);
+
+	sdaiPutAttrBN(iBuildingElementInstance, "ObjectPlacement", sdaiINSTANCE, (void*)iBuildingInstancePlacement);
+	sdaiPutAttrBN(iBuildingElementInstance, "Representation", sdaiINSTANCE, (void*)buildProductDefinitionShapeInstance(vecRepresentations));
+
+	return iBuildingElementInstance;
+}
+
 SdaiInstance _exporter_base::buildBuildingStoreyInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo, SdaiInstance& iBuildingStoreyInstancePlacement)
 {
 	assert(pMatrix != nullptr);
@@ -1974,6 +2005,23 @@ void _citygml_exporter::createFeatures(SdaiInstance iSiteInstance, SdaiInstance 
 			isTunnelObjectClass(iInstanceClass))
 		{			
 			SdaiInstance iFeatureInstance = buildTransportElementInstance(
+				strTag.c_str(),
+				szClassName,
+				&mtxIdentity,
+				iSiteInstancePlacement,
+				iFeatureInstancePlacement,
+				vecSdaiFeatureElementGeometryInstances);
+			assert(iFeatureInstance != 0);
+
+			createProperties(itFeature.first, iFeatureInstance);
+
+			vecFeatureInstances.push_back(iFeatureInstance);
+		}
+		else if (isReliefObjectClass(iInstanceClass) ||
+			isWaterObjectClass(iInstanceClass) ||
+			isVegetationObjectClass(iInstanceClass))
+		{
+			SdaiInstance iFeatureInstance = buildGeographicElementInstance(
 				strTag.c_str(),
 				szClassName,
 				&mtxIdentity,

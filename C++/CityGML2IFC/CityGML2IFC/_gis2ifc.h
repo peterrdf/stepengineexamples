@@ -200,6 +200,13 @@ protected: // Methods
 		SdaiInstance iPlacementRelativeTo,
 		SdaiInstance& iBuildingInstancePlacement,
 		const vector<SdaiInstance>& vecRepresentations);
+	SdaiInstance buildGeographicElementInstance(
+		const char* szName,
+		const char* szDescription,
+		_matrix* pMatrix,
+		SdaiInstance iPlacementRelativeTo,
+		SdaiInstance& iBuildingInstancePlacement,
+		const vector<SdaiInstance>& vecRepresentations);
 	SdaiInstance buildBuildingStoreyInstance(_matrix* pMatrix, SdaiInstance iPlacementRelativeTo, SdaiInstance& iBuildingStoreyInstancePlacement);	
 	SdaiInstance buildProductDefinitionShapeInstance(const vector<SdaiInstance>& vecRepresentations);
 	SdaiInstance buildRelAggregatesInstance(
