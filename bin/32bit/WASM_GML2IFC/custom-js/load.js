@@ -5,7 +5,8 @@ var Module = {
 }
 
 function jsLogCallback(event) {
-  document.getElementById("ta_log").value += event;
+  document.getElementById("txtLog").value += event;
+  document.getElementById("txtLog").value += '\n';
 }
 
 function getFileExtension(file) {
@@ -19,6 +20,8 @@ function getFileExtension(file) {
 function addContent(fileName, fileExtension, fileContent) {
   console.log('addContent BEGIN: ' + fileName)
 
+  jsLogCallback('Loading ' + fileName + '...');
+
   Module.unload()
   Module['FS_createDataFile']('/data/', 'input.ifc', fileContent, true, true)
 
@@ -28,7 +31,6 @@ function addContent(fileName, fileExtension, fileContent) {
     (fileExtension == 'json')) {
     Module.GIS2IFC(fileName)
     const output = Module.FS.readFile('/data/output.ifc', { encoding: 'utf8' })
-    document.getElementById("ta_log").value += output;
 
     const blob = new Blob([output], { type: 'text/plain' })
     const a = document.createElement('a')
@@ -47,6 +49,7 @@ function addContent(fileName, fileExtension, fileContent) {
 }
 
 function loadContent(fileName, fileExtension, fileContent) {
+  document.getElementById("txtLog").value = ''
   addContent(fileName, fileExtension, fileContent)
 }
 
