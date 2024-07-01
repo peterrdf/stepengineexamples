@@ -1200,7 +1200,7 @@ function dbg(text) {
 // end include: runtime_debug.js
 // === Body ===
 
-function call_js_agrs(szEvent,iLength) { jsLogCallback(UTF8ToString(szEvent, iLength)); }
+function call_js_log_callback(szEvent,iLength) { jsLogCallback(UTF8ToString(szEvent, iLength)); }
 
 
 // end include: preamble.js
@@ -7172,7 +7172,7 @@ var wasmImports = {
   /** @export */
   abort: _abort,
   /** @export */
-  call_js_agrs: call_js_agrs,
+  call_js_log_callback: call_js_log_callback,
   /** @export */
   emscripten_date_now: _emscripten_date_now,
   /** @export */
@@ -7227,8 +7227,8 @@ var dynCall_viijii = Module['dynCall_viijii'] = createExportWrapper('dynCall_vii
 var dynCall_iiiiij = Module['dynCall_iiiiij'] = createExportWrapper('dynCall_iiiiij');
 var dynCall_iiiiijj = Module['dynCall_iiiiijj'] = createExportWrapper('dynCall_iiiiijj');
 var dynCall_iiiiiijj = Module['dynCall_iiiiiijj'] = createExportWrapper('dynCall_iiiiiijj');
-var ___start_em_js = Module['___start_em_js'] = 9828184;
-var ___stop_em_js = Module['___stop_em_js'] = 9828273;
+var ___start_em_js = Module['___start_em_js'] = 9828168;
+var ___stop_em_js = Module['___stop_em_js'] = 9828257;
 
 // include: postamble.js
 // === Auto-generated postamble setup entry stuff ===
