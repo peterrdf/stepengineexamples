@@ -4,6 +4,10 @@ var Module = {
   },
 }
 
+function jsLogCallback(event) {
+  document.getElementById("ta_log").value += event;
+}
+
 function getFileExtension(file) {
   if (file && file.length > 4) {
     return file.split('.').pop();
@@ -24,7 +28,7 @@ function addContent(fileName, fileExtension, fileContent) {
     (fileExtension == 'json')) {
     Module.GIS2IFC(fileName)
     const output = Module.FS.readFile('/data/output.ifc', { encoding: 'utf8' })
-    document.getElementById("ta_log").value = output;
+    document.getElementById("ta_log").value += output;
 
     const blob = new Blob([output], { type: 'text/plain' })
     const a = document.createElement('a')
