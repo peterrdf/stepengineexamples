@@ -7227,8 +7227,8 @@ var dynCall_viijii = Module['dynCall_viijii'] = createExportWrapper('dynCall_vii
 var dynCall_iiiiij = Module['dynCall_iiiiij'] = createExportWrapper('dynCall_iiiiij');
 var dynCall_iiiiijj = Module['dynCall_iiiiijj'] = createExportWrapper('dynCall_iiiiijj');
 var dynCall_iiiiiijj = Module['dynCall_iiiiiijj'] = createExportWrapper('dynCall_iiiiiijj');
-var ___start_em_js = Module['___start_em_js'] = 9828168;
-var ___stop_em_js = Module['___stop_em_js'] = 9828257;
+var ___start_em_js = Module['___start_em_js'] = 9828536;
+var ___stop_em_js = Module['___stop_em_js'] = 9828625;
 
 // include: postamble.js
 // === Auto-generated postamble setup entry stuff ===
