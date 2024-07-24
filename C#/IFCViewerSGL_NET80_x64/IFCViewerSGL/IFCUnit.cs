@@ -165,31 +165,31 @@ namespace IFCViewerSGL
             Dictionary<string, IFCUnit> dicUnits = new Dictionary<string, IFCUnit>();
 
             IntPtr unitsInContext;
-            IfcEngine.x86_64.sdaiGetAttrBN(iProject, Encoding.Unicode.GetBytes("UnitsInContext"), IfcEngine.x86_64.sdaiINSTANCE, out unitsInContext);
+            RDF.ifcengine.sdaiGetAttrBN(iProject, Encoding.Unicode.GetBytes("UnitsInContext"), RDF.ifcengine.sdaiINSTANCE, out unitsInContext);
 
             IntPtr units;
-            IfcEngine.x86_64.sdaiGetAttrBN((int_t)unitsInContext, Encoding.Unicode.GetBytes("Units"), IfcEngine.x86_64.sdaiAGGR, out units);
+            RDF.ifcengine.sdaiGetAttrBN((int_t)unitsInContext, Encoding.Unicode.GetBytes("Units"), RDF.ifcengine.sdaiAGGR, out units);
 
-            int_t iUnitsCount = IfcEngine.x86_64.sdaiGetMemberCount((int_t)units);
+            int_t iUnitsCount = RDF.ifcengine.sdaiGetMemberCount((int_t)units);
             for (int_t iUnit = 0; iUnit < iUnitsCount; iUnit++)
             {
                 int_t iUnitInstance;
-                IfcEngine.x86_64.engiGetAggrElement((int_t)units, iUnit, IfcEngine.x86_64.sdaiINSTANCE, out iUnitInstance);
+                RDF.ifcengine.engiGetAggrElement((int_t)units, iUnit, RDF.ifcengine.sdaiINSTANCE, out iUnitInstance);
 
                 if (IsInstanceOf(iModel, iUnitInstance, "IFCCONVERSIONBASEDUNIT"))
                 {
                     int_t iConversionFactorInstance = 0;
-                    IfcEngine.x86_64.sdaiGetAttrBN(iUnitInstance, Encoding.Unicode.GetBytes("ConversionFactor"), IfcEngine.x86_64.sdaiINSTANCE, out iConversionFactorInstance);
+                    RDF.ifcengine.sdaiGetAttrBN(iUnitInstance, Encoding.Unicode.GetBytes("ConversionFactor"), RDF.ifcengine.sdaiINSTANCE, out iConversionFactorInstance);
 
                     if (iConversionFactorInstance != 0)
                     {
                         int_t iUnitComponentInstance;
-                        IfcEngine.x86_64.sdaiGetAttrBN(iConversionFactorInstance, Encoding.Unicode.GetBytes("UnitComponent"), IfcEngine.x86_64.sdaiINSTANCE, out iUnitComponentInstance);
+                        RDF.ifcengine.sdaiGetAttrBN(iConversionFactorInstance, Encoding.Unicode.GetBytes("UnitComponent"), RDF.ifcengine.sdaiINSTANCE, out iUnitComponentInstance);
 
                         if (IsInstanceOf(iModel, iUnitComponentInstance, "IFCSIUNIT"))
                         {
                             IntPtr unitType;
-                            IfcEngine.x86_64.sdaiGetAttrBN(iUnitComponentInstance, Encoding.Unicode.GetBytes("UnitType"), IfcEngine.x86_64.sdaiUNICODE, out unitType);
+                            RDF.ifcengine.sdaiGetAttrBN(iUnitComponentInstance, Encoding.Unicode.GetBytes("UnitType"), RDF.ifcengine.sdaiUNICODE, out unitType);
 
                             string strUnitType = string.Empty;
                             if (unitType != IntPtr.Zero)
@@ -198,7 +198,7 @@ namespace IFCViewerSGL
                             }
 
                             IntPtr prefix;
-                            IfcEngine.x86_64.sdaiGetAttrBN(iUnitComponentInstance, Encoding.Unicode.GetBytes("Prefix"), IfcEngine.x86_64.sdaiUNICODE, out prefix);
+                            RDF.ifcengine.sdaiGetAttrBN(iUnitComponentInstance, Encoding.Unicode.GetBytes("Prefix"), RDF.ifcengine.sdaiUNICODE, out prefix);
 
                             string strPrefix = string.Empty;
                             if (prefix != IntPtr.Zero)
@@ -207,7 +207,7 @@ namespace IFCViewerSGL
                             }
 
                             IntPtr name;
-                            IfcEngine.x86_64.sdaiGetAttrBN(iUnitComponentInstance, Encoding.Unicode.GetBytes("Name"), IfcEngine.x86_64.sdaiUNICODE, out name);
+                            RDF.ifcengine.sdaiGetAttrBN(iUnitComponentInstance, Encoding.Unicode.GetBytes("Name"), RDF.ifcengine.sdaiUNICODE, out name);
 
                             string strName = string.Empty;
                             if (name != IntPtr.Zero)
@@ -225,7 +225,7 @@ namespace IFCViewerSGL
                     if (IsInstanceOf(iModel, iUnitInstance, "IFCSIUNIT"))
                     {
                         IntPtr unitType;
-                        IfcEngine.x86_64.sdaiGetAttrBN(iUnitInstance, Encoding.Unicode.GetBytes("UnitType"), IfcEngine.x86_64.sdaiUNICODE, out unitType);
+                        RDF.ifcengine.sdaiGetAttrBN(iUnitInstance, Encoding.Unicode.GetBytes("UnitType"), RDF.ifcengine.sdaiUNICODE, out unitType);
 
                         string strUnitType = string.Empty;
                         if (unitType != IntPtr.Zero)
@@ -234,7 +234,7 @@ namespace IFCViewerSGL
                         }
 
                         IntPtr prefix;
-                        IfcEngine.x86_64.sdaiGetAttrBN(iUnitInstance, Encoding.Unicode.GetBytes("Prefix"), IfcEngine.x86_64.sdaiUNICODE, out prefix);
+                        RDF.ifcengine.sdaiGetAttrBN(iUnitInstance, Encoding.Unicode.GetBytes("Prefix"), RDF.ifcengine.sdaiUNICODE, out prefix);
 
                         string strPrefix = string.Empty;
                         if (prefix != IntPtr.Zero)
@@ -243,7 +243,7 @@ namespace IFCViewerSGL
                         }
 
                         IntPtr name;
-                        IfcEngine.x86_64.sdaiGetAttrBN(iUnitInstance, Encoding.Unicode.GetBytes("Name"), IfcEngine.x86_64.sdaiUNICODE, out name);
+                        RDF.ifcengine.sdaiGetAttrBN(iUnitInstance, Encoding.Unicode.GetBytes("Name"), RDF.ifcengine.sdaiUNICODE, out name);
 
                         string strName = string.Empty;
                         if (name != IntPtr.Zero)
@@ -856,7 +856,7 @@ namespace IFCViewerSGL
         /// <returns></returns>
         private static bool IsInstanceOf(int_t iModel, int_t iInstance, string strType)
         {
-            if (IfcEngine.x86_64.sdaiGetInstanceType(iInstance) == IfcEngine.x86_64.sdaiGetEntity(iModel, Encoding.Unicode.GetBytes(strType)))
+            if (RDF.ifcengine.sdaiGetInstanceType(iInstance) == RDF.ifcengine.sdaiGetEntity(iModel, Encoding.Unicode.GetBytes(strType)))
             {
                 return true;
             }

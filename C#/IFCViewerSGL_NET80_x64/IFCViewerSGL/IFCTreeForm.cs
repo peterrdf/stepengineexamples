@@ -150,7 +150,7 @@ namespace IFCViewerSGL
 
             int i = 0;
             IntPtr description;
-            while (IfcEngine.x86_64.GetSPFFHeaderItem(_ifcModel.Model, 0, i++, IfcEngine.x86_64.sdaiUNICODE, out description) == 0)
+            while (RDF.ifcengine.GetSPFFHeaderItem(_ifcModel.Model, 0, i++, RDF.ifcengine.sdaiUNICODE, out description) == 0)
             {
                 TreeNode tnDescription = tnDescriptions.Nodes.Add(Marshal.PtrToStringUni(description));
                 tnDescription.ImageIndex = tnDescription.SelectedImageIndex = IMAGE_PROPERTY;
@@ -158,21 +158,21 @@ namespace IFCViewerSGL
 
             // ImplementationLevel
             IntPtr implementationLevel;
-            IfcEngine.x86_64.GetSPFFHeaderItem(_ifcModel.Model, 1, 0, IfcEngine.x86_64.sdaiUNICODE, out implementationLevel);
+            RDF.ifcengine.GetSPFFHeaderItem(_ifcModel.Model, 1, 0, RDF.ifcengine.sdaiUNICODE, out implementationLevel);
 
             TreeNode tnImplementationLevel = tnHeaderInfo.Nodes.Add("ImplementationLevel = '" + Marshal.PtrToStringUni(implementationLevel) + "'");
             tnImplementationLevel.ImageIndex = tnImplementationLevel.SelectedImageIndex = IMAGE_PROPERTY;
 
             // Name
             IntPtr name;
-            IfcEngine.x86_64.GetSPFFHeaderItem(_ifcModel.Model, 2, 0, IfcEngine.x86_64.sdaiUNICODE, out name);
+            RDF.ifcengine.GetSPFFHeaderItem(_ifcModel.Model, 2, 0, RDF.ifcengine.sdaiUNICODE, out name);
 
             TreeNode tnName = tnHeaderInfo.Nodes.Add("Name = '" + Marshal.PtrToStringUni(name) + "'");
             tnName.ImageIndex = tnName.SelectedImageIndex = IMAGE_PROPERTY;
 
             // TimeStamp
             IntPtr timeStamp;
-            IfcEngine.x86_64.GetSPFFHeaderItem(_ifcModel.Model, 3, 0, IfcEngine.x86_64.sdaiUNICODE, out timeStamp);
+            RDF.ifcengine.GetSPFFHeaderItem(_ifcModel.Model, 3, 0, RDF.ifcengine.sdaiUNICODE, out timeStamp);
 
             TreeNode tnTimeStamp = tnHeaderInfo.Nodes.Add("TimeStamp = '" + Marshal.PtrToStringUni(timeStamp) + "'");
             tnTimeStamp.ImageIndex = tnTimeStamp.SelectedImageIndex = IMAGE_PROPERTY;
@@ -183,7 +183,7 @@ namespace IFCViewerSGL
 
             i = 0;
             IntPtr author;
-            while (IfcEngine.x86_64.GetSPFFHeaderItem(_ifcModel.Model, 4, i++, IfcEngine.x86_64.sdaiUNICODE, out author) == 0)
+            while (RDF.ifcengine.GetSPFFHeaderItem(_ifcModel.Model, 4, i++, RDF.ifcengine.sdaiUNICODE, out author) == 0)
             {
                 TreeNode tnAuthor = tnAuthors.Nodes.Add(Marshal.PtrToStringUni(author));
                 tnAuthor.ImageIndex = tnAuthor.SelectedImageIndex = IMAGE_PROPERTY;
@@ -195,7 +195,7 @@ namespace IFCViewerSGL
 
             i = 0;
             IntPtr organization;
-            while (IfcEngine.x86_64.GetSPFFHeaderItem(_ifcModel.Model, 5, i++, IfcEngine.x86_64.sdaiUNICODE, out organization) == 0)
+            while (RDF.ifcengine.GetSPFFHeaderItem(_ifcModel.Model, 5, i++, RDF.ifcengine.sdaiUNICODE, out organization) == 0)
             {
                 TreeNode tnOrganization = tnOrganizations.Nodes.Add(Marshal.PtrToStringUni(organization));
                 tnOrganization.ImageIndex = tnOrganization.SelectedImageIndex = IMAGE_PROPERTY;
@@ -203,21 +203,21 @@ namespace IFCViewerSGL
 
             // PreprocessorVersion
             IntPtr preprocessorVersion;
-            IfcEngine.x86_64.GetSPFFHeaderItem(_ifcModel.Model, 6, 0, IfcEngine.x86_64.sdaiUNICODE, out preprocessorVersion);
+            RDF.ifcengine.GetSPFFHeaderItem(_ifcModel.Model, 6, 0, RDF.ifcengine.sdaiUNICODE, out preprocessorVersion);
 
             TreeNode tnPreprocessorVersion = tnHeaderInfo.Nodes.Add("PreprocessorVersion = '" + Marshal.PtrToStringUni(preprocessorVersion) + "'");
             tnPreprocessorVersion.ImageIndex = tnPreprocessorVersion.SelectedImageIndex = IMAGE_PROPERTY;
 
             // OriginatingSystem
             IntPtr originatingSystem;
-            IfcEngine.x86_64.GetSPFFHeaderItem(_ifcModel.Model, 7, 0, IfcEngine.x86_64.sdaiUNICODE, out originatingSystem);
+            RDF.ifcengine.GetSPFFHeaderItem(_ifcModel.Model, 7, 0, RDF.ifcengine.sdaiUNICODE, out originatingSystem);
 
             TreeNode tnOriginatingSystem = tnHeaderInfo.Nodes.Add("OriginatingSystem = '" + Marshal.PtrToStringUni(originatingSystem) + "'");
             tnOriginatingSystem.ImageIndex = tnOriginatingSystem.SelectedImageIndex = IMAGE_PROPERTY;
 
             // Authorization
             IntPtr authorization;
-            IfcEngine.x86_64.GetSPFFHeaderItem(_ifcModel.Model, 8, 0, IfcEngine.x86_64.sdaiUNICODE, out authorization);
+            RDF.ifcengine.GetSPFFHeaderItem(_ifcModel.Model, 8, 0, RDF.ifcengine.sdaiUNICODE, out authorization);
 
             TreeNode tnAuthorization = tnHeaderInfo.Nodes.Add("Authorization = '" + Marshal.PtrToStringUni(authorization) + "'");
             tnAuthorization.ImageIndex = tnAuthorization.SelectedImageIndex = IMAGE_PROPERTY;
@@ -228,7 +228,7 @@ namespace IFCViewerSGL
 
             i = 0;
             IntPtr fileSchema;
-            while (IfcEngine.x86_64.GetSPFFHeaderItem(_ifcModel.Model, 9, i++, IfcEngine.x86_64.sdaiUNICODE, out fileSchema) == 0)
+            while (RDF.ifcengine.GetSPFFHeaderItem(_ifcModel.Model, 9, i++, RDF.ifcengine.sdaiUNICODE, out fileSchema) == 0)
             {
                 TreeNode tnFileSchema = tnFileSchemas.Nodes.Add(Marshal.PtrToStringUni(fileSchema));
                 tnFileSchema.ImageIndex = tnFileSchema.SelectedImageIndex = IMAGE_PROPERTY;
@@ -240,13 +240,13 @@ namespace IFCViewerSGL
         /// </summary>
         private void LoadProjects()
         {
-            int_t iEntityID = IfcEngine.x86_64.sdaiGetEntityExtentBN(_ifcModel.Model, Encoding.Unicode.GetBytes("IfcProject"));
-            int_t iEntitiesCount = IfcEngine.x86_64.sdaiGetMemberCount(iEntityID);
+            int_t iEntityID = RDF.ifcengine.sdaiGetEntityExtentBN(_ifcModel.Model, Encoding.Unicode.GetBytes("IfcProject"));
+            int_t iEntitiesCount = RDF.ifcengine.sdaiGetMemberCount(iEntityID);
 
             for (int_t iEntity = 0; iEntity < iEntitiesCount; iEntity++)
             {
                 int_t iInstance = 0;
-                IfcEngine.x86_64.engiGetAggrElement(iEntityID, iEntity, IfcEngine.x86_64.sdaiINSTANCE, out iInstance);
+                RDF.ifcengine.engiGetAggrElement(iEntityID, iEntity, RDF.ifcengine.sdaiINSTANCE, out iInstance);
 
                 IFCTreeNode tnProject = CreateIFCTreeNode(null, iInstance);
                 _treeView.Nodes.Add(tnProject);
@@ -281,14 +281,14 @@ namespace IFCViewerSGL
         {
             // check for decomposition
             IntPtr decompositionInstance;
-            IfcEngine.x86_64.sdaiGetAttrBN(iParentInstance, Encoding.Unicode.GetBytes("IsDecomposedBy"), IfcEngine.x86_64.sdaiAGGR, out decompositionInstance);
+            RDF.ifcengine.sdaiGetAttrBN(iParentInstance, Encoding.Unicode.GetBytes("IsDecomposedBy"), RDF.ifcengine.sdaiAGGR, out decompositionInstance);
 
             if (decompositionInstance == IntPtr.Zero)
             {
                 return;
             }
 
-            int_t iDecompositionsCount = IfcEngine.x86_64.sdaiGetMemberCount((int_t)decompositionInstance);
+            int_t iDecompositionsCount = RDF.ifcengine.sdaiGetMemberCount((int_t)decompositionInstance);
             if (iDecompositionsCount == 0)
             {
                 return;
@@ -301,7 +301,7 @@ namespace IFCViewerSGL
             for (int_t iDecomposition = 0; iDecomposition < iDecompositionsCount; iDecomposition++)
             {
                 int_t iDecompositionInstance = 0;
-                IfcEngine.x86_64.engiGetAggrElement((int_t)decompositionInstance, iDecomposition, IfcEngine.x86_64.sdaiINSTANCE, out iDecompositionInstance);
+                RDF.ifcengine.engiGetAggrElement((int_t)decompositionInstance, iDecomposition, RDF.ifcengine.sdaiINSTANCE, out iDecompositionInstance);
 
                 if (!IsInstanceOf(iDecompositionInstance, "IFCRELAGGREGATES"))
                 {
@@ -309,13 +309,13 @@ namespace IFCViewerSGL
                 }
 
                 IntPtr objectInstances;
-                IfcEngine.x86_64.sdaiGetAttrBN(iDecompositionInstance, Encoding.Unicode.GetBytes("RelatedObjects"), IfcEngine.x86_64.sdaiAGGR, out objectInstances);
+                RDF.ifcengine.sdaiGetAttrBN(iDecompositionInstance, Encoding.Unicode.GetBytes("RelatedObjects"), RDF.ifcengine.sdaiAGGR, out objectInstances);
 
-                int_t iObjectsCount = IfcEngine.x86_64.sdaiGetMemberCount((int_t)objectInstances);
+                int_t iObjectsCount = RDF.ifcengine.sdaiGetMemberCount((int_t)objectInstances);
                 for (int_t iObject = 0; iObject < iObjectsCount; iObject++)
                 {
                     int_t iObjectInstance = 0;
-                    IfcEngine.x86_64.engiGetAggrElement((int_t)objectInstances, iObject, IfcEngine.x86_64.sdaiINSTANCE, out iObjectInstance);
+                    RDF.ifcengine.engiGetAggrElement((int_t)objectInstances, iObject, RDF.ifcengine.sdaiINSTANCE, out iObjectInstance);
 
                     IFCTreeNode ifcTreeItem = CreateIFCTreeNode(ifcDecomposition, iObjectInstance);
 
@@ -337,14 +337,14 @@ namespace IFCViewerSGL
         {
             // check for elements
             IntPtr elementsInstance;
-            IfcEngine.x86_64.sdaiGetAttrBN(iParentInstance, Encoding.Unicode.GetBytes("ContainsElements"), IfcEngine.x86_64.sdaiAGGR, out elementsInstance);
+            RDF.ifcengine.sdaiGetAttrBN(iParentInstance, Encoding.Unicode.GetBytes("ContainsElements"), RDF.ifcengine.sdaiAGGR, out elementsInstance);
 
             if (elementsInstance == IntPtr.Zero)
             {
                 return;
             }
 
-            int_t iElementsCount = IfcEngine.x86_64.sdaiGetMemberCount((int_t)elementsInstance);
+            int_t iElementsCount = RDF.ifcengine.sdaiGetMemberCount((int_t)elementsInstance);
             if (iElementsCount == 0)
             {
                 return;
@@ -357,7 +357,7 @@ namespace IFCViewerSGL
             for (int_t iElement = 0; iElement < iElementsCount; iElement++)
             {
                 int_t iElementInstance = 0;
-                IfcEngine.x86_64.engiGetAggrElement((int_t)elementsInstance, iElement, IfcEngine.x86_64.sdaiINSTANCE, out iElementInstance);
+                RDF.ifcengine.engiGetAggrElement((int_t)elementsInstance, iElement, RDF.ifcengine.sdaiINSTANCE, out iElementInstance);
 
                 if (!IsInstanceOf(iElementInstance, "IFCRELCONTAINEDINSPATIALSTRUCTURE"))
                 {
@@ -365,13 +365,13 @@ namespace IFCViewerSGL
                 }
 
                 IntPtr objectInstances;
-                IfcEngine.x86_64.sdaiGetAttrBN(iElementInstance, Encoding.Unicode.GetBytes("RelatedElements"), IfcEngine.x86_64.sdaiAGGR, out objectInstances);
+                RDF.ifcengine.sdaiGetAttrBN(iElementInstance, Encoding.Unicode.GetBytes("RelatedElements"), RDF.ifcengine.sdaiAGGR, out objectInstances);
 
-                int_t iObjectsCount = IfcEngine.x86_64.sdaiGetMemberCount((int_t)objectInstances);
+                int_t iObjectsCount = RDF.ifcengine.sdaiGetMemberCount((int_t)objectInstances);
                 for (int_t iObject = 0; iObject < iObjectsCount; iObject++)
                 {
                     int_t iObjectInstance = 0;
-                    IfcEngine.x86_64.engiGetAggrElement((int_t)objectInstances, iObject, IfcEngine.x86_64.sdaiINSTANCE, out iObjectInstance);
+                    RDF.ifcengine.engiGetAggrElement((int_t)objectInstances, iObject, RDF.ifcengine.sdaiINSTANCE, out iObjectInstance);
 
                     IFCTreeNode ifcTreeItem = CreateIFCTreeNode(ifcContains, iObjectInstance);
                     if (!_ifcModel.Items.Keys.Contains(iObjectInstance))
@@ -396,18 +396,18 @@ namespace IFCViewerSGL
         private bool HasProperties(int_t iInstance)
         {
             IntPtr definedByInstances;
-            IfcEngine.x86_64.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("IsDefinedBy"), IfcEngine.x86_64.sdaiAGGR, out definedByInstances);
+            RDF.ifcengine.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("IsDefinedBy"), RDF.ifcengine.sdaiAGGR, out definedByInstances);
 
             if (definedByInstances == IntPtr.Zero)
             {
                 return false;
             }
 
-            int_t iDefinedByCount = IfcEngine.x86_64.sdaiGetMemberCount((int_t)definedByInstances);
+            int_t iDefinedByCount = RDF.ifcengine.sdaiGetMemberCount((int_t)definedByInstances);
             for (int_t iDefinedBy = 0; iDefinedBy < iDefinedByCount; iDefinedBy++)
             {
                 int_t iDefinedByInstance = 0;
-                IfcEngine.x86_64.engiGetAggrElement((int_t)definedByInstances, iDefinedBy, IfcEngine.x86_64.sdaiINSTANCE, out iDefinedByInstance);
+                RDF.ifcengine.engiGetAggrElement((int_t)definedByInstances, iDefinedBy, RDF.ifcengine.sdaiINSTANCE, out iDefinedByInstance);
 
                 if (IsInstanceOf(iDefinedByInstance, "IFCRELDEFINESBYPROPERTIES") || IsInstanceOf(iDefinedByInstance, "IFCRELDEFINESBYTYPE"))
                 {
@@ -426,7 +426,7 @@ namespace IFCViewerSGL
         private void LoadRelDefinesByProperties(IFCTreeNode ifcParent, int_t iInstance)
         {
             IntPtr propertyInstances;
-            IfcEngine.x86_64.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("RelatingPropertyDefinition"), IfcEngine.x86_64.sdaiINSTANCE, out propertyInstances);
+            RDF.ifcengine.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("RelatingPropertyDefinition"), RDF.ifcengine.sdaiINSTANCE, out propertyInstances);
 
             if (IsInstanceOf((int_t)propertyInstances, "IFCELEMENTQUANTITY"))
             {
@@ -437,18 +437,18 @@ namespace IFCViewerSGL
 
                 // check for quantity
                 IntPtr quantitiesInstance;
-                IfcEngine.x86_64.sdaiGetAttrBN((int_t)propertyInstances, Encoding.Unicode.GetBytes("Quantities"), IfcEngine.x86_64.sdaiAGGR, out quantitiesInstance);
+                RDF.ifcengine.sdaiGetAttrBN((int_t)propertyInstances, Encoding.Unicode.GetBytes("Quantities"), RDF.ifcengine.sdaiAGGR, out quantitiesInstance);
 
                 if (quantitiesInstance == IntPtr.Zero)
                 {
                     return;
                 }
 
-                int_t iQuantitiesCount = IfcEngine.x86_64.sdaiGetMemberCount((int_t)quantitiesInstance);
+                int_t iQuantitiesCount = RDF.ifcengine.sdaiGetMemberCount((int_t)quantitiesInstance);
                 for (int_t iQuantity = 0; iQuantity < iQuantitiesCount; iQuantity++)
                 {
                     int_t iQuantityInstance = 0;
-                    IfcEngine.x86_64.engiGetAggrElement((int_t)quantitiesInstance, iQuantity, IfcEngine.x86_64.sdaiINSTANCE, out iQuantityInstance);
+                    RDF.ifcengine.engiGetAggrElement((int_t)quantitiesInstance, iQuantity, RDF.ifcengine.sdaiINSTANCE, out iQuantityInstance);
 
                     string strPropertyText = string.Empty;
 
@@ -487,18 +487,18 @@ namespace IFCViewerSGL
 
                     // check for quantity
                     IntPtr propertiesInstance;
-                    IfcEngine.x86_64.sdaiGetAttrBN((int_t)propertyInstances, Encoding.Unicode.GetBytes("HasProperties"), IfcEngine.x86_64.sdaiAGGR, out propertiesInstance);
+                    RDF.ifcengine.sdaiGetAttrBN((int_t)propertyInstances, Encoding.Unicode.GetBytes("HasProperties"), RDF.ifcengine.sdaiAGGR, out propertiesInstance);
 
                     if (propertiesInstance == IntPtr.Zero)
                     {
                         return;
                     }
 
-                    int_t iPropertiesCount = IfcEngine.x86_64.sdaiGetMemberCount((int_t)propertiesInstance);
+                    int_t iPropertiesCount = RDF.ifcengine.sdaiGetMemberCount((int_t)propertiesInstance);
                     for (int_t iProperty = 0; iProperty < iPropertiesCount; iProperty++)
                     {
                         int_t iPropertyInstance = 0;
-                        IfcEngine.x86_64.engiGetAggrElement((int_t)propertiesInstance, iProperty, IfcEngine.x86_64.sdaiINSTANCE, out iPropertyInstance);
+                        RDF.ifcengine.engiGetAggrElement((int_t)propertiesInstance, iProperty, RDF.ifcengine.sdaiINSTANCE, out iPropertyInstance);
 
                         if (!IsInstanceOf(iPropertyInstance, "IFCPROPERTYSINGLEVALUE"))
                             continue;
@@ -796,7 +796,7 @@ namespace IFCViewerSGL
         /// <returns></returns>
         private bool IsInstanceOf(int_t iInstance, string strType)
         {
-            if (IfcEngine.x86_64.sdaiGetInstanceType(iInstance) == IfcEngine.x86_64.sdaiGetEntity(_ifcModel.Model, Encoding.Unicode.GetBytes(strType)))
+            if (RDF.ifcengine.sdaiGetInstanceType(iInstance) == RDF.ifcengine.sdaiGetEntity(_ifcModel.Model, Encoding.Unicode.GetBytes(strType)))
             {
                 return true;
             }
@@ -818,25 +818,25 @@ namespace IFCViewerSGL
                 return string.Empty;
             }
 
-            int_t iType = IfcEngine.x86_64.sdaiGetInstanceType(iInstance);
+            int_t iType = RDF.ifcengine.sdaiGetInstanceType(iInstance);
 
             IntPtr type = IntPtr.Zero;
-            IfcEngine.x86_64.engiGetEntityName(iType, IfcEngine.x86_64.sdaiUNICODE, out type);
+            RDF.ifcengine.engiGetEntityName(iType, RDF.ifcengine.sdaiUNICODE, out type);
 
             string strIfcType = Marshal.PtrToStringUni(type);
 
             IntPtr name;
-            IfcEngine.x86_64.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("Name"), IfcEngine.x86_64.sdaiUNICODE, out name);
+            RDF.ifcengine.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("Name"), RDF.ifcengine.sdaiUNICODE, out name);
 
             string strName = Marshal.PtrToStringUni(name);
 
             IntPtr globalID;
-            IfcEngine.x86_64.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("GlobalID"), IfcEngine.x86_64.sdaiUNICODE, out globalID);
+            RDF.ifcengine.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("GlobalID"), RDF.ifcengine.sdaiUNICODE, out globalID);
 
             string strGlobalID = Marshal.PtrToStringUni(globalID);
 
             IntPtr description;
-            IfcEngine.x86_64.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("Description"), IfcEngine.x86_64.sdaiUNICODE, out description);
+            RDF.ifcengine.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("Description"), RDF.ifcengine.sdaiUNICODE, out description);
 
             string strDescription = Marshal.PtrToStringUni(description);
 
@@ -861,22 +861,22 @@ namespace IFCViewerSGL
                 return string.Empty;
             }
 
-            int_t entity = IfcEngine.x86_64.sdaiGetInstanceType(iInstance);
+            int_t entity = RDF.ifcengine.sdaiGetInstanceType(iInstance);
 
             IntPtr entityNamePtr;
-            IfcEngine.x86_64.engiGetEntityName(entity, IfcEngine.x86_64.sdaiUNICODE, out entityNamePtr);
+            RDF.ifcengine.engiGetEntityName(entity, RDF.ifcengine.sdaiUNICODE, out entityNamePtr);
 
             string strIfcType = Marshal.PtrToStringUni(entityNamePtr);
 
             IntPtr name;
-            IfcEngine.x86_64.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("Name"), IfcEngine.x86_64.sdaiUNICODE, out name);
+            RDF.ifcengine.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("Name"), RDF.ifcengine.sdaiUNICODE, out name);
 
             string strName = Marshal.PtrToStringUni(name);
 
             string strUnit = string.Empty;
 
             IntPtr unit;
-            IfcEngine.x86_64.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("Unit"), IfcEngine.x86_64.sdaiUNICODE, out unit);
+            RDF.ifcengine.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("Unit"), RDF.ifcengine.sdaiUNICODE, out unit);
 
             if (unit != IntPtr.Zero)
             {
@@ -889,7 +889,7 @@ namespace IFCViewerSGL
                 case "IFCQUANTITYLENGTH":
                     {
                         IntPtr value;
-                        IfcEngine.x86_64.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("LengthValue"), IfcEngine.x86_64.sdaiUNICODE, out value);
+                        RDF.ifcengine.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("LengthValue"), RDF.ifcengine.sdaiUNICODE, out value);
 
                         strValue = Marshal.PtrToStringUni(value);
 
@@ -906,7 +906,7 @@ namespace IFCViewerSGL
                 case "IFCQUANTITYAREA":
                     {
                         IntPtr value;
-                        IfcEngine.x86_64.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("AreaValue"), IfcEngine.x86_64.sdaiUNICODE, out value);
+                        RDF.ifcengine.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("AreaValue"), RDF.ifcengine.sdaiUNICODE, out value);
 
                         strValue = Marshal.PtrToStringUni(value);
 
@@ -923,7 +923,7 @@ namespace IFCViewerSGL
                 case "IFCQUANTITYVOLUME":
                     {
                         IntPtr value;
-                        IfcEngine.x86_64.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("VolumeValue"), IfcEngine.x86_64.sdaiUNICODE, out value);
+                        RDF.ifcengine.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("VolumeValue"), RDF.ifcengine.sdaiUNICODE, out value);
 
                         strValue = Marshal.PtrToStringUni(value);
 
@@ -940,7 +940,7 @@ namespace IFCViewerSGL
                 case "IFCQUANTITYCOUNT":
                     {
                         IntPtr value;
-                        IfcEngine.x86_64.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("CountValue"), IfcEngine.x86_64.sdaiUNICODE, out value);
+                        RDF.ifcengine.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("CountValue"), RDF.ifcengine.sdaiUNICODE, out value);
 
                         strValue = Marshal.PtrToStringUni(value);
                     }
@@ -949,7 +949,7 @@ namespace IFCViewerSGL
                 case "IFCQUANTITYWEIGTH":
                     {
                         IntPtr value;
-                        IfcEngine.x86_64.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("WeigthValue"), IfcEngine.x86_64.sdaiUNICODE, out value);
+                        RDF.ifcengine.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("WeigthValue"), RDF.ifcengine.sdaiUNICODE, out value);
 
                         strValue = Marshal.PtrToStringUni(value);
 
@@ -966,7 +966,7 @@ namespace IFCViewerSGL
                 case "IFCQUANTITYTIME":
                     {
                         IntPtr value;
-                        IfcEngine.x86_64.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("TimeValue"), IfcEngine.x86_64.sdaiUNICODE, out value);
+                        RDF.ifcengine.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("TimeValue"), RDF.ifcengine.sdaiUNICODE, out value);
 
                         strValue = Marshal.PtrToStringUni(value);
 
@@ -983,7 +983,7 @@ namespace IFCViewerSGL
                 case "IFCPROPERTYSINGLEVALUE":
                     {
                         IntPtr value;
-                        IfcEngine.x86_64.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("NominalValue"), IfcEngine.x86_64.sdaiUNICODE, out value);
+                        RDF.ifcengine.sdaiGetAttrBN(iInstance, Encoding.Unicode.GetBytes("NominalValue"), RDF.ifcengine.sdaiUNICODE, out value);
 
                         strValue = Marshal.PtrToStringUni(value);
                     }
@@ -1150,15 +1150,15 @@ namespace IFCViewerSGL
             System.Diagnostics.Debug.Assert(ifcParent.Item != null);
 
             IntPtr definedByInstances;
-            IfcEngine.x86_64.sdaiGetAttrBN(ifcParent.Item._instance, Encoding.Unicode.GetBytes("IsDefinedBy"), IfcEngine.x86_64.sdaiAGGR, out definedByInstances);
+            RDF.ifcengine.sdaiGetAttrBN(ifcParent.Item._instance, Encoding.Unicode.GetBytes("IsDefinedBy"), RDF.ifcengine.sdaiAGGR, out definedByInstances);
 
             System.Diagnostics.Debug.Assert(definedByInstances != IntPtr.Zero);
 
-            int_t iDefinedByCount = IfcEngine.x86_64.sdaiGetMemberCount((int_t)definedByInstances);
+            int_t iDefinedByCount = RDF.ifcengine.sdaiGetMemberCount((int_t)definedByInstances);
             for (int_t iDefinedBy = 0; iDefinedBy < iDefinedByCount; iDefinedBy++)
             {
                 int_t iDefinedByInstance = 0;
-                IfcEngine.x86_64.engiGetAggrElement((int_t)definedByInstances, iDefinedBy, IfcEngine.x86_64.sdaiINSTANCE, out iDefinedByInstance);
+                RDF.ifcengine.engiGetAggrElement((int_t)definedByInstances, iDefinedBy, RDF.ifcengine.sdaiINSTANCE, out iDefinedByInstance);
 
                 if (IsInstanceOf(iDefinedByInstance, "IFCRELDEFINESBYPROPERTIES"))
                 {

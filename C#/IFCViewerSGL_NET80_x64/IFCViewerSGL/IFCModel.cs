@@ -7,6 +7,8 @@ using System.Xml;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using System.Runtime.Intrinsics.Arm;
+
 
 #if _WIN64
 using int_t = System.Int64;
@@ -206,13 +208,13 @@ namespace IFCViewerSGL
 
             if (_iModel != 0)
             {
-                IfcEngine.x86_64.sdaiCloseModel(_iModel);
+                RDF.ifcengine.sdaiCloseModel(_iModel);
                 _iModel = 0;
             }
 
-            IfcEngine.x86_64.setStringUnicode(1);
+            RDF.ifcengine.setStringUnicode(1);
 
-            _iModel = IfcEngine.x86_64.sdaiOpenModelBNUnicode(0, Encoding.Unicode.GetBytes(strPath), null);
+            _iModel = RDF.ifcengine.sdaiOpenModelBNUnicode(0, Encoding.Unicode.GetBytes(strPath), Encoding.Unicode.GetBytes(""));
             if (_iModel == 0)
             {
                 return false;
@@ -221,18 +223,18 @@ namespace IFCViewerSGL
             string strExpFile = Assembly.GetExecutingAssembly().Location.ToUpper().Replace("IFCVIEWERSGL.DLL", "");
 
             IntPtr outputValue = IntPtr.Zero;
-            IfcEngine.x86_64.GetSPFFHeaderItem(_iModel, 9, 0, IfcEngine.x86_64.sdaiUNICODE, out outputValue);
+            RDF.ifcengine.GetSPFFHeaderItem(_iModel, 9, 0, RDF.ifcengine.sdaiUNICODE, out outputValue);
 
             string strVersion = Marshal.PtrToStringUni(outputValue);
 
-            IfcEngine.x86_64.sdaiCloseModel(_iModel);
+            RDF.ifcengine.sdaiCloseModel(_iModel);
             _iModel = 0;
 
             if (strVersion.Contains("IFC2"))
             {
                 strExpFile += "IFC2X3_TC1.exp";
 
-                _iModel = IfcEngine.x86_64.sdaiOpenModelBNUnicode(0, Encoding.Unicode.GetBytes(strPath), Encoding.Unicode.GetBytes(strExpFile));
+                _iModel = RDF.ifcengine.sdaiOpenModelBNUnicode(0, Encoding.Unicode.GetBytes(strPath), Encoding.Unicode.GetBytes(strExpFile));
             }
             else
             {
@@ -240,7 +242,7 @@ namespace IFCViewerSGL
                 {
                     strExpFile += "IFC4x1_FINAL.exp";
 
-                    _iModel = IfcEngine.x86_64.sdaiOpenModelBNUnicode(0, Encoding.Unicode.GetBytes(strPath), Encoding.Unicode.GetBytes(strExpFile));
+                    _iModel = RDF.ifcengine.sdaiOpenModelBNUnicode(0, Encoding.Unicode.GetBytes(strPath), Encoding.Unicode.GetBytes(strExpFile));
                 }
                 else
                 {
@@ -250,7 +252,7 @@ namespace IFCViewerSGL
                     {
                         strExpFile += "IFC4_ADD2.exp";
 
-                        _iModel = IfcEngine.x86_64.sdaiOpenModelBNUnicode(0, Encoding.Unicode.GetBytes(strPath), Encoding.Unicode.GetBytes(strExpFile));
+                        _iModel = RDF.ifcengine.sdaiOpenModelBNUnicode(0, Encoding.Unicode.GetBytes(strPath), Encoding.Unicode.GetBytes(strExpFile));
                     }
                 }
             }
@@ -260,22 +262,22 @@ namespace IFCViewerSGL
                 return false;
             }
 
-            ifcSpace_TYPE						= IfcEngine.x86_64.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCSPACE"));
-            ifcOpeningElement_TYPE              = IfcEngine.x86_64.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCOPENINGELEMENT"));
-		    ifcDistributionElement_TYPE			= IfcEngine.x86_64.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCDISTRIBUTIONELEMENT"));
-		    ifcElectricalElement_TYPE			= IfcEngine.x86_64.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCELECTRICALELEMENT"));
-		    ifcElementAssembly_TYPE				= IfcEngine.x86_64.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCELEMENTASSEMBLY"));
-		    ifcElementComponent_TYPE			= IfcEngine.x86_64.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCELEMENTCOMPONENT"));
-		    ifcEquipmentElement_TYPE			= IfcEngine.x86_64.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCEQUIPMENTELEMENT"));
-		    ifcFeatureElement_TYPE				= IfcEngine.x86_64.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCFEATUREELEMENT"));
-		    ifcFeatureElementSubtraction_TYPE	= IfcEngine.x86_64.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCFEATUREELEMENTSUBTRACTION"));
-		    ifcFurnishingElement_TYPE			= IfcEngine.x86_64.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCFURNISHINGELEMENT"));
-		    ifcReinforcingElement_TYPE			= IfcEngine.x86_64.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCREINFORCINGELEMENT"));
-		    ifcTransportElement_TYPE			= IfcEngine.x86_64.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCTRANSPORTELEMENT"));
-		    ifcVirtualElement_TYPE				= IfcEngine.x86_64.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCVIRTUALELEMENT"));
+            ifcSpace_TYPE						= RDF.ifcengine.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCSPACE"));
+            ifcOpeningElement_TYPE              = RDF.ifcengine.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCOPENINGELEMENT"));
+		    ifcDistributionElement_TYPE			= RDF.ifcengine.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCDISTRIBUTIONELEMENT"));
+		    ifcElectricalElement_TYPE			= RDF.ifcengine.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCELECTRICALELEMENT"));
+		    ifcElementAssembly_TYPE				= RDF.ifcengine.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCELEMENTASSEMBLY"));
+		    ifcElementComponent_TYPE			= RDF.ifcengine.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCELEMENTCOMPONENT"));
+		    ifcEquipmentElement_TYPE			= RDF.ifcengine.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCEQUIPMENTELEMENT"));
+		    ifcFeatureElement_TYPE				= RDF.ifcengine.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCFEATUREELEMENT"));
+		    ifcFeatureElementSubtraction_TYPE	= RDF.ifcengine.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCFEATUREELEMENTSUBTRACTION"));
+		    ifcFurnishingElement_TYPE			= RDF.ifcengine.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCFURNISHINGELEMENT"));
+		    ifcReinforcingElement_TYPE			= RDF.ifcengine.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCREINFORCINGELEMENT"));
+		    ifcTransportElement_TYPE			= RDF.ifcengine.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCTRANSPORTELEMENT"));
+		    ifcVirtualElement_TYPE				= RDF.ifcengine.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCVIRTUALELEMENT"));
 
             int_t iCircleSegments = IFCItem.DEFAULT_CIRCLE_SEGMENTS;
-            RetrieveObjects(_iModel, IfcEngine.x86_64.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCPRODUCT")), iCircleSegments);
+            RetrieveObjects(_iModel, RDF.ifcengine.sdaiGetEntity(_iModel, Encoding.Unicode.GetBytes("IFCPRODUCT")), iCircleSegments);
 
             RetrieveObjects(_iModel, "IFCRELSPACEBOUNDARY", iCircleSegments);
 
@@ -413,16 +415,19 @@ namespace IFCViewerSGL
 
             SetFormat(ifcModel);
 
-            IfcEngine.x86_64.setFilter(ifcModel, IfcEngine.x86_64.flagbit1, IfcEngine.x86_64.flagbit1);
+            RDF.ifcengine.setFilter(ifcModel, RDF.ifcengine.flagbit1, RDF.ifcengine.flagbit1);
 
-            IfcEngine.x86_64.circleSegments(ifcItem.circleSegments, 5);
+            RDF.ifcengine.circleSegments(ifcItem.circleSegments, 5);
+
+            int_t iSdaiModel = RDF.ifcengine.sdaiGetInstanceModel(ifcItem._instance);
+
+            long iOwlInstance = 0;
+            RDF.ifcengine.owlBuildInstance(iSdaiModel, ifcItem._instance, out iOwlInstance);
 
             Int64 iVerticesCount = 0;
             Int64 iIndicesCount = 0;
             Int64 iTransformationBufferSize = 0;
-            IfcEngine.x86_64.CalculateInstance(ifcItem._instance, ref iVerticesCount, ref iIndicesCount, ref iTransformationBufferSize);
-
-       
+            RDF.engine.CalculateInstance(iOwlInstance, out iVerticesCount, out iIndicesCount, out iTransformationBufferSize);       
 
             if ((iVerticesCount == 0) || (iIndicesCount == 0))
             {
@@ -435,12 +440,6 @@ namespace IFCViewerSGL
             float[] vertices = new float[10 * iVerticesCount];
             int[] indices = new int[iIndicesCount];
 
-            Int64 owlModel = 0;
-            IfcEngine.x86_64.owlGetModel(ifcModel, ref owlModel);
-
-            Int64 owlInstance = 0;
-            IfcEngine.x86_64.owlGetInstance(ifcModel, ifcItem._instance, ref owlInstance);
-
             // ((R * 255 + G) * 255 + B) * 255 + A
             UInt32 R = 10,
             G = 200,
@@ -450,9 +449,9 @@ namespace IFCViewerSGL
                                   256 * 256 * G +
                                   256 * B +
                                   A;
-            IfcEngine.x86_64.SetDefaultColor(ifcModel, defaultColor, defaultColor, defaultColor, defaultColor);
-            IfcEngine.x86_64.UpdateInstanceVertexBuffer(owlInstance, vertices);
-            IfcEngine.x86_64.UpdateInstanceIndexBuffer(owlInstance, indices);
+            RDF.engine.SetDefaultColor(ifcModel, defaultColor, defaultColor, defaultColor, defaultColor);
+            RDF.engine.UpdateInstanceVertexBuffer(iOwlInstance, vertices);
+            RDF.engine.UpdateInstanceIndexBuffer(iOwlInstance, indices);
 
             ifcItem._vertices = new float[6 * iVerticesCount];
             for (int iVertex = 0; iVertex < iVerticesCount; iVertex++)
@@ -482,7 +481,7 @@ namespace IFCViewerSGL
                 uint>();
             List<uint> lsPointsIndices = new List<uint>();          
 
-            int_t iFacesCount = IfcEngine.x86_64.getConceptualFaceCnt(ifcItem._instance);
+            int_t iFacesCount = RDF.ifcengine.getConceptualFaceCnt(ifcItem._instance);
 
             List<int_t> lsMaxIndex = new List<int_t>();
 
@@ -501,18 +500,18 @@ namespace IFCViewerSGL
                 int_t iIndicesCountFacesPolygons = 0;
 
                 int_t iValue = 0;
-                IfcEngine.x86_64.getConceptualFaceEx(ifcItem._instance,
+                RDF.ifcengine.getConceptualFaceEx(ifcItem._instance,
                     iFace,
-                    ref iStartIndexTriangles,
-                    ref iIndicesCountTriangles,
-                    ref iStartIndexLines,
-                    ref iIndicesCountLines,
-                    ref iStartIndexPoints,
-                    ref iIndicesCountPoints,
-                    ref iStartIndexFacesPolygons,
-                    ref iIndicesCountFacesPolygons,
-                    ref iValue,
-                    ref iValue);
+                    out iStartIndexTriangles,
+                    out iIndicesCountTriangles,
+                    out iStartIndexLines,
+                    out iIndicesCountLines,
+                    out iStartIndexPoints,
+                    out iIndicesCountPoints,
+                    out iStartIndexFacesPolygons,
+                    out iIndicesCountFacesPolygons,
+                    out iValue,
+                    out iValue);
 
                 ifcItem._noPrimitivesForFaces += iIndicesCountTriangles / 3;
 
@@ -590,31 +589,31 @@ namespace IFCViewerSGL
         private void SetFormat(int_t ifcModel)
         {
             int_t setting = 0, mask = 0;
-            mask += IfcEngine.x86_64.flagbit2;        //    PRECISION (32/64 bit)
-            mask += IfcEngine.x86_64.flagbit3;        //	INDEX ARRAY (32/64 bit)
-            mask += IfcEngine.x86_64.flagbit5;        //    NORMALS
-            mask += IfcEngine.x86_64.flagbit8;        //    TRIANGLES
-            mask += IfcEngine.x86_64.flagbit9;        //    LINES
-            mask += IfcEngine.x86_64.flagbit10;       //    POINTS
-            mask += IfcEngine.x86_64.flagbit12;       //    WIREFRAME
-            mask += IfcEngine.x86_64.flagbit24;		  //	AMBIENT
-            mask += IfcEngine.x86_64.flagbit25;		  //	DIFFUSE
-            mask += IfcEngine.x86_64.flagbit26;		  //	EMISSIVE
-            mask += IfcEngine.x86_64.flagbit27;		  //	SPECULAR
+            mask += RDF.ifcengine.flagbit2;        //    PRECISION (32/64 bit)
+            mask += RDF.ifcengine.flagbit3;        //	INDEX ARRAY (32/64 bit)
+            mask += RDF.ifcengine.flagbit5;        //    NORMALS
+            mask += RDF.ifcengine.flagbit8;        //    TRIANGLES
+            mask += RDF.ifcengine.flagbit9;        //    LINES
+            mask += RDF.ifcengine.flagbit10;       //    POINTS
+            mask += RDF.ifcengine.flagbit12;       //    WIREFRAME
+            mask += RDF.ifcengine.flagbit24;		  //	AMBIENT
+            mask += RDF.ifcengine.flagbit25;		  //	DIFFUSE
+            mask += RDF.ifcengine.flagbit26;		  //	EMISSIVE
+            mask += RDF.ifcengine.flagbit27;		  //	SPECULAR
 
 		    setting += 0;		                      //    SINGLE PRECISION (float)
 		    setting += 0;                             //    32 BIT INDEX ARRAY (Int32)
-            setting += IfcEngine.x86_64.flagbit5;     //    NORMALS ON
-            setting += IfcEngine.x86_64.flagbit8;     //    TRIANGLES ON
-            setting += IfcEngine.x86_64.flagbit9;     //    LINES ON
-            setting += IfcEngine.x86_64.flagbit10;    //    POINTS ON
-            setting += IfcEngine.x86_64.flagbit12;    //    WIREFRAME ON
-            setting += IfcEngine.x86_64.flagbit24;	  //	AMBIENT
-            setting += IfcEngine.x86_64.flagbit25;	  //	DIFFUSE
-            setting += IfcEngine.x86_64.flagbit26;	  //	EMISSIVE
-            setting += IfcEngine.x86_64.flagbit27;	  //	SPECULAR
+            setting += RDF.ifcengine.flagbit5;     //    NORMALS ON
+            setting += RDF.ifcengine.flagbit8;     //    TRIANGLES ON
+            setting += RDF.ifcengine.flagbit9;     //    LINES ON
+            setting += RDF.ifcengine.flagbit10;    //    POINTS ON
+            setting += RDF.ifcengine.flagbit12;    //    WIREFRAME ON
+            setting += RDF.ifcengine.flagbit24;	  //	AMBIENT
+            setting += RDF.ifcengine.flagbit25;	  //	DIFFUSE
+            setting += RDF.ifcengine.flagbit26;	  //	EMISSIVE
+            setting += RDF.ifcengine.flagbit27;	  //	SPECULAR
 
-            IfcEngine.x86_64.setFormat(ifcModel, setting, mask);
+            RDF.ifcengine.setFormat(ifcModel, setting, mask);
         }
 
         /// <summary>
@@ -625,13 +624,13 @@ namespace IFCViewerSGL
         /// <param name="iCircleSegments"></param>
         private void RetrieveObjects(int_t ifcModel, string strIfcType, int_t iCircleSegments)
         {
-            int_t ifcObjectInstances = IfcEngine.x86_64.sdaiGetEntityExtentBN(ifcModel, Encoding.Unicode.GetBytes(strIfcType));
-            int_t noIfcObjectIntances = IfcEngine.x86_64.sdaiGetMemberCount(ifcObjectInstances);
+            int_t ifcObjectInstances = RDF.ifcengine.sdaiGetEntityExtentBN(ifcModel, Encoding.Unicode.GetBytes(strIfcType));
+            int_t noIfcObjectIntances = RDF.ifcengine.sdaiGetMemberCount(ifcObjectInstances);
 
             for (int_t i = 0; i < noIfcObjectIntances; ++i)
             {
                 int_t ifcObjectIns = 0;
-                IfcEngine.x86_64.engiGetAggrElement(ifcObjectInstances, i, IfcEngine.x86_64.sdaiINSTANCE, out ifcObjectIns);
+                RDF.ifcengine.engiGetAggrElement(ifcObjectInstances, i, RDF.ifcengine.sdaiINSTANCE, out ifcObjectIns);
 
                 IFCItem ifcItem = new IFCItem();
                 // hide by default
@@ -670,24 +669,24 @@ namespace IFCViewerSGL
                 iCircleSegments = 6;
             }
 
-            int_t ifcObjectInstances = IfcEngine.x86_64.sdaiGetEntityExtent(ifcModel, iParent);
-            int_t noIfcObjectIntances = IfcEngine.x86_64.sdaiGetMemberCount(ifcObjectInstances);
+            int_t ifcObjectInstances = RDF.ifcengine.sdaiGetEntityExtent(ifcModel, iParent);
+            int_t noIfcObjectIntances = RDF.ifcengine.sdaiGetMemberCount(ifcObjectInstances);
 
             if (noIfcObjectIntances != 0)
             {
                 IntPtr name;                
-                IfcEngine.x86_64.engiGetEntityName(iParent, IfcEngine.x86_64.sdaiUNICODE, out name);
+                RDF.ifcengine.engiGetEntityName(iParent, RDF.ifcengine.sdaiUNICODE, out name);
 
                 string strIfcParentEntityName = Marshal.PtrToStringUni(name);
 
                 RetrieveObjects(ifcModel, strIfcParentEntityName, iCircleSegments);
             } // if (noIfcObjectIntances != 0)
 
-            noIfcObjectIntances = IfcEngine.x86_64.engiGetEntityCount(ifcModel);
+            noIfcObjectIntances = RDF.ifcengine.engiGetEntityCount(ifcModel);
             for (int_t i = 0; i < noIfcObjectIntances; i++)
             {
-                int_t ifcEntity = IfcEngine.x86_64.engiGetEntityElement(ifcModel, i);
-                if (IfcEngine.x86_64.engiGetEntityParent(ifcEntity) == iParent)
+                int_t ifcEntity = RDF.ifcengine.engiGetEntityElement(ifcModel, i);
+                if (RDF.ifcengine.engiGetEntityParent(ifcEntity) == iParent)
                 {
                     RetrieveObjects(ifcModel, ifcEntity, iCircleSegments);
                 }

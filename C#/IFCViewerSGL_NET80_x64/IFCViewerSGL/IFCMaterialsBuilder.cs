@@ -145,19 +145,19 @@ namespace IFCViewerSGL
             _defaultMaterial.active = true;
 
 #if _WIN64
-            _rdfClassTransformation = IfcEngine.x86_64.GetClassByName(_ifcModel, "Transformation");
-            _rdfClassCollection = IfcEngine.x86_64.GetClassByName(_ifcModel, "Collection");
-            _owlDataTypePropertyExpressID = IfcEngine.x86_64.GetPropertyByName(_ifcModel, "expressID");
-            _owlObjectTypePropertyMatrix = IfcEngine.x86_64.GetPropertyByName(_ifcModel, "matrix");
-            _owlObjectTypePropertyObject = IfcEngine.x86_64.GetPropertyByName(_ifcModel, "object");
-            _owlObjectTypePropertyObjects = IfcEngine.x86_64.GetPropertyByName(_ifcModel, "objects");
+            _rdfClassTransformation = RDF.engine.GetClassByName(_ifcModel, "Transformation");
+            _rdfClassCollection = RDF.engine.GetClassByName(_ifcModel, "Collection");
+            _owlDataTypePropertyExpressID = RDF.engine.GetPropertyByName(_ifcModel, "expressID");
+            _owlObjectTypePropertyMatrix = RDF.engine.GetPropertyByName(_ifcModel, "matrix");
+            _owlObjectTypePropertyObject = RDF.engine.GetPropertyByName(_ifcModel, "object");
+            _owlObjectTypePropertyObjects = RDF.engine.GetPropertyByName(_ifcModel, "objects");
 #else
-            _rdfClassTransformation = (int)IfcEngine.x86_64.GetClassByName(_ifcModel, "Transformation");
-            _rdfClassCollection = (int)IfcEngine.x86_64.GetClassByName(_ifcModel, "Collection");
-            _owlDataTypePropertyExpressID = (int)IfcEngine.x86_64.GetPropertyByName(_ifcModel, "expressID");
-            _owlObjectTypePropertyMatrix = (int)IfcEngine.x86_64.GetPropertyByName(_ifcModel, "matrix");
-            _owlObjectTypePropertyObject = (int)IfcEngine.x86_64.GetPropertyByName(_ifcModel, "object");
-            _owlObjectTypePropertyObjects = (int)IfcEngine.x86_64.GetPropertyByName(_ifcModel, "objects");
+            _rdfClassTransformation = (int)RDF.ifcengine.GetClassByName(_ifcModel, "Transformation");
+            _rdfClassCollection = (int)RDF.ifcengine.GetClassByName(_ifcModel, "Collection");
+            _owlDataTypePropertyExpressID = (int)RDF.ifcengine.GetPropertyByName(_ifcModel, "expressID");
+            _owlObjectTypePropertyMatrix = (int)RDF.ifcengine.GetPropertyByName(_ifcModel, "matrix");
+            _owlObjectTypePropertyObject = (int)RDF.ifcengine.GetPropertyByName(_ifcModel, "object");
+            _owlObjectTypePropertyObjects = (int)RDF.ifcengine.GetPropertyByName(_ifcModel, "objects");
 #endif            
         }
 
@@ -225,7 +225,7 @@ namespace IFCViewerSGL
         //    STRUCT_MATERIAL_META_INFO materialMetaInfo = null;
 
         //    IntPtr ifcProductRepresentationInstance;
-        //    IfcEngine.x86_64.sdaiGetAttrBN(ifcInstance, "Representation", IfcEngine.x86_64.sdaiINSTANCE, out ifcProductRepresentationInstance);
+        //    RDF.ifcengine.sdaiGetAttrBN(ifcInstance, "Representation", RDF.ifcengine.sdaiINSTANCE, out ifcProductRepresentationInstance);
 
         //    if (ifcProductRepresentationInstance != IntPtr.Zero)
         //    {
@@ -246,18 +246,18 @@ namespace IFCViewerSGL
 
         //    if (noMaterialFound)
         //    {
-        //        int_t ifcRelAssociatesMaterialEntity = IfcEngine.x86_64.sdaiGetEntity(_ifcModel, "IFCRELASSOCIATESMATERIAL");								
+        //        int_t ifcRelAssociatesMaterialEntity = RDF.ifcengine.sdaiGetEntity(_ifcModel, "IFCRELASSOCIATESMATERIAL");								
         //        int_t ifcRelAssociatesAggr;
-        //        IfcEngine.x86_64.sdaiGetAttrBN(ifcInstance, "HasAssociations", IfcEngine.x86_64.sdaiAGGR, out ifcRelAssociatesAggr);
+        //        RDF.ifcengine.sdaiGetAttrBN(ifcInstance, "HasAssociations", RDF.ifcengine.sdaiAGGR, out ifcRelAssociatesAggr);
 
-        //        int_t ifcRelAssociatesAggrCnt = IfcEngine.x86_64.sdaiGetMemberCount(ifcRelAssociatesAggr);
+        //        int_t ifcRelAssociatesAggrCnt = RDF.ifcengine.sdaiGetMemberCount(ifcRelAssociatesAggr);
 
         //        int_t i = 0;
         //        while  (i < ifcRelAssociatesAggrCnt) {
         //            int_t	ifcRelAssociatesInstance;
-        //            IfcEngine.x86_64.engiGetAggrElement(ifcRelAssociatesAggr, i, IfcEngine.x86_64.sdaiINSTANCE, out ifcRelAssociatesInstance);
+        //            RDF.ifcengine.engiGetAggrElement(ifcRelAssociatesAggr, i, RDF.ifcengine.sdaiINSTANCE, out ifcRelAssociatesInstance);
 
-        //            if (IfcEngine.x86_64.sdaiGetInstanceType(ifcRelAssociatesInstance) == ifcRelAssociatesMaterialEntity)
+        //            if (RDF.ifcengine.sdaiGetInstanceType(ifcRelAssociatesInstance) == ifcRelAssociatesMaterialEntity)
         //            {
         //                getRGB_relAssociatesMaterial(_ifcModel, ifcRelAssociatesInstance, ref materialMetaInfo.material);
         //            }
@@ -288,9 +288,9 @@ namespace IFCViewerSGL
         //    {
         //        int_t setting = 0;
         //        int_t mask = 0;
-        //        mask += IfcEngine.x86_64.flagbit12;   //    WIREFRAME
+        //        mask += RDF.ifcengine.flagbit12;   //    WIREFRAME
         //        setting += 0;                         //    WIREFRAME OFF
-        //        IfcEngine.x86_64.setFormat(_ifcModel, setting, mask);
+        //        RDF.ifcengine.setFormat(_ifcModel, setting, mask);
                 
         //        STRUCT_MATERIALS materials = null;
         //        walkThroughGeometry__transformation(ifcInstance, ref materials, ref materialMetaInfo);
@@ -314,11 +314,11 @@ namespace IFCViewerSGL
         /// <param name="materialMetaInfo"></param>
         private void walkThroughGeometry__transformation(int_t owlInstance, ref STRUCT_MATERIALS materials, ref STRUCT_MATERIAL_META_INFO materialMetaInfo)
         {
-            System.Diagnostics.Debug.Assert(IfcEngine.x86_64.GetInstanceClass(owlInstance) == _rdfClassTransformation);
+            System.Diagnostics.Debug.Assert(RDF.engine.GetInstanceClass(owlInstance) == _rdfClassTransformation);
 
             IntPtr owlInstanceObjectsPtr;
             Int64 iObjectCards = 0;
-            IfcEngine.x86_64.GetObjectTypeProperty(owlInstance, _owlObjectTypePropertyObject, out owlInstanceObjectsPtr, ref iObjectCards);
+            RDF.engine.GetObjectTypeProperty(owlInstance, _owlObjectTypePropertyObject, out owlInstanceObjectsPtr, out iObjectCards);
 
             if (iObjectCards == 1)
             {
@@ -344,11 +344,11 @@ namespace IFCViewerSGL
         /// <param name="materialMetaInfo"></param>
         private void walkThroughGeometry__collection(int_t owlInstance, ref STRUCT_MATERIALS materials, ref STRUCT_MATERIAL_META_INFO materialMetaInfo)
         {
-            if (IfcEngine.x86_64.GetInstanceClass(owlInstance) == _rdfClassCollection)
+            if (RDF.engine.GetInstanceClass(owlInstance) == _rdfClassCollection)
             {
                 IntPtr owlInstanceObjectsPtr;
                 Int64 iObjectCards = 0;
-                IfcEngine.x86_64.GetObjectTypeProperty(owlInstance, _owlObjectTypePropertyObjects, out owlInstanceObjectsPtr, ref iObjectCards);
+                RDF.engine.GetObjectTypeProperty(owlInstance, _owlObjectTypePropertyObjects, out owlInstanceObjectsPtr, out iObjectCards);
 
                 if (iObjectCards > 0)
                 {
@@ -383,7 +383,7 @@ namespace IFCViewerSGL
 
             IntPtr owlInstanceExpressIDPtr;
             Int64 expressIDCard = 0;
-            IfcEngine.x86_64.GetDataTypeProperty(owlInstance, _owlDataTypePropertyExpressID, out owlInstanceExpressIDPtr, ref expressIDCard);
+            RDF.engine.GetDataTypeProperty(owlInstance, _owlDataTypePropertyExpressID, out owlInstanceExpressIDPtr, out expressIDCard);
             if (expressIDCard == 1)
             {
                 Int64[] owlInstanceExpressID = new Int64[expressIDCard];
@@ -406,11 +406,11 @@ namespace IFCViewerSGL
 
                     if (materialMetaInfoIterator.child != null)
                     {
-                        if (IfcEngine.x86_64.GetInstanceClass(owlInstance) == _rdfClassTransformation)
+                        if (RDF.engine.GetInstanceClass(owlInstance) == _rdfClassTransformation)
                         {
                             IntPtr owlInstanceObjectPtr;
                             Int64 objectCard = 0;
-                            IfcEngine.x86_64.GetObjectTypeProperty(owlInstance, _owlObjectTypePropertyObject, out owlInstanceObjectPtr, ref objectCard);
+                            RDF.engine.GetObjectTypeProperty(owlInstance, _owlObjectTypePropertyObject, out owlInstanceObjectPtr, out objectCard);
 
                             if (objectCard == 1)
                             {
@@ -427,11 +427,11 @@ namespace IFCViewerSGL
                                 System.Diagnostics.Debug.Assert(false);
                             }
                         }
-                        else if (IfcEngine.x86_64.GetInstanceClass(owlInstance) == _rdfClassCollection)
+                        else if (RDF.engine.GetInstanceClass(owlInstance) == _rdfClassCollection)
                         {
                             IntPtr owlInstanceObjectsPtr;
                             Int64 objectsCard = 0;
-                            IfcEngine.x86_64.GetObjectTypeProperty(owlInstance, _owlObjectTypePropertyObjects, out owlInstanceObjectsPtr, ref objectsCard);
+                            RDF.engine.GetObjectTypeProperty(owlInstance, _owlObjectTypePropertyObjects, out owlInstanceObjectsPtr, out objectsCard);
 
                             Int64[] owlInstanceObjects = new Int64[objectsCard];
                             Marshal.Copy(owlInstanceObjectsPtr, owlInstanceObjects, 0, (int)objectsCard);
@@ -458,7 +458,7 @@ namespace IFCViewerSGL
                         Int64 vertexBufferSize = 0;
                         Int64 indexBufferSize = 0;
                         Int64 transformationBufferSize = 0;
-                        IfcEngine.x86_64.CalculateInstance(owlInstance, ref vertexBufferSize, ref indexBufferSize, ref transformationBufferSize);
+                        RDF.engine.CalculateInstance(owlInstance, out vertexBufferSize, out indexBufferSize, out transformationBufferSize);
 
                         if (materials != null)
                         {
@@ -488,11 +488,11 @@ namespace IFCViewerSGL
             }
             else
             {
-                if (IfcEngine.x86_64.GetInstanceClass(owlInstance) == _rdfClassTransformation)
+                if (RDF.engine.GetInstanceClass(owlInstance) == _rdfClassTransformation)
                 {
                     IntPtr owlInstanceObjectPtr;
                     Int64 objectCard = 0;
-                    IfcEngine.x86_64.GetObjectTypeProperty(owlInstance, _owlObjectTypePropertyObject, out owlInstanceObjectPtr, ref objectCard);
+                    RDF.engine.GetObjectTypeProperty(owlInstance, _owlObjectTypePropertyObject, out owlInstanceObjectPtr, out objectCard);
 
                     if (objectCard == 1)
                     {
@@ -509,11 +509,11 @@ namespace IFCViewerSGL
                         System.Diagnostics.Debug.Assert(false);
                     }
                 }
-                else if (IfcEngine.x86_64.GetInstanceClass(owlInstance) == _rdfClassCollection)
+                else if (RDF.engine.GetInstanceClass(owlInstance) == _rdfClassCollection)
                 {
                     IntPtr owlInstanceObjectsPtr;
                     Int64 objectsCard = 0;
-                    IfcEngine.x86_64.GetObjectTypeProperty(owlInstance, _owlObjectTypePropertyObjects, out owlInstanceObjectsPtr, ref objectsCard);
+                    RDF.engine.GetObjectTypeProperty(owlInstance, _owlObjectTypePropertyObjects, out owlInstanceObjectsPtr, out objectsCard);
 
                     Int64[] owlInstanceObjects = new Int64[objectsCard];
                     Marshal.Copy(owlInstanceObjectsPtr, owlInstanceObjects, 0, (int)objectsCard);
@@ -764,26 +764,26 @@ namespace IFCViewerSGL
 
         private void getRGB_relAssociatesMaterial(int_t model, int_t ifcRelAssociatesMaterialInstance, ref STRUCT_MATERIAL material)
         {
-            int_t ifcMaterialEntity = IfcEngine.x86_64.sdaiGetEntity(_ifcModel, "IFCMATERIAL"),
-                    ifcMaterialLayerSetUsageEntity = IfcEngine.x86_64.sdaiGetEntity(_ifcModel, "IFCMATERIALLAYERSETUSAGE"),
-                    ifcMaterialLayerSetEntity = IfcEngine.x86_64.sdaiGetEntity(_ifcModel, "IFCMATERIALLAYERSET"),
-                    ifcMaterialLayerEntity = IfcEngine.x86_64.sdaiGetEntity(_ifcModel, "IFCMATERIALLAYER"),
+            int_t ifcMaterialEntity = RDF.ifcengine.sdaiGetEntity(_ifcModel, "IFCMATERIAL"),
+                    ifcMaterialLayerSetUsageEntity = RDF.ifcengine.sdaiGetEntity(_ifcModel, "IFCMATERIALLAYERSETUSAGE"),
+                    ifcMaterialLayerSetEntity = RDF.ifcengine.sdaiGetEntity(_ifcModel, "IFCMATERIALLAYERSET"),
+                    ifcMaterialLayerEntity = RDF.ifcengine.sdaiGetEntity(_ifcModel, "IFCMATERIALLAYER"),
 			        ifcMaterialSelectInstance = 0;
-            IfcEngine.x86_64.sdaiGetAttrBN(ifcRelAssociatesMaterialInstance, "RelatingMaterial", IfcEngine.x86_64.sdaiINSTANCE, out ifcMaterialSelectInstance);
+            RDF.ifcengine.sdaiGetAttrBN(ifcRelAssociatesMaterialInstance, "RelatingMaterial", RDF.ifcengine.sdaiINSTANCE, out ifcMaterialSelectInstance);
 
-            if (IfcEngine.x86_64.sdaiGetInstanceType(ifcMaterialSelectInstance) == ifcMaterialEntity)
+            if (RDF.ifcengine.sdaiGetInstanceType(ifcMaterialSelectInstance) == ifcMaterialEntity)
             {
                 getRGB_ifcMaterial(_ifcModel, ifcMaterialSelectInstance, ref material);
             }
-            else if (IfcEngine.x86_64.sdaiGetInstanceType(ifcMaterialSelectInstance) == ifcMaterialLayerSetUsageEntity)
+            else if (RDF.ifcengine.sdaiGetInstanceType(ifcMaterialSelectInstance) == ifcMaterialLayerSetUsageEntity)
             {
                 getRGB_ifcMaterialLayerSetUsage(_ifcModel, ifcMaterialSelectInstance, ref material);
             }
-            else if (IfcEngine.x86_64.sdaiGetInstanceType(ifcMaterialSelectInstance) == ifcMaterialLayerSetEntity)
+            else if (RDF.ifcengine.sdaiGetInstanceType(ifcMaterialSelectInstance) == ifcMaterialLayerSetEntity)
             {
                 getRGB_ifcMaterialLayerSet(_ifcModel, ifcMaterialSelectInstance, ref material);
             }
-            else if (IfcEngine.x86_64.sdaiGetInstanceType(ifcMaterialSelectInstance) == ifcMaterialLayerEntity)
+            else if (RDF.ifcengine.sdaiGetInstanceType(ifcMaterialSelectInstance) == ifcMaterialLayerEntity)
             {
                 getRGB_ifcMaterialLayer(_ifcModel, ifcMaterialSelectInstance, ref material);
 	        }
@@ -798,14 +798,14 @@ namespace IFCViewerSGL
         void getRGB_ifcMaterialLayerSet(int_t model, int_t ifcMaterialLayerSet, ref STRUCT_MATERIAL material)
         {
             IntPtr ifcMaterialLayerAggr;
-            IfcEngine.x86_64.sdaiGetAttrBN(ifcMaterialLayerSet, "MaterialLayers", IfcEngine.x86_64.sdaiAGGR, out ifcMaterialLayerAggr);
+            RDF.ifcengine.sdaiGetAttrBN(ifcMaterialLayerSet, "MaterialLayers", RDF.ifcengine.sdaiAGGR, out ifcMaterialLayerAggr);
 
-            int_t ifcMaterialLayerAggrCnt = IfcEngine.x86_64.sdaiGetMemberCount((int_t)ifcMaterialLayerAggr);
+            int_t ifcMaterialLayerAggrCnt = RDF.ifcengine.sdaiGetMemberCount((int_t)ifcMaterialLayerAggr);
 	        if	(ifcMaterialLayerAggrCnt > 0) {
 		        int_t	ifcMaterialLayer;
-                IfcEngine.x86_64.engiGetAggrElement((int_t)ifcMaterialLayerAggr, 0, IfcEngine.x86_64.sdaiINSTANCE, out ifcMaterialLayer);
+                RDF.ifcengine.engiGetAggrElement((int_t)ifcMaterialLayerAggr, 0, RDF.ifcengine.sdaiINSTANCE, out ifcMaterialLayer);
 
-                if (IfcEngine.x86_64.sdaiGetInstanceType(ifcMaterialLayer) == IfcEngine.x86_64.sdaiGetEntity(model, "IFCMATERIALLAYER"))
+                if (RDF.ifcengine.sdaiGetInstanceType(ifcMaterialLayer) == RDF.ifcengine.sdaiGetEntity(model, "IFCMATERIALLAYER"))
                 {
 			        getRGB_ifcMaterialLayer(model, ifcMaterialLayer, ref material);
 		        } else {
@@ -823,9 +823,9 @@ namespace IFCViewerSGL
         void getRGB_ifcMaterialLayer(int_t model, int_t ifcMaterialLayer, ref STRUCT_MATERIAL material)
         {
 	        int_t	ifcMaterialInstance;
-            IfcEngine.x86_64.sdaiGetAttrBN(ifcMaterialLayer, "Material", IfcEngine.x86_64.sdaiINSTANCE, out ifcMaterialInstance);
+            RDF.ifcengine.sdaiGetAttrBN(ifcMaterialLayer, "Material", RDF.ifcengine.sdaiINSTANCE, out ifcMaterialInstance);
 
-            Debug.Assert(IfcEngine.x86_64.sdaiGetInstanceType(ifcMaterialInstance) == IfcEngine.x86_64.sdaiGetEntity(model, "IFCMATERIAL"));
+            Debug.Assert(RDF.ifcengine.sdaiGetInstanceType(ifcMaterialInstance) == RDF.ifcengine.sdaiGetEntity(model, "IFCMATERIAL"));
 
 	        getRGB_ifcMaterial(model, ifcMaterialInstance, ref material);
         }
@@ -839,9 +839,9 @@ namespace IFCViewerSGL
         void getRGB_ifcMaterialLayerSetUsage(int_t model, int_t ifcMaterialLayerSetUsage, ref STRUCT_MATERIAL material)
         {
 	        int_t ifcMaterialLayerSetInstance;
-            IfcEngine.x86_64.sdaiGetAttrBN(ifcMaterialLayerSetUsage, "ForLayerSet", IfcEngine.x86_64.sdaiINSTANCE, out ifcMaterialLayerSetInstance);
+            RDF.ifcengine.sdaiGetAttrBN(ifcMaterialLayerSetUsage, "ForLayerSet", RDF.ifcengine.sdaiINSTANCE, out ifcMaterialLayerSetInstance);
 
-            Debug.Assert(IfcEngine.x86_64.sdaiGetInstanceType(ifcMaterialLayerSetInstance) == IfcEngine.x86_64.sdaiGetEntity(model, "IFCMATERIALLAYERSET"));
+            Debug.Assert(RDF.ifcengine.sdaiGetInstanceType(ifcMaterialLayerSetInstance) == RDF.ifcengine.sdaiGetEntity(model, "IFCMATERIALLAYERSET"));
 
 	        getRGB_ifcMaterialLayerSet(model, ifcMaterialLayerSetInstance, ref material);
         }
@@ -855,16 +855,16 @@ namespace IFCViewerSGL
         void getRGB_ifcMaterial(int_t model, int_t ifcMaterialInstance, ref STRUCT_MATERIAL material)
         {
             IntPtr ifcMaterialDefinitionRepresentationAggr;
-	        IfcEngine.x86_64.sdaiGetAttrBN(ifcMaterialInstance, "HasRepresentation", IfcEngine.x86_64.sdaiAGGR, out ifcMaterialDefinitionRepresentationAggr);
+	        RDF.ifcengine.sdaiGetAttrBN(ifcMaterialInstance, "HasRepresentation", RDF.ifcengine.sdaiAGGR, out ifcMaterialDefinitionRepresentationAggr);
 
-	        int_t ifcMaterialDefinitionRepresentationAggrCnt = IfcEngine.x86_64.sdaiGetMemberCount((int_t)ifcMaterialDefinitionRepresentationAggr);
+	        int_t ifcMaterialDefinitionRepresentationAggrCnt = RDF.ifcengine.sdaiGetMemberCount((int_t)ifcMaterialDefinitionRepresentationAggr);
 
             int_t  i = 0;
 	        while  (i < ifcMaterialDefinitionRepresentationAggrCnt) {
 		        int_t	ifcMaterialDefinitionRepresentationInstance = 0;
-                IfcEngine.x86_64.engiGetAggrElement((int_t)ifcMaterialDefinitionRepresentationAggr, i, IfcEngine.x86_64.sdaiINSTANCE, out ifcMaterialDefinitionRepresentationInstance);
+                RDF.ifcengine.engiGetAggrElement((int_t)ifcMaterialDefinitionRepresentationAggr, i, RDF.ifcengine.sdaiINSTANCE, out ifcMaterialDefinitionRepresentationInstance);
 
-                if (IfcEngine.x86_64.sdaiGetInstanceType(ifcMaterialDefinitionRepresentationInstance) == IfcEngine.x86_64.sdaiGetEntity(model, "IFCMATERIALDEFINITIONREPRESENTATION"))
+                if (RDF.ifcengine.sdaiGetInstanceType(ifcMaterialDefinitionRepresentationInstance) == RDF.ifcengine.sdaiGetEntity(model, "IFCMATERIALDEFINITIONREPRESENTATION"))
                 {
 			        getRGB_ifcMaterialDefinitionRepresentation(_ifcModel, ifcMaterialDefinitionRepresentationInstance, ref material);
 		        } else {
@@ -883,16 +883,16 @@ namespace IFCViewerSGL
         void getRGB_ifcMaterialDefinitionRepresentation(int_t model, int_t ifcMaterialDefinitionRepresentationInstance, ref STRUCT_MATERIAL material)
         {
             IntPtr ifcRepresentationAggr;
-	        IfcEngine.x86_64.sdaiGetAttrBN(ifcMaterialDefinitionRepresentationInstance, "Representations", IfcEngine.x86_64.sdaiAGGR, out ifcRepresentationAggr);
+	        RDF.ifcengine.sdaiGetAttrBN(ifcMaterialDefinitionRepresentationInstance, "Representations", RDF.ifcengine.sdaiAGGR, out ifcRepresentationAggr);
 
-            int_t ifcRepresentationAggrCnt = IfcEngine.x86_64.sdaiGetMemberCount((int_t)ifcRepresentationAggr);
+            int_t ifcRepresentationAggrCnt = RDF.ifcengine.sdaiGetMemberCount((int_t)ifcRepresentationAggr);
 
             int_t i = 0;
 	        while  (i < ifcRepresentationAggrCnt) {
 		        int_t	ifcRepresentationInstance;
-                IfcEngine.x86_64.engiGetAggrElement((int_t)ifcRepresentationAggr, i, IfcEngine.x86_64.sdaiINSTANCE, out ifcRepresentationInstance);
+                RDF.ifcengine.engiGetAggrElement((int_t)ifcRepresentationAggr, i, RDF.ifcengine.sdaiINSTANCE, out ifcRepresentationInstance);
 
-                if (IfcEngine.x86_64.sdaiGetInstanceType(ifcRepresentationInstance) == IfcEngine.x86_64.sdaiGetEntity(model, "IFCSTYLEDREPRESENTATION"))
+                if (RDF.ifcengine.sdaiGetInstanceType(ifcRepresentationInstance) == RDF.ifcengine.sdaiGetEntity(model, "IFCSTYLEDREPRESENTATION"))
                 {
 			        getRGB_ifcStyledRepresentation(model, ifcRepresentationInstance, ref material);
 		        }
@@ -909,16 +909,16 @@ namespace IFCViewerSGL
         void getRGB_ifcStyledRepresentation(int_t model, int_t ifcStyledRepresentationInstance, ref STRUCT_MATERIAL material)
         {
             IntPtr ifcRepresentationItemAggr;
-	        IfcEngine.x86_64.sdaiGetAttrBN(ifcStyledRepresentationInstance, "Items", IfcEngine.x86_64.sdaiAGGR, out ifcRepresentationItemAggr);
+	        RDF.ifcengine.sdaiGetAttrBN(ifcStyledRepresentationInstance, "Items", RDF.ifcengine.sdaiAGGR, out ifcRepresentationItemAggr);
 
-	        int_t ifcRepresentationItemAggrCnt = IfcEngine.x86_64.sdaiGetMemberCount((int_t)ifcRepresentationItemAggr);
+	        int_t ifcRepresentationItemAggrCnt = RDF.ifcengine.sdaiGetMemberCount((int_t)ifcRepresentationItemAggr);
             
             int_t i = 0;
 	        while  (i < ifcRepresentationItemAggrCnt) {
 		        int_t ifcRepresentationItemInstance;
-		        IfcEngine.x86_64.engiGetAggrElement((int_t)ifcRepresentationItemAggr, i, IfcEngine.x86_64.sdaiINSTANCE, out ifcRepresentationItemInstance);
+		        RDF.ifcengine.engiGetAggrElement((int_t)ifcRepresentationItemAggr, i, RDF.ifcengine.sdaiINSTANCE, out ifcRepresentationItemInstance);
 
-		        if	(IfcEngine.x86_64.sdaiGetInstanceType(ifcRepresentationItemInstance) == IfcEngine.x86_64.sdaiGetEntity(model, "IFCSTYLEDITEM")) {
+		        if	(RDF.ifcengine.sdaiGetInstanceType(ifcRepresentationItemInstance) == RDF.ifcengine.sdaiGetEntity(model, "IFCSTYLEDITEM")) {
 			        getRGB_styledItem(ifcRepresentationItemInstance, material);
 		        }
 		        i++;
@@ -933,13 +933,13 @@ namespace IFCViewerSGL
         private void getRGB_productDefinitionShape(int_t ifcObjectInstance, ref STRUCT_MATERIAL_META_INFO materialMetaInfo)
         {
             IntPtr representationsSet;
-            IfcEngine.x86_64.sdaiGetAttrBN(ifcObjectInstance, "Representations", IfcEngine.x86_64.sdaiAGGR, out representationsSet);
+            RDF.ifcengine.sdaiGetAttrBN(ifcObjectInstance, "Representations", RDF.ifcengine.sdaiAGGR, out representationsSet);
 
-            int_t iRepresentationsCount = IfcEngine.x86_64.sdaiGetMemberCount((int_t)representationsSet);
+            int_t iRepresentationsCount = RDF.ifcengine.sdaiGetMemberCount((int_t)representationsSet);
             for (int_t iRepresentation = 0; iRepresentation < iRepresentationsCount; iRepresentation++)
             {
                 int_t ifcShapeRepresentation;
-                IfcEngine.x86_64.engiGetAggrElement((int_t)representationsSet, iRepresentation, IfcEngine.x86_64.sdaiINSTANCE, out ifcShapeRepresentation);
+                RDF.ifcengine.engiGetAggrElement((int_t)representationsSet, iRepresentation, RDF.ifcengine.sdaiINSTANCE, out ifcShapeRepresentation);
 
                 if (ifcShapeRepresentation != 0)
                 {
@@ -956,12 +956,12 @@ namespace IFCViewerSGL
         private void getRGB_shapeRepresentation(int_t ifcShapeRepresentationInstance, ref STRUCT_MATERIAL_META_INFO materialMetaInfo)
         {
             IntPtr representationIdentifier;
-            IfcEngine.x86_64.sdaiGetAttrBN(ifcShapeRepresentationInstance, "RepresentationIdentifier", IfcEngine.x86_64.sdaiUNICODE, out representationIdentifier);
+            RDF.ifcengine.sdaiGetAttrBN(ifcShapeRepresentationInstance, "RepresentationIdentifier", RDF.ifcengine.sdaiUNICODE, out representationIdentifier);
 
             string strRepresentationIdentifier = Marshal.PtrToStringUni(representationIdentifier);
 
             IntPtr representationType;
-            IfcEngine.x86_64.sdaiGetAttrBN(ifcShapeRepresentationInstance, "RepresentationType", IfcEngine.x86_64.sdaiUNICODE, out representationType);
+            RDF.ifcengine.sdaiGetAttrBN(ifcShapeRepresentationInstance, "RepresentationType", RDF.ifcengine.sdaiUNICODE, out representationType);
 
             string strRepresentationType = Marshal.PtrToStringUni(representationType);
 
@@ -969,15 +969,15 @@ namespace IFCViewerSGL
                 (strRepresentationType != "BoundingBox"))
             {
                 IntPtr geometrySet;
-                IfcEngine.x86_64.sdaiGetAttrBN(ifcShapeRepresentationInstance, "Items", IfcEngine.x86_64.sdaiAGGR, out geometrySet);
+                RDF.ifcengine.sdaiGetAttrBN(ifcShapeRepresentationInstance, "Items", RDF.ifcengine.sdaiAGGR, out geometrySet);
 
                 STRUCT_MATERIAL_META_INFO materialMetaInfoIterator = materialMetaInfo;
 
-                int_t iGeometryCount = IfcEngine.x86_64.sdaiGetMemberCount((int_t)geometrySet);
+                int_t iGeometryCount = RDF.ifcengine.sdaiGetMemberCount((int_t)geometrySet);
                 for (int_t iGeometry = 0; iGeometry < iGeometryCount; iGeometry++)
                 {
                     int_t iGeometryInstance = 0;
-                    IfcEngine.x86_64.engiGetAggrElement((int_t)geometrySet, iGeometry, IfcEngine.x86_64.sdaiINSTANCE, out iGeometryInstance);
+                    RDF.ifcengine.engiGetAggrElement((int_t)geometrySet, iGeometry, RDF.ifcengine.sdaiINSTANCE, out iGeometryInstance);
 
                     if (materialMetaInfoIterator == null)
                     {
@@ -989,7 +989,7 @@ namespace IFCViewerSGL
                     }
 
                     IntPtr styledItemInstance;
-                    IfcEngine.x86_64.sdaiGetAttrBN(iGeometryInstance, "StyledByItem", IfcEngine.x86_64.sdaiINSTANCE, out styledItemInstance);
+                    RDF.ifcengine.sdaiGetAttrBN(iGeometryInstance, "StyledByItem", RDF.ifcengine.sdaiINSTANCE, out styledItemInstance);
 
                     if (styledItemInstance != IntPtr.Zero)
                     {
@@ -1012,7 +1012,7 @@ namespace IFCViewerSGL
         private void searchDeeper(int_t iGeometryInstance, ref STRUCT_MATERIAL_META_INFO materialMetaInfo, STRUCT_MATERIAL material)
         {
             IntPtr styledItemInstance;
-            IfcEngine.x86_64.sdaiGetAttrBN(iGeometryInstance, "StyledByItem", IfcEngine.x86_64.sdaiINSTANCE, out styledItemInstance);
+            RDF.ifcengine.sdaiGetAttrBN(iGeometryInstance, "StyledByItem", RDF.ifcengine.sdaiINSTANCE, out styledItemInstance);
 
             if (styledItemInstance != IntPtr.Zero)
             {
@@ -1024,14 +1024,14 @@ namespace IFCViewerSGL
                 }
             }
 
-            int_t booleanClippingResultEntity = IfcEngine.x86_64.sdaiGetEntity(_ifcModel, "IFCBOOLEANCLIPPINGRESULT");
-            int_t booleanResultEntity = IfcEngine.x86_64.sdaiGetEntity(_ifcModel, "IFCBOOLEANRESULT");
-			int_t mappedItemEntity = IfcEngine.x86_64.sdaiGetEntity(_ifcModel, "IFCMAPPEDITEM");
+            int_t booleanClippingResultEntity = RDF.ifcengine.sdaiGetEntity(_ifcModel, "IFCBOOLEANCLIPPINGRESULT");
+            int_t booleanResultEntity = RDF.ifcengine.sdaiGetEntity(_ifcModel, "IFCBOOLEANRESULT");
+			int_t mappedItemEntity = RDF.ifcengine.sdaiGetEntity(_ifcModel, "IFCMAPPEDITEM");
 
             if (IsInstanceOf(iGeometryInstance, "IFCBOOLEANRESULT") || IsInstanceOf(iGeometryInstance, "IFCBOOLEANCLIPPINGRESULT"))
             {
                 IntPtr geometryChildInstance;
-                IfcEngine.x86_64.sdaiGetAttrBN(iGeometryInstance, "FirstOperand", IfcEngine.x86_64.sdaiINSTANCE, out geometryChildInstance);
+                RDF.ifcengine.sdaiGetAttrBN(iGeometryInstance, "FirstOperand", RDF.ifcengine.sdaiINSTANCE, out geometryChildInstance);
 
                 if (geometryChildInstance != IntPtr.Zero)
                 {
@@ -1043,10 +1043,10 @@ namespace IFCViewerSGL
                 if (IsInstanceOf(iGeometryInstance, "IFCMAPPEDITEM"))
                 {
                     IntPtr representationMapInstance;
-                    IfcEngine.x86_64.sdaiGetAttrBN(iGeometryInstance, "MappingSource", IfcEngine.x86_64.sdaiINSTANCE, out representationMapInstance);
+                    RDF.ifcengine.sdaiGetAttrBN(iGeometryInstance, "MappingSource", RDF.ifcengine.sdaiINSTANCE, out representationMapInstance);
 
                     IntPtr shapeRepresentationInstance;
-                    IfcEngine.x86_64.sdaiGetAttrBN((int_t)representationMapInstance, "MappedRepresentation", IfcEngine.x86_64.sdaiINSTANCE, out shapeRepresentationInstance);
+                    RDF.ifcengine.sdaiGetAttrBN((int_t)representationMapInstance, "MappedRepresentation", RDF.ifcengine.sdaiINSTANCE, out shapeRepresentationInstance);
 
                     if (shapeRepresentationInstance != IntPtr.Zero)
                     {
@@ -1060,15 +1060,15 @@ namespace IFCViewerSGL
                     if (IsInstanceOf(iGeometryInstance, "IFCSHELLBASEDSURFACEMODEL"))
                     {
                         IntPtr geometryChildAggr;
-                        IfcEngine.x86_64.sdaiGetAttrBN(iGeometryInstance, "SbsmBoundary", IfcEngine.x86_64.sdaiAGGR, out geometryChildAggr);
+                        RDF.ifcengine.sdaiGetAttrBN(iGeometryInstance, "SbsmBoundary", RDF.ifcengine.sdaiAGGR, out geometryChildAggr);
 
                         STRUCT_MATERIAL_META_INFO materialMetaInfoIterator = materialMetaInfo;
 
-                        int_t iGeometryChildAggrCount = IfcEngine.x86_64.sdaiGetMemberCount((int_t)geometryChildAggr);
+                        int_t iGeometryChildAggrCount = RDF.ifcengine.sdaiGetMemberCount((int_t)geometryChildAggr);
                         for (int iGeometryChildAggr = 0; iGeometryChildAggr < iGeometryChildAggrCount; iGeometryChildAggr++)
                         {
                             int_t iGeometryChildInstance = 0;
-                            IfcEngine.x86_64.engiGetAggrElement((int_t)geometryChildAggr, iGeometryChildAggr, IfcEngine.x86_64.sdaiINSTANCE, out iGeometryChildInstance);
+                            RDF.ifcengine.engiGetAggrElement((int_t)geometryChildAggr, iGeometryChildAggr, RDF.ifcengine.sdaiINSTANCE, out iGeometryChildInstance);
 
                             if (iGeometryChildInstance != 0)
                             {
@@ -1097,13 +1097,13 @@ namespace IFCViewerSGL
         private void getRGB_styledItem(int_t iStyledItemInstance, STRUCT_MATERIAL material)
         {
             IntPtr stylesSet;
-            IfcEngine.x86_64.sdaiGetAttrBN(iStyledItemInstance, "Styles", IfcEngine.x86_64.sdaiAGGR, out stylesSet);
+            RDF.ifcengine.sdaiGetAttrBN(iStyledItemInstance, "Styles", RDF.ifcengine.sdaiAGGR, out stylesSet);
 
-            int_t iStylesCount = IfcEngine.x86_64.sdaiGetMemberCount((int_t)stylesSet);
+            int_t iStylesCount = RDF.ifcengine.sdaiGetMemberCount((int_t)stylesSet);
             for (int_t iStyle = 0; iStyle < iStylesCount; iStyle++)
             {
                 int_t iPresentationStyleAssignmentInstance = 0;
-                IfcEngine.x86_64.engiGetAggrElement((int_t)stylesSet, iStyle, IfcEngine.x86_64.sdaiINSTANCE, out iPresentationStyleAssignmentInstance);
+                RDF.ifcengine.engiGetAggrElement((int_t)stylesSet, iStyle, RDF.ifcengine.sdaiINSTANCE, out iPresentationStyleAssignmentInstance);
 
                 if (iPresentationStyleAssignmentInstance != 0)
                 {
@@ -1120,13 +1120,13 @@ namespace IFCViewerSGL
         private void getRGB_presentationStyleAssignment(int_t iPresentationStyleAssignmentInstance, ref STRUCT_MATERIAL material)
         {
             IntPtr stylesSet;
-            IfcEngine.x86_64.sdaiGetAttrBN(iPresentationStyleAssignmentInstance, "Styles", IfcEngine.x86_64.sdaiAGGR, out stylesSet);
+            RDF.ifcengine.sdaiGetAttrBN(iPresentationStyleAssignmentInstance, "Styles", RDF.ifcengine.sdaiAGGR, out stylesSet);
 
-            int_t iStylesCount = IfcEngine.x86_64.sdaiGetMemberCount((int_t)stylesSet);
+            int_t iStylesCount = RDF.ifcengine.sdaiGetMemberCount((int_t)stylesSet);
             for (int_t iStyle = 0; iStyle < iStylesCount; iStyle++)
             {
                 int_t iSurfaceStyleInstance = 0;
-                IfcEngine.x86_64.engiGetAggrElement((int_t)stylesSet, iStyle, IfcEngine.x86_64.sdaiINSTANCE, out iSurfaceStyleInstance);
+                RDF.ifcengine.engiGetAggrElement((int_t)stylesSet, iStyle, RDF.ifcengine.sdaiINSTANCE, out iSurfaceStyleInstance);
 
                 if (iSurfaceStyleInstance != 0)
                 {
@@ -1143,20 +1143,20 @@ namespace IFCViewerSGL
         private void getRGB_surfaceStyle(int_t iSurfaceStyleInstance, ref STRUCT_MATERIAL material)
         {
             IntPtr stylesSet;
-            IfcEngine.x86_64.sdaiGetAttrBN(iSurfaceStyleInstance, "Styles", IfcEngine.x86_64.sdaiAGGR, out stylesSet);
+            RDF.ifcengine.sdaiGetAttrBN(iSurfaceStyleInstance, "Styles", RDF.ifcengine.sdaiAGGR, out stylesSet);
 
-            int_t iStylesCount = IfcEngine.x86_64.sdaiGetMemberCount((int_t)stylesSet);
+            int_t iStylesCount = RDF.ifcengine.sdaiGetMemberCount((int_t)stylesSet);
             for (int_t iStyle = 0; iStyle < iStylesCount; iStyle++)
             {
                 int_t iSurfaceStyleRenderingInstance = 0;
-                IfcEngine.x86_64.engiGetAggrElement((int_t)stylesSet, iStyle, IfcEngine.x86_64.sdaiINSTANCE, out iSurfaceStyleRenderingInstance);
+                RDF.ifcengine.engiGetAggrElement((int_t)stylesSet, iStyle, RDF.ifcengine.sdaiINSTANCE, out iSurfaceStyleRenderingInstance);
 
                 double	dTransparency = 0;
-                IfcEngine.x86_64.sdaiGetAttrBN(iSurfaceStyleRenderingInstance, "Transparency", IfcEngine.x86_64.sdaiREAL, out dTransparency);
+                RDF.ifcengine.sdaiGetAttrBN(iSurfaceStyleRenderingInstance, "Transparency", RDF.ifcengine.sdaiREAL, out dTransparency);
 		        material.transparency = 1.0 - dTransparency;
 
                 IntPtr surfaceColourInstance;
-                IfcEngine.x86_64.sdaiGetAttrBN(iSurfaceStyleRenderingInstance, "SurfaceColour", IfcEngine.x86_64.sdaiINSTANCE, out surfaceColourInstance);
+                RDF.ifcengine.sdaiGetAttrBN(iSurfaceStyleRenderingInstance, "SurfaceColour", RDF.ifcengine.sdaiINSTANCE, out surfaceColourInstance);
 
                 if (surfaceColourInstance != IntPtr.Zero)
                 {
@@ -1168,7 +1168,7 @@ namespace IFCViewerSGL
                 }
 
                 IntPtr diffuseColourInstance;
-                IfcEngine.x86_64.sdaiGetAttrBN(iSurfaceStyleRenderingInstance, "DiffuseColour", IfcEngine.x86_64.sdaiINSTANCE, out diffuseColourInstance);
+                RDF.ifcengine.sdaiGetAttrBN(iSurfaceStyleRenderingInstance, "DiffuseColour", RDF.ifcengine.sdaiINSTANCE, out diffuseColourInstance);
 
                 if (diffuseColourInstance != IntPtr.Zero)
                 {
@@ -1177,12 +1177,12 @@ namespace IFCViewerSGL
                 else
                 {
                     int_t iADB = 0;
-                    IfcEngine.x86_64.sdaiGetAttrBN(iSurfaceStyleRenderingInstance, "DiffuseColour", IfcEngine.x86_64.sdaiADB, out iADB);
+                    RDF.ifcengine.sdaiGetAttrBN(iSurfaceStyleRenderingInstance, "DiffuseColour", RDF.ifcengine.sdaiADB, out iADB);
 
                     if (iADB != 0)
                     {
                         double dValue;
-                        IfcEngine.x86_64.sdaiGetADBValue(iADB, IfcEngine.x86_64.sdaiREAL, out dValue);
+                        RDF.ifcengine.sdaiGetADBValue(iADB, RDF.ifcengine.sdaiREAL, out dValue);
 
                         material.diffuse.R = (float)dValue * material.ambient.R;
                         material.diffuse.G = (float)dValue * material.ambient.G;
@@ -1191,7 +1191,7 @@ namespace IFCViewerSGL
                 }
 
                 IntPtr specularColourInstance;
-                IfcEngine.x86_64.sdaiGetAttrBN(iSurfaceStyleRenderingInstance, "SpecularColour", IfcEngine.x86_64.sdaiINSTANCE, out specularColourInstance);
+                RDF.ifcengine.sdaiGetAttrBN(iSurfaceStyleRenderingInstance, "SpecularColour", RDF.ifcengine.sdaiINSTANCE, out specularColourInstance);
 
                 if (specularColourInstance != IntPtr.Zero)
                 {
@@ -1200,12 +1200,12 @@ namespace IFCViewerSGL
                 else
                 {
                     int_t iADB = 0;
-                    IfcEngine.x86_64.sdaiGetAttrBN(iSurfaceStyleRenderingInstance, "SpecularColour", IfcEngine.x86_64.sdaiADB, out iADB);
+                    RDF.ifcengine.sdaiGetAttrBN(iSurfaceStyleRenderingInstance, "SpecularColour", RDF.ifcengine.sdaiADB, out iADB);
 
                     if (iADB != 0)
                     {
                         double dValue;
-                        IfcEngine.x86_64.sdaiGetADBValue(iADB, IfcEngine.x86_64.sdaiREAL, out dValue);
+                        RDF.ifcengine.sdaiGetADBValue(iADB, RDF.ifcengine.sdaiREAL, out dValue);
 
                         material.specular.R = (float)dValue * material.ambient.R;
                         material.specular.G = (float)dValue * material.ambient.G;
@@ -1223,9 +1223,9 @@ namespace IFCViewerSGL
         private void getRGB_colourRGB(int_t iSurfaceColourInstance, STRUCT_COLOR color)
         {
             double	dRed = 0, dGreen = 0, dBlue = 0;
-            IfcEngine.x86_64.sdaiGetAttrBN(iSurfaceColourInstance, "Red", IfcEngine.x86_64.sdaiREAL, out dRed);
-            IfcEngine.x86_64.sdaiGetAttrBN(iSurfaceColourInstance, "Green", IfcEngine.x86_64.sdaiREAL, out dGreen);
-            IfcEngine.x86_64.sdaiGetAttrBN(iSurfaceColourInstance, "Blue", IfcEngine.x86_64.sdaiREAL, out dBlue);
+            RDF.ifcengine.sdaiGetAttrBN(iSurfaceColourInstance, "Red", RDF.ifcengine.sdaiREAL, out dRed);
+            RDF.ifcengine.sdaiGetAttrBN(iSurfaceColourInstance, "Green", RDF.ifcengine.sdaiREAL, out dGreen);
+            RDF.ifcengine.sdaiGetAttrBN(iSurfaceColourInstance, "Blue", RDF.ifcengine.sdaiREAL, out dBlue);
                      
             color.R = (float)dRed;
             color.G = (float)dGreen;
@@ -1240,7 +1240,7 @@ namespace IFCViewerSGL
         /// <returns></returns>
         private bool IsInstanceOf(int_t iInstance, string strType)
         {
-            if (IfcEngine.x86_64.sdaiGetInstanceType(iInstance) == IfcEngine.x86_64.sdaiGetEntity(_ifcModel, strType))
+            if (RDF.ifcengine.sdaiGetInstanceType(iInstance) == RDF.ifcengine.sdaiGetEntity(_ifcModel, strType))
             {
                 return true;
             }
@@ -1392,7 +1392,7 @@ namespace IFCViewerSGL
 
 	        if	(ifcInstance != 0) 
             {
-                materialMetaInfo.expressID = IfcEngine.x86_64.internalGetP21Line(ifcInstance);
+                materialMetaInfo.expressID = RDF.ifcengine.internalGetP21Line(ifcInstance);
 	        } 
             else 
             {
