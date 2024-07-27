@@ -560,18 +560,18 @@ namespace IFCViewerSGL
                 gl.GenFramebuffersEXT(1, arFrameBuffers);
 
                 _iSelectionFrameBuffer = arFrameBuffers[0];
-                System.Diagnostics.Debug.Assert(_iSelectionFrameBuffer != 0);
+                Debug.Assert(_iSelectionFrameBuffer != 0);
 
 		        gl.BindFramebufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, _iSelectionFrameBuffer);
 
-		        /*
+                /*
 		        * Texture buffer
 		        */
- /*               uint[] arTextures = new uint[1];
+                uint[] arTextures = new uint[1];
 		        gl.GenTextures(1, arTextures);
 
                 _iSelectionTextureBuffer = arTextures[0];
-                System.Diagnostics.Debug.Assert(_iSelectionTextureBuffer != 0);
+                Debug.Assert(_iSelectionTextureBuffer != 0);
 
                 gl.BindTexture(OpenGL.GL_TEXTURE_2D, _iSelectionTextureBuffer);
                 gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
@@ -579,9 +579,9 @@ namespace IFCViewerSGL
                 gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_S, OpenGL.GL_CLAMP_TO_EDGE);
                 gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_T, OpenGL.GL_CLAMP_TO_EDGE);
 
-//                gl.TexImage2D(OpenGL.GL_TEXTURE_2D, 0, OpenGL.GL_RGBA, SELECTION_BUFFER_SIZE, SELECTION_BUFFER_SIZE, 0, OpenGL.GL_RGBA, OpenGL.GL_UNSIGNED_BYTE, IntPtr.Zero);
+                gl.TexImage2D(OpenGL.GL_TEXTURE_2D, 0, OpenGL.GL_RGBA, SELECTION_BUFFER_SIZE, SELECTION_BUFFER_SIZE, 0, OpenGL.GL_RGBA, OpenGL.GL_UNSIGNED_BYTE, IntPtr.Zero);
 
- //               gl.BindTexture(OpenGL.GL_TEXTURE_2D, 0);
+                gl.BindTexture(OpenGL.GL_TEXTURE_2D, 0);
 
                 gl.FramebufferTexture2DEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_COLOR_ATTACHMENT0_EXT, OpenGL.GL_TEXTURE_2D, _iSelectionTextureBuffer, 0);
 
@@ -592,7 +592,7 @@ namespace IFCViewerSGL
                 gl.GenRenderbuffersEXT(1, arRenderBuffers);
 
                 _iSelectionDepthRenderBuffer = arRenderBuffers[0];
-                System.Diagnostics.Debug.Assert(_iSelectionDepthRenderBuffer != 0);
+                Debug.Assert(_iSelectionDepthRenderBuffer != 0);
 
                 gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, _iSelectionDepthRenderBuffer);
                 gl.RenderbufferStorageEXT(OpenGL.GL_RENDERBUFFER_EXT, OpenGL.GL_DEPTH_COMPONENT, SELECTION_BUFFER_SIZE, SELECTION_BUFFER_SIZE);
@@ -1289,8 +1289,8 @@ namespace IFCViewerSGL
         /// <param name="ifcView"></param>
         public void RegisterView(IIFCView ifcView)
         {
-            System.Diagnostics.Debug.Assert(ifcView != null);
-            System.Diagnostics.Debug.Assert(!_hsIFCViews.Contains(ifcView));
+            Debug.Assert(ifcView != null);
+            Debug.Assert(!_hsIFCViews.Contains(ifcView));
 
             _hsIFCViews.Add(ifcView);
         }
@@ -1301,8 +1301,8 @@ namespace IFCViewerSGL
         /// <param name="ifcView"></param>
         public void UnRegisterView(IIFCView ifcView)
         {
-            System.Diagnostics.Debug.Assert(ifcView != null);
-            System.Diagnostics.Debug.Assert(_hsIFCViews.Contains(ifcView));
+            Debug.Assert(ifcView != null);
+            Debug.Assert(_hsIFCViews.Contains(ifcView));
 
             _hsIFCViews.Remove(ifcView);
         }
