@@ -7,9 +7,9 @@
 maptilerClient.config.apiKey = "IzXwuNELmi1wQXfKZZOQ";
 
 var ptr = null;
-async function jsUTM2WGS84Callback(x, y, z, CRS) {
+function jsUTM2WGS84Callback(x, y, z, CRS) {
 
-  const result = await maptilerClient.coordinates.transform(
+  const result = maptilerClient.coordinates.transform(
     [431962.77, 4812381.63, 0.00],
     { sourceCrs: 25830, targetCrs: 4326, operations: "1623" });
   console.log(result);
