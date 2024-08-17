@@ -1200,6 +1200,10 @@ function dbg(text) {
 // end include: runtime_debug.js
 // === Body ===
 
+function callJSLogCallback(szEvent,iLength) { jsLogCallback(UTF8ToString(szEvent, iLength)); }
+function callJSUTM2WGS84Callback(fX,fY,fZ,szCRS,iLength) { let a = jsUTM2WGS84Callback(fX, fY, fZ, UTF8ToString(szCRS, iLength)); console.log(a); return a; }
+
+
 // end include: preamble.js
 
   /** @constructor */
@@ -6736,6 +6740,11 @@ function dbg(text) {
   }
   }
 
+  var _getentropy = (buffer, size) => {
+      randomFill(HEAPU8.subarray(buffer, buffer + size));
+      return 0;
+    };
+
   
   var arraySum = (array, index) => {
       var sum = 0;
@@ -7040,6 +7049,7 @@ function dbg(text) {
 
 
 
+
   var FS_unlink = (path) => FS.unlink(path);
 
   var FSNode = /** @constructor */ function(parent, name, mode, rdev) {
@@ -7163,6 +7173,10 @@ var wasmImports = {
   /** @export */
   abort: _abort,
   /** @export */
+  callJSLogCallback: callJSLogCallback,
+  /** @export */
+  callJSUTM2WGS84Callback: callJSUTM2WGS84Callback,
+  /** @export */
   emscripten_date_now: _emscripten_date_now,
   /** @export */
   emscripten_get_now: _emscripten_get_now,
@@ -7182,6 +7196,8 @@ var wasmImports = {
   fd_seek: _fd_seek,
   /** @export */
   fd_write: _fd_write,
+  /** @export */
+  getentropy: _getentropy,
   /** @export */
   strftime_l: _strftime_l
 };
@@ -7214,7 +7230,8 @@ var dynCall_viijii = Module['dynCall_viijii'] = createExportWrapper('dynCall_vii
 var dynCall_iiiiij = Module['dynCall_iiiiij'] = createExportWrapper('dynCall_iiiiij');
 var dynCall_iiiiijj = Module['dynCall_iiiiijj'] = createExportWrapper('dynCall_iiiiijj');
 var dynCall_iiiiiijj = Module['dynCall_iiiiiijj'] = createExportWrapper('dynCall_iiiiiijj');
-
+var ___start_em_js = Module['___start_em_js'] = 10200024;
+var ___stop_em_js = Module['___stop_em_js'] = 10200280;
 
 // include: postamble.js
 // === Auto-generated postamble setup entry stuff ===
@@ -7225,6 +7242,7 @@ Module['FS_createPath'] = FS.createPath;
 Module['FS_createLazyFile'] = FS.createLazyFile;
 Module['FS_createDevice'] = FS.createDevice;
 Module['FS_createPreloadedFile'] = FS.createPreloadedFile;
+Module['FS'] = FS;
 Module['FS_createDataFile'] = FS.createDataFile;
 Module['FS_unlink'] = FS.unlink;
 var missingLibrarySymbols = [
@@ -7495,7 +7513,6 @@ var unexportedSymbols = [
   'FS_getMode',
   'FS_stdin_getChar_buffer',
   'FS_stdin_getChar',
-  'FS',
   'MEMFS',
   'TTY',
   'PIPEFS',
