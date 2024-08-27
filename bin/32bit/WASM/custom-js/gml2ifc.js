@@ -197,9 +197,9 @@ function jsToWGS84AsyncCallback(CRS, x, y, z) {
       FS.unlink('/data/' + 'input.ifc')
 
       // Print EPSG(s)
-      jsLogCallback('EPGS***; EPGS:4326 (WGS84)')
+      jsLogCallback('EPGS:****; EPGS:4326 (WGS84)')
       for (const [key, value] of Object.entries(g_crsTransformations)) {
-        jsLogCallback('- EPSG:' + key.replaceAll('#', ', ') + '; EPGS:4326: ' + value.x + ', ' + value.y);
+        jsLogCallback('- EPSG:' + key.replaceAll('#', ', ') + '; EPGS:4326 (WGS84) ' + value.x + ', ' + value.y);
       }
 
       // Download
