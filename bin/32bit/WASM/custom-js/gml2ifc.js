@@ -57,6 +57,8 @@ function addContent(fileName, fileExtension, fileContent) {
 
 function loadContent(fileName, fileExtension, fileContent) {
   g_fileName = fileName
+  g_crsTransformations = {}
+  g_pendingCRSTransformations = 0
   document.getElementById("txtLog").value = ''
   addContent(fileName, fileExtension, fileContent)
 }
@@ -193,6 +195,12 @@ function jsToWGS84AsyncCallback(CRS, x, y, z) {
       Module.gml2ifc(g_fileName);
 
       FS.unlink('/data/' + 'input.ifc')
+
+      // Print EPSG(s)
+      jsLogCallback('EPGS(s):')
+      for (const [key, ] of Object.entries(g_crsTransformations)) {
+        jsLogCallback('- EPSG:' + key.replaceAll('#', ', '));
+      }
 
       // Download
       const output = Module.FS.readFile('/data/output.ifc', { encoding: 'utf8' })
