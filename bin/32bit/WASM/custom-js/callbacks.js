@@ -1,32 +1,220 @@
-﻿function jsLogCallback(event) {
-  console.log(event);
+﻿var Module = {
+  onRuntimeInitialized: function () {
+    console.log('onRuntimeInitialized')
+  },
 }
+
+var g_fileName = null;
+
+function jsLogCallback(event) {
+  document.getElementById("txtLog").value += event;
+  document.getElementById("txtLog").value += '\n';
+}
+
+function getFileExtension(file) {
+  if (file && file.length > 4) {
+    return file.split('.').pop();
+  }
+
+  return null
+}
+
+function addContent(fileName, fileExtension, fileContent) {
+  console.log('addContent BEGIN: ' + fileName)
+
+  jsLogCallback('Loading ' + fileName + '...');
+
+  Module.unload()
+  Module['FS_createDataFile']('/data/', 'input.ifc', fileContent, true, true)
+
+  if ((fileExtension == 'gml') ||
+    (fileExtension == 'citygml') ||
+    (fileExtension == 'xml') ||
+    (fileExtension == 'json')) {
+    let transformationsCount = Module.gml2ifc_retrieveSRSData(fileName)
+    if (transformationsCount == 0) {
+      // Execute
+      Module.gml2ifc(fileName);
+
+      FS.unlink('/data/' + 'input.ifc')
+
+      // Download
+      const output = Module.FS.readFile('/data/output.ifc', { encoding: 'utf8' })
+      const blob = new Blob([output], { type: 'text/plain' })
+      const a = document.createElement('a')
+      a.setAttribute('download', fileName + ".ifc")
+      a.setAttribute('href', window.URL.createObjectURL(blob))
+      a.click();
+      a.remove()
+    }
+  }
+  else {
+    alert('Not supported.');
+  }
+
+  console.log('addContent END: ' + fileName)
+}
+
+function loadContent(fileName, fileExtension, fileContent) {
+  g_fileName = fileName
+  document.getElementById("txtLog").value = ''
+  addContent(fileName, fileExtension, fileContent)
+}
+
+function loadFile(file) {
+  var fileReader = new FileReader()
+  fileReader.onload = function () {
+    var fileContent = new Uint8Array(fileReader.result)
+
+    var fileExtension = getFileExtension(file.name)
+    loadContent(file.name, fileExtension, fileContent)
+  }
+
+  fileReader.readAsArrayBuffer(file)
+}
+
+// Emscripten/Docker
+function readFileFileSystem(file, callback) {
+  var rawFile = new XMLHttpRequest();
+  rawFile.open("GET", file);
+  rawFile.setRequestHeader("Content-Type", "text/xml");
+  rawFile.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+  rawFile.setRequestHeader("Access-Control-Allow-Origin", "*");
+  rawFile.onreadystatechange = function () {
+    if (rawFile.readyState === 4 && rawFile.status === 200) {
+      callback(rawFile.responseText);
+    }
+  }
+  rawFile.send();
+}
+
+// Emscripten/Docker
+function loadFileByPath(file) {
+  readFileFileSystem(`${file}`, function (fileContent) {
+    try {
+      var fileExtension = getFileExtension(file)
+      loadContent(file.name, fileExtension, fileContent)
+    }
+    catch (e) {
+      console.error(e);
+    }
+  });
+}
+
+function readFileByUri(file, callback) {
+  try {
+    var rawFile = new XMLHttpRequest()
+    rawFile.open('GET', "http://localhost:8088/fileservice/byUri?fileUri=" + encodeURIComponent(file))
+    rawFile.setRequestHeader("Content-type", "application/json; charset=utf-8")
+    rawFile.onreadystatechange = function () {
+      if (rawFile.readyState === 4 && rawFile.status === 200) {
+        callback(rawFile.responseText)
+      }
+    }
+    rawFile.send()
+  }
+  catch (ex) {
+    console.error(ex)
+  }
+}
+
+function loadFileByUri(file) {
+  let fileExtension = getFileExtension(file)
+  readFileByUri(`${file}`, function (fileContent) {
+    try {
+      loadContent(file, fileExtension, fileContent)
+    }
+    catch (e) {
+      console.error(e)
+    }
+  })
+}
+
 
 // ***** Map Tiler API ***** //
 
 maptilerClient.config.apiKey = "IzXwuNELmi1wQXfKZZOQ";
 
-var ptr = null;
-function jsUTM2WGS84Callback(x, y, z, CRS) {
+/* 
+Example:
+  GML_Parcelas.gml
 
+  // Map Tiler Server
   const result = maptilerClient.coordinates.transform(
     [431962.77, 4812381.63, 0.00],
     { sourceCrs: 25830, targetCrs: 4326, operations: "1623" });
   console.log(result);
+*/
 
-  let coordinates = x + ';' + y + ';' + z;
+var g_crsTransformations = {};
+var g_pendingCRSTransformations = 0;
+function jsGetWGS84Callback(CRS, x, y, z) {
+  const key = CRS + '#' + x + '#' + y + '#' + z;
+  if (!g_crsTransformations.hasOwnProperty(key)) {
+    return stringToNewUTF8(""); 
+  }
 
-  ptr = null;
-  stringToUTF8(coordinates, ptr, lengthBytesUTF8(coordinates) + 1);
+  let wgs84Data = g_crsTransformations[key];
 
-  return ptr;
+  let coordinates = "";
+  coordinates = wgs84Data.y;
+  coordinates += ' ';
+  coordinates += wgs84Data.x;
+  coordinates += ' ';
+  coordinates += wgs84Data.z;
+
+  return stringToNewUTF8(coordinates);
+
+  // Note: does not work in callbacks
+  //g_ptr = null;
+  //stringToUTF8(coordinates, g_ptr, lengthBytesUTF8(coordinates) + 1);
+  //return g_ptr;
 }
 
-/* 
-Example:
-  // GML_Parcelas.gml
+function jsToWGS84AsyncCallback(CRS, x, y, z) {
+  const key = CRS + '#' + x + '#' + y + '#' + z;
+  if (g_crsTransformations.hasOwnProperty(key)) {
+    return;
+  }
 
-  // Map Tiler Server + JavaScript
+  g_pendingCRSTransformations = g_pendingCRSTransformations + 1;
+
+  const promise = maptilerClient.coordinates.transform(
+    [x, y, z], {
+    sourceCrs: CRS, targetCrs: 4326/*WGS84*/, operations: "1623"
+  });
+
+  promise.then(response => {
+    g_crsTransformations[key] = { "x": response.results[0].x, "y": response.results[0].y, "z": response.results[0].z };
+
+    g_pendingCRSTransformations = g_pendingCRSTransformations - 1;
+    if (g_pendingCRSTransformations == 0) {
+      // Execute
+      Module.gml2ifc(g_fileName);
+
+      FS.unlink('/data/' + 'input.ifc')
+
+      // Download
+      const output = Module.FS.readFile('/data/output.ifc', { encoding: 'utf8' })
+      const blob = new Blob([output], { type: 'text/plain' })
+      const a = document.createElement('a')
+      a.setAttribute('download', g_fileName + ".ifc")
+      a.setAttribute('href', window.URL.createObjectURL(blob))
+      a.click();
+      a.remove()
+    }
+  }).catch(error => {
+    console.error(error);
+    alert(error);
+  });
+}
+
+
+/* 
+Example 2:
+  GML_Parcelas.gml
+
+  // Map Tiler Server and JaveScript
   const result = await maptilerClient.coordinates.search('25830');
   console.log(result);
 

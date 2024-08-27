@@ -1200,8 +1200,9 @@ function dbg(text) {
 // end include: runtime_debug.js
 // === Body ===
 
-function callJSLogCallback(szEvent,iLength) { jsLogCallback(UTF8ToString(szEvent, iLength)); }
-function callJSUTM2WGS84Callback(fX,fY,fZ,szCRS,iLength) { let a = jsUTM2WGS84Callback(fX, fY, fZ, UTF8ToString(szCRS, iLength)); console.log(a); return a; }
+function call_jsLogCallback(szEvent,iLength) { jsLogCallback(UTF8ToString(szEvent, iLength)); }
+function call_jsToWGS84Async(iCRS,fX,fY,fZ) { jsToWGS84AsyncCallback(iCRS, fX, fY, fZ); }
+function call_jsGetWGS84(iCRS,fX,fY,fZ) { return jsGetWGS84Callback(iCRS, fX, fY, fZ); }
 
 
 // end include: preamble.js
@@ -7173,9 +7174,11 @@ var wasmImports = {
   /** @export */
   abort: _abort,
   /** @export */
-  callJSLogCallback: callJSLogCallback,
+  call_jsGetWGS84: call_jsGetWGS84,
   /** @export */
-  callJSUTM2WGS84Callback: callJSUTM2WGS84Callback,
+  call_jsLogCallback: call_jsLogCallback,
+  /** @export */
+  call_jsToWGS84Async: call_jsToWGS84Async,
   /** @export */
   emscripten_date_now: _emscripten_date_now,
   /** @export */
@@ -7225,13 +7228,14 @@ var dynCall_ji = Module['dynCall_ji'] = createExportWrapper('dynCall_ji');
 var dynCall_jiii = Module['dynCall_jiii'] = createExportWrapper('dynCall_jiii');
 var dynCall_viji = Module['dynCall_viji'] = createExportWrapper('dynCall_viji');
 var dynCall_vijii = Module['dynCall_vijii'] = createExportWrapper('dynCall_vijii');
+var dynCall_iij = Module['dynCall_iij'] = createExportWrapper('dynCall_iij');
 var dynCall_jiji = Module['dynCall_jiji'] = createExportWrapper('dynCall_jiji');
 var dynCall_viijii = Module['dynCall_viijii'] = createExportWrapper('dynCall_viijii');
 var dynCall_iiiiij = Module['dynCall_iiiiij'] = createExportWrapper('dynCall_iiiiij');
 var dynCall_iiiiijj = Module['dynCall_iiiiijj'] = createExportWrapper('dynCall_iiiiijj');
 var dynCall_iiiiiijj = Module['dynCall_iiiiiijj'] = createExportWrapper('dynCall_iiiiiijj');
-var ___start_em_js = Module['___start_em_js'] = 10200024;
-var ___stop_em_js = Module['___stop_em_js'] = 10200280;
+var ___start_em_js = Module['___start_em_js'] = 10200216;
+var ___stop_em_js = Module['___stop_em_js'] = 10200488;
 
 // include: postamble.js
 // === Auto-generated postamble setup entry stuff ===

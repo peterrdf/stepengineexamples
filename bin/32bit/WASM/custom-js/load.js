@@ -55,7 +55,7 @@ function addContent(fileName, fileExtension, fileContent) {
     (fileExtension == 'citygml') ||
     (fileExtension == 'xml') ||
     (fileExtension == 'json')) {
-    Module.loadGIS(fileName, true, !embeddedMode(), SCALE_AND_CENTER)
+    Module.loadGIS(fileName, true, !embeddedMode(), SCALE_AND_CENTER) 
   }
   else {
     Module.loadSTEP(true, !embeddedMode(), SCALE_AND_CENTER)
