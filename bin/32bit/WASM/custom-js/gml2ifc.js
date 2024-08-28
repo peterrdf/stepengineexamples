@@ -37,6 +37,8 @@ function addContent(fileName, fileExtension, fileContent) {
       // Execute
       jsLogCallback('Exporting ' + fileName + '...');
       Module.gml2ifc(fileName);
+
+      let txtLog = document.getElementById('txtLog');
       txtLog.scrollTop = txtLog.scrollHeight;
 
       FS.unlink('/data/' + 'input.ifc')
@@ -197,6 +199,8 @@ async function jsToWGS84AsyncCallback(CRS, x, y, z) {
       // Execute
       jsLogCallback('Exporting ' + g_fileName + '...');
       Module.gml2ifc(g_fileName);
+
+      let txtLog = document.getElementById('txtLog');
       txtLog.scrollTop = txtLog.scrollHeight;
 
       FS.unlink('/data/' + 'input.ifc')
