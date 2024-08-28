@@ -15,10 +15,14 @@
 <body>
   <div id="map"></div>
   <script>
-      try {
+      try {          
           const queryString = window.location.search;
           const urlParams = new URLSearchParams(queryString);
 
+          // Title
+          window.document.title = urlParams.get('title');
+
+          // Map
           const longitude = urlParams.get('longitude');
           const latitude = urlParams.get('latitude');
 

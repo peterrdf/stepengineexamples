@@ -232,7 +232,12 @@ function showOnTilerMap(longitude, latitude) {
   try {
     let mapUrl = window.location.href.replace('gml2ifc', 'map');
 
-    window.open(mapUrl + '?longitude=' + longitude + '&latitude=' + latitude, '_blank');
+    window.open(
+      mapUrl +
+      '?title=' + encodeURIComponent(g_fileName) +
+      '&longitude=' + longitude +
+      '&latitude=' + latitude,
+      '_blank');
   }
   catch (ex) {
       console.error(ex);
