@@ -7,8 +7,10 @@
 var g_fileName = null;
 
 function jsLogCallback(event) {
-  document.getElementById("txtLog").value += event;
-  document.getElementById("txtLog").value += '\n';
+  let txtLog = document.getElementById('txtLog');
+  txtLog.value += event;
+  txtLog.value += '\n';
+  txtLog.scrollTop = txtLog.scrollHeight;
 }
 
 function getFileExtension(file) {
@@ -174,7 +176,7 @@ function jsGetWGS84Callback(CRS, x, y, z) {
   //return g_ptr;
 }
 
-function jsToWGS84AsyncCallback(CRS, x, y, z) {
+async function jsToWGS84AsyncCallback(CRS, x, y, z) {
   const key = CRS + '#' + x + '#' + y + '#' + z;
   if (g_crsTransformations.hasOwnProperty(key)) {
     return;
@@ -187,7 +189,7 @@ function jsToWGS84AsyncCallback(CRS, x, y, z) {
     sourceCrs: CRS, targetCrs: 4326/*WGS84*/, operations: "1623"
   });
 
-  promise.then(response => {
+  await promise.then(response => {
     g_crsTransformations[key] = { "x": response.results[0].x, "y": response.results[0].y, "z": response.results[0].z };
 
     g_pendingCRSTransformations = g_pendingCRSTransformations - 1;
@@ -236,7 +238,6 @@ function showOnTilerMap(longitude, latitude) {
       console.error(ex);
     }
 }
-
 
 /* 
 Example 2:
