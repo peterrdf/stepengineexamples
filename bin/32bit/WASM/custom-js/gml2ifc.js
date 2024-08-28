@@ -10,7 +10,6 @@ function jsLogCallback(event) {
   let txtLog = document.getElementById('txtLog');
   txtLog.value += event;
   txtLog.value += '\n';
-  txtLog.scrollTop = txtLog.scrollHeight;
 }
 
 function getFileExtension(file) {
@@ -38,6 +37,7 @@ function addContent(fileName, fileExtension, fileContent) {
       // Execute
       jsLogCallback('Exporting ' + fileName + '...');
       Module.gml2ifc(fileName);
+      txtLog.scrollTop = txtLog.scrollHeight;
 
       FS.unlink('/data/' + 'input.ifc')
 
@@ -197,6 +197,7 @@ async function jsToWGS84AsyncCallback(CRS, x, y, z) {
       // Execute
       jsLogCallback('Exporting ' + g_fileName + '...');
       Module.gml2ifc(g_fileName);
+      txtLog.scrollTop = txtLog.scrollHeight;
 
       FS.unlink('/data/' + 'input.ifc')
 
