@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>3D Terrain Map</title>
+  <link rel="icon" type="image/x-icon" href="favicon/favicon.ico" />
   <script src="https://cdn.maptiler.com/maptiler-sdk-js/latest/maptiler-sdk.umd.min.js"></script>
   <link href="https://cdn.maptiler.com/maptiler-sdk-js/latest/maptiler-sdk.css" rel="stylesheet" />
   <style>
@@ -16,15 +17,10 @@
   <script>
       try {
           const queryString = window.location.search;
-          console.log(queryString);
-
           const urlParams = new URLSearchParams(queryString);
 
-          const longitude = urlParams.get('longitude')
-          console.log(longitude);
-
-          const latitude = urlParams.get('latitude')
-          console.log(latitude);
+          const longitude = urlParams.get('longitude');
+          const latitude = urlParams.get('latitude');
 
           maptilersdk.config.apiKey = 'IzXwuNELmi1wQXfKZZOQ';
           const map = new maptilersdk.Map({
