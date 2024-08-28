@@ -34,6 +34,7 @@ function addContent(fileName, fileExtension, fileContent) {
     let transformationsCount = Module.gml2ifc_retrieveSRSData(fileName)
     if (transformationsCount == 0) {
       // Execute
+      jsLogCallback('Exporting ' + fileName + '...');
       Module.gml2ifc(fileName);
 
       FS.unlink('/data/' + 'input.ifc')
@@ -192,14 +193,22 @@ function jsToWGS84AsyncCallback(CRS, x, y, z) {
     g_pendingCRSTransformations = g_pendingCRSTransformations - 1;
     if (g_pendingCRSTransformations == 0) {
       // Execute
+      jsLogCallback('Exporting ' + g_fileName + '...');
       Module.gml2ifc(g_fileName);
 
       FS.unlink('/data/' + 'input.ifc')
 
       // Print EPSG(s)
       jsLogCallback('EPGS:****; EPGS:4326 (WGS84)')
+
+      let showOnMap = true;
       for (const [key, value] of Object.entries(g_crsTransformations)) {
         jsLogCallback('- EPSG:' + key.replaceAll('#', ', ') + '; EPGS:4326 (WGS84) ' + value.x + ', ' + value.y);
+
+        if (showOnMap) {
+          showOnMap = false;
+          showOnTilerMap(value.x, value.y);       
+        }
       }
 
       // Download
@@ -209,12 +218,23 @@ function jsToWGS84AsyncCallback(CRS, x, y, z) {
       a.setAttribute('download', g_fileName + ".ifc")
       a.setAttribute('href', window.URL.createObjectURL(blob))
       a.click();
-      a.remove()
+      a.remove()     
     }
   }).catch(error => {
     console.error(error);
     alert(error);
   });
+}
+
+function showOnTilerMap(longitude, latitude) {
+  try {
+    let mapUrl = window.location.href.replace('gml2ifc', 'map');
+
+    window.open(mapUrl + '?longitude=' + longitude + '&latitude=' + latitude, '_blank');
+  }
+  catch (ex) {
+      console.error(ex);
+    }
 }
 
 
