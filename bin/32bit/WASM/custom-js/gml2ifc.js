@@ -5,11 +5,21 @@
 }
 
 var g_fileName = null;
+var g_logCache = [];
 
 function jsLogCallback(event) {
+  g_logCache.push(event + '\n');
+}
+
+function printLogCache() {
   let txtLog = document.getElementById('txtLog');
-  txtLog.value += event;
-  txtLog.value += '\n';
+  for (let i = 0; i < g_logCache.length; i++) {
+    txtLog.value += g_logCache[i];
+  }
+
+  g_logCache = [];
+
+  txtLog.scrollTop = txtLog.scrollHeight;
 }
 
 function getFileExtension(file) {
@@ -32,14 +42,12 @@ function addContent(fileName, fileExtension, fileContent) {
     (fileExtension == 'citygml') ||
     (fileExtension == 'xml') ||
     (fileExtension == 'json')) {
-    let transformationsCount = Module.gml2ifc_retrieveSRSData(fileName)
+      let transformationsCount = Module.gml2ifc_retrieveSRSData(fileName)
     if (transformationsCount == 0) {
       // Execute
       jsLogCallback('Exporting ' + fileName + '...');
       Module.gml2ifc(fileName);
-
-      let txtLog = document.getElementById('txtLog');
-      txtLog.scrollTop = txtLog.scrollHeight;
+      printLogCache();
 
       FS.unlink('/data/' + 'input.ifc')
 
@@ -199,9 +207,7 @@ async function jsToWGS84AsyncCallback(CRS, x, y, z) {
       // Execute
       jsLogCallback('Exporting ' + g_fileName + '...');
       Module.gml2ifc(g_fileName);
-
-      let txtLog = document.getElementById('txtLog');
-      txtLog.scrollTop = txtLog.scrollHeight;
+      printLogCache();
 
       FS.unlink('/data/' + 'input.ifc')
 
