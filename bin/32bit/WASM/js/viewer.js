@@ -479,7 +479,7 @@ var Viewer = function () {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
     gl.enable(gl.SAMPLE_COVERAGE)
-    gl.sampleCoverage(2.0, false)
+    gl.sampleCoverage(1.0, false)
 
     gl.enable(gl.DEPTH_TEST)
     gl.depthFunc(gl.LEQUAL)
