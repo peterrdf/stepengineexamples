@@ -60,7 +60,6 @@ var Viewer = function () {
    */
   this._mtxModelView = mat4.create()
   this._mtxProjection = mat4.create()
-  this._mtxNormal = mat4.create()
   this._mtxInversePMV = mat4.create()
   this._updateProjectionMatrix = true
   this._applyTranslations = true
@@ -68,9 +67,9 @@ var Viewer = function () {
   /*
    * Scene
    */
-  this._clearColor = [0.0, 0.0, 0.0, 0.0]
-  this._pointLightingLocation = vec3.create([0, 0, 10000])
-  this._materialShininess = 30.0
+  this._clearColor = [0.9, 0.9, 0.9, 1.0]
+  this._pointLightPosition = vec3.create([0.25, 0.25, 1])
+  this._materialShininess = 50.0
   this._defaultEyeVector = [0, 0, -5]
   this._eyeVector = vec3.create(this._defaultEyeVector)
   this._rotateX = 30
@@ -179,76 +178,99 @@ var Viewer = function () {
 
     gl.useProgram(this._shaderProgram)
 
-    this._shaderProgram.aVertexPosition = gl.getAttribLocation(
+    /* Vertex Shader */
+    this._shaderProgram.VertexPosition = gl.getAttribLocation(
       this._shaderProgram,
-      'aVertexPosition'
-    )
-    this._shaderProgram.uPMatrix = gl.getUniformLocation(
-      this._shaderProgram,
-      'uPMatrix'
-    )
-    this._shaderProgram.uMVMatrix = gl.getUniformLocation(
-      this._shaderProgram,
-      'uMVMatrix'
-    )
-    this._shaderProgram.aVertexNormal = gl.getAttribLocation(
-      this._shaderProgram,
-      'aVertexNormal'
-    )
-    this._shaderProgram.aTextureCoord = gl.getAttribLocation(
-      this._shaderProgram,
-      'aTextureCoord'
+      'Position'
     )
 
-    this._shaderProgram.uNMatrix = gl.getUniformLocation(
+    this._shaderProgram.VertexNormal = gl.getAttribLocation(
       this._shaderProgram,
-      'uNMatrix'
+      'Normal'
     )
 
-    this._shaderProgram.uPointLightingLocation = gl.getUniformLocation(
+    this._shaderProgram.ProjectionMatrix = gl.getUniformLocation(
       this._shaderProgram,
-      'uPointLightingLocation'
+      'ProjectionMatrix'
+    )
+    this._shaderProgram.ModelViewMatrix = gl.getUniformLocation(
+      this._shaderProgram,
+      'ModelViewMatrix'
+    )    
+
+    this._shaderProgram.NormalMatrix = gl.getUniformLocation(
+      this._shaderProgram,
+      'NormalMatrix'
     )
 
-    this._shaderProgram.uMaterialAmbientColor = gl.getUniformLocation(
+    this._shaderProgram.DiffuseMaterial = gl.getUniformLocation(
       this._shaderProgram,
-      'uMaterialAmbientColor'
-    )
-    this._shaderProgram.uTransparency = gl.getUniformLocation(
-      this._shaderProgram,
-      'uTransparency'
-    )
-    this._shaderProgram.uMaterialSpecularColor = gl.getUniformLocation(
-      this._shaderProgram,
-      'uMaterialSpecularColor'
-    )
-    this._shaderProgram.uMaterialDiffuseColor = gl.getUniformLocation(
-      this._shaderProgram,
-      'uMaterialDiffuseColor'
-    )
-    this._shaderProgram.uMaterialEmissiveColor = gl.getUniformLocation(
-      this._shaderProgram,
-      'uMaterialEmissiveColor'
+      'DiffuseMaterial'
     )
 
-    this._shaderProgram.uMaterialShininess = gl.getUniformLocation(
+    this._shaderProgram.EnableLighting = gl.getUniformLocation(
       this._shaderProgram,
-      'uMaterialShininess'
+      'EnableLighting'
     )
 
-    this._shaderProgram.samplerUniform = gl.getUniformLocation(
+    /* Fragment Shader */
+    this._shaderProgram.LightPosition = gl.getUniformLocation(
       this._shaderProgram,
-      'uSampler'
-    )
-    this._shaderProgram.uUseTexture = gl.getUniformLocation(
-      this._shaderProgram,
-      'uUseTexture'
+      'LightPosition'
     )
 
-    this._shaderProgram.uUseBinnPhongModel = gl.getUniformLocation(
+    this._shaderProgram.AmbientMaterial = gl.getUniformLocation(
       this._shaderProgram,
-      'uUseBinnPhongModel'
+      'AmbientMaterial'
     )
+
+    this._shaderProgram.SpecularMaterial = gl.getUniformLocation(
+      this._shaderProgram,
+      'SpecularMaterial'
+    )
+
+    this._shaderProgram.Transparency = gl.getUniformLocation(
+      this._shaderProgram,
+      'Transparency'
+    )
+
+    // #todo
+    //this._shaderProgram.uMaterialEmissiveColor = gl.getUniformLocation(
+    //  this._shaderProgram,
+    //  'uMaterialEmissiveColor'
+    //)
+
+    this._shaderProgram.Shininess = gl.getUniformLocation(
+      this._shaderProgram,
+      'Shininess'
+    )
+
+    this._shaderProgram.AmbientLightWeighting = gl.getUniformLocation(
+      this._shaderProgram,
+      'AmbientLightWeighting'
+    )
+
+    this._shaderProgram.DiffuseLightWeighting = gl.getUniformLocation(
+      this._shaderProgram,
+      'DiffuseLightWeighting'
+    )
+
+    this._shaderProgram.SpecularLightWeighting = gl.getUniformLocation(
+      this._shaderProgram,
+      'SpecularLightWeighting'
+    )
+
+    // #todo
+    //this._shaderProgram.uUseTexture = gl.getUniformLocation(
+    //  this._shaderProgram,
+    //  'uUseTexture'
+    //)
+
+    // #todo
+    //this._shaderProgram.samplerUniform = gl.getUniformLocation(
+    //  this._shaderProgram,
+    //  'uSampler'
+    //)    
 
     this._defaultTexture = this.createTexture('texture.png')
 
@@ -260,15 +282,28 @@ var Viewer = function () {
    */
   Viewer.prototype.setLights = function () {
     gl.uniform3f(
-      this._shaderProgram.uPointLightingLocation,
-      this._pointLightingLocation[0],
-      this._pointLightingLocation[1],
-      this._pointLightingLocation[2]
+      this._shaderProgram.LightPosition,
+      this._pointLightPosition[0],
+      this._pointLightPosition[1],
+      this._pointLightPosition[2]
     )
+
     gl.uniform1f(
-      this._shaderProgram.uMaterialShininess,
+      this._shaderProgram.Shininess,
       this._materialShininess
     )
+
+    gl.uniform3f(
+      this._shaderProgram.AmbientLightWeighting,
+      0.4, 0.4, 0.4)
+
+    gl.uniform3f(
+      this._shaderProgram.DiffuseLightWeighting,
+      0.95, 0.95, 0.95)
+
+    gl.uniform3f(
+      this._shaderProgram.SpecularLightWeighting,
+      0.15, 0.15, 0.15)
   }
 
   /*
@@ -364,7 +399,7 @@ var Viewer = function () {
     )
 
     gl.uniformMatrix4fv(
-      this._shaderProgram.uPMatrix,
+      this._shaderProgram.ProjectionMatrix,
       false,
       this._mtxProjection
     )
@@ -417,19 +452,15 @@ var Viewer = function () {
     }
 
     gl.uniformMatrix4fv(
-      this._shaderProgram.uMVMatrix,
+      this._shaderProgram.ModelViewMatrix,
       false,
       this._mtxModelView
     )
 
     /*
-     * Normals matrix
+     * Normal matrix
      */
-    mat4.set(this._mtxModelView, this._mtxNormal)
-    mat4.inverse(this._mtxNormal)
-    mat4.transpose(this._mtxNormal)
-
-    gl.uniformMatrix4fv(this._shaderProgram.uNMatrix, false, this._mtxNormal)
+    gl.uniformMatrix3fv(this._shaderProgram.NormalMatrix, false, mat4.toMat3(this._mtxModelView))
   }
 
   /**
@@ -446,6 +477,9 @@ var Viewer = function () {
       this._clearColor[3]
     )
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+
+    gl.enable(gl.SAMPLE_COVERAGE)
+    gl.sampleCoverage(2.0, false)
 
     gl.enable(gl.DEPTH_TEST)
     gl.depthFunc(gl.LEQUAL)
@@ -1167,10 +1201,10 @@ var Viewer = function () {
    * Default view
    */ 
   Viewer.prototype.resetView = function () {
-    this._clearColor = [0.0, 0.0, 0.0, 0.0]
+    this._clearColor = [0.9, 0.9, 0.9, 1.0]
 
-    this._pointLightingLocation = vec3.create([0, 0, 10000])
-    this._materialShininess = 30.0
+    this._pointLightPosition = vec3.create([0.25, 0.25, 1])
+    this._materialShininess = 50.0
 
     this._defaultEyeVector = [0, 0, -5]
     this._eyeVector = vec3.create(this._defaultEyeVector)
@@ -1602,7 +1636,7 @@ var Viewer = function () {
     )
 
     gl.uniformMatrix4fv(
-      this._shaderProgram.uPMatrix,
+      this._shaderProgram.ProjectionMatrix,
       false,
       this._mtxProjection
     )
@@ -1620,19 +1654,15 @@ var Viewer = function () {
     mat4.rotate(this._mtxModelView, (this._rotateY * Math.PI) / 180, [0, 1, 0])
 
     gl.uniformMatrix4fv(
-      this._shaderProgram.uMVMatrix,
+      this._shaderProgram.ModelViewMatrix,
       false,
       this._mtxModelView
     )
 
     /*
-     * Normals matrix
+     * Normal matrix
      */
-    mat4.set(this._mtxModelView, this._mtxNormal)
-    mat4.inverse(this._mtxNormal)
-    mat4.transpose(this._mtxNormal)
-
-    gl.uniformMatrix4fv(this._shaderProgram.uNMatrix, false, this._mtxNormal)
+    gl.uniformMatrix3fv(this._shaderProgram.NormalMatrix, false, mat4.toMat3(this._mtxModelView))
 
     gl.viewport(
       (gl.canvas.width / 2.5) - (NAVIGATION_VIEW_LENGTH),
@@ -1667,24 +1697,24 @@ var Viewer = function () {
 
     gl.bindBuffer(gl.ARRAY_BUFFER, geometry.VBO)
     gl.vertexAttribPointer(
-      this._shaderProgram.aVertexPosition,
+      this._shaderProgram.VertexPosition,
       3,
       gl.FLOAT,
       false,
       geometry.vertexSizeInBytes,
       0
     )
-    gl.enableVertexAttribArray(this._shaderProgram.aVertexPosition)
+    gl.enableVertexAttribArray(this._shaderProgram.VertexPosition)
 
     gl.vertexAttribPointer(
-      this._shaderProgram.aVertexNormal,
+      this._shaderProgram.VertexNormal,
       3,
       gl.FLOAT,
       true,
       geometry.vertexSizeInBytes,
       12
     )
-    gl.enableVertexAttribArray(this._shaderProgram.aVertexNormal)
+    gl.enableVertexAttribArray(this._shaderProgram.VertexNormal)
 
     if (geometry.vertexSizeInBytes === 32) {
       gl.vertexAttribPointer(
@@ -1780,19 +1810,15 @@ var Viewer = function () {
       mat4.multiply(this._mtxModelView, mtxTransformation, this._mtxModelView)
 
       gl.uniformMatrix4fv(
-        this._shaderProgram.uMVMatrix,
+        this._shaderProgram.ModelViewMatrix,
         false,
         this._mtxModelView
       )
 
       /*
-       * Normals matrix
-       */
-      mat4.set(this._mtxModelView, this._mtxNormal)
-      mat4.inverse(this._mtxNormal)
-      mat4.transpose(this._mtxNormal)
-
-      gl.uniformMatrix4fv(this._shaderProgram.uNMatrix, false, this._mtxNormal)
+      * Normal matrix
+      */
+      gl.uniformMatrix3fv(this._shaderProgram.NormalMatrix, false, mat4.toMat3(this._mtxModelView))
     } // if (!!matrix && (matrix.length == 16))
   }
 
@@ -1810,8 +1836,9 @@ var Viewer = function () {
 
     this.setDefultMatrices()
 
-    gl.uniform1f(this._shaderProgram.uUseBinnPhongModel, 1.0)
-    gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableLighting, 1.0)
+    // #todo
+    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
 
     if (!opaqueObjects) {
       gl.enable(gl.BLEND)
@@ -1864,38 +1891,40 @@ var Viewer = function () {
             }
 
             if (conceptualFace.material.texture) {
-              gl.uniform1f(this._shaderProgram.uUseTexture, 1.0)
+              // #todo
+              //gl.uniform1f(this._shaderProgram.uUseTexture, 1.0)
 
-              gl.activeTexture(gl.TEXTURE0)
-              gl.bindTexture(
-                gl.TEXTURE_2D,
-                this.getTexture(conceptualFace.material.texture.name))
+              //gl.activeTexture(gl.TEXTURE0)
+              //gl.bindTexture(
+              //  gl.TEXTURE_2D,
+              //  this.getTexture(conceptualFace.material.texture.name))
 
-              gl.uniform1i(this._shaderProgram.samplerUniform, 0)
+              //gl.uniform1i(this._shaderProgram.samplerUniform, 0)
             } // if (conceptualFace.material.texture)
             else {
               gl.uniform3f(
-                this._shaderProgram.uMaterialAmbientColor,
+                this._shaderProgram.AmbientMaterial,
                 conceptualFace.material.ambient[0],
                 conceptualFace.material.ambient[1],
                 conceptualFace.material.ambient[2])
               gl.uniform3f(
-                this._shaderProgram.uMaterialDiffuseColor,
-                conceptualFace.material.diffuse[0] / 2.0,
-                conceptualFace.material.diffuse[1] / 2.0,
-                conceptualFace.material.diffuse[2] / 2.0)
+                this._shaderProgram.DiffuseMaterial,
+                conceptualFace.material.diffuse[0],
+                conceptualFace.material.diffuse[1],
+                conceptualFace.material.diffuse[2])
               gl.uniform3f(
-                this._shaderProgram.uMaterialSpecularColor,
-                conceptualFace.material.specular[0] / 2.0,
-                conceptualFace.material.specular[1] / 2.0,
-                conceptualFace.material.specular[2] / 2.0)
-              gl.uniform3f(
-                this._shaderProgram.uMaterialEmissiveColor,
-                conceptualFace.material.emissive[0] / 3.0,
-                conceptualFace.material.emissive[1] / 3.0,
-                conceptualFace.material.emissive[2] / 3.0)
+                this._shaderProgram.SpecularMaterial,
+                conceptualFace.material.specular[0],
+                conceptualFace.material.specular[1],
+                conceptualFace.material.specular[2])
+              // #todo
+              //gl.uniform3f(
+              //  this._shaderProgram.uMaterialEmissiveColor,
+              //  conceptualFace.material.emissive[0] / 3.0,
+              //  conceptualFace.material.emissive[1] / 3.0,
+              //  conceptualFace.material.emissive[2] / 3.0)
               gl.uniform1f(
-                this._shaderProgram.uTransparency,
+                this._shaderProgram.Transparency,
                 conceptualFace.material.transparency)
             } // else if (conceptualFace.material.texture)
 
@@ -1907,7 +1936,8 @@ var Viewer = function () {
               0)
 
             if (conceptualFace.material.texture) {
-              gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+              // #todo
+              //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
             }
           } // for (let j = ...
         } // for (let g = ...
@@ -1935,30 +1965,32 @@ var Viewer = function () {
 
     this.setDefultMatrices()
 
-    gl.uniform1f(this._shaderProgram.uUseBinnPhongModel, 1.0)
-    gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableLighting, 1.0)
+    // #todo
+    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
 
     gl.uniform3f(
-      this._shaderProgram.uMaterialAmbientColor,
+      this._shaderProgram.AmbientMaterial,
       NOT_SELECTED_OBJECT_COLOR[0],
       NOT_SELECTED_OBJECT_COLOR[1],
       NOT_SELECTED_OBJECT_COLOR[2])
     gl.uniform3f(
-      this._shaderProgram.uMaterialSpecularColor,
+      this._shaderProgram.SpecularMaterial,
       NOT_SELECTED_OBJECT_COLOR[0],
       NOT_SELECTED_OBJECT_COLOR[1],
       NOT_SELECTED_OBJECT_COLOR[2])
     gl.uniform3f(
-      this._shaderProgram.uMaterialDiffuseColor,
+      this._shaderProgram.DiffuseMaterial,
       NOT_SELECTED_OBJECT_COLOR[0],
       NOT_SELECTED_OBJECT_COLOR[1],
       NOT_SELECTED_OBJECT_COLOR[2])
-    gl.uniform3f(
-      this._shaderProgram.uMaterialEmissiveColor,
-      NOT_SELECTED_OBJECT_COLOR[0],
-      NOT_SELECTED_OBJECT_COLOR[1],
-      NOT_SELECTED_OBJECT_COLOR[2])
-    gl.uniform1f(this._shaderProgram.uTransparency, NOT_SELECTED_OBJECT_TRANSPARENCY)
+    // #todo
+    //gl.uniform3f(
+    //  this._shaderProgram.uMaterialEmissiveColor,
+    //  NOT_SELECTED_OBJECT_COLOR[0],
+    //  NOT_SELECTED_OBJECT_COLOR[1],
+    //  NOT_SELECTED_OBJECT_COLOR[2])
+    gl.uniform1f(this._shaderProgram.Transparency, NOT_SELECTED_OBJECT_TRANSPARENCY)
 
     gl.enable(gl.BLEND)
     gl.blendEquation(gl.FUNC_ADD)
@@ -2028,14 +2060,16 @@ var Viewer = function () {
 
     this.setDefultMatrices()    
 
-    gl.uniform1f(this._shaderProgram.uUseBinnPhongModel, 0.0)
-    gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableLighting, 0.0)
+    // #todo
+    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
 
-    gl.uniform3f(this._shaderProgram.uMaterialAmbientColor, 0.0, 0.0, 0.0)
-    gl.uniform1f(this._shaderProgram.uTransparency, 1.0)
-    gl.uniform3f(this._shaderProgram.uMaterialSpecularColor, 0.0, 0.0, 0.0)
-    gl.uniform3f(this._shaderProgram.uMaterialDiffuseColor, 0.0, 0.0, 0.0)
-    gl.uniform3f(this._shaderProgram.uMaterialEmissiveColor, 0.0, 0.0, 0.0)
+    gl.uniform3f(this._shaderProgram.AmbientMaterial, 0.0, 0.0, 0.0)
+    gl.uniform1f(this._shaderProgram.Transparency, 1.0)
+    gl.uniform3f(this._shaderProgram.SpecularMaterial, 0.0, 0.0, 0.0)
+    gl.uniform3f(this._shaderProgram.DiffuseMaterial, 0.0, 0.0, 0.0)
+    // #todo
+    //gl.uniform3f(this._shaderProgram.uMaterialEmissiveColor, 0.0, 0.0, 0.0) 
 
     try {
       for (let i = 0; i < instances.length; i++) {
@@ -2090,14 +2124,16 @@ var Viewer = function () {
 
     this.setDefultMatrices()
 
-    gl.uniform1f(this._shaderProgram.uUseBinnPhongModel, 0.0)
-    gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableLighting, 0.0)
+    // #todo
+    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
 
-    gl.uniform3f(this._shaderProgram.uMaterialAmbientColor, 0.0, 0.0, 0.0)
-    gl.uniform1f(this._shaderProgram.uTransparency, 1.0)
-    gl.uniform3f(this._shaderProgram.uMaterialSpecularColor, 0.0, 0.0, 0.0)
-    gl.uniform3f(this._shaderProgram.uMaterialDiffuseColor, 0.0, 0.0, 0.0)
-    gl.uniform3f(this._shaderProgram.uMaterialEmissiveColor, 0.0, 0.0, 0.0)
+    gl.uniform3f(this._shaderProgram.AmbientMaterial, 0.0, 0.0, 0.0)
+    gl.uniform1f(this._shaderProgram.Transparency, 1.0)
+    gl.uniform3f(this._shaderProgram.SpecularMaterial, 0.0, 0.0, 0.0)
+    gl.uniform3f(this._shaderProgram.DiffuseMaterial, 0.0, 0.0, 0.0)
+    // #todo
+    //gl.uniform3f(this._shaderProgram.uMaterialEmissiveColor, 0.0, 0.0, 0.0)
 
     try {
       for (let i = 0; i < instances.length; i++) {
@@ -2152,14 +2188,16 @@ var Viewer = function () {
 
     this.setDefultMatrices()
 
-    gl.uniform1f(this._shaderProgram.uUseBinnPhongModel, 0.0)
-    gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableLighting, 0.0)
+    // #todo
+    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
 
-    gl.uniform3f(this._shaderProgram.uMaterialAmbientColor, 0.0, 0.0, 0.0)
-    gl.uniform1f(this._shaderProgram.uTransparency, 1.0)
-    gl.uniform3f(this._shaderProgram.uMaterialSpecularColor, 0.0, 0.0, 0.0)
-    gl.uniform3f(this._shaderProgram.uMaterialDiffuseColor, 0.0, 0.0, 0.0)
-    gl.uniform3f(this._shaderProgram.uMaterialEmissiveColor, 0.0, 0.0, 0.0)
+    gl.uniform3f(this._shaderProgram.AmbientMaterial, 0.0, 0.0, 0.0)
+    gl.uniform1f(this._shaderProgram.Transparency, 1.0)
+    gl.uniform3f(this._shaderProgram.SpecularMaterial, 0.0, 0.0, 0.0)
+    gl.uniform3f(this._shaderProgram.DiffuseMaterial, 0.0, 0.0, 0.0)
+    // #todo
+    //gl.uniform3f(this._shaderProgram.uMaterialEmissiveColor, 0.0, 0.0, 0.0)
 
     try {
       for (let i = 0; i < instances.length; i++) {
@@ -2236,9 +2274,10 @@ var Viewer = function () {
 
       this.setDefultMatrices()
 
-      gl.uniform1f(this._shaderProgram.uUseBinnPhongModel, 0.0)
-      gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
-      gl.uniform1f(this._shaderProgram.uTransparency, 1.0)
+      gl.uniform1f(this._shaderProgram.EnableLighting, 0.0)
+      // #todo
+      //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+      gl.uniform1f(this._shaderProgram.Transparency, 1.0)
 
       gl.bindFramebuffer(gl.FRAMEBUFFER, this._selectionFramebuffer)
 
@@ -2256,7 +2295,7 @@ var Viewer = function () {
         }
 
         gl.uniform3f(
-          this._shaderProgram.uMaterialAmbientColor,
+          this._shaderProgram.AmbientMaterial,
           this._instancesSelectionColors[i][0],
           this._instancesSelectionColors[i][1],
           this._instancesSelectionColors[i][2])
@@ -2314,8 +2353,9 @@ var Viewer = function () {
 
     this.setDefultMatrices()
 
-    gl.uniform1f(this._shaderProgram.uUseBinnPhongModel, 1.0)
-    gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableLighting, 1.0)
+    // #todo
+    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
 
     gl.enable(gl.BLEND)
     gl.blendEquation(gl.FUNC_ADD)
@@ -2323,26 +2363,27 @@ var Viewer = function () {
 
     try {
       gl.uniform3f(
-        this._shaderProgram.uMaterialAmbientColor,
+        this._shaderProgram.AmbientMaterial,
         SELECTED_OBJECT_AMBIENT_COLOR[0],
         SELECTED_OBJECT_AMBIENT_COLOR[1],
         SELECTED_OBJECT_AMBIENT_COLOR[2])
       gl.uniform3f(
-        this._shaderProgram.uMaterialSpecularColor,
+        this._shaderProgram.SpecularMaterial,
         SELECTED_OBJECT_SPECULAR_COLOR[0],
         SELECTED_OBJECT_SPECULAR_COLOR[1],
         SELECTED_OBJECT_SPECULAR_COLOR[2])
       gl.uniform3f(
-        this._shaderProgram.uMaterialDiffuseColor,
+        this._shaderProgram.DiffuseMaterial,
         SELECTED_OBJECT_DIFFUSE_COLOR[0],
         SELECTED_OBJECT_DIFFUSE_COLOR[1],
         SELECTED_OBJECT_DIFFUSE_COLOR[2])
-      gl.uniform3f(
-        this._shaderProgram.uMaterialEmissiveColor,
-        SELECTED_OBJECT_EMISSIVE_COLOR[0],
-        SELECTED_OBJECT_EMISSIVE_COLOR[1],
-        SELECTED_OBJECT_EMISSIVE_COLOR[2])
-      gl.uniform1f(this._shaderProgram.uTransparency, SELECTED_OBJECT_TRANSPARENCY)
+      // #todo
+      //gl.uniform3f(
+      //  this._shaderProgram.uMaterialEmissiveColor,
+      //  SELECTED_OBJECT_EMISSIVE_COLOR[0],
+      //  SELECTED_OBJECT_EMISSIVE_COLOR[1],
+      //  SELECTED_OBJECT_EMISSIVE_COLOR[2])
+      gl.uniform1f(this._shaderProgram.Transparency, SELECTED_OBJECT_TRANSPARENCY)
 
       for (let index = 0; index < this._selectedObjects.length; index++) {
         let instance = g_instances[this._selectedObjects[index] - 1]
@@ -2392,14 +2433,16 @@ var Viewer = function () {
 
     this.setDefultMatrices()
 
-    gl.uniform1f(this._shaderProgram.uUseBinnPhongModel, 1.0)
-    gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableLighting, 1.0)
+    // #todo
+    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
 
-    gl.uniform3f(this._shaderProgram.uMaterialAmbientColor, 0.0, 0.0, 0.0)    
-    gl.uniform3f(this._shaderProgram.uMaterialSpecularColor, 0.0, 0.0, 0.0)
-    gl.uniform3f(this._shaderProgram.uMaterialDiffuseColor, 0.0, 0.0, 0.0)
-    gl.uniform3f(this._shaderProgram.uMaterialEmissiveColor, 0.0, 0.0, 0.0)
-    gl.uniform1f(this._shaderProgram.uTransparency, 1.0)
+    gl.uniform3f(this._shaderProgram.AmbientMaterial, 0.0, 0.0, 0.0)    
+    gl.uniform3f(this._shaderProgram.SpecularMaterial, 0.0, 0.0, 0.0)
+    gl.uniform3f(this._shaderProgram.DiffuseMaterial, 0.0, 0.0, 0.0)
+    // #todo
+    //gl.uniform3f(this._shaderProgram.uMaterialEmissiveColor, 0.0, 0.0, 0.0)
+    gl.uniform1f(this._shaderProgram.Transparency, 1.0)
 
     try {
       if (this._gridVBO === null) {
@@ -2431,14 +2474,14 @@ var Viewer = function () {
 
       gl.bindBuffer(gl.ARRAY_BUFFER, this._gridVBO)
       gl.vertexAttribPointer(
-        this._shaderProgram.aVertexPosition,
+        this._shaderProgram.VertexPosition,
         3,
         gl.FLOAT,
         false,
         12,
         0)
 
-      gl.enableVertexAttribArray(this._shaderProgram.aVertexPosition)
+      gl.enableVertexAttribArray(this._shaderProgram.VertexPosition)
 
       gl.drawArrays(gl.LINES, 0, this._gridVBO.count )
     } catch (ex) {
@@ -2476,14 +2519,16 @@ var Viewer = function () {
 
     this.setDefultMatrices()
 
-    gl.uniform1f(this._shaderProgram.uUseBinnPhongModel, 1.0)
-    gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableLighting, 1.0)
+    // #todo
+    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
 
-    gl.uniform3f(this._shaderProgram.uMaterialAmbientColor, 0.0, 0.0, 0.0)    
-    gl.uniform3f(this._shaderProgram.uMaterialSpecularColor, 0.0, 0.0, 0.0)
-    gl.uniform3f(this._shaderProgram.uMaterialDiffuseColor, 0.0, 0.0, 0.0)
-    gl.uniform3f(this._shaderProgram.uMaterialEmissiveColor, 0.0, 0.0, 0.0)
-    gl.uniform1f(this._shaderProgram.uTransparency, 1.0)
+    gl.uniform3f(this._shaderProgram.AmbientMaterial, 0.0, 0.0, 0.0)    
+    gl.uniform3f(this._shaderProgram.SpecularMaterial, 0.0, 0.0, 0.0)
+    gl.uniform3f(this._shaderProgram.DiffuseMaterial, 0.0, 0.0, 0.0)
+    // #todo
+    //gl.uniform3f(this._shaderProgram.uMaterialEmissiveColor, 0.0, 0.0, 0.0)
+    gl.uniform1f(this._shaderProgram.Transparency, 1.0)
 
     try {
       for (let index = 0; index < this._selectedObjects.length; index++) {
@@ -2614,7 +2659,7 @@ var Viewer = function () {
           gl.bindBuffer(gl.ARRAY_BUFFER, instance.BBVBO)
 
           gl.vertexAttribPointer(
-            this._shaderProgram.aVertexPosition,
+            this._shaderProgram.VertexPosition,
             3,
             gl.FLOAT,
             false,
@@ -2622,7 +2667,7 @@ var Viewer = function () {
             0
           )
 
-          gl.enableVertexAttribArray(this._shaderProgram.aVertexPosition)
+          gl.enableVertexAttribArray(this._shaderProgram.VertexPosition)
 
           gl.drawArrays(gl.LINES, 0, 24);
         }
@@ -2693,8 +2738,9 @@ var Viewer = function () {
 
     this.setDefultMatrices()
 
-    gl.uniform1f(this._shaderProgram.uUseBinnPhongModel, 1.0)
-    gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableLighting, 1.0)
+    // #todo
+    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
 
     gl.enable(gl.BLEND)
     gl.blendEquation(gl.FUNC_ADD)
@@ -2702,26 +2748,27 @@ var Viewer = function () {
 
     try {
       gl.uniform3f(
-        this._shaderProgram.uMaterialAmbientColor,
+        this._shaderProgram.AmbientMaterial,
         PICKED_OBJECT_AMBIENT_COLOR[0],
         PICKED_OBJECT_AMBIENT_COLOR[1],
         PICKED_OBJECT_AMBIENT_COLOR[2])
       gl.uniform3f(
-        this._shaderProgram.uMaterialSpecularColor,
+        this._shaderProgram.SpecularMaterial,
         PICKED_OBJECT_SPECULAR_COLOR[0],
         PICKED_OBJECT_SPECULAR_COLOR[1],
         PICKED_OBJECT_SPECULAR_COLOR[2])
       gl.uniform3f(
-        this._shaderProgram.uMaterialDiffuseColor,
+        this._shaderProgram.DiffuseMaterial,
         PICKED_OBJECT_DIFFUSE_COLOR[0],
         PICKED_OBJECT_DIFFUSE_COLOR[1],
         PICKED_OBJECT_DIFFUSE_COLOR[2])
-      gl.uniform3f(
-        this._shaderProgram.uMaterialEmissiveColor,
-        PICKED_OBJECT_EMISSIVE_COLOR[0],
-        PICKED_OBJECT_EMISSIVE_COLOR[1],
-        PICKED_OBJECT_EMISSIVE_COLOR[2])
-      gl.uniform1f(this._shaderProgram.uTransparency, PICKED_OBJECT_TRANSPARENCY)
+      // #todo
+      //gl.uniform3f(
+      //  this._shaderProgram.uMaterialEmissiveColor,
+      //  PICKED_OBJECT_EMISSIVE_COLOR[0],
+      //  PICKED_OBJECT_EMISSIVE_COLOR[1],
+      //  PICKED_OBJECT_EMISSIVE_COLOR[2])
+      gl.uniform1f(this._shaderProgram.Transparency, PICKED_OBJECT_TRANSPARENCY)
 
       var instance = g_instances[this._pickedObject - 1]
       for (let g = 0; g < instance.geometry.length; g++) {
