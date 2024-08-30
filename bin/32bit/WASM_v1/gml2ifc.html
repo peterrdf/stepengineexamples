@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html class="model-page" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>RDF Ltd.</title>
+    <link rel="icon" type="image/x-icon" href="favicon/favicon.ico" />
+    <style>
+        html, body {
+            width: 99%;
+            height: auto;
+            margin: 5px;
+        }
+
+        select {
+            margin: 5px;
+        }
+
+        .column1 {
+            float: left;
+            width: 24%;
+        }
+
+        .column2 {
+            float: right;
+            width: 75%;
+        }
+
+        @font-face {
+            font-family: 'OpenSans-Bold';
+            src: url('resources/Open Sans Font/OpenSans-Bold.ttf');
+        }
+
+        .label-bold {
+            font-family: OpenSans-Bold;
+        }
+    </style>
+
+    <style>
+        #loader {
+            position: absolute;
+            display: none; /* Hidden by default */
+            left: 50%;
+            top: 50%;
+            z-index: 10000;
+            width: 120px;
+            height: 120px;
+            margin: -76px 0 0 -76px;
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Add animation to "page content" */
+        .animate-bottom {
+            position: relative;
+            -webkit-animation-name: animatebottom;
+            -webkit-animation-duration: 1s;
+            animation-name: animatebottom;
+            animation-duration: 1s
+        }
+
+        @-webkit-keyframes animatebottom {
+            from {
+                bottom: -100px;
+                opacity: 0
+            }
+
+            to {
+                bottom: 0px;
+                opacity: 1
+            }
+        }
+
+        @keyframes animatebottom {
+            from {
+                bottom: -100px;
+                opacity: 0
+            }
+
+            to {
+                bottom: 0;
+                opacity: 1
+            }
+        }
+
+        #overlay {
+            position: fixed; /* Sit on top of the page content */
+            display: none; /* Hidden by default */
+            width: 100%; /* Full width (cover the whole page) */
+            height: 100%; /* Full height (cover the whole page) */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+            z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+            cursor: wait; /* Add a pointer on hover */
+        }
+    </style>
+
+    <script>
+        function showProgressUI(show) {
+            document.getElementById('overlay').style.display = show ? 'block' : 'none';
+            document.getElementById('loader').style.display = show ? 'block' : 'none';
+        }
+    </script>
+</head>
+
+<body>
+    <input id="load_ifc_file" type="file" accept=".gml, citygml, .xml, .json"
+           onclick="this.value = null;" onchange="loadFile(this.files[0]);" style="display:none;" />
+
+    <div style="width: stretch; height: 60px; background-color: black; border-radius: 10px;">
+        <img src="favicon/rdf-logo.png" style="height: 40px; margin: 10px 10px 10px 10px; " />
+    </div>
+    <div class="row" style="margin-top: 5px;">
+        <div class="column1">
+            <label for="load" class="label-bold"><b>Convert GML, CityGML or CityJSON to IFC</b></label>
+            <br />
+            <button id="load" onclick="document.getElementById('load_ifc_file').click();" style="background-color: #00B1D9; height: 40px; color: white; margin-top: 5px;">LOAD</button>
+            <hr />
+        </div>
+        <div class="column2">
+            <textarea id="txtLog" readonly rows="54" style="width: 100%; height: inherit; overflow-y: scroll; resize: none; border-radius: 10px;"></textarea>
+        </div>
+    </div>
+
+    <div id="overlay"></div>
+    <span id="loader"></span>
+
+    <script src="https://cdn.maptiler.com/client-js/v1.8.1/maptiler-client.umd.min.js"></script>
+    <script src="custom-js/gml2ifc.js"></script>
+    <script async src="emifcengine.js"></script>
+</body>
+
+</html>
