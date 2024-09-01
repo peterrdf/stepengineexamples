@@ -69,16 +69,20 @@
     <script id="shader-vs" type="x-shader/x-vertex">
         attribute vec4 Position;
         attribute vec3 Normal;
+        attribute vec2 UV;
 
         uniform mat4 ProjectionMatrix;
         uniform mat4 ModelViewMatrix;
         uniform mat3 NormalMatrix;
         uniform vec3 DiffuseMaterial;
         uniform float EnableLighting;
+        uniform float EnableTexture;
 
         varying vec3 EyespaceNormal;
         varying vec3 Diffuse;
-        varying float IsLightingEnabled;
+        varying float _EnableLighting;
+        varying float _EnableTexture;
+        varying vec2 _UV;
 
         void main()
         {
@@ -88,9 +92,12 @@
                 Diffuse = DiffuseMaterial;
             }
 
-            IsLightingEnabled = EnableLighting;
+            _EnableLighting = EnableLighting;
+            _EnableTexture = EnableTexture;
+            _UV = UV;
 
             gl_Position = ProjectionMatrix * ModelViewMatrix * Position;
+            gl_PointSize = 5.0;
         }
     </script>
 
@@ -99,7 +106,9 @@
 
         varying vec3 EyespaceNormal;
         varying vec3 Diffuse;
-        varying float IsLightingEnabled;
+        varying float _EnableLighting;
+        varying float _EnableTexture;
+        varying vec2 _UV;
 
         uniform vec3 LightPosition;
         uniform vec3 AmbientMaterial;
@@ -109,29 +118,37 @@
         uniform vec3 AmbientLightWeighting;
         uniform vec3 DiffuseLightWeighting;
         uniform vec3 SpecularLightWeighting;
+        uniform sampler2D Sampler;
 
         void main()
         {
-            if (IsLightingEnabled > 0.5)
+            if (_EnableTexture < 0.5)
             {
-                vec3 N = normalize(EyespaceNormal);
-                vec3 L = normalize(LightPosition);
-                vec3 E = vec3(0, 0, 1);
-                vec3 H = normalize(L + E);
+                if (_EnableLighting > 0.5)
+                {
+                    vec3 N = normalize(EyespaceNormal);
+                    vec3 L = normalize(LightPosition);
+                    vec3 E = vec3(0, 0, 1);
+                    vec3 H = normalize(L + E);
 
-                float df = max(0.0, dot(N, L));
-                float sf = max(0.0, dot(N, H));
-                sf = pow(sf, Shininess);
+                    float df = max(0.0, dot(N, L));
+                    float sf = max(0.0, dot(N, H));
+                    sf = pow(sf, Shininess);
 
-                vec3 color =
-                    (AmbientMaterial * AmbientLightWeighting) +
-                    (df * Diffuse * DiffuseLightWeighting) +
-                    (sf * SpecularMaterial * SpecularLightWeighting);
-                gl_FragColor = vec4(color, Transparency);
+                    vec3 color =
+                        (AmbientMaterial * AmbientLightWeighting) +
+                        (df * Diffuse * DiffuseLightWeighting) +
+                        (sf * SpecularMaterial * SpecularLightWeighting);
+                    gl_FragColor = vec4(color, Transparency);
+                }
+                else
+                {
+                    gl_FragColor = vec4(AmbientMaterial, 1);
+                }
             }
             else
             {
-                gl_FragColor = vec4(AmbientMaterial, 1);
+                gl_FragColor = texture2D(Sampler, _UV);
             }
         }
     </script>

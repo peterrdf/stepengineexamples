@@ -189,6 +189,11 @@ var Viewer = function () {
       'Normal'
     )
 
+    this._shaderProgram.UV = gl.getAttribLocation(
+      this._shaderProgram,
+      'UV'
+    )
+
     this._shaderProgram.ProjectionMatrix = gl.getUniformLocation(
       this._shaderProgram,
       'ProjectionMatrix'
@@ -211,6 +216,11 @@ var Viewer = function () {
     this._shaderProgram.EnableLighting = gl.getUniformLocation(
       this._shaderProgram,
       'EnableLighting'
+    )
+
+    this._shaderProgram.EnableTexture = gl.getUniformLocation(
+      this._shaderProgram,
+      'EnableTexture'
     )
 
     /* Fragment Shader */
@@ -258,19 +268,12 @@ var Viewer = function () {
     this._shaderProgram.SpecularLightWeighting = gl.getUniformLocation(
       this._shaderProgram,
       'SpecularLightWeighting'
-    )
+    )    
 
-    // #todo
-    //this._shaderProgram.uUseTexture = gl.getUniformLocation(
-    //  this._shaderProgram,
-    //  'uUseTexture'
-    //)
-
-    // #todo
-    //this._shaderProgram.samplerUniform = gl.getUniformLocation(
-    //  this._shaderProgram,
-    //  'uSampler'
-    //)    
+    this._shaderProgram.Sampler = gl.getUniformLocation(
+      this._shaderProgram,
+      'Sampler'
+    )    
 
     this._defaultTexture = this.createTexture('texture.png')
 
@@ -1718,14 +1721,14 @@ var Viewer = function () {
 
     if (geometry.vertexSizeInBytes === 32) {
       gl.vertexAttribPointer(
-        this._shaderProgram.aTextureCoord,
+        this._shaderProgram.UV,
         2,
         gl.FLOAT,
         false,
         geometry.vertexSizeInBytes,
         24
       )
-      gl.enableVertexAttribArray(this._shaderProgram.aTextureCoord)
+      gl.enableVertexAttribArray(this._shaderProgram.UV)
     }
 
     return true
@@ -1837,8 +1840,7 @@ var Viewer = function () {
     this.setDefultMatrices()
 
     gl.uniform1f(this._shaderProgram.EnableLighting, 1.0)
-    // #todo
-    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableTexture, 0.0)
 
     if (!opaqueObjects) {
       gl.enable(gl.BLEND)
@@ -1891,15 +1893,14 @@ var Viewer = function () {
             }
 
             if (conceptualFace.material.texture) {
-              // #todo
-              //gl.uniform1f(this._shaderProgram.uUseTexture, 1.0)
+              gl.uniform1f(this._shaderProgram.EnableTexture, 1.0)
 
-              //gl.activeTexture(gl.TEXTURE0)
-              //gl.bindTexture(
-              //  gl.TEXTURE_2D,
-              //  this.getTexture(conceptualFace.material.texture.name))
+              gl.activeTexture(gl.TEXTURE0)
+              gl.bindTexture(
+                gl.TEXTURE_2D,
+                this.getTexture(conceptualFace.material.texture.name))
 
-              //gl.uniform1i(this._shaderProgram.samplerUniform, 0)
+              gl.uniform1i(this._shaderProgram.Sampler, 0)
             } // if (conceptualFace.material.texture)
             else {
               gl.uniform3f(
@@ -1936,8 +1937,7 @@ var Viewer = function () {
               0)
 
             if (conceptualFace.material.texture) {
-              // #todo
-              //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+              gl.uniform1f(this._shaderProgram.EnableTexture, 0.0)
             }
           } // for (let j = ...
         } // for (let g = ...
@@ -1966,8 +1966,7 @@ var Viewer = function () {
     this.setDefultMatrices()
 
     gl.uniform1f(this._shaderProgram.EnableLighting, 1.0)
-    // #todo
-    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableTexture, 0.0)
 
     gl.uniform3f(
       this._shaderProgram.AmbientMaterial,
@@ -2061,8 +2060,7 @@ var Viewer = function () {
     this.setDefultMatrices()    
 
     gl.uniform1f(this._shaderProgram.EnableLighting, 0.0)
-    // #todo
-    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableTexture, 0.0)
 
     gl.uniform3f(this._shaderProgram.AmbientMaterial, 0.0, 0.0, 0.0)
     gl.uniform1f(this._shaderProgram.Transparency, 1.0)
@@ -2125,8 +2123,7 @@ var Viewer = function () {
     this.setDefultMatrices()
 
     gl.uniform1f(this._shaderProgram.EnableLighting, 0.0)
-    // #todo
-    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableTexture, 0.0)
 
     gl.uniform3f(this._shaderProgram.AmbientMaterial, 0.0, 0.0, 0.0)
     gl.uniform1f(this._shaderProgram.Transparency, 1.0)
@@ -2189,8 +2186,7 @@ var Viewer = function () {
     this.setDefultMatrices()
 
     gl.uniform1f(this._shaderProgram.EnableLighting, 0.0)
-    // #todo
-    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableTexture, 0.0)
 
     gl.uniform3f(this._shaderProgram.AmbientMaterial, 0.0, 0.0, 0.0)
     gl.uniform1f(this._shaderProgram.Transparency, 1.0)
@@ -2275,8 +2271,7 @@ var Viewer = function () {
       this.setDefultMatrices()
 
       gl.uniform1f(this._shaderProgram.EnableLighting, 0.0)
-      // #todo
-      //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+      gl.uniform1f(this._shaderProgram.EnableTexture, 0.0)
       gl.uniform1f(this._shaderProgram.Transparency, 1.0)
 
       gl.bindFramebuffer(gl.FRAMEBUFFER, this._selectionFramebuffer)
@@ -2354,8 +2349,7 @@ var Viewer = function () {
     this.setDefultMatrices()
 
     gl.uniform1f(this._shaderProgram.EnableLighting, 1.0)
-    // #todo
-    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableTexture, 0.0)
 
     gl.enable(gl.BLEND)
     gl.blendEquation(gl.FUNC_ADD)
@@ -2434,8 +2428,7 @@ var Viewer = function () {
     this.setDefultMatrices()
 
     gl.uniform1f(this._shaderProgram.EnableLighting, 1.0)
-    // #todo
-    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableTexture, 0.0)
 
     gl.uniform3f(this._shaderProgram.AmbientMaterial, 0.0, 0.0, 0.0)    
     gl.uniform3f(this._shaderProgram.SpecularMaterial, 0.0, 0.0, 0.0)
@@ -2520,8 +2513,7 @@ var Viewer = function () {
     this.setDefultMatrices()
 
     gl.uniform1f(this._shaderProgram.EnableLighting, 1.0)
-    // #todo
-    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableTexture, 0.0)
 
     gl.uniform3f(this._shaderProgram.AmbientMaterial, 0.0, 0.0, 0.0)    
     gl.uniform3f(this._shaderProgram.SpecularMaterial, 0.0, 0.0, 0.0)
@@ -2739,8 +2731,7 @@ var Viewer = function () {
     this.setDefultMatrices()
 
     gl.uniform1f(this._shaderProgram.EnableLighting, 1.0)
-    // #todo
-    //gl.uniform1f(this._shaderProgram.uUseTexture, 0.0)
+    gl.uniform1f(this._shaderProgram.EnableTexture, 0.0)
 
     gl.enable(gl.BLEND)
     gl.blendEquation(gl.FUNC_ADD)
