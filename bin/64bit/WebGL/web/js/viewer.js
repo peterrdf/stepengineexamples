@@ -514,7 +514,7 @@ var Viewer = function () {
     * Projection matrix
     */
     mat4.identity(this._mtxProjection);
-    mat4.perspective(45, gl.canvas.width / gl.canvas.height, 0.1, 1000000.0, this._mtxProjection);
+    mat4.perspective(45, gl.canvas.width / gl.canvas.height, 0.001, 1000000.0, this._mtxProjection);
 
     gl.uniformMatrix4fv(this._shaderProgram.ProjectionMatrix, false, this._mtxProjection);
   }
@@ -534,7 +534,7 @@ var Viewer = function () {
     mat4.identity(this._mtxModelView);
     mat4.translate(this._mtxModelView, this._eyeVector);
     mat4.rotate(this._mtxModelView, this._rotateX * Math.PI / 180, [1, 0, 0]);
-    mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 1, 0]);
+    mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 0, 1]);
 
     /*
     * Fit the image
@@ -2032,7 +2032,7 @@ var Viewer = function () {
           mat4.translate(this._mtxModelView, [transformation._41, transformation._42, transformation._43]);
 
           mat4.rotate(this._mtxModelView, this._rotateX * Math.PI / 180, [1, 0, 0]);
-          mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 1, 0]);
+          mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 0, 1]);
 
           var vertexMin = [staticInstance.Xmin, staticInstance.Ymin, staticInstance.Zmin, 1.0];
           var transformedVertexMin = [0, 0, 0, 0];
@@ -2167,7 +2167,7 @@ var Viewer = function () {
           this._mtxModelView[15] = 1;
           mat4.translate(this._mtxModelView, this._eyeVector);
           mat4.rotate(this._mtxModelView, this._rotateX * Math.PI / 180, [1, 0, 0]);
-          mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 1, 0]);
+          mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 0, 1]);
 
           mat4.translate(this._mtxModelView, [transformation._41, transformation._42, transformation._43]);
 
@@ -2333,7 +2333,7 @@ var Viewer = function () {
       this._mtxModelView[15] = 1;
       mat4.translate(this._mtxModelView, this._eyeVector);
       mat4.rotate(this._mtxModelView, this._rotateX * Math.PI / 180, [1, 0, 0]);
-      mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 1, 0]);
+      mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 0, 1]);
 
       mat4.translate(this._mtxModelView, [transformation._41, transformation._42, transformation._43]);
 
@@ -2479,7 +2479,7 @@ var Viewer = function () {
           this._mtxModelView[15] = 1;
           mat4.translate(this._mtxModelView, this._eyeVector);
           mat4.rotate(this._mtxModelView, this._rotateX * Math.PI / 180, [1, 0, 0]);
-          mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 1, 0]);
+          mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 0, 1]);
           mat4.translate(this._mtxModelView, [transformation._41, transformation._42, transformation._43]);
 
           /*
@@ -2643,7 +2643,7 @@ var Viewer = function () {
           this._mtxModelView[15] = 1;
           mat4.translate(this._mtxModelView, this._eyeVector);
           mat4.rotate(this._mtxModelView, this._rotateX * Math.PI / 180, [1, 0, 0]);
-          mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 1, 0]);
+          mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 0, 1]);
           mat4.translate(this._mtxModelView, [transformation._41, transformation._42, transformation._43]);
 
           /*
@@ -3562,7 +3562,7 @@ var Viewer = function () {
       mat4.identity(this._mtxModelView);
 
       mat4.rotate(this._mtxModelView, this._rotateX * Math.PI / 180, [1, 0, 0]);
-      mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 1, 0]);
+      mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 0, 1]);
 
       mat4.multiply(this._mtxModelView, transformation, this._mtxModelView);
 
@@ -3577,7 +3577,7 @@ var Viewer = function () {
     mat4.identity(this._mtxModelView);
     mat4.translate(this._mtxModelView, this._eyeVector);
     mat4.rotate(this._mtxModelView, this._rotateX * Math.PI / 180, [1, 0, 0]);
-    mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 1, 0]);
+    mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 0, 1]);
 
     /*
     * Fit the image
