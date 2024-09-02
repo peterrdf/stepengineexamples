@@ -1287,6 +1287,9 @@ var Viewer = function () {
 
     this.setDefultMatrices();
 
+    gl.uniform1f(this._shaderProgram.EnableLighting, 1.0)
+    gl.uniform1f(this._shaderProgram.EnableTexture, 0.0)
+
     if (!opaqueObjects) {
       gl.enable(gl.BLEND);
       gl.blendEquation(gl.FUNC_ADD);
