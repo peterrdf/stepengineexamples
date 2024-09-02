@@ -58,8 +58,6 @@ var Viewer = function () {
   */
   this._mtxModelView = mat4.create();
   this._mtxProjection = mat4.create();
-  this._mtxNormal = mat4.create();
-  this._mtxInversePMV = mat4.create();
 
   /*
   * Scene
@@ -535,10 +533,6 @@ var Viewer = function () {
     */
     mat4.identity(this._mtxModelView);
     mat4.translate(this._mtxModelView, this._eyeVector);
-
-    mat4.multiply(this._mtxProjection, this._mtxModelView, this._mtxInversePMV);
-    mat4.inverse(this._mtxInversePMV);
-
     mat4.rotate(this._mtxModelView, this._rotateX * Math.PI / 180, [1, 0, 0]);
     mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 1, 0]);
 
@@ -567,11 +561,7 @@ var Viewer = function () {
     /*
     * Normals matrix
     */
-    mat4.set(this._mtxModelView, this._mtxNormal);
-    mat4.inverse(this._mtxNormal);
-    mat4.transpose(this._mtxNormal);
-
-    gl.uniformMatrix4fv(this._shaderProgram.NormalMatrix, false, this._mtxNormal);
+    gl.uniformMatrix3fv(this._shaderProgram.NormalMatrix, false, mat4.toMat3(this._mtxModelView));
   }
 
   /**
@@ -2170,10 +2160,6 @@ var Viewer = function () {
           this._mtxModelView[14] = 0;
           this._mtxModelView[15] = 1;
           mat4.translate(this._mtxModelView, this._eyeVector);
-
-          mat4.multiply(this._mtxProjection, this._mtxModelView, this._mtxInversePMV);
-          mat4.inverse(this._mtxInversePMV);
-
           mat4.rotate(this._mtxModelView, this._rotateX * Math.PI / 180, [1, 0, 0]);
           mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 1, 0]);
 
@@ -2204,11 +2190,7 @@ var Viewer = function () {
           /*
           * Normals matrix
           */
-          mat4.set(this._mtxModelView, this._mtxNormal);
-          mat4.inverse(this._mtxNormal);
-          mat4.transpose(this._mtxNormal);
-
-          gl.uniformMatrix4fv(this._shaderProgram.NormalMatrix, false, this._mtxNormal);
+          gl.uniformMatrix3fv(this._shaderProgram.NormalMatrix, false, mat4.toMat3(this._mtxModelView));
 
           for (var f = 0; f < staticInstanceData.facesCohorts.length; f++) {
             if (this.areAllStaticObjectsHidden(g_staticInstances[i].objectsCount, transformation)) {
@@ -2344,10 +2326,6 @@ var Viewer = function () {
       this._mtxModelView[14] = 0;
       this._mtxModelView[15] = 1;
       mat4.translate(this._mtxModelView, this._eyeVector);
-
-      mat4.multiply(this._mtxProjection, this._mtxModelView, this._mtxInversePMV);
-      mat4.inverse(this._mtxInversePMV);
-
       mat4.rotate(this._mtxModelView, this._rotateX * Math.PI / 180, [1, 0, 0]);
       mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 1, 0]);
 
@@ -2377,12 +2355,7 @@ var Viewer = function () {
 
       /*
       * Normals matrix
-      */
-      mat4.set(this._mtxModelView, this._mtxNormal);
-      mat4.inverse(this._mtxNormal);
-      mat4.transpose(this._mtxNormal);
-
-      gl.uniformMatrix4fv(this._shaderProgram.NormalMatrix, false, this._mtxNormal);
+      */gl.uniformMatrix3fv(this._shaderProgram.NormalMatrix, false, mat4.toMat3(this._mtxModelView));
 
       for (var f = 0; f < staticInstanceData.facesCohorts.length; f++) {
         var facesCohort = staticInstanceData.facesCohorts[f];
@@ -2499,13 +2472,8 @@ var Viewer = function () {
           this._mtxModelView[14] = 0;
           this._mtxModelView[15] = 1;
           mat4.translate(this._mtxModelView, this._eyeVector);
-
-          mat4.multiply(this._mtxProjection, this._mtxModelView, this._mtxInversePMV);
-          mat4.inverse(this._mtxInversePMV);
-
           mat4.rotate(this._mtxModelView, this._rotateX * Math.PI / 180, [1, 0, 0]);
           mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 1, 0]);
-
           mat4.translate(this._mtxModelView, [transformation._41, transformation._42, transformation._43]);
 
           /*
@@ -2533,11 +2501,7 @@ var Viewer = function () {
           /*
           * Normals matrix
           */
-          mat4.set(this._mtxModelView, this._mtxNormal);
-          mat4.inverse(this._mtxNormal);
-          mat4.transpose(this._mtxNormal);
-
-          gl.uniformMatrix4fv(this._shaderProgram.NormalMatrix, false, this._mtxNormal);
+          gl.uniformMatrix3fv(this._shaderProgram.NormalMatrix, false, mat4.toMat3(this._mtxModelView));
 
           for (var w = 0; w < staticInstanceData.wireframesCohorts.length; w++) {
             if (this.areAllStaticObjectsHidden(g_staticInstances[i].objectsCount, transformation)) {
@@ -2672,13 +2636,8 @@ var Viewer = function () {
           this._mtxModelView[14] = 0;
           this._mtxModelView[15] = 1;
           mat4.translate(this._mtxModelView, this._eyeVector);
-
-          mat4.multiply(this._mtxProjection, this._mtxModelView, this._mtxInversePMV);
-          mat4.inverse(this._mtxInversePMV);
-
           mat4.rotate(this._mtxModelView, this._rotateX * Math.PI / 180, [1, 0, 0]);
           mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 1, 0]);
-
           mat4.translate(this._mtxModelView, [transformation._41, transformation._42, transformation._43]);
 
           /*
@@ -2706,11 +2665,7 @@ var Viewer = function () {
           /*
           * Normals matrix
           */
-          mat4.set(this._mtxModelView, this._mtxNormal);
-          mat4.inverse(this._mtxNormal);
-          mat4.transpose(this._mtxNormal);
-
-          gl.uniformMatrix4fv(this._shaderProgram.NormalMatrix, false, this._mtxNormal);
+          gl.uniformMatrix3fv(this._shaderProgram.NormalMatrix, false, mat4.toMat3(this._mtxModelView));
 
           for (var f = 0; f < staticInstanceData.facesCohorts.length; f++) {
             if (this.areAllStaticObjectsHidden(g_staticInstances[i].objectsCount, transformation)) {
@@ -3615,10 +3570,6 @@ var Viewer = function () {
     */
     mat4.identity(this._mtxModelView);
     mat4.translate(this._mtxModelView, this._eyeVector);
-
-    mat4.multiply(this._mtxProjection, this._mtxModelView, this._mtxInversePMV);
-    mat4.inverse(this._mtxInversePMV);
-
     mat4.rotate(this._mtxModelView, this._rotateX * Math.PI / 180, [1, 0, 0]);
     mat4.rotate(this._mtxModelView, this._rotateY * Math.PI / 180, [0, 1, 0]);
 
@@ -3649,11 +3600,7 @@ var Viewer = function () {
     /*
     * Normals matrix
     */
-    mat4.set(this._mtxModelView, this._mtxNormal);
-    mat4.inverse(this._mtxNormal);
-    mat4.transpose(this._mtxNormal);
-
-    gl.uniformMatrix4fv(this._shaderProgram.NormalMatrix, false, this._mtxNormal);
+    gl.uniformMatrix3fv(this._shaderProgram.NormalMatrix, false, mat4.toMat3(this._mtxModelView));
   }
 
   /**
