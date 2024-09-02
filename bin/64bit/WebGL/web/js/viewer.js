@@ -514,7 +514,7 @@ var Viewer = function () {
     * Projection matrix
     */
     mat4.identity(this._mtxProjection);
-    mat4.perspective(45, gl.canvas.width / gl.canvas.height, 0.001, 1000000.0, this._mtxProjection);
+    mat4.perspective(45, gl.canvas.width / gl.canvas.height, 0.1, 1000000.0, this._mtxProjection);
 
     gl.uniformMatrix4fv(this._shaderProgram.ProjectionMatrix, false, this._mtxProjection);
   }
