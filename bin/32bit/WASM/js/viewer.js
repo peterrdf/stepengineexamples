@@ -433,7 +433,7 @@ var Viewer = function () {
     mat4.inverse(this._mtxInversePMV)
 
     mat4.rotate(this._mtxModelView, (this._rotateX * Math.PI) / 180, [1, 0, 0])
-    mat4.rotate(this._mtxModelView, (this._rotateY * Math.PI) / 180, [0, 1, 0])
+    mat4.rotate(this._mtxModelView, (this._rotateY * Math.PI) / 180, [0, 0, 1])
 
     /*
      * Fit the image
@@ -1654,7 +1654,7 @@ var Viewer = function () {
     mat4.inverse(this._mtxInversePMV)
 
     mat4.rotate(this._mtxModelView, (this._rotateX * Math.PI) / 180, [1, 0, 0])
-    mat4.rotate(this._mtxModelView, (this._rotateY * Math.PI) / 180, [0, 1, 0])
+    mat4.rotate(this._mtxModelView, (this._rotateY * Math.PI) / 180, [0, 0, 1])
 
     gl.uniformMatrix4fv(
       this._shaderProgram.ModelViewMatrix,
@@ -1764,7 +1764,7 @@ var Viewer = function () {
       mat4.rotate(
         this._mtxModelView,
         (this._rotateY * Math.PI) / 180,
-        [0, 1, 0]
+        [0, 0, 1]
       )
 
       /*
