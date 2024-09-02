@@ -302,6 +302,10 @@
                     return;
                 }
 
+                let mtxInversePMV = mat4.create();
+                mat4.multiply(g_viewer._mtxProjection, g_viewer._mtxModelView, mtxInversePMV)
+                mat4.inverse(mtxInversePMV)
+
                 var zoomFactor = zoomIn ? (g_viewer._worldDimensions.MaxDistance * 0.05) : -(g_viewer._worldDimensions.MaxDistance * 0.05);
 
                 var near = [0, 0, 0, 0];
@@ -311,10 +315,10 @@
                 var X = (g_zoomStartX - (gl.canvas.width / 2.0)) / (gl.canvas.width / 2.0);
                 var Y = -(g_zoomStartY - (gl.canvas.height / 2.0)) / (gl.canvas.height / 2.0);
 
-                mat4.multiplyVec4(g_viewer._mtxInversePMV, [X, Y, -1.0, 1.0], near);
+                mat4.multiplyVec4(mtxInversePMV, [X, Y, -1.0, 1.0], near);
                 vec3.scale(near, 1 / near[3]);
 
-                mat4.multiplyVec4(g_viewer._mtxInversePMV, [X, Y, 0.0, 1.0], far);
+                mat4.multiplyVec4(mtxInversePMV, [X, Y, 0.0, 1.0], far);
                 vec3.scale(far, 1 / far[3]);
 
                 // calculate world space view vector
@@ -335,6 +339,10 @@
         */
         function mouseWheelZoom(zoomIn, zoomX, zoomY, speed) {
             try {
+                let mtxInversePMV = mat4.create();
+                mat4.multiply(g_viewer._mtxProjection, g_viewer._mtxModelView, mtxInversePMV)
+                mat4.inverse(mtxInversePMV)
+
                 var zoomFactor = zoomIn ? 0.35 * speed : -0.35 * speed;
 
                 var near = [0, 0, 0, 0];
@@ -344,10 +352,10 @@
                 var X = (zoomX - (gl.canvas.width / 2.0)) / (gl.canvas.width / 2.0);
                 var Y = -(zoomY - (gl.canvas.height / 2.0)) / (gl.canvas.height / 2.0);
 
-                mat4.multiplyVec4(g_viewer._mtxInversePMV, [X, Y, -1.0, 1.0], near);
+                mat4.multiplyVec4(mtxInversePMV, [X, Y, -1.0, 1.0], near);
                 vec3.scale(near, 1 / near[3]);
 
-                mat4.multiplyVec4(g_viewer._mtxInversePMV, [X, Y, 0.0, 1.0], far);
+                mat4.multiplyVec4(mtxInversePMV, [X, Y, 0.0, 1.0], far);
                 vec3.scale(far, 1 / far[3]);
 
                 // calculate world space view vector
@@ -410,6 +418,10 @@
                 return;
             }
 
+            let mtxInversePMV = mat4.create();
+            mat4.multiply(g_viewer._mtxProjection, g_viewer._mtxModelView, mtxInversePMV)
+            mat4.inverse(mtxInversePMV)
+
             var near = [0, 0, 0, 0];
             var far = [0, 0, 0, 0];
             var dir = [0, 0, 0];
@@ -417,10 +429,10 @@
             var X = (x - (gl.canvas.width / 2.0)) / (gl.canvas.width / 2.0);
             var Y = -(y - (gl.canvas.height / 2.0)) / (gl.canvas.height / 2.0);
 
-            mat4.multiplyVec4(g_viewer._mtxInversePMV, [X, Y, -1.0, 1.0], near);
+            mat4.multiplyVec4(mtxInversePMV, [X, Y, -1.0, 1.0], near);
             vec3.scale(near, 1 / near[3]);
 
-            mat4.multiplyVec4(g_viewer._mtxInversePMV, [X, Y, 0.0, 1.0], far);
+            mat4.multiplyVec4(mtxInversePMV, [X, Y, 0.0, 1.0], far);
             vec3.scale(far, 1 / far[3]);
 
             // calculate world space view vector
