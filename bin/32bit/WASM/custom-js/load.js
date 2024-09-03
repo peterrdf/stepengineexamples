@@ -6,6 +6,24 @@ var Module = {
   },
 }
 
+var g_fileName = null;
+var g_logCache = [];
+
+function jsLogCallback(event) {
+  g_logCache.push(event + '\n');
+}
+
+function printLogCache() {
+  let txtLog = document.getElementById('txtLog');
+  for (let i = 0; i < g_logCache.length; i++) {
+    txtLog.value += g_logCache[i];
+  }
+
+  g_logCache = [];
+
+  txtLog.scrollTop = txtLog.scrollHeight;
+}
+
 function embeddedMode() {
   try {
     return window.self !== window.top
