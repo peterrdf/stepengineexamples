@@ -214,14 +214,17 @@ async function jsToWGS84AsyncCallback(CRS, x, y, z) {
       // Print EPSG(s)
       jsLogCallback('EPGS:****; EPGS:4326 (WGS84)')
 
-      let showOnMap = true;
+      let showMapWindow = true;
+      let mapWindow = null;
       for (const [key, value] of Object.entries(g_crsTransformations)) {
         jsLogCallback('- EPSG:' + key.replaceAll('#', ', ') + '; EPGS:4326 (WGS84) ' + value.x + ', ' + value.y);
 
-        if (showOnMap) {
-          showOnMap = false;
-          showOnTilerMap(value.x, value.y);       
+        if (showMapWindow) {
+          showMapWindow = false;
+          mapWindow = showMap(value.x, value.y);
         }
+
+        mapAddMarker(mapWindow, value.x, value.y);
       }
 
       // Download
@@ -239,20 +242,38 @@ async function jsToWGS84AsyncCallback(CRS, x, y, z) {
   });
 }
 
-function showOnTilerMap(longitude, latitude) {
+function showMap(longitude, latitude) {
   try {
     let mapUrl = window.location.href.replace('gml2ifc', 'map');
 
-    window.open(
+    let mapWindow = window.open(
       mapUrl +
       '?title=' + encodeURIComponent(g_fileName) +
       '&longitude=' + longitude +
       '&latitude=' + latitude,
       '_blank');
+
+    return mapWindow;
   }
   catch (ex) {
       console.error(ex);
     }
+}
+
+function mapAddMarker(mapWindow, longitude, latitude) {
+  try {
+    setTimeout(() => {
+      let marker = {
+        "longitude": longitude,
+        "latitude": latitude
+      };
+
+      mapWindow.postMessage(JSON.stringify(marker), '*');
+    }, 200);
+  }
+  catch (ex) {
+    console.error(ex);
+  }
 }
 
 /* 

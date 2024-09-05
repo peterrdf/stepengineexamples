@@ -1,16 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Terrain Map</title>
-  <link rel="icon" type="image/x-icon" href="favicon/favicon.ico" />
-  <script src="https://cdn.maptiler.com/maptiler-sdk-js/latest/maptiler-sdk.umd.min.js"></script>
-  <link href="https://cdn.maptiler.com/maptiler-sdk-js/latest/maptiler-sdk.css" rel="stylesheet" />
-  <style>
-    body { margin: 0; padding: 0; }
-    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Terrain Map</title>
+    <link rel="icon" type="image/x-icon" href="favicon/favicon.ico" />
+    <script src="https://cdn.maptiler.com/maptiler-sdk-js/latest/maptiler-sdk.umd.min.js"></script>
+    <link href="https://cdn.maptiler.com/maptiler-sdk-js/latest/maptiler-sdk.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+    <script type="text/javascript">
+        var g_map = null;
+
+        window.addEventListener('message', function (event) {
+            const markerData = JSON.parse(event.data);
+
+            const marker = new maptilersdk.Marker()
+                .setLngLat([markerData.longitude, markerData.latitude])
+                .addTo(g_map);
+        });
+    </script>
 </head>
 <body>
   <div id="map"></div>
@@ -27,9 +47,9 @@
           const latitude = urlParams.get('latitude');
 
           maptilersdk.config.apiKey = 'IzXwuNELmi1wQXfKZZOQ';
-          const map = new maptilersdk.Map({
+          g_map = new maptilersdk.Map({
               container: 'map', // container's id or the HTML element to render the map
-              style: maptilersdk.MapStyle.STREETS,
+              style: maptilersdk.MapStyle.SATELLITE,
               center: [longitude, latitude], // starting position [lng, lat]
               zoom: 15, // starting zoom
               terrain: true,
@@ -39,13 +59,10 @@
               maxPitch: 85,
               maxZoom: 50
           });
-          const marker = new maptilersdk.Marker()
-              .setLngLat([longitude, latitude])
-              .addTo(map); 
       }
       catch (ex) {
           console.error(ex);
-      }      
+      }
   </script>
 </body>
 </html>
