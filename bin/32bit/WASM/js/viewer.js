@@ -1347,7 +1347,8 @@ var Viewer = function () {
       let geometry = g_geometries[i]
 
       if (geometry.VBO) {
-        gl.deleteBuffer(geometry.VBO)
+        // CRASH!?!?
+        //gl.deleteBuffer(geometry.VBO)
         count++
       }
 
