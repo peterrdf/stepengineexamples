@@ -5,6 +5,8 @@ let leftSidebarWidth, rightSidebarWidth
 /*
  * Interaction support
  */
+var g_zoomTimeoutID = 0
+var g_eyeVector = null;
 function zoom(zoomIn) {
   try {
     if (!g_interactionMoveInProgress) {
@@ -12,8 +14,8 @@ function zoom(zoomIn) {
     }
 
     var zoomFactor = zoomIn
-      ? g_viewer._worldDimensions.MaxDistance * 0.0075
-      : -(g_viewer._worldDimensions.MaxDistance * 0.0075)
+      ? g_viewer._worldDimensions.MaxDistance * 0.01
+      : -(g_viewer._worldDimensions.MaxDistance * 0.01)
 
     var near = [0, 0, 0, 0]
     var far = [0, 0, 0, 0]
@@ -34,12 +36,25 @@ function zoom(zoomIn) {
     vec3.scale(dir, zoomFactor)
 
     // move eye in direction of world space view vector
-    vec3.subtract(g_viewer._eyeVector, dir)
+    if (g_eyeVector === null) {
+      g_eyeVector = vec3.create(g_viewer._eyeVector)
+    }
+    vec3.subtract(g_eyeVector, dir)
+
+    if (g_zoomTimeoutID !== 0) {
+      clearTimeout(g_zoomTimeoutID)
+      g_zoomTimeoutID = 0
+    }
+
+    g_zoomTimeoutID = setTimeout(() => {
+      g_viewer._eyeVector = vec3.create(g_eyeVector)
+      g_eyeVector = null;
+
+      PENDING_DRAW_SCENE = true
+    }, 10)
   } catch (ex) {
     console.error(ex)
   }
-
-  PENDING_DRAW_SCENE = true
 }
 
 /*
@@ -480,6 +495,8 @@ $('#canvas-element-id').mousemove(function (event) {
               zoomIn = event.clientY >= g_mouseY ? false : true
             }
 
+            //console.log(`******* zoom(zoomIn) ${g_zoomStartX} ${g_zoomStartY}`)
+
             zoom(zoomIn)
           } // if (Math.abs(event.clientX - g_mouseX) != ...
         } // if ((g_zoomStartX != -1) && ...
@@ -499,6 +516,8 @@ $('#canvas-element-id').mousemove(function (event) {
 
   g_mouseX = event.clientX
   g_mouseY = event.clientY
+
+  //console.log(`******* g_mouseXY ${g_mouseX} ${g_mouseY}`)
 })
 
 /*
