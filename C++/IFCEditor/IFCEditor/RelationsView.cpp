@@ -1639,11 +1639,14 @@ void CRelationsView::OnSelectedItemChanged(NMHDR* pNMHDR, LRESULT* pResult)
 		return;
 	}
 
-	auto pInstance = pController->LoadInstance(pInstanceData->GetInstance());
-	if (pInstance != nullptr)
+	if (pController->GetAutoPreview())
 	{
-		pController->SetTargetInstance(this, pInstance);
-	}
+		auto pInstance = pController->LoadInstance(pInstanceData->GetInstance());
+		if (pInstance != nullptr)
+		{
+			pController->SetTargetInstance(this, pInstance);
+		}
+	}	
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -2008,6 +2011,7 @@ void CRelationsView::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
 	VERIFY(menu.LoadMenuW(IDR_POPUP_INSTANCE));
 
 	auto pPopup = menu.GetSubMenu(0);
+	pPopup->CheckMenuItem(ID_INSTANCES_PREVIEW, MF_BYCOMMAND | (pController->GetAutoPreview() ? MF_CHECKED : MF_UNCHECKED));
 
 	UINT uiCommand = pPopup->TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD, point.x, point.y, &m_treeCtrl);
 	if (uiCommand == 0)
@@ -2020,6 +2024,20 @@ void CRelationsView::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
 		case ID_INSTANCE_SAVE:
 		{
 			pController->SaveInstance(iInstance);
+		}
+		break;
+
+		case ID_INSTANCES_PREVIEW:
+		{
+			pController->SetAutoPreview(!pController->GetAutoPreview());
+			if (pController->GetAutoPreview())
+			{
+				auto pInstance = pController->LoadInstance(pInstanceData->GetInstance());
+				if (pInstance != nullptr)
+				{
+					pController->SetTargetInstance(this, pInstance);
+				}
+			}
 		}
 		break;
 

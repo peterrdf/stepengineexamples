@@ -29,6 +29,7 @@ private: // Members
 
 	// Selection
 	CInstanceBase* m_pSelectedInstance;
+	BOOL m_bAutoPreview;
 	
 	// UI properties
 	BOOL m_bScaleAndCenter;
@@ -80,6 +81,8 @@ public: // Methods
 	CInstanceBase* GetTargetInstance() const;
 	void SelectInstance(CViewBase* pSender, CInstanceBase* pInstance);
 	CInstanceBase* GetSelectedInstance() const;
+	void SetAutoPreview(BOOL bNewValue);
+	BOOL GetAutoPreview() const;
 
 	// UI
 	BOOL GetScaleAndCenter() const;

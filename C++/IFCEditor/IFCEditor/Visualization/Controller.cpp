@@ -9,6 +9,7 @@ CController::CController()
 	, m_bUpdatingModel(false)
 	, m_setViews()
 	, m_pSelectedInstance(nullptr)
+	, m_bAutoPreview(TRUE)
 	, m_bScaleAndCenter(FALSE)
 {
 	wchar_t szAppPath[_MAX_PATH];
@@ -240,6 +241,18 @@ void CController::SelectInstance(CViewBase* pSender, CInstanceBase* pInstance)
 CInstanceBase* CController::GetSelectedInstance() const
 {
 	return m_pSelectedInstance;
+}
+
+// ------------------------------------------------------------------------------------------------
+void CController::SetAutoPreview(BOOL bNewValue)
+{
+	m_bAutoPreview = bNewValue;
+}
+
+// ------------------------------------------------------------------------------------------------
+BOOL CController::GetAutoPreview() const
+{
+	return m_bAutoPreview;
 }
 
 // ------------------------------------------------------------------------------------------------
