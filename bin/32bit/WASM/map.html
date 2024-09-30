@@ -20,6 +20,21 @@
             width: 100%;
         }
     </style>
+    <style type="text/css">
+        #info {
+            display: block;
+            position: relative;
+            margin: 0px auto;
+            width: 50%;
+            padding: 10px;
+            border: none;
+            border-radius: 3px;
+            font-size: 12px;
+            text-align: center;
+            color: #222;
+            background: #fff;
+        }
+    </style>
     <script type="text/javascript">
         var g_map = null;
 
@@ -33,36 +48,47 @@
     </script>
 </head>
 <body>
-  <div id="map"></div>
-  <script>
-      try {          
-          const queryString = window.location.search;
-          const urlParams = new URLSearchParams(queryString);
+    <div id="map"></div>
+    <pre id="info"></pre>
+    <script>
+        try {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
 
-          // Title
-          window.document.title = urlParams.get('title');
+            // Title
+            window.document.title = urlParams.get('title');
 
-          // Map
-          const longitude = urlParams.get('longitude');
-          const latitude = urlParams.get('latitude');
+            // Map
+            const longitude = urlParams.get('longitude');
+            const latitude = urlParams.get('latitude');
 
-          maptilersdk.config.apiKey = 'IzXwuNELmi1wQXfKZZOQ';
-          g_map = new maptilersdk.Map({
-              container: 'map', // container's id or the HTML element to render the map
-              style: maptilersdk.MapStyle.SATELLITE,
-              center: [longitude, latitude], // starting position [lng, lat]
-              zoom: 15, // starting zoom
-              terrain: true,
-              terrainControl: true,
-              pitch: 61,
-              bearing: 172,
-              maxPitch: 85,
-              maxZoom: 50
-          });
-      }
-      catch (ex) {
-          console.error(ex);
-      }
-  </script>
+            maptilersdk.config.apiKey = 'IzXwuNELmi1wQXfKZZOQ';
+            g_map = new maptilersdk.Map({
+                container: 'map', // container's id or the HTML element to render the map
+                style: maptilersdk.MapStyle.STREET,
+                center: [longitude, latitude], // starting position [lng, lat]
+                zoom: 15, // starting zoom
+                terrain: true,
+                terrainControl: true,
+                pitch: 61,
+                bearing: 172,
+                maxPitch: 85,
+                maxZoom: 50
+            });
+        }
+        catch (ex) {
+            console.error(ex);
+        }
+
+        g_map.on('mousemove', function (e) {
+            document.getElementById('info').innerHTML =
+                // e.point is the x, y coordinates of the mousemove event relative
+                // to the top-left corner of the map
+                JSON.stringify(e.point) +
+                '<br />' +
+                // e.lngLat is the longitude, latitude geographical position of the event
+                JSON.stringify(e.lngLat.wrap());
+        });
+    </script>
 </body>
 </html>
