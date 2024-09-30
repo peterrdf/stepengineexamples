@@ -20,8 +20,21 @@
             bottom: 0;
             width: 100%;
         }
-    </style>
-    <style type="text/css">
+
+        #features {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 25%;
+            overflow: auto;
+            border: none;
+            border-radius: 5px;
+            font-style: oblique;
+            color: #F00;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
         #info {
             display: block;
             position: relative;
@@ -29,11 +42,12 @@
             width: 50%;
             padding: 10px;
             border: none;
-            border-radius: 3px;
+            border-radius: 5px;
             font-size: 12px;
+            font-style: oblique;
             text-align: center;
-            color: #222;
-            background: #fff;
+            color: #F00;
+            background: rgba(255, 255, 255, 0.25);
         }
     </style>
     <script type="text/javascript">
@@ -72,6 +86,7 @@
 </head>
 <body>
     <div id="map"></div>
+    <pre id="features"></pre>
     <pre id="info"></pre>
     <script>
         try {
@@ -146,12 +161,40 @@
 
                     document.getElementById('info').innerHTML =
                         JSON.stringify(e.lngLat.wrap());
+
+                    var features = g_map.queryRenderedFeatures(e.point);
+
+                    // Limit the number of properties we're displaying for
+                    // legibility and performance
+                    var displayProperties = [
+                        'type',
+                        'properties',
+                        'id',
+                        'layer',
+                        'source',
+                        'sourceLayer',
+                        'state'
+                    ];
+
+                    var displayFeatures = features.map(function (feat) {
+                        var displayFeat = {};
+                        displayProperties.forEach(function (prop) {
+                            displayFeat[prop] = feat[prop];
+                        });
+                        return displayFeat;
+                    });
+
+                    document.getElementById('features').innerHTML = JSON.stringify(
+                        displayFeatures,
+                        null,
+                        2
+                    );
                 });
             });
         }
         catch (ex) {
             console.error(ex);
-        }        
+        }
     </script>
 </body>
 </html>
