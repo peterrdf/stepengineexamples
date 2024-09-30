@@ -6,6 +6,7 @@
     <title>3D Terrain Map</title>
     <link rel="icon" type="image/x-icon" href="favicon/favicon.ico" />
     <script src="https://cdn.maptiler.com/maptiler-sdk-js/latest/maptiler-sdk.umd.min.js"></script>
+    <script src="https://npmcdn.com/@turf/turf@5.1.6/turf.min.js"></script>
     <link href="https://cdn.maptiler.com/maptiler-sdk-js/latest/maptiler-sdk.css" rel="stylesheet" />
     <style>
         body {
@@ -37,13 +38,35 @@
     </style>
     <script type="text/javascript">
         var g_map = null;
+        // GeoJSON object to hold our features
+        var geojson = {
+            'type': 'FeatureCollection',
+            'features': []
+        };
 
         window.addEventListener('message', function (event) {
             const markerData = JSON.parse(event.data);
 
-            const marker = new maptilersdk.Marker()
-                .setLngLat([markerData.longitude, markerData.latitude])
-                .addTo(g_map);
+            //const marker = new maptilersdk.Marker()
+            //    .setLngLat([markerData.longitude, markerData.latitude])
+            //    .addTo(g_map);
+
+            var point = {
+                'type': 'Feature',
+                'geometry': {
+                    'type': 'Point',
+                    'coordinates': [markerData.longitude, markerData.latitude]
+                },
+                'properties': {
+                    'id': String(new Date().getTime())
+                }
+            };
+
+            geojson.features.push(point);
+
+            if (g_map !== null) {
+                g_map.getSource('geojson').setData(geojson);
+            }            
         });
     </script>
 </head>
@@ -76,12 +99,6 @@
                 maxZoom: 50
             });
 
-            // GeoJSON object to hold our features
-            var geojson = {
-                'type': 'FeatureCollection',
-                'features': []
-            };
-
             // Used to draw a line between points
             var linestring = {
                 'type': 'Feature',
@@ -104,7 +121,7 @@
                     source: 'geojson',
                     paint: {
                         'circle-radius': 5,
-                        'circle-color': '#000'
+                        'circle-color': '#F00'
                     },
                     filter: ['in', '$type', 'Point']
                 });
@@ -123,18 +140,18 @@
                     },
                     filter: ['in', '$type', 'LineString']
                 });
+
+                g_map.on('mousemove', function (e) {
+                    g_map.getCanvas().style.cursor = 'pointer';
+
+                    document.getElementById('info').innerHTML =
+                        JSON.stringify(e.lngLat.wrap());
+                });
             });
         }
         catch (ex) {
             console.error(ex);
-        }
-
-        g_map.on('mousemove', function (e) {
-            g_map.getCanvas().style.cursor = 'pointer';
-
-            document.getElementById('info').innerHTML =
-                JSON.stringify(e.lngLat.wrap());
-        });
+        }        
     </script>
 </body>
 </html>
