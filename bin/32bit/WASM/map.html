@@ -75,18 +75,64 @@
                 maxPitch: 85,
                 maxZoom: 50
             });
+
+            // GeoJSON object to hold our features
+            var geojson = {
+                'type': 'FeatureCollection',
+                'features': []
+            };
+
+            // Used to draw a line between points
+            var linestring = {
+                'type': 'Feature',
+                'geometry': {
+                    'type': 'LineString',
+                    'coordinates': []
+                }
+            };
+
+            g_map.on('load', function () {
+                g_map.addSource('geojson', {
+                    'type': 'geojson',
+                    'data': geojson
+                });
+
+                // Add styles to the map
+                g_map.addLayer({
+                    id: 'measure-points',
+                    type: 'circle',
+                    source: 'geojson',
+                    paint: {
+                        'circle-radius': 5,
+                        'circle-color': '#000'
+                    },
+                    filter: ['in', '$type', 'Point']
+                });
+
+                g_map.addLayer({
+                    id: 'measure-lines',
+                    type: 'line',
+                    source: 'geojson',
+                    layout: {
+                        'line-cap': 'round',
+                        'line-join': 'round'
+                    },
+                    paint: {
+                        'line-color': '#000',
+                        'line-width': 2.5
+                    },
+                    filter: ['in', '$type', 'LineString']
+                });
+            });
         }
         catch (ex) {
             console.error(ex);
         }
 
         g_map.on('mousemove', function (e) {
+            g_map.getCanvas().style.cursor = 'pointer';
+
             document.getElementById('info').innerHTML =
-                // e.point is the x, y coordinates of the mousemove event relative
-                // to the top-left corner of the map
-                JSON.stringify(e.point) +
-                '<br />' +
-                // e.lngLat is the longitude, latitude geographical position of the event
                 JSON.stringify(e.lngLat.wrap());
         });
     </script>
