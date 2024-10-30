@@ -7229,13 +7229,16 @@ var dynCall_jiii = Module['dynCall_jiii'] = createExportWrapper('dynCall_jiii');
 var dynCall_viji = Module['dynCall_viji'] = createExportWrapper('dynCall_viji');
 var dynCall_vijii = Module['dynCall_vijii'] = createExportWrapper('dynCall_vijii');
 var dynCall_iij = Module['dynCall_iij'] = createExportWrapper('dynCall_iij');
+var dynCall_iijj = Module['dynCall_iijj'] = createExportWrapper('dynCall_iijj');
+var dynCall_viij = Module['dynCall_viij'] = createExportWrapper('dynCall_viij');
+var dynCall_dij = Module['dynCall_dij'] = createExportWrapper('dynCall_dij');
 var dynCall_jiji = Module['dynCall_jiji'] = createExportWrapper('dynCall_jiji');
 var dynCall_viijii = Module['dynCall_viijii'] = createExportWrapper('dynCall_viijii');
 var dynCall_iiiiij = Module['dynCall_iiiiij'] = createExportWrapper('dynCall_iiiiij');
 var dynCall_iiiiijj = Module['dynCall_iiiiijj'] = createExportWrapper('dynCall_iiiiijj');
 var dynCall_iiiiiijj = Module['dynCall_iiiiiijj'] = createExportWrapper('dynCall_iiiiiijj');
-var ___start_em_js = Module['___start_em_js'] = 10201640;
-var ___stop_em_js = Module['___stop_em_js'] = 10201912;
+var ___start_em_js = Module['___start_em_js'] = 10202116;
+var ___stop_em_js = Module['___stop_em_js'] = 10202388;
 
 // include: postamble.js
 // === Auto-generated postamble setup entry stuff ===
