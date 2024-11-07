@@ -311,3 +311,7 @@
 /C++/Version/StreamingSTPInOut-CS/StreamingIFCInOut-CS/obj
 /C++/Version/x64/Debug
 /C++/STEPViewer/Win32/Debug
+/C++WebGL/bin2js/x64/Debug
+/C++WebGL/bin2js/x64/Release/bin2js.exp
+/C++WebGL/stp2bin/x64/Debug
+/C++WebGL/STP2JS-Example/x64/Debug

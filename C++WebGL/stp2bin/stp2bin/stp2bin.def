@@ -1,0 +1,8 @@
+; stp2bin.def : Declares the module parameters for the DLL.
+
+LIBRARY
+
+EXPORTS
+	setQuality
+	STP2BIN
+    ; Explicit exports can go here
