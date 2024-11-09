@@ -187,7 +187,7 @@ int64_t	BuildParts(
 		SetPropertyType(propertyName, 3);
 		SetPropertyType(propertyDescription, 3);
 
-		int64_t	* parts = new int64_t[partCnt], i = 0;
+		int64_t	* parts = new int64_t[(unsigned)partCnt], i = 0;
 		while (productDefinition) {
 			if (productDefinition->children == 0 && productDefinition->geometryInstance) {
 				parts[i] = productDefinition->geometryInstance;
@@ -296,7 +296,7 @@ int64_t	BuildAssembly(
 			instanceCollection;
 
 	if (elementCnt) {
-		elements = new int64_t[elementCnt];
+		elements = new int64_t[(unsigned)elementCnt];
 
 		int u = 0;
 		int64_t	classCollection = GetClassByName(rdfModel, "Collection"),
@@ -344,7 +344,7 @@ int64_t	BuildAssemblies(
 		SetPropertyType(propertyName, 3);
 		SetPropertyType(propertyDescription, 3);
 
-		int64_t	* assemblies = new int64_t[assemblyCnt], i = 0;
+		int64_t	* assemblies = new int64_t[(unsigned)assemblyCnt], i = 0;
 		while (productDefinition) {
 			if (productDefinition->parents == 0 && productDefinition->children) {
 				assemblies[i] = BuildAssembly(rdfModel, productDefinition);
@@ -381,9 +381,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		return -1;
 	}
 
-	uint64_t	flagbit20 = 1048576;		// 2^^20   0000.0000..0001.0000  0000.0000..0000.0000
-	uint64_t	flagbit21 = 2097152;		// 2^^21   0000.0000..0010.0000  0000.0000..0000.0000
-	uint64_t	flagbit22 = 4194304;		// 2^^22   0000.0000..0100.0000  0000.0000..0000.0000
+	int_t	flagbit20 = 1048576;		// 2^^20   0000.0000..0001.0000  0000.0000..0000.0000
+	int_t	flagbit21 = 2097152;		// 2^^21   0000.0000..0010.0000  0000.0000..0000.0000
+	int_t	flagbit22 = 4194304;		// 2^^22   0000.0000..0100.0000  0000.0000..0000.0000
 
 	//
 	//  http://rdf.bg/downloads/setFilter.pdf	//
