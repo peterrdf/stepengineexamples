@@ -88,10 +88,11 @@ typedef	int_t			SdaiModel;
 typedef	int_t			SdaiRep;
 typedef	int_t			SdaiPrimitiveType;
 typedef	int_t			* SdaiSet;
-typedef	char			* SdaiString;
+typedef	const char		* SdaiString;
 typedef	void			* SdaiADB;
 typedef	int_t			SdaiNPL;
 typedef	int_t			SdaiIterator;
+typedef double			SdaiReal;
 
 typedef	int64_t			ExpressID;
 
@@ -99,111 +100,115 @@ typedef	int_t			SchemaDeclIterator;
 typedef	int_t			SchemaDecl;
 typedef	int_t			* SchemaAggr;
 
+#define sdaiFALSE		((SdaiInteger) 0)  
+#define sdaiTRUE		((SdaiInteger) 1)
+#define sdaiUNKNOWN		((SdaiInteger) 2)
 
-enum class enum_string_encoding : unsigned char
+
+enum enum_string_encoding
 {
-	IGNORE_DEFAULT				= (0 + 0 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 0 * 32),	//		 0   0   0   0   0   0
-	WINDOWS_1250				= (0 + 0 * 2 + 1 * 4 + 0 * 8 + 0 * 16 + 0 * 32),	//		 0   0   1   0   0   0
-	WINDOWS_1251				= (0 + 0 * 2 + 0 * 4 + 1 * 8 + 0 * 16 + 0 * 32),	//		 0   0   0   1   0   0
-	WINDOWS_1252				= (0 + 0 * 2 + 1 * 4 + 1 * 8 + 0 * 16 + 0 * 32),	//		 0   0   1   1   0   0
-	WINDOWS_1253				= (0 + 0 * 2 + 0 * 4 + 0 * 8 + 1 * 16 + 0 * 32),	//		 0   0   0   0   1   0
-	WINDOWS_1254				= (0 + 0 * 2 + 1 * 4 + 0 * 8 + 1 * 16 + 0 * 32),	//		 0   0   1   0   1   0
-	WINDOWS_1255				= (0 + 0 * 2 + 0 * 4 + 1 * 8 + 1 * 16 + 0 * 32),	//		 0   0   0   1   1   0
-	WINDOWS_1256				= (0 + 0 * 2 + 1 * 4 + 1 * 8 + 1 * 16 + 0 * 32),	//		 0   0   1   1   1   0
-	WINDOWS_1257				= (0 + 0 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 1 * 32),	//		 0   0   0   0   0   1
-	WINDOWS_1258				= (0 + 0 * 2 + 1 * 4 + 0 * 8 + 0 * 16 + 1 * 32),	//		 0   0   1   0   0   1
-	ISO8859_1					= (1 + 0 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 0 * 32),	//		 1   0   0   0   0   0
-	ISO8859_2					= (1 + 0 * 2 + 1 * 4 + 0 * 8 + 0 * 16 + 0 * 32),	//		 1   0   1   0   0   0
-	ISO8859_3					= (1 + 0 * 2 + 0 * 4 + 1 * 8 + 0 * 16 + 0 * 32),	//		 1   0   0   1   0   0
-	ISO8859_4					= (1 + 0 * 2 + 1 * 4 + 1 * 8 + 0 * 16 + 0 * 32),	//		 1   0   1   1   0   0
-	ISO8859_5					= (1 + 0 * 2 + 0 * 4 + 0 * 8 + 1 * 16 + 0 * 32),	//		 1   0   0   0   1   0
-	ISO8859_6					= (1 + 0 * 2 + 1 * 4 + 0 * 8 + 1 * 16 + 0 * 32),	//		 1   0   1   0   1   0
-	ISO8859_7					= (1 + 0 * 2 + 0 * 4 + 1 * 8 + 1 * 16 + 0 * 32),	//		 1   0   0   1   1   0
-	ISO8859_8					= (1 + 0 * 2 + 1 * 4 + 1 * 8 + 1 * 16 + 0 * 32),	//		 1   0   1   1   1   0
-	ISO8859_9					= (1 + 0 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 1 * 32),	//		 1   0   0   0   0   1
-	ISO8859_10					= (1 + 0 * 2 + 1 * 4 + 0 * 8 + 0 * 16 + 1 * 32),	//		 1   0   1   0   0   1
-	ISO8859_11					= (1 + 0 * 2 + 0 * 4 + 1 * 8 + 0 * 16 + 1 * 32),	//		 1   0   0   1   0   1
-	ISO8859_13					= (1 + 0 * 2 + 0 * 4 + 0 * 8 + 1 * 16 + 1 * 32),	//		 1   0   0   0   1   1
-	ISO8859_14					= (1 + 0 * 2 + 1 * 4 + 0 * 8 + 1 * 16 + 1 * 32),	//		 1   0   1   0   1   1
-	ISO8859_15					= (1 + 0 * 2 + 0 * 4 + 1 * 8 + 1 * 16 + 1 * 32),	//		 1   0   0   1   1   1
-	ISO8859_16					= (1 + 0 * 2 + 1 * 4 + 1 * 8 + 1 * 16 + 1 * 32),	//		 1   0   1   1   1   1
-	MACINTOSH_CENTRAL_EUROPEAN	= (0 + 1 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 0 * 32),	//		 0   1   0   0   0   0
-	SHIFT_JIS_X_213				= (1 + 1 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 0 * 32),    //		 1   1   0   0   0   0
-	UTF8						= (1 + 1 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 1 * 32)     //		 1   1   0   0   0   1
+	enum_string_encoding__IGNORE_DEFAULT = 32,
+	enum_string_encoding__WINDOWS_1250 = 32,
+	enum_string_encoding__WINDOWS_1251 = 32,
+	enum_string_encoding__WINDOWS_1252 = 32,
+	enum_string_encoding__WINDOWS_1253 = 32,
+	enum_string_encoding__WINDOWS_1254 = 32,
+	enum_string_encoding__WINDOWS_1255 = 32,
+	enum_string_encoding__WINDOWS_1256 = 32,
+	enum_string_encoding__WINDOWS_1257 = 32,
+	enum_string_encoding__WINDOWS_1258 = 32,
+	enum_string_encoding__ISO8859_1 = 32,
+	enum_string_encoding__ISO8859_2 = 32,
+	enum_string_encoding__ISO8859_3 = 32,
+	enum_string_encoding__ISO8859_4 = 32,
+	enum_string_encoding__ISO8859_5 = 32,
+	enum_string_encoding__ISO8859_6 = 32,
+	enum_string_encoding__ISO8859_7 = 32,
+	enum_string_encoding__ISO8859_8 = 32,
+	enum_string_encoding__ISO8859_9 = 32,
+	enum_string_encoding__ISO8859_10 = 32,
+	enum_string_encoding__ISO8859_11 = 32,
+	enum_string_encoding__ISO8859_13 = 32,
+	enum_string_encoding__ISO8859_14 = 32,
+	enum_string_encoding__ISO8859_15 = 32,
+	enum_string_encoding__ISO8859_16 = 32,
+	enum_string_encoding__MACINTOSH_CENTRAL_EUROPEAN = 32,
+	enum_string_encoding__SHIFT_JIS_X_213 = 32,
+	enum_string_encoding__UTF8 = 32
 };
 
 
-enum class enum_express_declaration : unsigned char
+enum enum_express_declaration
 {
-	__NONE						= 0,
-	__ENTITY					= 1,
-	__ENUM						= 2,
-	__SELECT					= 3,
-	__DEFINED_TYPE				= 4
+	enum_express_declaration____NONE = 0,
+	enum_express_declaration____ENTITY = 1,
+	enum_express_declaration____ENUM = 2,
+	enum_express_declaration____SELECT = 3,
+	enum_express_declaration____DEFINED_TYPE = 4
 };
 
 
-enum class enum_express_attr_type : unsigned char
+enum enum_express_attr_type
 {
-	__NONE						= 0,					//	attribute type is unknown here but it may be defined by referenced domain entity
-	__BINARY					= 1,
-	__BINARY_32					= 2,
-	__BOOLEAN					= 3,
-	__ENUMERATION				= 4,
-	__INTEGER					= 5,
-	__LOGICAL					= 6,
-	__NUMBER					= 7,
-	__REAL						= 8,
-	__SELECT					= 9,
-	__STRING					= 10,
-	__GENERIC					= 11
+	enum_express_attr_type____NONE = 0,
+	enum_express_attr_type____BINARY = 1,
+	enum_express_attr_type____BINARY_32 = 2,
+	enum_express_attr_type____BOOLEAN = 3,
+	enum_express_attr_type____ENUMERATION = 4,
+	enum_express_attr_type____INTEGER = 5,
+	enum_express_attr_type____LOGICAL = 6,
+	enum_express_attr_type____NUMBER = 7,
+	enum_express_attr_type____REAL = 8,
+	enum_express_attr_type____SELECT = 9,
+	enum_express_attr_type____STRING = 10,
+	enum_express_attr_type____GENERIC = 11
 };
 
 
-enum class enum_express_aggr : unsigned char
+enum enum_express_aggr
 {
-	__NONE						= 0,
-	__ARRAY						= 1,
-	__BAG						= 2,
-	__LIST						= 3,
-	__SET						= 4,
-	__AGGREGATE					= 5						//	generic aggregate
+	enum_express_aggr____NONE = 0,
+	enum_express_aggr____ARRAY = 1,
+	enum_express_aggr____BAG = 2,
+	enum_express_aggr____LIST = 3,
+	enum_express_aggr____SET = 4,
+	enum_express_aggr____AGGREGATE = 5
 };
 
 typedef void		* ValidationResults;
 typedef void		* ValidationIssue;
 typedef int_t		ValidationIssueLevel;
 
-enum class enum_validation_type : uint64_t
+enum enum_validation_type
 {
-	__NONE						= 0,
-	__KNOWN_ENTITY				= 1 << 0,				//  entity is defined in the schema
-	__NO_OF_ARGUMENTS			= 1 << 1,				//	number of arguments
-	__ARGUMENT_EXPRESS_TYPE		= 1 << 2,				//	argument value is correct entity, defined type or enumeration value
-	__ARGUMENT_PRIM_TYPE		= 1 << 3,				//	argument value has correct primitive type
-	__REQUIRED_ARGUMENTS		= 1 << 4,				//	non-optional arguments values are provided
-	__ARRGEGATION_EXPECTED		= 1 << 5,				//	aggregation is provided when expected
-	__AGGREGATION_NOT_EXPECTED	= 1 << 6,   			//	aggregation is not used when not expected
-	__AGGREGATION_SIZE			= 1 << 7,   			//	aggregation size
-	__AGGREGATION_UNIQUE		= 1 << 8,				//	elements in aggregations are unique when required
-	__COMPLEX_INSTANCE			= 1 << 9,				//	complex instances contains full parent chains
-	__REFERENCE_EXISTS			= 1 << 10,				//	referenced instance exists
-	__ABSTRACT_ENTITY			= 1 << 11,  			//	abstract entity should not instantiate
-	__WHERE_RULE				= 1 << 12,  			//	where-rule check
-	__UNIQUE_RULE				= 1 << 13,				//	unique-rule check
-	__STAR_USAGE				= 1 << 14,  			//	* is used only for derived arguments
-	__CALL_ARGUMENT				= 1 << 15,  			//	validateModel / validateInstance function argument should be model / instance
-	__INVALID_TEXT_LITERAL		= 1 << 16,				//	invalid text literal string
-	__INTERNAL_ERROR			= UINT64_C(1) << 63   	//	unspecified error
+	enum_validation_type____NONE = 0,
+	enum_validation_type____KNOWN_ENTITY = 10,
+	enum_validation_type____NO_OF_ARGUMENTS = 11,
+	enum_validation_type____ARGUMENT_EXPRESS_TYPE = 12,
+	enum_validation_type____ARGUMENT_PRIM_TYPE = 13,
+	enum_validation_type____REQUIRED_ARGUMENTS = 14,
+	enum_validation_type____ARRGEGATION_EXPECTED = 15,
+	enum_validation_type____AGGREGATION_NOT_EXPECTED = 16,
+	enum_validation_type____AGGREGATION_SIZE = 17,
+	enum_validation_type____AGGREGATION_UNIQUE = 18,
+	enum_validation_type____COMPLEX_INSTANCE = 19,
+	enum_validation_type____REFERENCE_EXISTS = 110,
+	enum_validation_type____ABSTRACT_ENTITY = 111,
+	enum_validation_type____WHERE_RULE = 112,
+	enum_validation_type____UNIQUE_RULE = 113,
+	enum_validation_type____STAR_USAGE = 114,
+	enum_validation_type____CALL_ARGUMENT = 115,
+	enum_validation_type____INVALID_TEXT_LITERAL = 116,
+	enum_validation_type____INTERNAL_ERROR = 163
 };
 
-enum class enum_validation_status : unsigned char
+enum enum_validation_status
 {
-	__NONE						= 0,
-	__COMPLETE_ALL				= 1,					//	all issues proceed
-	__COMPLETE_NOT_ALL			= 2,					//	completed but some issues were excluded by option settings
-	__TIME_EXCEED				= 3,					//	validation was finished because of reach time limit
-	__COUNT_EXCEED				= 4						//	validation was finished because of reach of issue's numbers limit
+	enum_validation_status____NONE = 0,
+	enum_validation_status____COMPLETE_ALL = 1,
+	enum_validation_status____COMPLETE_NOT_ALL = 2,
+	enum_validation_status____TIME_EXCEED = 3,
+	enum_validation_status____COUNT_EXCEED = 4
 };
 
 
@@ -528,7 +533,7 @@ static	inline	const char	* GetLibraryIdentifier(
 								)
 {
 	return	GetLibraryIdentifier(
-					(const char**) nullptr				//	libraryIdentifier
+					(const char**) 0      				//	libraryIdentifier
 				);
 }
 
@@ -575,7 +580,7 @@ static	inline	const char	* GetSchemaName(
 {
 	return	GetSchemaName(
 					model,
-					(const char**) nullptr				//	schemaName
+					(const char**) 0      				//	schemaName
 				);
 }
 
@@ -658,7 +663,7 @@ static	inline	SdaiModel	sdaiCreateModelBN(
 {
 	SdaiModel	model = sdaiCreateModelBN(
 								0,
-								nullptr,
+								0      ,
 								schemaName
 							);
 
@@ -731,7 +736,7 @@ static	inline	SdaiModel	sdaiCreateModelBNUnicode(
 {
 	SdaiModel	model = sdaiCreateModelBNUnicode(
 								0,
-								nullptr,
+								0      ,
 								schemaName
 							);
 
@@ -1629,7 +1634,7 @@ static	inline	const char	* engiGetEntityArgumentName(
 					entity,
 					index,
 					valueType,
-					(const char**) nullptr				//	argumentName
+					(const char**) 0      				//	argumentName
 				);
 }
 
@@ -1782,7 +1787,7 @@ static	inline	const char	* engiGetEntityName(
 	return	engiGetEntityName(
 					entity,
 					valueType,
-					(const char**) nullptr				//	entityName
+					(const char**) 0      				//	entityName
 				);
 }
 
@@ -2075,7 +2080,7 @@ static	inline	const char	* engiGetAttrDomain(
 {
 	return	engiGetAttrDomain(
 					attribute,
-					(const char**) nullptr				//	domainName
+					(const char**) 0      				//	domainName
 				);
 }
 
@@ -2137,7 +2142,7 @@ static	inline	const char	* engiGetAttrDomainBN(
 	return	engiGetAttrDomainBN(
 					entity,
 					attributeName,
-					(const char**) nullptr				//	domainName
+					(const char**) 0      				//	domainName
 				);
 }
 
@@ -2251,7 +2256,7 @@ static	inline	const char	* engiGetEnumerationValue(
 					attribute,
 					index,
 					valueType,
-					(const char**) nullptr				//	enumerationValue
+					(const char**) 0      				//	enumerationValue
 				);
 }
 
@@ -3811,7 +3816,7 @@ static	inline	void	sdaiAppend(
 //		sdaiAdd                                                 (http://rdf.bg/ifcdoc/CP64/sdaiAdd.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiPrimitiveType		valueType							IN
-//				const void				* value								IN
+//				...						value								IN
 //
 //				void					returns
 //
@@ -3826,13 +3831,13 @@ static	inline	void	sdaiAppend(
 //	valueType				C/C++														C#
 //
 //	sdaiINTEGER				int_t val = 123;											int_t val = 123;
-//							sdaiAdd (aggr, sdaiINTEGER, &val);							stepengine.sdaiAdd (aggr, stepengine.sdaiINTEGER, ref val);
+//							sdaiAdd (aggr, sdaiINTEGER, val);							stepengine.sdaiAdd (aggr, stepengine.sdaiINTEGER, ref val);
 //
 //	sdaiREAL or sdaiNUMBER	double val = 123.456;										double val = 123.456;
-//							sdaiAdd (aggr, sdaiREAL, &val);								stepengine.sdaiAdd (aggr, stepengine.sdaiREAL, ref val);
+//							sdaiAdd (aggr, sdaiREAL, val);								stepengine.sdaiAdd (aggr, stepengine.sdaiREAL, ref val);
 //
 //	sdaiBOOLEAN				bool val = true;											bool val = true;
-//							sdaiAdd (aggr, sdaiBOOLEAN, &val);							stepengine.sdaiAdd (aggr, stepengine.sdaiBOOLEAN, ref val);
+//							sdaiAdd (aggr, sdaiBOOLEAN, val);							stepengine.sdaiAdd (aggr, stepengine.sdaiBOOLEAN, ref val);
 //
 //	sdaiLOGICAL				const TCHAR* val = "U";										string val = "U";
 //							sdaiAdd (aggr, sdaiLOGICAL, val);							stepengine.sdaiAdd (aggr, stepengine.sdaiLOGICAL, val);
@@ -3891,27 +3896,13 @@ static	inline	void	sdaiAppend(
 void			DECL STDC	sdaiAdd(
 									const SdaiAggr			aggregate,
 									SdaiPrimitiveType		valueType,
-									const void				* value
+									...
 								);
 
 #ifdef __cplusplus
 	}
 #endif
 
-//
-//
-static	inline	void	sdaiAdd(
-								const SdaiAggr			aggregate,
-								SdaiPrimitiveType		valueType,
-								SdaiInstance			value
-							)
-{
-	return	sdaiAdd(
-					aggregate,
-					valueType,
-					(const void*) value
-				);
-}
 
 #ifdef __cplusplus
 	extern "C" {
@@ -4236,6 +4227,27 @@ void			DECL STDC	sdaiDeleteNPL(
 SdaiAggr		DECL STDC	sdaiCreateNestedAggr(
 									const SdaiAggr			aggregate
 								);
+
+
+//
+//		sdaiCreateNestedAggrADB                                  (http://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrADB.html)
+//				const SdaiAggr			aggregate							IN
+//				const SdaiAggr			selaggrInstance						IN
+//
+//				SdaiAggr				returns								OUT
+//
+//	The CreateNestedAggrABD function creates an aggregate instance as a member of (an unordered)
+//  aggregate instance in the case where the type of the aggregate to create is a SELECT TYPE and
+//  ambiguous.
+//  Input ADB is expected to have type path
+//  The function sets the value of the ADB with the identifier of the newly created aggregate instance.
+//
+SdaiAggr		DECL STDC	sdaiCreateNestedAggrADB(
+									const SdaiAggr			aggregate,
+									const SdaiADB			selaggrInstance
+								);
+
+
 
 //
 //		sdaiCreateInstance                                      (http://rdf.bg/ifcdoc/CP64/sdaiCreateInstance.html)
@@ -5175,7 +5187,7 @@ static	inline	const char	* internalGetXMLID(
 {
 	return	internalGetXMLID(
 					instance,
-					(const char**) nullptr				//	XMLID
+					(const char**) 0      				//	XMLID
 				);
 }
 
@@ -5415,7 +5427,7 @@ static	inline	const char	* xxxxGetAttrNameByIndex(
 	return	xxxxGetAttrNameByIndex(
 					instance,
 					index,
-					(const char**) nullptr				//	name
+					(const char**) 0      				//	name
 				);
 }
 
@@ -6319,7 +6331,7 @@ static	inline	const char	* sdaiGetADBTypePathx(
 	return	sdaiGetADBTypePathx(
 					ADB,
 					typeNameNumber,
-					(const char**) nullptr				//	path
+					(const char**) 0      				//	path
 				);
 }
 
@@ -6439,6 +6451,40 @@ void			DECL STDC	sdaiEnd(
 								);
 
 //
+//
+//
+SdaiBoolean		DECL STDC	sdaiIsMember(
+									SdaiAggr			aggregate,
+									SdaiPrimitiveType	valueType, 
+									...
+								);
+
+
+//
+//
+//
+SdaiInteger		DECL STDC	sdaiGetAggrElementBoundByItr(
+									SdaiIterator iterator
+								);
+
+
+//
+//
+//
+SdaiInteger		DECL STDC	sdaiGetLowerBound(
+									SdaiAggr aggregate
+								);
+
+
+//
+//
+//
+SdaiInteger		DECL STDC	sdaiGetUpperBound(
+									SdaiAggr aggregate
+								);
+
+
+//
 //		sdaiplusGetAggregationType                              (http://rdf.bg/ifcdoc/CP64/sdaiplusGetAggregationType.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAggr			aggregate							IN
@@ -6450,6 +6496,14 @@ void			DECL STDC	sdaiEnd(
 int_t			DECL STDC	sdaiplusGetAggregationType(
 									SdaiInstance			instance,
 									const SdaiAggr			aggregate
+								);
+
+
+//
+// TODO
+//
+SdaiInstance	DECL STDC	engiGetComplexInstanceNextPart(
+									SdaiInstance			instance
 								);
 
 //
