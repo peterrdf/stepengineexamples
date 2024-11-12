@@ -358,3 +358,12 @@
 /C++WebGL/bin2js/bin2js/Release
 /C++WebGL/bin2js/bin2js/x64/Debug
 /C++WebGL/bin2js/bin2js/x64/Release
+/C++WebGL/bin2js/.vs/bin2js
+/C++WebGL/stp2bin/.vs/stp2bin
+/C++WebGL/stp2bin/stp2bin/x64/Debug
+/C++WebGL/stp2bin/stp2bin/x64/Release
+/C++WebGL/stp2bin/x64/Release/stp2bin.pdb
+/C++WebGL/STP2JS-Example/.vs/STP2JS-Example
+/C++WebGL/STP2JS-Example/STP2JS-Example/x64/Debug
+/C++WebGL/STP2JS-Example/STP2JS-Example/x64/Release
+/C++WebGL/STP2JS-Example/x64/Release/STP2JS-Example.pdb
