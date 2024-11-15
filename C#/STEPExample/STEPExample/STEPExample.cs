@@ -17,9 +17,9 @@ using StepEngine;
 
 namespace STEPExample
 {
-    public partial class Form1 : Form
+    public partial class STEPExample : Form
     {
-        public Form1()
+        public STEPExample()
         {
             InitializeComponent();
         }
