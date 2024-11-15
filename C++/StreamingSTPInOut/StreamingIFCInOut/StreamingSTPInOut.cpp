@@ -109,12 +109,12 @@ BOOL CStreamingIFCInOutApp::InitApplication()
 
 	ASSERT(importFileName == nullptr && exportFileName == nullptr && i > 0);
 
-	const wchar_t* szInput = L"data\\EGK_StreamingSTPInOut_as1-oc-214.stp";
+	const wchar_t* szInput = L"data\\StreamingSTPInOut_as1-oc-214.stp";
 	importFileName = new wchar_t[i + wcslen(szInput) + 1];
 	memcpy(&importFileName[0], this->m_pszHelpFilePath, i * sizeof(wchar_t));
 	memcpy(&importFileName[i], szInput, (wcslen(szInput) + 1) * sizeof(wchar_t));
 
-	const wchar_t* szOutput = L"EGK_StreamingSTPInOut_exported_as1-oc-214.stp";
+	const wchar_t* szOutput = L"StreamingSTPInOut_exported_as1-oc-214.stp";
 	exportFileName = new wchar_t[i + wcslen(szOutput) + 1];
 	memcpy(&exportFileName[0], this->m_pszHelpFilePath, i * sizeof(wchar_t));
 	memcpy(&exportFileName[i], szOutput, (wcslen(szOutput) + 1) * sizeof(wchar_t));
