@@ -78,21 +78,23 @@ typedef void(*LOGCB)(const char *);
 #define		sdaiSET					3
 #define		sdaiBAG					4
 
-typedef	int_t			* SdaiAggr;
-typedef	void			* SdaiAttr;
+typedef	int_t			SdaiPrimitiveType;
+typedef	int_t			SdaiInteger;
+typedef double			SdaiReal;
 typedef	int_t			SdaiBoolean;
 typedef	int_t			SdaiEntity;
 typedef	int_t			SdaiInstance;
-typedef	int_t			SdaiInteger;
 typedef	int_t			SdaiModel;
 typedef	int_t			SdaiRep;
-typedef	int_t			SdaiPrimitiveType;
 typedef	int_t			* SdaiSet;
 typedef	const char		* SdaiString;
 typedef	void			* SdaiADB;
 typedef	int_t			SdaiNPL;
-typedef	int_t			SdaiIterator;
-typedef double			SdaiReal;
+typedef	int_t			* SdaiAggr;
+typedef SdaiAggr		SdaiArray;
+typedef	void*			SdaiIterator;
+typedef int_t			SdaiAggrIndex;
+typedef	void			* SdaiAttr;
 
 typedef	int64_t			ExpressID;
 
@@ -100,117 +102,127 @@ typedef	int_t			SchemaDeclIterator;
 typedef	int_t			SchemaDecl;
 typedef	int_t			* SchemaAggr;
 
+typedef void*			ValidationResults;
+typedef void*			ValidationIssue;
+typedef int_t			ValidationIssueLevel;
+
 #define sdaiFALSE		((SdaiInteger) 0)  
 #define sdaiTRUE		((SdaiInteger) 1)
 #define sdaiUNKNOWN		((SdaiInteger) 2)
 
+#ifdef __cplusplus
 
-enum enum_string_encoding
+enum class enum_string_encoding : unsigned char
 {
-	enum_string_encoding__IGNORE_DEFAULT = 32,
-	enum_string_encoding__WINDOWS_1250 = 32,
-	enum_string_encoding__WINDOWS_1251 = 32,
-	enum_string_encoding__WINDOWS_1252 = 32,
-	enum_string_encoding__WINDOWS_1253 = 32,
-	enum_string_encoding__WINDOWS_1254 = 32,
-	enum_string_encoding__WINDOWS_1255 = 32,
-	enum_string_encoding__WINDOWS_1256 = 32,
-	enum_string_encoding__WINDOWS_1257 = 32,
-	enum_string_encoding__WINDOWS_1258 = 32,
-	enum_string_encoding__ISO8859_1 = 32,
-	enum_string_encoding__ISO8859_2 = 32,
-	enum_string_encoding__ISO8859_3 = 32,
-	enum_string_encoding__ISO8859_4 = 32,
-	enum_string_encoding__ISO8859_5 = 32,
-	enum_string_encoding__ISO8859_6 = 32,
-	enum_string_encoding__ISO8859_7 = 32,
-	enum_string_encoding__ISO8859_8 = 32,
-	enum_string_encoding__ISO8859_9 = 32,
-	enum_string_encoding__ISO8859_10 = 32,
-	enum_string_encoding__ISO8859_11 = 32,
-	enum_string_encoding__ISO8859_13 = 32,
-	enum_string_encoding__ISO8859_14 = 32,
-	enum_string_encoding__ISO8859_15 = 32,
-	enum_string_encoding__ISO8859_16 = 32,
-	enum_string_encoding__MACINTOSH_CENTRAL_EUROPEAN = 32,
-	enum_string_encoding__SHIFT_JIS_X_213 = 32,
-	enum_string_encoding__UTF8 = 32
+	IGNORE_DEFAULT				= (0 + 0 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 0 * 32),	//		 0   0   0   0   0   0
+	WINDOWS_1250				= (0 + 0 * 2 + 1 * 4 + 0 * 8 + 0 * 16 + 0 * 32),	//		 0   0   1   0   0   0
+	WINDOWS_1251				= (0 + 0 * 2 + 0 * 4 + 1 * 8 + 0 * 16 + 0 * 32),	//		 0   0   0   1   0   0
+	WINDOWS_1252				= (0 + 0 * 2 + 1 * 4 + 1 * 8 + 0 * 16 + 0 * 32),	//		 0   0   1   1   0   0
+	WINDOWS_1253				= (0 + 0 * 2 + 0 * 4 + 0 * 8 + 1 * 16 + 0 * 32),	//		 0   0   0   0   1   0
+	WINDOWS_1254				= (0 + 0 * 2 + 1 * 4 + 0 * 8 + 1 * 16 + 0 * 32),	//		 0   0   1   0   1   0
+	WINDOWS_1255				= (0 + 0 * 2 + 0 * 4 + 1 * 8 + 1 * 16 + 0 * 32),	//		 0   0   0   1   1   0
+	WINDOWS_1256				= (0 + 0 * 2 + 1 * 4 + 1 * 8 + 1 * 16 + 0 * 32),	//		 0   0   1   1   1   0
+	WINDOWS_1257				= (0 + 0 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 1 * 32),	//		 0   0   0   0   0   1
+	WINDOWS_1258				= (0 + 0 * 2 + 1 * 4 + 0 * 8 + 0 * 16 + 1 * 32),	//		 0   0   1   0   0   1
+	ISO8859_1					= (1 + 0 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 0 * 32),	//		 1   0   0   0   0   0
+	ISO8859_2					= (1 + 0 * 2 + 1 * 4 + 0 * 8 + 0 * 16 + 0 * 32),	//		 1   0   1   0   0   0
+	ISO8859_3					= (1 + 0 * 2 + 0 * 4 + 1 * 8 + 0 * 16 + 0 * 32),	//		 1   0   0   1   0   0
+	ISO8859_4					= (1 + 0 * 2 + 1 * 4 + 1 * 8 + 0 * 16 + 0 * 32),	//		 1   0   1   1   0   0
+	ISO8859_5					= (1 + 0 * 2 + 0 * 4 + 0 * 8 + 1 * 16 + 0 * 32),	//		 1   0   0   0   1   0
+	ISO8859_6					= (1 + 0 * 2 + 1 * 4 + 0 * 8 + 1 * 16 + 0 * 32),	//		 1   0   1   0   1   0
+	ISO8859_7					= (1 + 0 * 2 + 0 * 4 + 1 * 8 + 1 * 16 + 0 * 32),	//		 1   0   0   1   1   0
+	ISO8859_8					= (1 + 0 * 2 + 1 * 4 + 1 * 8 + 1 * 16 + 0 * 32),	//		 1   0   1   1   1   0
+	ISO8859_9					= (1 + 0 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 1 * 32),	//		 1   0   0   0   0   1
+	ISO8859_10					= (1 + 0 * 2 + 1 * 4 + 0 * 8 + 0 * 16 + 1 * 32),	//		 1   0   1   0   0   1
+	ISO8859_11					= (1 + 0 * 2 + 0 * 4 + 1 * 8 + 0 * 16 + 1 * 32),	//		 1   0   0   1   0   1
+	ISO8859_13					= (1 + 0 * 2 + 0 * 4 + 0 * 8 + 1 * 16 + 1 * 32),	//		 1   0   0   0   1   1
+	ISO8859_14					= (1 + 0 * 2 + 1 * 4 + 0 * 8 + 1 * 16 + 1 * 32),	//		 1   0   1   0   1   1
+	ISO8859_15					= (1 + 0 * 2 + 0 * 4 + 1 * 8 + 1 * 16 + 1 * 32),	//		 1   0   0   1   1   1
+	ISO8859_16					= (1 + 0 * 2 + 1 * 4 + 1 * 8 + 1 * 16 + 1 * 32),	//		 1   0   1   1   1   1
+	MACINTOSH_CENTRAL_EUROPEAN	= (0 + 1 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 0 * 32),	//		 0   1   0   0   0   0
+	SHIFT_JIS_X_213				= (1 + 1 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 0 * 32),    //		 1   1   0   0   0   0
+	UTF8						= (1 + 1 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 1 * 32)     //		 1   1   0   0   0   1
 };
 
 
-enum enum_express_declaration
+enum class enum_express_declaration : unsigned char
 {
-	enum_express_declaration____NONE = 0,
-	enum_express_declaration____ENTITY = 1,
-	enum_express_declaration____ENUM = 2,
-	enum_express_declaration____SELECT = 3,
-	enum_express_declaration____DEFINED_TYPE = 4
+	__NONE						= 0,
+	__ENTITY					= 1,
+	__ENUM						= 2,
+	__SELECT					= 3,
+	__DEFINED_TYPE				= 4
 };
 
 
-enum enum_express_attr_type
+enum class enum_express_attr_type : unsigned char
 {
-	enum_express_attr_type____NONE = 0,
-	enum_express_attr_type____BINARY = 1,
-	enum_express_attr_type____BINARY_32 = 2,
-	enum_express_attr_type____BOOLEAN = 3,
-	enum_express_attr_type____ENUMERATION = 4,
-	enum_express_attr_type____INTEGER = 5,
-	enum_express_attr_type____LOGICAL = 6,
-	enum_express_attr_type____NUMBER = 7,
-	enum_express_attr_type____REAL = 8,
-	enum_express_attr_type____SELECT = 9,
-	enum_express_attr_type____STRING = 10,
-	enum_express_attr_type____GENERIC = 11
+	__NONE						= 0,					//	attribute type is unknown here but it may be defined by referenced domain entity
+	__BINARY					= 1,
+	__BINARY_32					= 2,
+	__BOOLEAN					= 3,
+	__ENUMERATION				= 4,
+	__INTEGER					= 5,
+	__LOGICAL					= 6,
+	__NUMBER					= 7,
+	__REAL						= 8,
+	__SELECT					= 9,
+	__STRING					= 10,
+	__GENERIC					= 11
 };
 
 
-enum enum_express_aggr
+enum class enum_express_aggr : unsigned char
 {
-	enum_express_aggr____NONE = 0,
-	enum_express_aggr____ARRAY = 1,
-	enum_express_aggr____BAG = 2,
-	enum_express_aggr____LIST = 3,
-	enum_express_aggr____SET = 4,
-	enum_express_aggr____AGGREGATE = 5
+	__NONE						= 0,
+	__ARRAY						= 1,
+	__BAG						= 2,
+	__LIST						= 3,
+	__SET						= 4,
+	__AGGREGATE					= 5						//	generic aggregate
 };
 
-typedef void		* ValidationResults;
-typedef void		* ValidationIssue;
-typedef int_t		ValidationIssueLevel;
-
-enum enum_validation_type
+enum class enum_validation_type : uint64_t
 {
-	enum_validation_type____NONE = 0,
-	enum_validation_type____KNOWN_ENTITY = 10,
-	enum_validation_type____NO_OF_ARGUMENTS = 11,
-	enum_validation_type____ARGUMENT_EXPRESS_TYPE = 12,
-	enum_validation_type____ARGUMENT_PRIM_TYPE = 13,
-	enum_validation_type____REQUIRED_ARGUMENTS = 14,
-	enum_validation_type____ARRGEGATION_EXPECTED = 15,
-	enum_validation_type____AGGREGATION_NOT_EXPECTED = 16,
-	enum_validation_type____AGGREGATION_SIZE = 17,
-	enum_validation_type____AGGREGATION_UNIQUE = 18,
-	enum_validation_type____COMPLEX_INSTANCE = 19,
-	enum_validation_type____REFERENCE_EXISTS = 110,
-	enum_validation_type____ABSTRACT_ENTITY = 111,
-	enum_validation_type____WHERE_RULE = 112,
-	enum_validation_type____UNIQUE_RULE = 113,
-	enum_validation_type____STAR_USAGE = 114,
-	enum_validation_type____CALL_ARGUMENT = 115,
-	enum_validation_type____INVALID_TEXT_LITERAL = 116,
-	enum_validation_type____INTERNAL_ERROR = 163
+	__NONE						= 0,
+	__KNOWN_ENTITY				= 1 << 0,				//  entity is defined in the schema
+	__NO_OF_ARGUMENTS			= 1 << 1,				//	number of arguments
+	__ARGUMENT_EXPRESS_TYPE		= 1 << 2,				//	argument value is correct entity, defined type or enumeration value
+	__ARGUMENT_PRIM_TYPE		= 1 << 3,				//	argument value has correct primitive type
+	__REQUIRED_ARGUMENTS		= 1 << 4,				//	non-optional arguments values are provided
+	__ARRGEGATION_EXPECTED		= 1 << 5,				//	aggregation is provided when expected
+	__AGGREGATION_NOT_EXPECTED	= 1 << 6,   			//	aggregation is not used when not expected
+	__AGGREGATION_SIZE			= 1 << 7,   			//	aggregation size
+	__AGGREGATION_UNIQUE		= 1 << 8,				//	elements in aggregations are unique when required
+	__COMPLEX_INSTANCE			= 1 << 9,				//	complex instances contains full parent chains
+	__REFERENCE_EXISTS			= 1 << 10,				//	referenced instance exists
+	__ABSTRACT_ENTITY			= 1 << 11,  			//	abstract entity should not instantiate
+	__WHERE_RULE				= 1 << 12,  			//	where-rule check
+	__UNIQUE_RULE				= 1 << 13,				//	unique-rule check
+	__STAR_USAGE				= 1 << 14,  			//	* is used only for derived arguments
+	__CALL_ARGUMENT				= 1 << 15,  			//	validateModel / validateInstance function argument should be model / instance
+	__INVALID_TEXT_LITERAL		= 1 << 16,				//	invalid text literal string
+	__INTERNAL_ERROR			= UINT64_C(1) << 63   	//	unspecified error
 };
 
-enum enum_validation_status
+enum class enum_validation_status : unsigned char
 {
-	enum_validation_status____NONE = 0,
-	enum_validation_status____COMPLETE_ALL = 1,
-	enum_validation_status____COMPLETE_NOT_ALL = 2,
-	enum_validation_status____TIME_EXCEED = 3,
-	enum_validation_status____COUNT_EXCEED = 4
+	__NONE						= 0,
+	__COMPLETE_ALL				= 1,					//	all issues proceed
+	__COMPLETE_NOT_ALL			= 2,					//	completed but some issues were excluded by option settings
+	__TIME_EXCEED				= 3,					//	validation was finished because of reach time limit
+	__COUNT_EXCEED				= 4						//	validation was finished because of reach of issue's numbers limit
 };
 
+#else //__cplusplus
+	typedef unsigned char bool;
+	typedef unsigned char enum_string_encoding;
+	typedef unsigned char enum_express_declaration;
+	typedef unsigned char enum_express_attr_type;
+	typedef unsigned char enum_express_aggr;
+	typedef uint64_t	  enum_validation_type;
+	typedef unsigned char enum_validation_status;
+#endif//__cplusplus
 
 
 //
@@ -255,7 +267,7 @@ void			DECL STDC	SetSPFFHeader(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -288,7 +300,7 @@ static	inline	void	SetSPFFHeader(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -314,7 +326,7 @@ int_t			DECL STDC	SetSPFFHeaderItem(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -392,7 +404,7 @@ static	inline	int_t	SetSPFFHeaderItem(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -418,7 +430,7 @@ int_t			DECL STDC	GetSPFFHeaderItem(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -496,7 +508,7 @@ static	inline	int_t	GetSPFFHeaderItem(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -514,7 +526,7 @@ const char		DECL * STDC	GetLibraryIdentifier(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -533,11 +545,11 @@ static	inline	const char	* GetLibraryIdentifier(
 								)
 {
 	return	GetLibraryIdentifier(
-					(const char**) 0      				//	libraryIdentifier
+					(const char**) nullptr				//	libraryIdentifier
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -557,7 +569,7 @@ const char		DECL * STDC	GetSchemaName(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -580,11 +592,11 @@ static	inline	const char	* GetSchemaName(
 {
 	return	GetSchemaName(
 					model,
-					(const char**) 0      				//	schemaName
+					(const char**) nullptr				//	schemaName
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -638,7 +650,7 @@ SdaiModel		DECL STDC	sdaiCreateModelBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -663,7 +675,7 @@ static	inline	SdaiModel	sdaiCreateModelBN(
 {
 	SdaiModel	model = sdaiCreateModelBN(
 								0,
-								0      ,
+								nullptr,
 								schemaName
 							);
 
@@ -687,7 +699,7 @@ static	inline	SdaiModel	sdaiCreateModelBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -711,7 +723,7 @@ SdaiModel		DECL STDC	sdaiCreateModelBNUnicode(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -736,7 +748,7 @@ static	inline	SdaiModel	sdaiCreateModelBNUnicode(
 {
 	SdaiModel	model = sdaiCreateModelBNUnicode(
 								0,
-								0      ,
+								nullptr,
 								schemaName
 							);
 
@@ -760,7 +772,7 @@ static	inline	SdaiModel	sdaiCreateModelBNUnicode(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -784,7 +796,7 @@ SdaiModel		DECL STDC	sdaiOpenModelBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -801,7 +813,7 @@ static	inline	SdaiModel	sdaiOpenModelBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -825,7 +837,7 @@ SdaiModel		DECL STDC	sdaiOpenModelBNUnicode(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -842,7 +854,7 @@ static	inline	SdaiModel	sdaiOpenModelBNUnicode(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -866,7 +878,7 @@ SdaiModel		DECL STDC	engiOpenModelByStream(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -883,7 +895,7 @@ static	inline	SdaiModel	engiOpenModelByStream(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -909,7 +921,7 @@ SdaiModel		DECL STDC	engiOpenModelByArray(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -944,7 +956,7 @@ static	inline	SdaiModel	engiOpenModelByArray(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -964,7 +976,7 @@ void			DECL STDC	sdaiSaveModelBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -979,7 +991,7 @@ static	inline	void	sdaiSaveModelBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -999,7 +1011,7 @@ void			DECL STDC	sdaiSaveModelBNUnicode(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1014,7 +1026,7 @@ static	inline	void	sdaiSaveModelBNUnicode(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -1066,7 +1078,7 @@ void			DECL STDC	sdaiSaveModelAsXmlBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1081,7 +1093,7 @@ static	inline	void	sdaiSaveModelAsXmlBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -1101,7 +1113,7 @@ void			DECL STDC	sdaiSaveModelAsXmlBNUnicode(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1116,7 +1128,7 @@ static	inline	void	sdaiSaveModelAsXmlBNUnicode(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -1136,7 +1148,7 @@ void			DECL STDC	sdaiSaveModelAsSimpleXmlBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1151,7 +1163,7 @@ static	inline	void	sdaiSaveModelAsSimpleXmlBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -1171,7 +1183,7 @@ void			DECL STDC	sdaiSaveModelAsSimpleXmlBNUnicode(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1186,7 +1198,7 @@ static	inline	void	sdaiSaveModelAsSimpleXmlBNUnicode(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -1206,7 +1218,7 @@ void			DECL STDC	sdaiSaveModelAsJsonBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1221,7 +1233,7 @@ static	inline	void	sdaiSaveModelAsJsonBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -1241,7 +1253,7 @@ void			DECL STDC	sdaiSaveModelAsJsonBNUnicode(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1256,7 +1268,7 @@ static	inline	void	sdaiSaveModelAsJsonBNUnicode(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -1276,7 +1288,7 @@ bool			DECL STDC	engiSaveSchemaBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1291,7 +1303,7 @@ static	inline	bool	engiSaveSchemaBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -1311,7 +1323,7 @@ bool			DECL STDC	engiSaveSchemaBNUnicode(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1326,7 +1338,7 @@ static	inline	bool	engiSaveSchemaBNUnicode(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -1474,7 +1486,7 @@ SdaiEntity		DECL STDC	sdaiGetEntity(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1489,7 +1501,7 @@ static	inline	SdaiEntity	sdaiGetEntity(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -1521,7 +1533,7 @@ int_t			DECL STDC	engiGetEntityAttributeIndex(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1536,7 +1548,7 @@ static	inline	int_t	engiGetEntityAttributeIndex(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -1560,7 +1572,7 @@ int_t			DECL STDC	engiGetEntityAttributeIndexEx(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1579,7 +1591,7 @@ static	inline	int_t	engiGetEntityAttributeIndexEx(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -1603,7 +1615,7 @@ const char		DECL * STDC	engiGetEntityArgumentName(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1634,11 +1646,11 @@ static	inline	const char	* engiGetEntityArgumentName(
 					entity,
 					index,
 					valueType,
-					(const char**) 0      				//	argumentName
+					(const char**) nullptr				//	argumentName
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -1723,7 +1735,7 @@ SdaiAggr		DECL STDC	sdaiGetEntityExtentBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1738,7 +1750,7 @@ static	inline	SdaiAggr	sdaiGetEntityExtentBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -1760,7 +1772,7 @@ const char		DECL * STDC	engiGetEntityName(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1787,11 +1799,11 @@ static	inline	const char	* engiGetEntityName(
 	return	engiGetEntityName(
 					entity,
 					valueType,
-					(const char**) 0      				//	entityName
+					(const char**) nullptr				//	entityName
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -1909,7 +1921,7 @@ int_t			DECL STDC	engiGetAttrOptionalBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1924,7 +1936,7 @@ static	inline	int_t	engiGetAttrOptionalBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -1967,7 +1979,7 @@ int_t			DECL STDC	engiGetAttrDerivedBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -1982,7 +1994,7 @@ static	inline	int_t	engiGetAttrDerivedBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -2022,7 +2034,7 @@ int_t			DECL STDC	engiGetAttrInverseBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -2037,7 +2049,7 @@ static	inline	int_t	engiGetAttrInverseBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -2057,7 +2069,7 @@ const char		DECL * STDC	engiGetAttrDomain(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -2080,11 +2092,11 @@ static	inline	const char	* engiGetAttrDomain(
 {
 	return	engiGetAttrDomain(
 					attribute,
-					(const char**) 0      				//	domainName
+					(const char**) nullptr				//	domainName
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -2115,7 +2127,7 @@ const char		DECL * STDC	engiGetAttrDomainBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -2142,11 +2154,11 @@ static	inline	const char	* engiGetAttrDomainBN(
 	return	engiGetAttrDomainBN(
 					entity,
 					attributeName,
-					(const char**) 0      				//	domainName
+					(const char**) nullptr				//	domainName
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -2186,7 +2198,7 @@ int_t			DECL STDC	engiGetEntityIsAbstractBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -2201,7 +2213,7 @@ static	inline	int_t	engiGetEntityIsAbstractBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -2225,7 +2237,7 @@ const char		DECL * STDC	engiGetEnumerationValue(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -2256,18 +2268,18 @@ static	inline	const char	* engiGetEnumerationValue(
 					attribute,
 					index,
 					valueType,
-					(const char**) 0      				//	enumerationValue
+					(const char**) nullptr				//	enumerationValue
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
 //
 //		engiGetEntityAttributeByIndex                           (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeByIndex.html)
 //				SdaiEntity				entity								IN
-//				SdaiInteger				index								IN
+//				SdaiAggrIndex			index								IN
 //				bool					countedWithParents					IN
 //				bool					countedWithInverse					IN
 //
@@ -2277,7 +2289,7 @@ static	inline	const char	* engiGetEnumerationValue(
 //
 SdaiAttr		DECL STDC	engiGetEntityAttributeByIndex(
 									SdaiEntity				entity,
-									SdaiInteger				index,
+									SdaiAggrIndex			index,
 									bool					countedWithParents,
 									bool					countedWithInverse
 								);
@@ -2310,7 +2322,7 @@ void			DECL STDC	engiGetAttributeTraits(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -2337,7 +2349,7 @@ static	inline	void	engiGetAttributeTraits(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -2515,7 +2527,7 @@ void			DECL STDC	sdaiDeleteADB(
 //
 //		sdaiGetAggrByIndex                                      (http://rdf.bg/ifcdoc/CP64/sdaiGetAggrByIndex.html)
 //				const SdaiAggr			aggregate							IN
-//				int_t					index								IN
+//				SdaiAggrIndex			index								IN
 //				SdaiPrimitiveType		valueType							IN
 //				void					* value								IN / OUT
 //
@@ -2523,6 +2535,7 @@ void			DECL STDC	sdaiDeleteADB(
 //
 //	valueType argument to specify what type of data caller wants to get and
 //	value argument where the caller should provide a buffer, and the function will write the result to.
+// 
 //	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiGetAggrByIndex, and it works similarly for all get-functions.
 //	Note: with SDAI API it is impossible to check buffer type at compilation or execution time and this is responsibility of a caller to ensure that
 //		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
@@ -2576,7 +2589,7 @@ void			DECL STDC	sdaiDeleteADB(
 //							sdaiDeleteADB (adb);
 //
 //							SdaiADB	adb = nullptr;	//	it is important to initialize
-//							sdaiGetADBValue (ADB, sdaiADB, &adb);
+//							sdaiGetAggrByIndex (ADB, sdaiADB, &adb);
 //
 //	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t
@@ -2605,10 +2618,119 @@ void			DECL STDC	sdaiDeleteADB(
 //
 void			DECL * STDC	sdaiGetAggrByIndex(
 									const SdaiAggr			aggregate,
-									int_t					index,
+									SdaiAggrIndex			index,
 									SdaiPrimitiveType		valueType,
 									void					* value
 								);
+
+
+//
+//		sdaiPutAggrByIndex                                   (http://rdf.bg/ifcdoc/CP64/sdaiPutAggrByIndex.html)
+//				SdaiAggr				aggregate							IN
+//				SdaiAggrIndex			index								IN
+//				SdaiPrimitiveType		valueType							IN
+//				const void				* value								IN
+//
+//				void					returns
+//
+//	valueType argument to specify what type of data caller wants to put
+//	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiPutAggrByIndex, and it works similarly for all put-functions.
+//	Note: with SDAI API it is impossible to check buffer type at compilation or execution time and this is responsibility of a caller to ensure that
+//		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
+//
+//
+//	Table 1 – Required value buffer depending on valueType (on the example of sdaiPutAggrByIndex but valid for all put-functions)
+//
+//	valueType				C/C++														C#
+//
+//	sdaiINTEGER				int_t val = 123;											int_t val = 123;
+//							sdaiPutAggrByIndex (iter, sdaiINTEGER, &val);			    stepengine.sdaiPutAggrByIndex (iter, stepengine.sdaiINTEGER, ref val);
+//
+//	sdaiREAL or sdaiNUMBER	double val = 123.456;										double val = 123.456;
+//							sdaiPutAggrByIndex (iter, sdaiREAL, &val);				    stepengine.sdaiPutAggrByIndex (iter, stepengine.sdaiREAL, ref val);
+//
+//	sdaiBOOLEAN				bool val = true;											bool val = true;
+//							sdaiPutAggrByIndex (iter, sdaiBOOLEAN, &val);				stepengine.sdaiPutAggrByIndex (iter, stepengine.sdaiBOOLEAN, ref val);
+//
+//	sdaiLOGICAL				const TCHAR* val = "U";										string val = "U";
+//							sdaiPutAggrByIndex (iter, sdaiLOGICAL, val);				stepengine.sdaiPutAggrByIndex (iter, stepengine.sdaiLOGICAL, val);
+//
+//	sdaiENUM				const TCHAR* val = "NOTDEFINED";							string val = "NOTDEFINED";
+//							sdaiPutAggrByIndex (iter, sdaiENUM, val);					stepengine.sdaiPutAggrByIndex (iter, stepengine.sdaiENUM, val);
+//
+//	sdaiBINARY				const TCHAR* val = "0123456ABC";							string val = "0123456ABC";
+//							sdaiPutAggrByIndex (iter, sdaiBINARY, val);					stepengine.sdaiPutAggrByIndex (iter, stepengine.sdaiBINARY, val);
+//
+//	sdaiSTRING				const char* val = "My Simple String";						string val = "My Simple String";
+//							sdaiPutAggrByIndex (iter, sdaiSTRING, val);					stepengine.sdaiPutAggrByIndex (iter, stepengine.sdaiSTRING, val);
+//
+//	sdaiUNICODE				const wchar_t* val = L"Any Unicode String";					string val = "Any Unicode String";
+//							sdaiPutAggrByIndex (iter, sdaiUNICODE, val);				stepengine.sdaiPutAggrByIndex (iter, stepengine.sdaiUNICODE, val);
+//
+//	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
+//							sdaiPutAggrByIndex (iter, sdaiEXPRESSSTRING, val);			stepengine.sdaiPutAggrByIndex (iter, stepengine.sdaiEXPRESSSTRING, val);
+//
+//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");	int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
+//							sdaiPutAggrByIndex (iter, sdaiINSTANCE, val);				stepengine.sdaiPutAggrByIndex (iter, stepengine.sdaiINSTANCE, val);
+//
+//	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);					int_t val = sdaiCreateAggr (inst, 0);
+//							sdaiPutAttr (val, sdaiINSTANCE, inst);						stepengine.sdaiPutAttr (val, stepengine.sdaiINSTANCE, inst);
+//							sdaiPutAggrByIndex (iter, sdaiAGGR, val);					stepengine.sdaiPutAggrByIndex (iter, stepengine.sdaiAGGR, val);
+//
+//	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
+//							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
+//							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					stepengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
+//							sdaiPutAggrByIndex (iter, sdaiADB, val);					stepengine.sdaiPutAggrByIndex (iter, stepengine.sdaiADB, val);	
+//							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
+//
+//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t
+//
+//
+//	Table 2 - valueType can be requested depending on actual model data.
+//
+//	valueType		Works for following values in the model
+//				 	  integer	   real		.T. or .F.	   .U.		other enum	  binary	  string	 instance	   list		 $ (empty)
+//	sdaiINTEGER			Yes			 .			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiREAL			 .			Yes			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiNUMBER			 . 			Yes			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiBOOLEAN			 .			 .			Yes			 .			 .			 .			 .			 .			 .			 .
+//	sdaiLOGICAL			 .			 .			Yes			Yes			 .			 .			 .			 .			 .			 .
+//	sdaiENUM			 .			 .			Yes			Yes			Yes			 .			 .			 .			 .			 .
+//	sdaiBINARY			 .			 .			 .			 .			 .			Yes			 .			 .			 .			 .
+//	sdaiSTRING			 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiUNICODE			 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiEXPRESSSTRING	 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiINSTANCE		 .			 .			 .			 .			 .			 .			 .			Yes			 .			 .
+//	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
+//	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
+//
+void			DECL STDC	sdaiPutAggrByIndex(
+									SdaiAggr				aggregate,
+									SdaiAggrIndex			index,
+									SdaiPrimitiveType		valueType,
+									const void				* value
+								);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static inline void	sdaiPutAggrByIndex(
+									SdaiAggr				aggregate,
+									SdaiAggrIndex			index,
+									SdaiPrimitiveType		valueType,
+									SdaiInstance			value
+								)
+{
+	sdaiPutAggrByIndex(aggregate, index, valueType, (const void*)value);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
 
 //
 //		engiGetAggrType                                         (http://rdf.bg/ifcdoc/CP64/engiGetAggrType.html)
@@ -2849,7 +2971,7 @@ void			DECL * STDC	sdaiGetAttrBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -2868,7 +2990,7 @@ static	inline	void	* sdaiGetAttrBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -2892,7 +3014,7 @@ int_t			DECL STDC	sdaiGetAttrBNUnicode(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -2911,7 +3033,7 @@ static	inline	int_t	sdaiGetAttrBNUnicode(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -2948,7 +3070,7 @@ char			DECL * STDC	sdaiGetStringAttrBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -2963,7 +3085,7 @@ static	inline	char	* sdaiGetStringAttrBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -3000,7 +3122,7 @@ SdaiInstance	DECL STDC	sdaiGetInstanceAttrBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -3015,7 +3137,7 @@ static	inline	SdaiInstance	sdaiGetInstanceAttrBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -3052,7 +3174,7 @@ SdaiAggr		DECL STDC	sdaiGetAggregationAttrBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -3067,7 +3189,7 @@ static	inline	SdaiAggr	sdaiGetAggregationAttrBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -3087,7 +3209,7 @@ SdaiAttr		DECL STDC	sdaiGetAttrDefinition(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -3102,7 +3224,7 @@ static	inline	SdaiAttr	sdaiGetAttrDefinition(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -3184,7 +3306,7 @@ int_t			DECL STDC	sdaiIsKindOfBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -3199,7 +3321,7 @@ static	inline	int_t	sdaiIsKindOfBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -3247,7 +3369,7 @@ SdaiPrimitiveType	DECL STDC	engiGetAttrTypeBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -3262,7 +3384,7 @@ static	inline	SdaiPrimitiveType	engiGetAttrTypeBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -3309,7 +3431,7 @@ SdaiPrimitiveType	DECL STDC	engiGetInstanceAttrTypeBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -3324,7 +3446,7 @@ static	inline	SdaiPrimitiveType	engiGetInstanceAttrTypeBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -3371,7 +3493,7 @@ int_t			DECL STDC	sdaiIsInstanceOfBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -3386,7 +3508,7 @@ static	inline	int_t	sdaiIsInstanceOfBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -3443,7 +3565,7 @@ int_t			DECL STDC	sdaiValidateAttributeBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -3458,7 +3580,7 @@ static	inline	int_t	sdaiValidateAttributeBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -3506,7 +3628,7 @@ int_t			DECL STDC	engiGetInstanceMetaInfo(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -3525,7 +3647,7 @@ static	inline	int_t	engiGetInstanceMetaInfo(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -3565,7 +3687,7 @@ int_t			DECL STDC	sdaiFindInstanceUsedInBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -3588,7 +3710,7 @@ static	inline	int_t	sdaiFindInstanceUsedInBN(
 //  Instance Writing API Calls
 //
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -3681,7 +3803,7 @@ void			DECL STDC	sdaiPrepend(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -3698,7 +3820,7 @@ static	inline	void	sdaiPrepend(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -3791,7 +3913,7 @@ void			DECL STDC	sdaiAppend(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -3808,7 +3930,7 @@ static	inline	void	sdaiAppend(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -3901,17 +4023,17 @@ void			DECL STDC	sdaiAdd(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
 //
 //		sdaiInsertByIndex                                       (http://rdf.bg/ifcdoc/CP64/sdaiInsertByIndex.html)
 //				const SdaiAggr			aggregate							IN
-//				SdaiInteger				index								IN
+//				SdaiAggrIndex			index								IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
 //
@@ -3992,20 +4114,20 @@ void			DECL STDC	sdaiAdd(
 //
 void			DECL STDC	sdaiInsertByIndex(
 									const SdaiAggr			aggregate,
-									SdaiInteger				index,
+									SdaiAggrIndex			index,
 									SdaiPrimitiveType		valueType,
 									const void				* value
 								);
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
 static	inline	void	sdaiInsertByIndex(
 								const SdaiAggr			aggregate,
-								SdaiInteger				index,
+								SdaiAggrIndex			index,
 								SdaiPrimitiveType		valueType,
 								SdaiInstance			value
 							)
@@ -4018,9 +4140,221 @@ static	inline	void	sdaiInsertByIndex(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
+
+//
+//		sdaiInsertBefore                                       (http://rdf.bg/ifcdoc/CP64/sdaiInsertBefore.html)
+//				const SdaiIterator		iterator							IN
+//				SdaiPrimitiveType		valueType							IN
+//				const void				* value								IN
+//
+//				void					returns
+//
+//	valueType argument to specify what type of data caller wants to put
+//	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiInsertBefore, and it works similarly for all put-functions.
+//	Note: with SDAI API it is impossible to check buffer type at compilation or execution time and this is responsibility of a caller to ensure that
+//		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
+//
+//
+//	Table 1 – Required value buffer depending on valueType (on the example of sdaiInsertBefore but valid for all put-functions)
+//
+//	valueType				C/C++														C#
+//
+//	sdaiINTEGER				int_t val = 123;											int_t val = 123;
+//							sdaiInsertBefore (aggr, sdaiINTEGER, &val);					stepengine.sdaiInsertBefore (aggr, stepengine.sdaiINTEGER, ref val);
+//
+//	sdaiREAL or sdaiNUMBER	double val = 123.456;										double val = 123.456;
+//							sdaiInsertBefore (aggr, sdaiREAL, &val);					stepengine.sdaiInsertBefore (aggr, stepengine.sdaiREAL, ref val);
+//
+//	sdaiBOOLEAN				bool val = true;											bool val = true;
+//							sdaiInsertBefore (aggr, sdaiBOOLEAN, &val);					stepengine.sdaiInsertBefore (aggr, stepengine.sdaiBOOLEAN, ref val);
+//
+//	sdaiLOGICAL				const TCHAR* val = "U";										string val = "U";
+//							sdaiInsertBefore (aggr, sdaiLOGICAL, val);					stepengine.sdaiInsertBefore (aggr, stepengine.sdaiLOGICAL, val);
+//
+//	sdaiENUM				const TCHAR* val = "NOTDEFINED";							string val = "NOTDEFINED";
+//							sdaiInsertBefore (aggr, sdaiENUM, val);						stepengine.sdaiInsertBefore (aggr, stepengine.sdaiENUM, val);
+//
+//	sdaiBINARY				const TCHAR* val = "0123456ABC";							string val = "0123456ABC";
+//							sdaiInsertBefore (aggr, sdaiBINARY, val);					stepengine.sdaiInsertBefore (aggr, stepengine.sdaiBINARY, val);
+//
+//	sdaiSTRING				const char* val = "My Simple String";						string val = "My Simple String";
+//							sdaiInsertBefore (aggr, sdaiSTRING, val);					stepengine.sdaiInsertBefore (aggr, stepengine.sdaiSTRING, val);
+//
+//	sdaiUNICODE				const wchar_t* val = L"Any Unicode String";					string val = "Any Unicode String";
+//							sdaiInsertBefore (aggr, sdaiUNICODE, val);					stepengine.sdaiInsertBefore (aggr, stepengine.sdaiUNICODE, val);
+//
+//	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
+//							sdaiInsertBefore (aggr, sdaiEXPRESSSTRING, val);			stepengine.sdaiInsertBefore (aggr, stepengine.sdaiEXPRESSSTRING, val);
+//
+//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");	int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
+//							sdaiInsertBefore (aggr, sdaiINSTANCE, val);					stepengine.sdaiInsertBefore (aggr, stepengine.sdaiINSTANCE, val);
+//
+//	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);					int_t val = sdaiCreateAggr (inst, 0);
+//							sdaiAppend (val, sdaiINSTANCE, inst);						stepengine.sdaiAppend (val, stepengine.sdaiINSTANCE, inst);
+//							sdaiInsertBefore (aggr, sdaiAGGR, val);						stepengine.sdaiInsertBefore (aggr, stepengine.sdaiAGGR, val);
+//
+//	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
+//							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
+//							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					stepengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
+//							sdaiInsertBefore (aggr, sdaiADB, val);						stepengine.sdaiInsertBefore (aggr, stepengine.sdaiADB, val);	
+//							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
+//
+//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t
+//
+//
+//	Table 2 - valueType can be requested depending on actual model data.
+//
+//	valueType		Works for following values in the model
+//				 	  integer	   real		.T. or .F.	   .U.		other enum	  binary	  string	 instance	   list		 $ (empty)
+//	sdaiINTEGER			Yes			 .			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiREAL			 .			Yes			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiNUMBER			 . 			Yes			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiBOOLEAN			 .			 .			Yes			 .			 .			 .			 .			 .			 .			 .
+//	sdaiLOGICAL			 .			 .			Yes			Yes			 .			 .			 .			 .			 .			 .
+//	sdaiENUM			 .			 .			Yes			Yes			Yes			 .			 .			 .			 .			 .
+//	sdaiBINARY			 .			 .			 .			 .			 .			Yes			 .			 .			 .			 .
+//	sdaiSTRING			 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiUNICODE			 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiEXPRESSSTRING	 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiINSTANCE		 .			 .			 .			 .			 .			 .			 .			Yes			 .			 .
+//	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
+//	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
+//
+void			DECL STDC	sdaiInsertBefore(
+									SdaiIterator			iterator,
+									SdaiPrimitiveType		valueType,
+									const void				* value
+								);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static inline void	sdaiInsertBefore(
+									SdaiIterator			iterator,
+									SdaiPrimitiveType		valueType,
+									SdaiInstance			value
+								)
+{
+	sdaiInsertBefore(iterator, valueType, (void*)value);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
+
+
+//
+//		sdaiInsertAfter                                       (http://rdf.bg/ifcdoc/CP64/sdaiInsertAfter.html)
+//				const SdaiIterator		iterator							IN
+//				SdaiPrimitiveType		valueType							IN
+//				const void				* value								IN
+//
+//				void					returns
+//
+//	valueType argument to specify what type of data caller wants to put
+//	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiInsertAfter, and it works similarly for all put-functions.
+//	Note: with SDAI API it is impossible to check buffer type at compilation or execution time and this is responsibility of a caller to ensure that
+//		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
+//
+//
+//	Table 1 – Required value buffer depending on valueType (on the example of sdaiInsertAfter but valid for all put-functions)
+//
+//	valueType				C/C++														C#
+//
+//	sdaiINTEGER				int_t val = 123;											int_t val = 123;
+//							sdaiInsertAfter (aggr, sdaiINTEGER, &val);					stepengine.sdaiInsertAfter (aggr, stepengine.sdaiINTEGER, ref val);
+//
+//	sdaiREAL or sdaiNUMBER	double val = 123.456;										double val = 123.456;
+//							sdaiInsertAfter (aggr, sdaiREAL, &val);						stepengine.sdaiInsertAfter (aggr, stepengine.sdaiREAL, ref val);
+//
+//	sdaiBOOLEAN				bool val = true;											bool val = true;
+//							sdaiInsertAfter (aggr, sdaiBOOLEAN, &val);					stepengine.sdaiInsertAfter (aggr, stepengine.sdaiBOOLEAN, ref val);
+//
+//	sdaiLOGICAL				const TCHAR* val = "U";										string val = "U";
+//							sdaiInsertAfter (aggr, sdaiLOGICAL, val);					stepengine.sdaiInsertAfter (aggr, stepengine.sdaiLOGICAL, val);
+//
+//	sdaiENUM				const TCHAR* val = "NOTDEFINED";							string val = "NOTDEFINED";
+//							sdaiInsertAfter (aggr, sdaiENUM, val);						stepengine.sdaiInsertAfter (aggr, stepengine.sdaiENUM, val);
+//
+//	sdaiBINARY				const TCHAR* val = "0123456ABC";							string val = "0123456ABC";
+//							sdaiInsertAfter (aggr, sdaiBINARY, val);					stepengine.sdaiInsertAfter (aggr, stepengine.sdaiBINARY, val);
+//
+//	sdaiSTRING				const char* val = "My Simple String";						string val = "My Simple String";
+//							sdaiInsertAfter (aggr, sdaiSTRING, val);					stepengine.sdaiInsertAfter (aggr, stepengine.sdaiSTRING, val);
+//
+//	sdaiUNICODE				const wchar_t* val = L"Any Unicode String";					string val = "Any Unicode String";
+//							sdaiInsertAfter (aggr, sdaiUNICODE, val);					stepengine.sdaiInsertAfter (aggr, stepengine.sdaiUNICODE, val);
+//
+//	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
+//							sdaiInsertAfter (aggr, sdaiEXPRESSSTRING, val);				stepengine.sdaiInsertAfter (aggr, stepengine.sdaiEXPRESSSTRING, val);
+//
+//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");	int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
+//							sdaiInsertAfter (aggr, sdaiINSTANCE, val);					stepengine.sdaiInsertAfter (aggr, stepengine.sdaiINSTANCE, val);
+//
+//	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);					int_t val = sdaiCreateAggr (inst, 0);
+//							sdaiAppend (val, sdaiINSTANCE, inst);						stepengine.sdaiAppend (val, stepengine.sdaiINSTANCE, inst);
+//							sdaiInsertAfter (aggr, sdaiAGGR, val);						stepengine.sdaiInsertAfter (aggr, stepengine.sdaiAGGR, val);
+//
+//	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
+//							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
+//							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					stepengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
+//							sdaiInsertAfter (aggr, sdaiADB, val);						stepengine.sdaiInsertAfter (aggr, stepengine.sdaiADB, val);	
+//							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
+//
+//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t
+//
+//
+//	Table 2 - valueType can be requested depending on actual model data.
+//
+//	valueType		Works for following values in the model
+//				 	  integer	   real		.T. or .F.	   .U.		other enum	  binary	  string	 instance	   list		 $ (empty)
+//	sdaiINTEGER			Yes			 .			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiREAL			 .			Yes			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiNUMBER			 . 			Yes			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiBOOLEAN			 .			 .			Yes			 .			 .			 .			 .			 .			 .			 .
+//	sdaiLOGICAL			 .			 .			Yes			Yes			 .			 .			 .			 .			 .			 .
+//	sdaiENUM			 .			 .			Yes			Yes			Yes			 .			 .			 .			 .			 .
+//	sdaiBINARY			 .			 .			 .			 .			 .			Yes			 .			 .			 .			 .
+//	sdaiSTRING			 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiUNICODE			 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiEXPRESSSTRING	 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiINSTANCE		 .			 .			 .			 .			 .			 .			 .			Yes			 .			 .
+//	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
+//	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
+//
+void			DECL STDC	sdaiInsertAfter(
+									SdaiIterator			iterator,
+									SdaiPrimitiveType		valueType,
+									const void				* value
+								);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static inline void	sdaiInsertAfter(
+									SdaiIterator			iterator,
+									SdaiPrimitiveType		valueType,
+									SdaiInstance			value
+								)
+{
+	sdaiInsertAfter(iterator, valueType, (void*)value);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
+
 
 //
 //		sdaiCreateADB                                           (http://rdf.bg/ifcdoc/CP64/sdaiCreateADB.html)
@@ -4105,7 +4439,7 @@ SdaiADB			DECL STDC	sdaiCreateADB(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -4120,7 +4454,7 @@ static	inline	SdaiADB	sdaiCreateADB(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -4176,7 +4510,7 @@ SdaiAggr		DECL STDC	sdaiCreateAggrBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -4191,7 +4525,7 @@ static	inline	SdaiAggr	sdaiCreateAggrBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -4225,14 +4559,85 @@ void			DECL STDC	sdaiDeleteNPL(
 //	This call creates an aggregation within an aggregation.
 //
 SdaiAggr		DECL STDC	sdaiCreateNestedAggr(
-									const SdaiAggr			aggregate
+									SdaiAggr				aggregate
+								);
+
+
+//
+//		sdaiCreateNestedAggrByIndex                              (http://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByIndex.html)
+//				SdaiAggr				aggregate							IN
+//				SdaiAggrIndex			index								IN
+//
+//				SdaiAggr				returns								OUT
+//
+//		The function creates an aggregate instance and replaces the existing member of the specified ordered aggregate instance 
+//		referenced by the specified index
+//
+SdaiAggr		DECL STDC	sdaiCreateNestedAggrByIndex(
+									SdaiAggr				aggregate,
+									SdaiAggrIndex			index									
+								);
+
+//
+//		sdaiInsertNestedAggrByIndex                              (http://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByIndex.html)
+//				SdaiAggr				aggregate							IN
+//				SdaiAggrIndex			index								IN
+//
+//				SdaiAggr				returns								OUT
+//
+//		The function creates an aggregate instance as a member of the specified ordered aggregate instance 
+//		The newly created aggregate is inserted into the aggregate at the position referenced by the specified index.
+//
+SdaiAggr		DECL STDC	sdaiInsertNestedAggrByIndex(
+									SdaiAggr				aggregate,
+									SdaiAggrIndex			index									
+								);
+
+//
+//		sdaiCreateNestedAggrByItr                                 (http://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByItr.html)
+//				SdaiIterator		iterator							IN
+//
+//				SdaiAggr				returns								OUT
+//
+//      The function creates an aggregate instance replacing the current member of the aggregate instance 
+//		referenced by the specified iterator
+//
+SdaiAggr		DECL STDC	sdaiCreateNestedAggrByItr(
+									SdaiIterator			iterator
+								);
+
+
+//
+//		sdaiInsertNestedAggrBefore                                 (http://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrBefore.html)
+//				SdaiIterator			iterator							IN
+//
+//				SdaiAggr				returns								OUT
+//
+//      The function creates an aggregate instance as a member of a list instance.
+//      The newly created aggregate is inserted into the list instance before the member referenced by the specified iterator
+//
+SdaiAggr		DECL STDC	sdaiInsertNestedAggrBefore(
+									SdaiIterator			iterator
+								);
+
+//
+//		sdaiInsertNestedAggrAfter                                 (http://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrAfter.html)
+//				SdaiIterator			iterator							IN
+//
+//				SdaiAggr				returns								OUT
+//
+//      The function creates an aggregate instance as a member of a list instance.
+//      The newly created aggregate is inserted into the list instance after the member referenced by the specified iterator
+//
+SdaiAggr		DECL STDC	sdaiInsertNestedAggrAfter(
+									SdaiIterator			iterator
 								);
 
 
 //
 //		sdaiCreateNestedAggrADB                                  (http://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrADB.html)
-//				const SdaiAggr			aggregate							IN
-//				const SdaiAggr			selaggrInstance						IN
+//				SdaiAggr				aggregate							IN
+//				SdaiADB					selaggrInstance						IN
 //
 //				SdaiAggr				returns								OUT
 //
@@ -4243,11 +4648,256 @@ SdaiAggr		DECL STDC	sdaiCreateNestedAggr(
 //  The function sets the value of the ADB with the identifier of the newly created aggregate instance.
 //
 SdaiAggr		DECL STDC	sdaiCreateNestedAggrADB(
-									const SdaiAggr			aggregate,
-									const SdaiADB			selaggrInstance
+									SdaiAggr			aggregate,
+									SdaiADB				selaggrInstance
 								);
 
 
+//
+//		sdaiCreateNestedAggrByIndexADB                               (http://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByIndexADB.html)
+//				SdaiAggr				aggregate							IN
+//				SdaiAggrIndex			index								IN
+//				SdaiADB					selaggrInstance						IN
+//
+//				SdaiAggr				returns								OUT
+//
+//		The function creates an aggregate instance and replaces the existing member of the specified ordered aggregate instance 
+//		referenced by the specified index
+//		Input ADB is expected to have type path
+//		The function sets the value of the ADB with the identifier of the newly created aggregate instance.
+//
+SdaiAggr		DECL STDC	sdaiCreateNestedAggrByIndexADB(
+									SdaiAggr			aggregate,
+									SdaiAggrIndex		index,
+									SdaiADB				selaggrInstance
+								);
+
+//
+//		sdaiInsertNestedAggrByIndexADB                               (http://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrByIndexADB.html)
+//				SdaiAggr				aggregate							IN
+//				SdaiAggrIndex			index								IN
+//				SdaiADB					selaggrInstance						IN
+//
+//				SdaiAggr				returns								OUT
+//
+//		The function creates an aggregate instance as member of the specified ordered aggregate instance. 
+//		The newly created aggregate is inserted into the aggregate at the position referenced by the specified index.
+//		Input ADB is expected to have type path.
+//		The function sets the value of the ADB with the identifier of the newly created aggregate instance.
+//
+SdaiAggr		DECL STDC	sdaiInsertNestedAggrByIndexADB(
+									SdaiAggr			aggregate,
+									SdaiAggrIndex		index,
+									SdaiADB				selaggrInstance
+								);
+
+//
+//		sdaiCreateNestedAggrByItrADB                               (http://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByItrADB.html)
+//				SdaiIteratot			aggregate							IN
+//				SdaiADB					selaggrInstance						IN
+//
+//				SdaiAggr				returns								OUT
+//
+//      The function creates an aggregate instance replacing the current member of the aggregate instance 
+//		referenced by the specified iterator where the type of the aggregate to create is a SELECT TYPE and ambiguous,
+//		Input ADB is expected to have type path
+//		The function sets the value of the ADB with the identifier of the newly created aggregate instance.
+//
+SdaiAggr		DECL STDC	sdaiCreateNestedAggrByItrADB(
+									SdaiIterator		iterator,
+									SdaiADB				selaggrInstance
+								);
+
+
+//
+//		sdaiInsertNestedAggrBeforeADB                                 (http://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrBeforeADB.html)
+//				SdaiIterator			iterator							IN
+//				SdaiADB					selaggrInstance						IN
+//
+//				SdaiAggr				returns								OUT
+//
+//      The function creates an aggregate instance as a member of a list instance where the type of the aggregate to create is a SELECT TYPE and ambiguous.
+//      The newly created aggregate is inserted into the list instance before the member referenced by the specified iterator
+//		Input ADB is expected to have type path
+//		The function sets the value of the ADB with the identifier of the newly created aggregate instance.
+//
+SdaiAggr		DECL STDC	sdaiInsertNestedAggrBeforeADB(
+									SdaiIterator			iterator,
+									SdaiADB					selaggrInstance
+								);
+
+//
+//		sdaiInsertNestedAggrAfterADB                                 (http://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrAfterADB.html)
+//				SdaiIterator			iterator							IN
+//				SdaiADB					selaggrInstance						IN
+//
+//				SdaiAggr				returns								OUT
+//
+//      The function creates an aggregate instance as a member of a list instance where the type of the aggregate to create is a SELECT TYPE and ambiguous.
+//      The newly created aggregate is inserted into the list instance after the member referenced by the specified iterator
+//		Input ADB is expected to have type path
+//		The function sets the value of the ADB with the identifier of the newly created aggregate instance.
+//
+SdaiAggr		DECL STDC	sdaiInsertNestedAggrAfterADB(
+									SdaiIterator			iterator,
+									SdaiADB					selaggrInstance
+								);
+
+
+//
+//		sdaiRemoveByIndex                                 (http://rdf.bg/ifcdoc/CP64/sdaiRemoveByIndex.html)
+//				SdaiAggr				aggregate							IN
+//				SdaiAggrIndex			index								IN
+//
+//
+//      The function removes the member of the specified list referenced by the specified index
+//
+void		DECL STDC	sdaiRemoveByIndex(
+									SdaiAggr				aggregate,	
+									SdaiAggrIndex			index		
+								);
+
+
+//
+//		sdaiRemoveByIterator                                 (http://rdf.bg/ifcdoc/CP64/sdaiRemoveByIterator.html)
+//				SdaiIterator			iterator							IN
+//
+//     The function removes the current member of an aggregate instance, that is not an array, referenced by the specified iterator.
+//	   After executing the function, the iterator position set as if the sdaiNext function had been invoked before the member was removed
+//
+void		DECL STDC	sdaiRemoveByIterator(
+									SdaiIterator			iterator	
+								);
+
+//
+//		sdaiRemove		                                  (http://rdf.bg/ifcdoc/CP64/sdaiRemove.html)
+//				SdaiAggr				aggregate							IN
+//				SdaiPrimitiveType		valueType							IN
+//				const void				* value								IN
+//
+//
+//		The function removes one occurrence of the specified value from the specified unordered aggregate instance
+//
+//	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiRemove, and it works similarly as for put-functions.
+//	Note: with SDAI API it is impossible to check buffer type at compilation or execution time and this is responsibility of a caller to ensure that
+//		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
+//
+//
+//	Table 1 – Required value buffer depending on valueType (on the example of sdaiRemove but valid for all put-functions)
+//
+//	valueType				C/C++														C#
+//
+//	sdaiINTEGER				int_t val = 123;											int_t val = 123;
+//							sdaiRemove (sdaiINTEGER, &val);								stepengine.sdaiRemove (stepengine.sdaiINTEGER, ref val);
+//
+//	sdaiREAL or sdaiNUMBER	double val = 123.456;										double val = 123.456;
+//							sdaiRemove (sdaiREAL, &val);								stepengine.sdaiRemove (stepengine.sdaiREAL, ref val);
+//
+//	sdaiBOOLEAN				bool val = true;											bool val = true;
+//							sdaiRemove (sdaiBOOLEAN, &val);								stepengine.sdaiRemove (stepengine.sdaiBOOLEAN, ref val);
+//
+//	sdaiLOGICAL				const TCHAR* val = "U";										string val = "U";
+//							sdaiRemove (sdaiLOGICAL, val);								stepengine.sdaiRemove (stepengine.sdaiLOGICAL, val);
+//
+//	sdaiENUM				const TCHAR* val = "NOTDEFINED";							string val = "NOTDEFINED";
+//							sdaiRemove (sdaiENUM, val);									stepengine.sdaiRemove (stepengine.sdaiENUM, val);
+//
+//	sdaiBINARY				const TCHAR* val = "0123456ABC";							string val = "0123456ABC";
+//							sdaiRemove (sdaiBINARY, val);								stepengine.sdaiRemove (stepengine.sdaiBINARY, val);
+//
+//	sdaiSTRING				const char* val = "My Simple String";						string val = "My Simple String";
+//							sdaiRemove (sdaiSTRING, val);								stepengine.sdaiRemove (stepengine.sdaiSTRING, val);
+//
+//	sdaiUNICODE				const wchar_t* val = L"Any Unicode String";					string val = "Any Unicode String";
+//							sdaiRemove (sdaiUNICODE, val);								stepengine.sdaiRemove (stepengine.sdaiUNICODE, val);
+//
+//	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
+//							sdaiRemove (sdaiEXPRESSSTRING, val);						stepengine.sdaiRemove (stepengine.sdaiEXPRESSSTRING, val);
+//
+//	sdaiINSTANCE			SdaiInstance val = ...										int_t val = ...
+//							sdaiRemove (sdaiINSTANCE, val);								stepengine.sdaiRemove (stepengine.sdaiINSTANCE, val);
+//
+//	sdaiAGGR				SdaiAggr val = ...											int_t val = ...
+//							sdaiRemove (sdaiAGGR, val);									stepengine.sdaiRemove (stepengine.sdaiAGGR, val);
+//
+//	sdaiADB					SdaiADB val = ...											SdaiADB adb = ...
+//							sdaiRemove (sdaiADB, val);									stepengine.sdaiRemove (stepengine.sdaiADB, val);
+//
+//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t
+//
+//
+//	Table 2 - valueType can be requested depending on actual model data.
+//
+//	valueType		Works for following values in the model
+//				 	  integer	   real		.T. or .F.	   .U.		other enum	  binary	  string	 instance	   list		 $ (empty)
+//	sdaiINTEGER			Yes			 .			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiREAL			 .			Yes			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiNUMBER			 . 			Yes			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiBOOLEAN			 .			 .			Yes			 .			 .			 .			 .			 .			 .			 .
+//	sdaiLOGICAL			 .			 .			Yes			Yes			 .			 .			 .			 .			 .			 .
+//	sdaiENUM			 .			 .			Yes			Yes			Yes			 .			 .			 .			 .			 .
+//	sdaiBINARY			 .			 .			 .			 .			 .			Yes			 .			 .			 .			 .
+//	sdaiSTRING			 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiUNICODE			 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiEXPRESSSTRING	 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiINSTANCE		 .			 .			 .			 .			 .			 .			 .			Yes			 .			 .
+//	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
+//	sdaiADB				 .			 .			 .			 .			 .			 .			 .			 .			 .			 .
+//
+
+void		DECL STDC	sdaiRemove(
+									SdaiAggr				aggregate,
+									SdaiPrimitiveType		valueType,
+									const void				* value
+								);
+
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static inline void	sdaiRemove(
+									SdaiAggr				aggregate,
+									SdaiPrimitiveType		valueType,
+									SdaiInstance			value
+								)
+{
+	sdaiRemove(aggregate, valueType, (void*)value);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
+
+
+//
+//		sdaiTestArrayByIndex                                (http://rdf.bg/ifcdoc/CP64/sdaiTestArrayByIndex.html)
+//				SdaiAggr				aggregate							IN
+//				SdaiAggrIndex			index							    IN
+//
+//				SdaiBoolean				returns								OUT
+//
+//		The function tests whether the member of the specified array referenced by the specified index position has a value.
+//
+SdaiBoolean		DECL STDC   sdaiTestArrayByIndex(
+									SdaiAggr				aggregate,
+									SdaiAggrIndex			index
+								);
+
+//
+//		sdaiTestArrayByItr                                (http://rdf.bg/ifcdoc/CP64/sdaiTestArrayByItr.html)
+//				SdaiIterator			iterator							IN
+//
+//				SdaiBoolean				returns								OUT
+//
+//		The function tests whether the member of the specified array referenced by the specified index position has a value.
+//
+SdaiBoolean		DECL STDC   sdaiTestArrayByItr(
+									SdaiIterator			iterator
+								);
 
 //
 //		sdaiCreateInstance                                      (http://rdf.bg/ifcdoc/CP64/sdaiCreateInstance.html)
@@ -4288,7 +4938,7 @@ SdaiInstance	DECL STDC	sdaiCreateInstanceBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -4303,7 +4953,7 @@ static	inline	SdaiInstance	sdaiCreateInstanceBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -4337,7 +4987,7 @@ void			DECL STDC	sdaiPutADBTypePath(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -4354,7 +5004,7 @@ static	inline	void	sdaiPutADBTypePath(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -4449,7 +5099,7 @@ void			DECL STDC	sdaiPutAttr(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -4468,7 +5118,7 @@ static	inline	void	sdaiPutAttr(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -4576,7 +5226,7 @@ void			DECL STDC	sdaiPutAttrBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -4612,7 +5262,7 @@ static	inline	void	sdaiPutAttrBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -4657,7 +5307,7 @@ void			DECL STDC	sdaiUnsetAttrBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -4672,7 +5322,7 @@ static	inline	void	sdaiUnsetAttrBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -4692,7 +5342,7 @@ void			DECL STDC	engiSetComment(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -4707,7 +5357,7 @@ static	inline	void	engiSetComment(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -4759,7 +5409,7 @@ int_t			DECL STDC	sdaiTestAttrBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -4774,7 +5424,7 @@ static	inline	int_t	sdaiTestAttrBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -4812,7 +5462,7 @@ SdaiInstance	DECL STDC	sdaiCreateInstanceBNEI(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -4829,7 +5479,7 @@ static	inline	SdaiInstance	sdaiCreateInstanceBNEI(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -4976,7 +5626,7 @@ double			DECL STDC	getProjectUnitConversionFactor(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -4997,7 +5647,7 @@ static	inline	double	getProjectUnitConversionFactor(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -5021,7 +5671,7 @@ double			DECL STDC	getUnitInstanceConversionFactor(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -5040,7 +5690,7 @@ static	inline	double	getUnitInstanceConversionFactor(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -5164,7 +5814,7 @@ const char		DECL * STDC	internalGetXMLID(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -5187,11 +5837,11 @@ static	inline	const char	* internalGetXMLID(
 {
 	return	internalGetXMLID(
 					instance,
-					(const char**) 0      				//	XMLID
+					(const char**) nullptr				//	XMLID
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -5307,7 +5957,7 @@ SdaiAggr		DECL STDC	xxxxGetEntityAndSubTypesExtentBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -5322,7 +5972,7 @@ static	inline	SdaiAggr	xxxxGetEntityAndSubTypesExtentBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -5400,7 +6050,7 @@ const char		DECL * STDC	xxxxGetAttrNameByIndex(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -5427,11 +6077,11 @@ static	inline	const char	* xxxxGetAttrNameByIndex(
 	return	xxxxGetAttrNameByIndex(
 					instance,
 					index,
-					(const char**) 0      				//	name
+					(const char**) nullptr				//	name
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -5456,7 +6106,7 @@ SdaiInstance	DECL STDC	iterateOverInstances(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -5475,7 +6125,7 @@ static	inline	SdaiInstance	iterateOverInstances(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -5502,7 +6152,86 @@ int_t			DECL STDC	iterateOverProperties(
 //
 //				void					* returns							OUT
 //
-//	...
+//	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiGetAggrByIterator, and it works similarly for all get-functions.
+//	Note: with SDAI API it is impossible to check buffer type at compilation or execution time and this is responsibility of a caller to ensure that
+//		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
+//
+//	The Table 2 shows what valueType can be fulfilled depending on actual model data.
+//	If a get-function cannot get a value it will return 0, it may happen when model item is unset ($) or incompatible with requested valueType.
+//	To separate these cases you can use engiGetInstanceAttrType(BN), sdaiGetADBType and engiGetAggrType.
+//	On success get-function will return non-zero. More precisely, according to ISO 10303-24-2001 on success they return content of
+//	value argument (*value) for sdaiADB, sdaiAGGR, or sdaiINSTANCE or value argument itself for other types (it has no useful meaning for C#).
+//
+//
+//	Table 1 – Required value buffer depending on valueType (on the example of sdaiGetAggrByIterator but valid for all get-functions)
+//
+//	valueType				C/C++															C#
+//
+//	sdaiINTEGER				int_t val;														int_t val;
+//							sdaiGetAggrByIterator (aggr, index, sdaiINTEGER, &val);			stepengine.sdaiGetAggrByIterator (aggr, index, stepengine.sdaiINTEGER, out val);
+//
+//	sdaiREAL or sdaiNUMBER	double val;														double val;
+//							sdaiGetAggrByIterator (aggr, index, sdaiREAL, &val);			stepengine.sdaiGetAggrByIterator (aggr, index, stepengine.sdaiREAL, out val);
+//
+//	sdaiBOOLEAN				bool val;														bool val;
+//							sdaiGetAggrByIterator (aggr, index, sdaiBOOLEAN, &val);			stepengine.sdaiGetAggrByIterator (aggr, index, stepengine.sdaiBOOLEAN, out val);
+//
+//	sdaiLOGICAL				const TCHAR* val;												string val;
+//							sdaiGetAggrByIterator (aggr, index, sdaiLOGICAL, &val);			stepengine.sdaiGetAggrByIterator (aggr, index, stepengine.sdaiLOGICAL, out val);
+//
+//	sdaiENUM				const TCHAR* val;												string val;
+//							sdaiGetAggrByIterator (aggr, index, sdaiENUM, &val);			stepengine.sdaiGetAggrByIterator (aggr, index, stepengine.sdaiENUM, out val);
+//
+//	sdaiBINARY				const TCHAR* val;												string val;
+//							sdaiGetAggrByIterator (aggr, index, sdaiBINARY, &val);			stepengine.sdaiGetAggrByIterator (aggr, index, stepengine.sdaiBINARY, out val);
+//
+//	sdaiSTRING				const char* val;												string val;
+//							sdaiGetAggrByIterator (aggr, index, sdaiSTRING, &val);			stepengine.sdaiGetAggrByIterator (aggr, index, stepengine.sdaiSTRING, out val);
+//
+//	sdaiUNICODE				const wchar_t* val;												string val;
+//							sdaiGetAggrByIterator (aggr, index, sdaiUNICODE, &val);			stepengine.sdaiGetAggrByIterator (aggr, index, stepengine.sdaiUNICODE, out val);
+//
+//	sdaiEXPRESSSTRING		const char* val;												string val;
+//							sdaiGetAggrByIterator (aggr, index, sdaiEXPRESSSTRING, &val);	stepengine.sdaiGetAggrByIterator (aggr, index, stepengine.sdaiEXPRESSSTRING, out val);
+//
+//	sdaiINSTANCE			SdaiInstance val;												int_t val;
+//							sdaiGetAggrByIterator (aggr, index, sdaiINSTANCE, &val);		stepengine.sdaiGetAggrByIterator (aggr, index, stepengine.sdaiINSTANCE, out val);
+//
+//	sdaiAGGR				SdaiAggr aggr;													int_t aggr;
+//							sdaiGetAggrByIterator (aggr, index, sdaiAGGR, &aggr);			stepengine.sdaiGetAggrByIterator (aggr, index, stepengine.sdaiAGGR, out aggr);
+//
+//	sdaiADB					SdaiADB adb = sdaiCreateEmptyADB();								int_t adb = 0;	//	it is important to initialize
+//							sdaiGetAggrByIterator (aggr, index, sdaiADB, adb);				stepengine.sdaiGetAggrByIterator (aggr, index, stepengine.sdaiADB, out adb);		
+//							sdaiDeleteADB (adb);
+//
+//							SdaiADB	adb = nullptr;	//	it is important to initialize
+//							sdaiGetAggrByIterator (ADB, sdaiADB, &adb);
+//
+//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t
+//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table
+//
+//
+//	Table 2 - valueType can be requested depending on actual model data.
+//
+//	valueType		Works for following values in the model
+//				 	  integer	   real		.T. or .F.	   .U.		other enum	  binary	  string	 instance	   list		 $ (empty)
+//	sdaiINTEGER			Yes			Yes *		 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiREAL			Yes			Yes			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiNUMBER			Yes			Yes			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiBOOLEAN			 .			 .			Yes			 .			 .			 .			 .			 .			 .			 .
+//	sdaiLOGICAL			 .			 .			Yes			Yes			 .			 .			 .			 .			 .			 .
+//	sdaiENUM			 .			 .			Yes			Yes			Yes			 .			 .			 .			 .			 .
+//	sdaiBINARY			 .			 .			 .			 .			 .			Yes			 .			 .			 .			 .
+//	sdaiSTRING			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .			 .			 .
+//	sdaiUNICODE			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .			 .			 .
+//	sdaiEXPRESSSTRING	Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .			 .			 .
+//	sdaiINSTANCE		 .			 .			 .			 .			 .			 .			 .			Yes			 .			 .
+//	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
+//	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
+//	Note: sdaiGetAttr, stdaiGetAttrBN, engiGetElement will success with any model data, except non-set($)
+//		  (Non-standard extensions) sdaiGetADBValue: sdaiADB is allowed and will success when sdaiGetADBTypePath is not NULL, returning ABD value has type path element removed.
+//
 //
 void			DECL * STDC	sdaiGetAggrByIterator(
 									SdaiIterator			iterator,
@@ -5599,7 +6328,7 @@ void			DECL STDC	sdaiPutAggrByIterator(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -5616,7 +6345,7 @@ static	inline	void	sdaiPutAggrByIterator(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -5638,7 +6367,7 @@ void			DECL STDC	internalSetLink(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -5655,7 +6384,7 @@ static	inline	void	internalSetLink(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -6063,11 +6792,11 @@ int_t			DECL STDC	getRootAxis2Placement(
 //				SdaiModel				model								IN
 //				double					* origin							IN / OUT
 //
-//				int_t					returns								OUT
+//				SdaiInstance			returns								OUT
 //
 //	...
 //
-int_t			DECL STDC	getGlobalPlacement(
+SdaiInstance		DECL STDC	getGlobalPlacement(
 									SdaiModel				model,
 									double					* origin
 								);
@@ -6078,11 +6807,11 @@ int_t			DECL STDC	getGlobalPlacement(
 //				const double			* origin							IN
 //				bool					includeRotation						IN
 //
-//				int_t					returns								OUT
+//				SdaiInstance			returns								OUT
 //
 //	...
 //
-int_t			DECL STDC	setGlobalPlacement(
+SdaiInstance			DECL STDC	setGlobalPlacement(
 									SdaiModel				model,
 									const double			* origin,
 									bool					includeRotation
@@ -6130,7 +6859,7 @@ int_t			DECL STDC	getInstanceReference(
 //		inferenceInstance                                       (http://rdf.bg/ifcdoc/CP64/inferenceInstance.html)
 //				SdaiInstance			instance							IN
 //
-//				int_t					returns								OUT
+//				SdaiInstance			returns								OUT
 //
 //	This call allows certain constructs to complete implicitely already available data
 //	Specifically for IFC4.3 and higher calls using the instances of the following entities are supported:
@@ -6142,7 +6871,7 @@ int_t			DECL STDC	getInstanceReference(
 //		IfcLinearPlacement => in case CartesianPosition is empty the internally calculated matrix will be
 //							  represented as an IfcAxis2Placement
 //
-int_t			DECL STDC	inferenceInstance(
+SdaiInstance			DECL STDC	inferenceInstance(
 									SdaiInstance			instance
 								);
 
@@ -6202,7 +6931,7 @@ int_t			DECL STDC	engiGetEntityArgumentIndex(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -6217,7 +6946,7 @@ static	inline	int_t	engiGetEntityArgumentIndex(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -6267,7 +6996,7 @@ SdaiAttr		DECL STDC	engiGetEntityArgument(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -6282,7 +7011,7 @@ static	inline	SdaiAttr	engiGetEntityArgument(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -6304,7 +7033,7 @@ const char		DECL * STDC	sdaiGetADBTypePathx(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -6331,11 +7060,11 @@ static	inline	const char	* sdaiGetADBTypePathx(
 	return	sdaiGetADBTypePathx(
 					ADB,
 					typeNameNumber,
-					(const char**) 0      				//	path
+					(const char**) nullptr				//	path
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -6357,7 +7086,7 @@ int_t			DECL STDC	xxxxOpenModelByStream(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -6374,7 +7103,7 @@ static	inline	int_t	xxxxOpenModelByStream(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -6451,17 +7180,122 @@ void			DECL STDC	sdaiEnd(
 								);
 
 //
+//		sdaiIsMember                                            (http://rdf.bg/ifcdoc/CP64/sdaiIsMember.html)
+//				SdaiAggr				aggregate							IN
+//				SdaiPrimitiveType		valueType
+//				const void				* value
 //
+//				SdaiBoolean				returns
+// 
+//		The function determines whether the specified primitive or instance value is contained
+//		in the aggregate. In the case of aggregate members represented by ADBs, both the data value and data
+//		type are compared.
+//
+//	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiIsMember, and it works similarly as for put-functions.
+//	Note: with SDAI API it is impossible to check buffer type at compilation or execution time and this is responsibility of a caller to ensure that
+//		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
+//
+//
+//	Table 1 – Required value buffer depending on valueType (on the example of sdaiIsMember but valid for all put-functions)
+//
+//	valueType				C/C++														C#
+//
+//	sdaiINTEGER				int_t val = 123;											int_t val = 123;
+//							sdaiIsMember (sdaiINTEGER, &val);							stepengine.sdaiIsMember (stepengine.sdaiINTEGER, ref val);
+//
+//	sdaiREAL or sdaiNUMBER	double val = 123.456;										double val = 123.456;
+//							sdaiIsMember (sdaiREAL, &val);								stepengine.sdaiIsMember (stepengine.sdaiREAL, ref val);
+//
+//	sdaiBOOLEAN				bool val = true;											bool val = true;
+//							sdaiIsMember (sdaiBOOLEAN, &val);							stepengine.sdaiIsMember (stepengine.sdaiBOOLEAN, ref val);
+//
+//	sdaiLOGICAL				const TCHAR* val = "U";										string val = "U";
+//							sdaiIsMember (sdaiLOGICAL, val);							stepengine.sdaiIsMember (stepengine.sdaiLOGICAL, val);
+//
+//	sdaiENUM				const TCHAR* val = "NOTDEFINED";							string val = "NOTDEFINED";
+//							sdaiIsMember (sdaiENUM, val);								stepengine.sdaiIsMember (stepengine.sdaiENUM, val);
+//
+//	sdaiBINARY				const TCHAR* val = "0123456ABC";							string val = "0123456ABC";
+//							sdaiIsMember (sdaiBINARY, val);								stepengine.sdaiIsMember (stepengine.sdaiBINARY, val);
+//
+//	sdaiSTRING				const char* val = "My Simple String";						string val = "My Simple String";
+//							sdaiIsMember (sdaiSTRING, val);								stepengine.sdaiIsMember (stepengine.sdaiSTRING, val);
+//
+//	sdaiUNICODE				const wchar_t* val = L"Any Unicode String";					string val = "Any Unicode String";
+//							sdaiIsMember (sdaiUNICODE, val);							stepengine.sdaiIsMember (stepengine.sdaiUNICODE, val);
+//
+//	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
+//							sdaiIsMember (sdaiEXPRESSSTRING, val);						stepengine.sdaiIsMember (stepengine.sdaiEXPRESSSTRING, val);
+//
+//	sdaiINSTANCE			SdaiInstance val = ...										int_t val = ...
+//							sdaiIsMember (sdaiINSTANCE, val);							stepengine.sdaiIsMember (stepengine.sdaiINSTANCE, val);
+//
+//	sdaiAGGR				SdaiAggr val = ...											int_t val = ...
+//							sdaiIsMember (sdaiAGGR, val);								stepengine.sdaiIsMember (stepengine.sdaiAGGR, val);
+//
+//	sdaiADB					SdaiADB val = ...											SdaiADB adb = ...
+//							sdaiIsMember (sdaiADB, val);								stepengine.sdaiIsMember (stepengine.sdaiADB, val);
+//
+//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t
+//
+//
+//	Table 2 - valueType can be requested depending on actual model data.
+//
+//	valueType		Works for following values in the model
+//				 	  integer	   real		.T. or .F.	   .U.		other enum	  binary	  string	 instance	   list		 $ (empty)
+//	sdaiINTEGER			Yes			 .			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiREAL			 .			Yes			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiNUMBER			 . 			Yes			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiBOOLEAN			 .			 .			Yes			 .			 .			 .			 .			 .			 .			 .
+//	sdaiLOGICAL			 .			 .			Yes			Yes			 .			 .			 .			 .			 .			 .
+//	sdaiENUM			 .			 .			Yes			Yes			Yes			 .			 .			 .			 .			 .
+//	sdaiBINARY			 .			 .			 .			 .			 .			Yes			 .			 .			 .			 .
+//	sdaiSTRING			 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiUNICODE			 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiEXPRESSSTRING	 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiINSTANCE		 .			 .			 .			 .			 .			 .			 .			Yes			 .			 .
+//	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
+//	sdaiADB				 .			 .			 .			 .			 .			 .			 .			 .			 .			 .
 //
 SdaiBoolean		DECL STDC	sdaiIsMember(
 									SdaiAggr			aggregate,
 									SdaiPrimitiveType	valueType, 
-									...
+									const void			* value
 								);
 
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
 
 //
 //
+static	inline	SdaiBoolean	sdaiIsMember(
+									SdaiAggr			aggregate,
+									SdaiPrimitiveType	valueType, 
+									SdaiInstance		instance
+							)
+{
+	return	sdaiIsMember(
+					aggregate,
+					valueType,
+					(void*) instance
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
+
+
+//
+//		sdaiGetAggrElementBoundByItr                                  (http://rdf.bg/ifcdoc/CP64/sdaiGetAggrElementBoundByItr.html)
+//				SdaiIterator			iterator							IN
+//
+//				SdaiInteger				returns
+//
+//   The function returns the current value of the real precision, the string width, or the binary width 
+//   for the current member referenced by the specified iterator.
 //
 SdaiInteger		DECL STDC	sdaiGetAggrElementBoundByItr(
 									SdaiIterator iterator
@@ -6469,7 +7303,27 @@ SdaiInteger		DECL STDC	sdaiGetAggrElementBoundByItr(
 
 
 //
+//		sdaiGetAggrElementBoundByIndex                                  (http://rdf.bg/ifcdoc/CP64/sdaiGetAggrElementBoundByIndex.html)
+//				SdaiAggr			    aggregate							IN
+//				SdaiAggrIndex			index
 //
+//				SdaiInteger				returns
+//
+//   The function returns the current value of the real precision, the string width, or the binary width 
+//   of the aggregate element at the specified index position in the specified ordered aggregate instance.
+//
+SdaiInteger		DECL STDC	sdaiGetAggrElementBoundByIndex(
+									SdaiAggr			aggregate,
+									SdaiAggrIndex		index
+								);
+
+//
+//		sdaiGetLowerBound                                  (http://rdf.bg/ifcdoc/CP64/sdaiGetLowerBound.html)
+//				SdaiAggr			    aggregate							IN
+//
+//				SdaiInteger				returns
+//
+//   The function returns the current value of the lower bound, or index, of the specified aggregate instance.
 //
 SdaiInteger		DECL STDC	sdaiGetLowerBound(
 									SdaiAggr aggregate
@@ -6477,12 +7331,103 @@ SdaiInteger		DECL STDC	sdaiGetLowerBound(
 
 
 //
+//		sdaiGetUpperBound                                  (http://rdf.bg/ifcdoc/CP64/sdaiGetUpperBound.html)
+//				SdaiAggr			    aggregate							IN
 //
+//				SdaiInteger				returns
+//
+//   The function returns the current value of the upper bound, or index, of the specified aggregate instance.
 //
 SdaiInteger		DECL STDC	sdaiGetUpperBound(
 									SdaiAggr aggregate
 								);
 
+
+//
+//		sdaiGetLowerIndex                                  (http://rdf.bg/ifcdoc/CP64/sdaiGetLowerIndex.html)
+//				SdaiAggr			    aggregate							IN
+//
+//				SdaiInteger				returns
+//
+//   The function returns the value of the lower index of the specified array instance when it was created.
+//
+SdaiInteger		DECL STDC	sdaiGetLowerIndex(
+									SdaiAggr aggregate
+								);
+
+
+//
+//		sdaiGetUpperIndex                                  (http://rdf.bg/ifcdoc/CP64/sdaiGetUpperIndex.html)
+//				SdaiAggr			    aggregate							IN
+//
+//				SdaiInteger				returns
+//
+//   The function returns the value of the upper index of the specified array instance when it was created.
+//
+SdaiInteger		DECL STDC	sdaiGetUpperIndex(
+									SdaiAggr aggregate
+								);
+
+
+//
+//		sdaiUnsetArrayByIndex                                  (http://rdf.bg/ifcdoc/CP64/sdaiUnsetArrayByIndex.html)
+//				SdaiArray		    array					IN
+//				SdaiAggrIndex		index					IN
+//
+//				void				returns
+//
+//  The function restores the unset (not assigned a value) status of the member
+//  of the specified array at the specified index position.
+//
+void			DECL STDC   sdaiUnsetArrayByIndex(
+									SdaiArray		array, 
+									SdaiAggrIndex	index
+								);
+
+//
+//		sdaiUnsetArrayByItr                                  (http://rdf.bg/ifcdoc/CP64/sdaiUnsetArrayByItr.html)
+//				SdaiIterator		iterator					IN
+//
+//				void				returns
+//
+//  The function restores the unset (not assigned a value) status of a member at the
+//  position identified by the iterator in the array associated with the iterator
+//
+void			DECL STDC  sdaiUnsetArrayByItr(
+									SdaiIterator iterator
+								);
+
+
+//
+//		sdaiReindexArray                                  (http://rdf.bg/ifcdoc/CP64/sdaiReindexArray.html)
+//				SdaiArray		    array					IN
+//
+//				void				returns
+//
+//  The function resizes the specified array instance setting the lower, or upper index,
+//  or both, based upon the current population of the application schema
+//
+void			DECL  STDC sdaiReindexArray(
+									SdaiArray array
+								);
+
+
+//
+//		sdaiResetArrayIndex                                  (http://rdf.bg/ifcdoc/CP64/sdaiResetArrayIndex.html)
+//				SdaiArray		    array					IN
+//				SdaiAggrIndex		lower					IN
+//				SdaiAggrIndex		upper					IN
+//
+//				void				returns
+//
+//  The function shall resizes the specified array instance setting the lower and upper
+//	index with the specified values.
+//
+void			DECL  STDC sdaiResetArrayIndex(
+									SdaiArray array, 
+									SdaiAggrIndex lower,
+									SdaiAggrIndex upper
+								);
 
 //
 //		sdaiplusGetAggregationType                              (http://rdf.bg/ifcdoc/CP64/sdaiplusGetAggregationType.html)
@@ -6500,7 +7445,12 @@ int_t			DECL STDC	sdaiplusGetAggregationType(
 
 
 //
-// TODO
+//		engiGetComplexInstanceNextPart                              (http://rdf.bg/ifcdoc/CP64/engiGetComplexInstanceNextPart.html)
+//				SdaiInstance			instance							IN
+//
+//				SdaiInstance			returns								OUT
+//
+//	 The function returns next part of complex instance or NULL
 //
 SdaiInstance	DECL STDC	engiGetComplexInstanceNextPart(
 									SdaiInstance			instance
@@ -6524,7 +7474,7 @@ int_t			DECL STDC	xxxxGetAttrType(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -6541,7 +7491,7 @@ static	inline	int_t	xxxxGetAttrType(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -6575,7 +7525,7 @@ int_t			DECL STDC	xxxxGetAttrTypeBN(
 
 #ifdef __cplusplus
 	}
-#endif
+//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -6592,7 +7542,7 @@ static	inline	int_t	xxxxGetAttrTypeBN(
 				);
 }
 
-#ifdef __cplusplus
+//}} End C++ polymorphic versions
 	extern "C" {
 #endif
 
@@ -7113,7 +8063,7 @@ void			DECL STDC	exportModellingAsOWL(
 
 #ifdef __cplusplus
 	}
-#endif
+	//{{ Begin C++ polymorphic versions
 
 //
 //
@@ -7128,6 +8078,14 @@ static	inline	void	exportModellingAsOWL(
 				);
 }
 
+//}} End C++ polymorphic versions
+extern "C" {
+#endif
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #undef DECL
 #undef STDC
