@@ -396,3 +396,8 @@
 /EmbeddedGeometryKernel/C#/StreamingInOut-CS/StreamingInOut-CS/bin/x86/Release/StreamingInOut-CS.exe.config
 /EmbeddedGeometryKernel/C#/StreamingInOut-CS/StreamingInOut-CS/obj/x64
 /EmbeddedGeometryKernel/C#/StreamingInOut-CS/StreamingInOut-CS/obj/x86
+/C++/Version/Version/Debug
+/C++/Version/Version/Release
+/C++/Version/Version/x64/Debug
+/C++/Version/Version/x64/Release
+/C++/Version/Release/Version-stepengine-32bit.pdb
