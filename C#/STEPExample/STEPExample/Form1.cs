@@ -31,7 +31,7 @@ namespace STEPExample
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            textBoxContent.Text = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "\\as1-oc-214.stp";
+            textBoxContent.Text = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "\\data\\STEPExample_as1-oc-214.stp.stp";
         }
 
         private void buttonPath_Click(object sender, EventArgs e)
@@ -57,7 +57,7 @@ namespace STEPExample
 
         private void buttonFind3DModel_Click(object sender, EventArgs e)
         {
-            int_t stepModel = StepEngine.x86_64.sdaiOpenModelBNUnicode(0, System.Text.Encoding.Unicode.GetBytes(textBoxContent.Text), System.Text.Encoding.Unicode.GetBytes(""));
+            long stepModel = StepEngine.x86_64.sdaiOpenModelBNUnicode(0, System.Text.Encoding.Unicode.GetBytes(textBoxContent.Text), System.Text.Encoding.Unicode.GetBytes(""));
             if (stepModel != 0)
             {
                 StepEngine.x86_64.setFilter(stepModel, 268435456, 268435456);
@@ -65,7 +65,7 @@ namespace STEPExample
                 Int64 geometryKernelModel = 0;  //  => static within one stepModel (in case multi-threading within one stepModel is not used)
                 StepEngine.x86_64.owlGetModel(stepModel, out geometryKernelModel);
 
-                int_t productDefinitionInstances = StepEngine.x86_64.sdaiGetEntityExtentBN(stepModel, "PRODUCT_DEFINITION"),
+                long productDefinitionInstances = StepEngine.x86_64.sdaiGetEntityExtentBN(stepModel, "PRODUCT_DEFINITION"),
                       noProductDefinitionInstances = StepEngine.x86_64.sdaiGetMemberCount(productDefinitionInstances);
                 if (noProductDefinitionInstances != 0)
                 {
@@ -101,7 +101,7 @@ namespace STEPExample
 
         private void buttonFind3DParts_Click(object sender, EventArgs e)
         {
-            int_t stepModel = StepEngine.x86_64.sdaiOpenModelBNUnicode(0, System.Text.Encoding.Unicode.GetBytes(textBoxContent.Text), System.Text.Encoding.Unicode.GetBytes(""));
+            long stepModel = StepEngine.x86_64.sdaiOpenModelBNUnicode(0, System.Text.Encoding.Unicode.GetBytes(textBoxContent.Text), System.Text.Encoding.Unicode.GetBytes(""));
             if (stepModel != 0)
             {
                 StepEngine.x86_64.setFilter(stepModel, 268435456, 268435456);
@@ -109,7 +109,7 @@ namespace STEPExample
                 Int64 geometryKernelModel = 0;  //  => static within one stepModel (in case multi-threading within one stepModel is not used)
                 StepEngine.x86_64.owlGetModel(stepModel, out geometryKernelModel);
 
-                int_t productDefinitionShapeInstances = StepEngine.x86_64.sdaiGetEntityExtentBN(stepModel, "PRODUCT_DEFINITION_SHAPE"),
+                long productDefinitionShapeInstances = StepEngine.x86_64.sdaiGetEntityExtentBN(stepModel, "PRODUCT_DEFINITION_SHAPE"),
                       noProductDefinitionShapeInstances = StepEngine.x86_64.sdaiGetMemberCount(productDefinitionShapeInstances);
                 if (noProductDefinitionShapeInstances != 0)
                 {
@@ -145,7 +145,7 @@ namespace STEPExample
 
         private void buttonFindAssemblies_Click(object sender, EventArgs e)
         {
-            int_t stepModel = StepEngine.x86_64.sdaiOpenModelBNUnicode(0, System.Text.Encoding.Unicode.GetBytes(textBoxContent.Text), System.Text.Encoding.Unicode.GetBytes(""));
+            long stepModel = StepEngine.x86_64.sdaiOpenModelBNUnicode(0, System.Text.Encoding.Unicode.GetBytes(textBoxContent.Text), System.Text.Encoding.Unicode.GetBytes(""));
             if (stepModel != 0)
             {
                 StepEngine.x86_64.setFilter(stepModel, 268435456, 268435456);
@@ -153,9 +153,9 @@ namespace STEPExample
                 Int64 geometryKernelModel = 0;  //  => static within one stepModel (in case multi-threading within one stepModel is not used)
                 StepEngine.x86_64.owlGetModel(stepModel, out geometryKernelModel);
 
-	            int_t nextAssemblyUsageOccurrenceEntity = StepEngine.x86_64.sdaiGetEntity(stepModel, "NEXT_ASSEMBLY_USAGE_OCCURRENCE");
+	            long nextAssemblyUsageOccurrenceEntity = StepEngine.x86_64.sdaiGetEntity(stepModel, "NEXT_ASSEMBLY_USAGE_OCCURRENCE");
 
-	            int_t productDefinitionShapeInstances = StepEngine.x86_64.sdaiGetEntityExtentBN(stepModel, "PRODUCT_DEFINITION_SHAPE"),
+	            long productDefinitionShapeInstances = StepEngine.x86_64.sdaiGetEntityExtentBN(stepModel, "PRODUCT_DEFINITION_SHAPE"),
 			          noProductDefinitionShapeInstances = StepEngine.x86_64.sdaiGetMemberCount(productDefinitionShapeInstances);
 	            if (noProductDefinitionShapeInstances != 0)
                 {
