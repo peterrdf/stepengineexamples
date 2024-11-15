@@ -111,13 +111,15 @@ BOOL CArrayInOutApp::InitApplication()
 
 	ASSERT(importFileName == nullptr && exportFileName == nullptr && i > 0);
 
-	importFileName = new wchar_t[i + wcslen(L"exampleFile.bin") + 1];
+	const wchar_t* szInput = L"data\\EGK_ArrayInOut_exampleFile.bin";
+	importFileName = new wchar_t[i + wcslen(szInput) + 1];
 	memcpy(&importFileName[0], this->m_pszHelpFilePath, i * sizeof(wchar_t));
-	memcpy(&importFileName[i], L"exampleFile.bin", (wcslen(L"exampleFile.bin") + 1) * sizeof(wchar_t));
+	memcpy(&importFileName[i], szInput, (wcslen(szInput) + 1) * sizeof(wchar_t));
 
-	exportFileName = new wchar_t[i + wcslen(L"exportedFile.bin") + 1];
+	const wchar_t* szOutput = L"EGK_ArrayInOut_exportedFile.bin";
+	exportFileName = new wchar_t[i + wcslen(szOutput) + 1];
 	memcpy(&exportFileName[0], this->m_pszHelpFilePath, i * sizeof(wchar_t));
-	memcpy(&exportFileName[i], L"exportedFile.bin", (wcslen(L"exportedFile.bin") + 1) * sizeof(wchar_t));
+	memcpy(&exportFileName[i], szOutput, (wcslen(szOutput) + 1) * sizeof(wchar_t));
 
 	return CWinApp::InitApplication();
 }
