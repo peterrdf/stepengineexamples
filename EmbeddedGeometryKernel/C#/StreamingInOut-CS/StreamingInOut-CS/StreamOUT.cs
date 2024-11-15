@@ -40,7 +40,7 @@ namespace StreamOUT
                     fs.Write(buffer, 0, (int) size);
                 };
 
-            fs = File.Open("exportedFile.bin", FileMode.Create);
+            fs = File.Open("EGK_StreamingInOut-CS_exampleFile_exportedFile.bin", FileMode.Create);
 
             RDF.engine.SaveModelS(myModel, callback, BLOCK_LENGTH_WRITE);
 

@@ -42,7 +42,7 @@ namespace StreamIN
                     return (Int64) size;
                 };
 
-            fs = File.Open("exampleFile.bin", FileMode.Open);
+            fs = File.Open("EGK_StreamingInOut-CS_exampleFile_exampleFile.bin", FileMode.Open);
             
             myModel = RDF.engine.OpenModelS(callback);
 
