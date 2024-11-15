@@ -53,7 +53,7 @@ namespace StreamSTP_IN
                     }
                 };
 
-            fs = File.Open("as1-oc-214.stp", FileMode.Open);
+            fs = File.Open("data\\StreamingSTPInOut-CS_as1-oc-214.stp", FileMode.Open);
 
             if (fs != null)
             {

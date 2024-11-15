@@ -38,7 +38,7 @@ namespace StreamSTP_OUT
                     fs.Write(buffer, 0, (int) size);
                 };
 
-            fs = File.Open("exported_as1-oc-214.stp", FileMode.Create);
+            fs = File.Open("StreamingSTPInOut-CS_exported_as1-oc-214.stp", FileMode.Create);
 
             StepEngine.x86_64.engiSaveModelByStream(mySTPModel, callback, BLOCK_LENGTH_WRITE);
 
