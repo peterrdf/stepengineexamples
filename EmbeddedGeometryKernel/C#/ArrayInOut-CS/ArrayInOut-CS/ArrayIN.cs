@@ -24,7 +24,7 @@ namespace ArrayIN
 
         public IN()
         {
-            FileStream fs = File.Open("exampleFile.bin", FileMode.Open);
+            FileStream fs = File.Open("ArrayInOut-CS_exampleFile.bin", FileMode.Open);
 
             if (fs != null)
             {
