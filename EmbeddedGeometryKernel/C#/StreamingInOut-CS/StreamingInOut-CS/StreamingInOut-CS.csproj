@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>StreamingInOut_CS</RootNamespace>
-    <AssemblyName>StreamingInOut-CS</AssemblyName>
+    <AssemblyName>EGK-StreamingInOut-CS</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
