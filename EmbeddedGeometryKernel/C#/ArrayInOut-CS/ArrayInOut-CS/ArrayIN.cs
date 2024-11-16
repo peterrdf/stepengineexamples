@@ -24,7 +24,7 @@ namespace ArrayIN
 
         public IN()
         {
-            FileStream fs = File.Open("data\\EGK_ArrayInOut-CS_exampleFile.bin", FileMode.Open);
+            FileStream fs = File.Open("data\\EGK-ArrayInOut-CS_exampleFile.bin", FileMode.Open);
 
             if (fs != null)
             {

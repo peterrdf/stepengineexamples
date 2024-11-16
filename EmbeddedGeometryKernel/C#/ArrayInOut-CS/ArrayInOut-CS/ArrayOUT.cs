@@ -24,7 +24,7 @@ namespace ArrayOUT
 
         public OUT(Int64 myModel)
         {
-            FileStream fs = File.Open("EGK_ArrayInOut-CS_exportedFile.bin", FileMode.Create);
+            FileStream fs = File.Open("EGK-ArrayInOut-CS_exportedFile.bin", FileMode.Create);
 
             Int64 size = 0;
             RDF.engine.SaveModelA(myModel, null, out size);
