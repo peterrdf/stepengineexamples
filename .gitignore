@@ -453,3 +453,6 @@
 /EmbeddedGeometryKernel/C++/BooleanOperation/Release/EGK-BooleanOperation.pdb
 /EmbeddedGeometryKernel/C++/BooleanOperation/x64/Debug/EGK-BooleanOperation.pdb
 /EmbeddedGeometryKernel/C++/BooleanOperation/x64/Release/EGK-BooleanOperation.pdb
+/EmbeddedGeometryKernel/C++/RepairMeshes/.vs/RepairMeshes
+/EmbeddedGeometryKernel/C++/RepairMeshes/Release/EGK-RepairMeshes.pdb
+/EmbeddedGeometryKernel/C++/RepairMeshes/x64/Release/EGK-RepairMeshes.pdb
