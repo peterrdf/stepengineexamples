@@ -449,3 +449,7 @@
 /EmbeddedGeometryKernel/C++/ArrayInOut/x64/Debug
 /EmbeddedGeometryKernel/C++/ArrayInOut/x64/Release/ArrayInOut.pdb
 /EmbeddedGeometryKernel/C++/ArrayInOut/x64/Release/EGK-ArrayInOut.pdb
+/EmbeddedGeometryKernel/C++/BooleanOperation/Debug/EGK-BooleanOperation.pdb
+/EmbeddedGeometryKernel/C++/BooleanOperation/Release/EGK-BooleanOperation.pdb
+/EmbeddedGeometryKernel/C++/BooleanOperation/x64/Debug/EGK-BooleanOperation.pdb
+/EmbeddedGeometryKernel/C++/BooleanOperation/x64/Release/EGK-BooleanOperation.pdb
