@@ -31,7 +31,7 @@ namespace STEPExample
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            textBoxContent.Text = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "\\data\\STEPExample_as1-oc-214.stp.stp";
+            textBoxContent.Text = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "\\data\\STEPExample-CS_as1-oc-214.stp";
         }
 
         private void buttonPath_Click(object sender, EventArgs e)
