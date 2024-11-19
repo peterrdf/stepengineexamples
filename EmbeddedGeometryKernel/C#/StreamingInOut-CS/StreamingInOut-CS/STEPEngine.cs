@@ -239,7 +239,7 @@ namespace RDF
 		public const int_t sdaiEXPRESSSTRING = sdaiUNICODE + 1;
 		public const int_t engiGLOBALID      = sdaiEXPRESSSTRING + 1;
 
-		public const string IFCEngineDLL = @"IFCEngine.dll";
+		public const string IFCEngineDLL = @"STEPEngine.dll";
 
         //
         //  Instance Header API Calls
@@ -5089,7 +5089,7 @@ namespace RDF
 		public const UInt64 flagbit30 = 1073741824;     // 2^^30   0100.0000..0000.0000  0000.0000..0000.0000
 		public const UInt64 flagbit31 = 2147483648;		// 2^^31   1000.0000..0000.0000  0000.0000..0000.0000
 
-		public const string enginedll = @"IFCEngine.dll";
+		public const string enginedll = @"STEPEngine.dll";
 
         //
         //  Meta information API Calls
