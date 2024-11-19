@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.IO;
-using StepEngine;
+using RDF;
+
 
 #if _WIN64
 using int_t = System.Int64;
@@ -34,7 +30,7 @@ namespace StreamSTP_IN
         {
 
             // define a progress callback delegate
-            StepEngine.x86_64.ReadCallBackFunction callback =
+            stepengine.ReadCallBackFunction callback =
                 (value) =>
                 {
                     byte[] buffer = new byte[BLOCK_LENGTH_READ]; 
@@ -57,7 +53,7 @@ namespace StreamSTP_IN
 
             if (fs != null)
             {
-                mySTPModel = StepEngine.x86_64.engiOpenModelByStream(0, callback, "");
+                mySTPModel = stepengine.engiOpenModelByStream(0, callback, "");
 
                 fs.Close();
             }
