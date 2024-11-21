@@ -53,7 +53,7 @@ namespace StreamSTP_IN
 
             if (fs != null)
             {
-                mySTPModel = stepengine.engiOpenModelByStream(0, callback, "");
+                mySTPModel = stepengine.engiOpenModelByStream(0, callback, "1");
 
                 fs.Close();
             }
