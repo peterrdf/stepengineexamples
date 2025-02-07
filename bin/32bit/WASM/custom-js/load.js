@@ -76,7 +76,7 @@ function addContent(fileName, fileExtension, fileContent) {
     Module.loadGIS(fileName, true, !embeddedMode(), SCALE_AND_CENTER) 
   }
   else {
-    Module.loadSTEP(true, !embeddedMode(), SCALE_AND_CENTER)
+    Module.loadSTEP(true, !embeddedMode(), false) // SCALE_AND_CENTER; Patch for Multiple IFC Model - World Coordinates
   }
 
   FS.unlink('/data/' + 'input.ifc')  
