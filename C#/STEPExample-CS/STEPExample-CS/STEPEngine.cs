@@ -335,7 +335,8 @@ namespace RDF
 		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiSetMappingSupport")]
-		public static extern byte engiSetMappingSupport(int_t entity, bool enable);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiSetMappingSupport(int_t entity, [param: MarshalAs(UnmanagedType.U1)] bool enable);
 
 		/// <summary>
 		///		engiGetMappingSupport                                   (http://rdf.bg/ifcdoc/CS64/engiGetMappingSupport.html)
@@ -343,7 +344,8 @@ namespace RDF
 		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetMappingSupport")]
-		public static extern byte engiGetMappingSupport(int_t entity);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiGetMappingSupport(int_t entity);
 
         //
         //  File IO API Calls
@@ -944,7 +946,7 @@ namespace RDF
 		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "setPrecisionDoubleExport")]
-		public static extern void setPrecisionDoubleExport(int_t model, int_t precisionCap, int_t precisionRound, bool clean);
+		public static extern void setPrecisionDoubleExport(int_t model, int_t precisionCap, int_t precisionRound, [param: MarshalAs(UnmanagedType.U1)] bool clean);
 
         //
         //  Schema Reading API Calls
@@ -1053,7 +1055,7 @@ namespace RDF
 		///	valueType, value and return type work similary to sdaiGetAttr.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiEvaluateScriptExpression")]
-		public static extern int_t engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, out bool value);
+		public static extern int_t engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "engiEvaluateScriptExpression")]
 		public static extern int_t engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, out int_t value);
@@ -1116,10 +1118,10 @@ namespace RDF
 		///	..
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrIndexExBN")]
-		public static extern int_t engiGetAttrIndexExBN(int_t entity, string attributeName, bool countedWithParents, bool countedWithInverse);
+		public static extern int_t engiGetAttrIndexExBN(int_t entity, string attributeName, [param: MarshalAs(UnmanagedType.U1)] bool countedWithParents, [param: MarshalAs(UnmanagedType.U1)] bool countedWithInverse);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrIndexExBN")]
-		public static extern int_t engiGetAttrIndexExBN(int_t entity, byte[] attributeName, bool countedWithParents, bool countedWithInverse);
+		public static extern int_t engiGetAttrIndexExBN(int_t entity, byte[] attributeName, [param: MarshalAs(UnmanagedType.U1)] bool countedWithParents, [param: MarshalAs(UnmanagedType.U1)] bool countedWithInverse);
 
 		/// <summary>
 		///		engiGetAttrNameByIndex                                  (http://rdf.bg/ifcdoc/CS64/engiGetAttrNameByIndex.html)
@@ -1218,7 +1220,7 @@ namespace RDF
 		///	This call returns the number of attributes, inclusion of parents and inverse depends on includeParent and includeInverse values.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityNoAttributesEx")]
-		public static extern int_t engiGetEntityNoAttributesEx(int_t entity, bool includeParent, bool includeInverse);
+		public static extern int_t engiGetEntityNoAttributesEx(int_t entity, [param: MarshalAs(UnmanagedType.U1)] bool includeParent, [param: MarshalAs(UnmanagedType.U1)] bool includeInverse);
 
 		/// <summary>
 		///		engiGetEntityParent                                     (http://rdf.bg/ifcdoc/CS64/engiGetEntityParent.html)
@@ -1278,7 +1280,8 @@ namespace RDF
 		///	This call can be used to check if an attribute is an inverse relation
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrInverse")]
-		public static extern bool engiIsAttrInverse(int_t attribute);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrInverse(int_t attribute);
 
 		/// <summary>
 		///		engiIsAttrInverseBN                                     (http://rdf.bg/ifcdoc/CS64/engiIsAttrInverseBN.html)
@@ -1294,10 +1297,12 @@ namespace RDF
 		///			);
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrInverseBN")]
-		public static extern bool engiIsAttrInverseBN(int_t entity, string attributeName);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrInverseBN(int_t entity, string attributeName);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrInverseBN")]
-		public static extern bool engiIsAttrInverseBN(int_t entity, byte[] attributeName);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrInverseBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
 		///		engiIsAttrOptional                                      (http://rdf.bg/ifcdoc/CS64/engiIsAttrOptional.html)
@@ -1305,7 +1310,8 @@ namespace RDF
 		///	This call can be used to check if an attribute is optional.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrOptional")]
-		public static extern bool engiIsAttrOptional(int_t attribute);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrOptional(int_t attribute);
 
 		/// <summary>
 		///		engiIsAttrOptionalBN                                    (http://rdf.bg/ifcdoc/CS64/engiIsAttrOptionalBN.html)
@@ -1321,10 +1327,12 @@ namespace RDF
 		///			);
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrOptionalBN")]
-		public static extern bool engiIsAttrOptionalBN(int_t entity, string attributeName);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrOptionalBN(int_t entity, string attributeName);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrOptionalBN")]
-		public static extern bool engiIsAttrOptionalBN(int_t entity, byte[] attributeName);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrOptionalBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
 		///		engiGetAttrDomainName                                   (http://rdf.bg/ifcdoc/CS64/engiGetAttrDomainName.html)
@@ -1437,7 +1445,7 @@ namespace RDF
 		///	Return attribute definition from attribute index.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityAttributeByIndex")]
-		public static extern int_t engiGetEntityAttributeByIndex(int_t entity, int_t index, bool countedWithParents, bool countedWithInverse);
+		public static extern int_t engiGetEntityAttributeByIndex(int_t entity, int_t index, [param: MarshalAs(UnmanagedType.U1)] bool countedWithParents, [param: MarshalAs(UnmanagedType.U1)] bool countedWithInverse);
 
 		/// <summary>
 		///		engiGetAggregationDefinition                            (http://rdf.bg/ifcdoc/CS64/engiGetAggregationDefinition.html)
@@ -1445,7 +1453,7 @@ namespace RDF
 		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAggregationDefinition")]
-		public static extern void engiGetAggregationDefinition(int_t aggregationDefinition, out enum_express_aggr aggregationType, out int_t cardinalityMin, out int_t cardinalityMax, out bool optional, out bool unique, out int_t nextAggregationLevel);
+		public static extern void engiGetAggregationDefinition(int_t aggregationDefinition, out enum_express_aggr aggregationType, out int_t cardinalityMin, out int_t cardinalityMax, [param: MarshalAs(UnmanagedType.U1)] out bool optional, [param: MarshalAs(UnmanagedType.U1)] out bool unique, out int_t nextAggregationLevel);
 
 		/// <summary>
 		///		engiGetEntityUniqueRuleByIterator                       (http://rdf.bg/ifcdoc/CS64/engiGetEntityUniqueRuleByIterator.html)
@@ -1623,7 +1631,7 @@ namespace RDF
 		///		  (Non-standard extensions) sdaiGetADBValue: sdaiADB is allowed and will success when sdaiGetADBTypePath is not NULL, returning ABD value has type path element removed.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetADBValue")]
-		public static extern int_t sdaiGetADBValue(int_t ADB, int_t valueType, out bool value);
+		public static extern int_t sdaiGetADBValue(int_t ADB, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetADBValue")]
 		public static extern int_t sdaiGetADBValue(int_t ADB, int_t valueType, out int_t value);
@@ -1754,7 +1762,7 @@ namespace RDF
 		///		  (Non-standard extensions) sdaiGetADBValue: sdaiADB is allowed and will success when sdaiGetADBTypePath is not NULL, returning ABD value has type path element removed.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAggrByIndex")]
-		public static extern int_t sdaiGetAggrByIndex(int_t aggregate, int_t index, int_t valueType, out bool value);
+		public static extern int_t sdaiGetAggrByIndex(int_t aggregate, int_t index, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAggrByIndex")]
 		public static extern int_t sdaiGetAggrByIndex(int_t aggregate, int_t index, int_t valueType, out int_t value);
@@ -1859,7 +1867,7 @@ namespace RDF
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIndex")]
-		public static extern void sdaiPutAggrByIndex(int_t aggregate, int_t index, int_t valueType, ref bool value);
+		public static extern void sdaiPutAggrByIndex(int_t aggregate, int_t index, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIndex")]
 		public static extern void sdaiPutAggrByIndex(int_t aggregate, int_t index, int_t valueType, ref int_t value);
@@ -1982,7 +1990,7 @@ namespace RDF
 		///		  (Non-standard extensions) sdaiGetADBValue: sdaiADB is allowed and will success when sdaiGetADBTypePath is not NULL, returning ABD value has type path element removed.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttr")]
-		public static extern int_t sdaiGetAttr(int_t instance, int_t attribute, int_t valueType, out bool value);
+		public static extern int_t sdaiGetAttr(int_t instance, int_t attribute, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttr")]
 		public static extern int_t sdaiGetAttr(int_t instance, int_t attribute, int_t valueType, out int_t value);
@@ -2110,7 +2118,7 @@ namespace RDF
 		///			);
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttrBN")]
-		public static extern int_t sdaiGetAttrBN(int_t instance, string attributeName, int_t valueType, out bool value);
+		public static extern int_t sdaiGetAttrBN(int_t instance, string attributeName, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttrBN")]
 		public static extern int_t sdaiGetAttrBN(int_t instance, string attributeName, int_t valueType, out int_t value);
@@ -2122,7 +2130,7 @@ namespace RDF
 		public static extern int_t sdaiGetAttrBN(int_t instance, string attributeName, int_t valueType, out IntPtr value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttrBN")]
-		public static extern int_t sdaiGetAttrBN(int_t instance, byte[] attributeName, int_t valueType, out bool value);
+		public static extern int_t sdaiGetAttrBN(int_t instance, byte[] attributeName, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttrBN")]
 		public static extern int_t sdaiGetAttrBN(int_t instance, byte[] attributeName, int_t valueType, out int_t value);
@@ -2262,7 +2270,16 @@ namespace RDF
 		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrTraits")]
-		public static extern void engiGetAttrTraits(int_t attribute, out IntPtr name, out int_t definingEntity, out bool isExplicit, out bool isInverse, out enum_express_attr_type attrType, out int_t domainEntity, out int_t aggregationDefinition, out bool isOptional);
+		public static extern void engiGetAttrTraits(
+			int_t attribute, 
+			out IntPtr name, 
+			out int_t definingEntity,
+            [param: MarshalAs(UnmanagedType.U1)] out bool isExplicit,
+            [param: MarshalAs(UnmanagedType.U1)] out bool isInverse, 
+			out enum_express_attr_type attrType, 
+			out int_t domainEntity, 
+			out int_t aggregationDefinition,
+            [param: MarshalAs(UnmanagedType.U1)] out bool isOptional);
 
         public static void engiGetAttrTraits(int_t attribute, out string name, out int_t definingEntity, out bool isExplicit, out bool isInverse, out enum_express_attr_type attrType, out int_t domainEntity, out int_t aggregationDefinition, out bool isOptional)
 		{
@@ -2299,7 +2316,8 @@ namespace RDF
 		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrExplicit")]
-		public static extern bool engiIsAttrExplicit(int_t attribute);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrExplicit(int_t attribute);
 
 		/// <summary>
 		///		engiIsAttrExplicitBN                                    (http://rdf.bg/ifcdoc/CS64/engiIsAttrExplicitBN.html)
@@ -2307,10 +2325,12 @@ namespace RDF
 		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrExplicitBN")]
-		public static extern bool engiIsAttrExplicitBN(int_t entity, string attributeName);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrExplicitBN(int_t entity, string attributeName);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrExplicitBN")]
-		public static extern bool engiIsAttrExplicitBN(int_t entity, byte[] attributeName);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrExplicitBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
 		///		sdaiGetInstanceModel                                    (http://rdf.bg/ifcdoc/CS64/sdaiGetInstanceModel.html)
@@ -2626,7 +2646,7 @@ namespace RDF
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPrepend")]
-		public static extern void sdaiPrepend(int_t aggregate, int_t valueType, ref bool value);
+		public static extern void sdaiPrepend(int_t aggregate, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPrepend")]
 		public static extern void sdaiPrepend(int_t aggregate, int_t valueType, ref int_t value);
@@ -2733,7 +2753,7 @@ namespace RDF
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiAppend")]
-		public static extern void sdaiAppend(int_t aggregate, int_t valueType, ref bool value);
+		public static extern void sdaiAppend(int_t aggregate, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiAppend")]
 		public static extern void sdaiAppend(int_t aggregate, int_t valueType, ref int_t value);
@@ -2840,7 +2860,7 @@ namespace RDF
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiAdd")]
-		public static extern void sdaiAdd(int_t aggregate, int_t valueType, ref bool value);
+		public static extern void sdaiAdd(int_t aggregate, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiAdd")]
 		public static extern void sdaiAdd(int_t aggregate, int_t valueType, ref int_t value);
@@ -2947,7 +2967,7 @@ namespace RDF
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertByIndex")]
-		public static extern void sdaiInsertByIndex(int_t aggregate, int_t index, int_t valueType, ref bool value);
+		public static extern void sdaiInsertByIndex(int_t aggregate, int_t index, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertByIndex")]
 		public static extern void sdaiInsertByIndex(int_t aggregate, int_t index, int_t valueType, ref int_t value);
@@ -3054,7 +3074,7 @@ namespace RDF
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertBefore")]
-		public static extern void sdaiInsertBefore(int_t iterator, int_t valueType, ref bool value);
+		public static extern void sdaiInsertBefore(int_t iterator, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertBefore")]
 		public static extern void sdaiInsertBefore(int_t iterator, int_t valueType, ref int_t value);
@@ -3151,7 +3171,7 @@ namespace RDF
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertAfter")]
-		public static extern void sdaiInsertAfter(int_t iterator, int_t valueType, ref bool value);
+		public static extern void sdaiInsertAfter(int_t iterator, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertAfter")]
 		public static extern void sdaiInsertAfter(int_t iterator, int_t valueType, ref int_t value);
@@ -3243,7 +3263,7 @@ namespace RDF
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateADB")]
-		public static extern int_t sdaiCreateADB(int_t valueType, ref bool value);
+		public static extern int_t sdaiCreateADB(int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateADB")]
 		public static extern int_t sdaiCreateADB(int_t valueType, ref int_t value);
@@ -3541,7 +3561,7 @@ namespace RDF
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiRemove")]
-		public static extern void sdaiRemove(int_t aggregate, int_t valueType, ref bool value);
+		public static extern void sdaiRemove(int_t aggregate, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiRemove")]
 		public static extern void sdaiRemove(int_t aggregate, int_t valueType, ref int_t value);
@@ -3567,7 +3587,8 @@ namespace RDF
 		///	The function tests whether the member of the specified array referenced by the specified index position has a value.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiTestArrayByIndex")]
-		public static extern bool sdaiTestArrayByIndex(int_t aggregate, int_t index);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool sdaiTestArrayByIndex(int_t aggregate, int_t index);
 
 		/// <summary>
 		///		sdaiTestArrayByItr                                      (http://rdf.bg/ifcdoc/CS64/sdaiTestArrayByItr.html)
@@ -3575,7 +3596,8 @@ namespace RDF
 		///	The function tests whether the member of the specified array referenced by the specified index position has a value.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiTestArrayByItr")]
-		public static extern bool sdaiTestArrayByItr(int_t iterator);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool sdaiTestArrayByItr(int_t iterator);
 
 		/// <summary>
 		///		sdaiCreateInstance                                      (http://rdf.bg/ifcdoc/CS64/sdaiCreateInstance.html)
@@ -3701,7 +3723,7 @@ namespace RDF
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttr")]
-		public static extern void sdaiPutAttr(int_t instance, int_t attribute, int_t valueType, ref bool value);
+		public static extern void sdaiPutAttr(int_t instance, int_t attribute, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttr")]
 		public static extern void sdaiPutAttr(int_t instance, int_t attribute, int_t valueType, ref int_t value);
@@ -3821,7 +3843,7 @@ namespace RDF
 		///			);
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
-		public static extern void sdaiPutAttrBN(int_t instance, string attributeName, int_t valueType, ref bool value);
+		public static extern void sdaiPutAttrBN(int_t instance, string attributeName, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, string attributeName, int_t valueType, ref int_t value);
@@ -3852,7 +3874,7 @@ namespace RDF
 		}
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
-		public static extern void sdaiPutAttrBN(int_t instance, byte[] attributeName, int_t valueType, ref bool value);
+		public static extern void sdaiPutAttrBN(int_t instance, byte[] attributeName, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, byte[] attributeName, int_t valueType, ref int_t value);
@@ -3997,7 +4019,8 @@ namespace RDF
 		///	This function positions the iterator to the succeeding member of the associated aggregate instance.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiNext")]
-		public static extern bool sdaiNext(int_t iterator);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool sdaiNext(int_t iterator);
 
 		/// <summary>
 		///		sdaiPrevious                                            (http://rdf.bg/ifcdoc/CS64/sdaiPrevious.html)
@@ -4094,25 +4117,32 @@ namespace RDF
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsMember")]
-		public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, ref bool value);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsMember")]
-		public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, ref int_t value);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, ref int_t value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsMember")]
-		public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, int_t value);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, int_t value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsMember")]
-		public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, ref double value);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, ref double value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsMember")]
-		public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, ref IntPtr value);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, ref IntPtr value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsMember")]
-		public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, byte[] value);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, byte[] value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsMember")]
-		public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, string value);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, string value);
 
 		/// <summary>
 		///		sdaiGetAggrElementBoundByItr                            (http://rdf.bg/ifcdoc/CS64/sdaiGetAggrElementBoundByItr.html)
@@ -4215,7 +4245,8 @@ namespace RDF
 		///	Returns success flag.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiEnableDerivedAttributes")]
-		public static extern bool engiEnableDerivedAttributes(int_t model, bool enable);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiEnableDerivedAttributes(int_t model, [param: MarshalAs(UnmanagedType.U1)] bool enable);
 
 		/// <summary>
 		///		engiEvaluateAllDerivedAttributes                        (http://rdf.bg/ifcdoc/CS64/engiEvaluateAllDerivedAttributes.html)
@@ -4223,7 +4254,7 @@ namespace RDF
 		///	The function evaluates and replaces all * with values, optionally can handle $ values as derived attributes.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiEvaluateAllDerivedAttributes")]
-		public static extern void engiEvaluateAllDerivedAttributes(int_t model, bool includeNullValues);
+		public static extern void engiEvaluateAllDerivedAttributes(int_t model, [param: MarshalAs(UnmanagedType.U1)] bool includeNullValues);
 
 		/// <summary>
 		///		setSegmentation                                         (http://rdf.bg/ifcdoc/CS64/setSegmentation.html)
@@ -4632,7 +4663,7 @@ namespace RDF
 		///		  (Non-standard extensions) sdaiGetADBValue: sdaiADB is allowed and will success when sdaiGetADBTypePath is not NULL, returning ABD value has type path element removed.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAggrByIterator")]
-		public static extern int_t sdaiGetAggrByIterator(int_t iterator, int_t valueType, out bool value);
+		public static extern int_t sdaiGetAggrByIterator(int_t iterator, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAggrByIterator")]
 		public static extern int_t sdaiGetAggrByIterator(int_t iterator, int_t valueType, out int_t value);
@@ -4737,7 +4768,7 @@ namespace RDF
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIterator")]
-		public static extern void sdaiPutAggrByIterator(int_t iterator, int_t valueType, ref bool value);
+		public static extern void sdaiPutAggrByIterator(int_t iterator, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIterator")]
 		public static extern void sdaiPutAggrByIterator(int_t iterator, int_t valueType, ref int_t value);
@@ -4809,7 +4840,7 @@ namespace RDF
 		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAggrUnknownElement")]
-		public static extern void engiGetAggrUnknownElement(int_t aggregate, int_t elementIndex, out int_t valueType, out bool value);
+		public static extern void engiGetAggrUnknownElement(int_t aggregate, int_t elementIndex, out int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAggrUnknownElement")]
 		public static extern void engiGetAggrUnknownElement(int_t aggregate, int_t elementIndex, out int_t valueType, out int_t value);
@@ -4985,7 +5016,7 @@ namespace RDF
 		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "getRootAxis2Placement")]
-		public static extern int_t getRootAxis2Placement(int_t model, bool exclusiveIfHasGeometry);
+		public static extern int_t getRootAxis2Placement(int_t model, [param: MarshalAs(UnmanagedType.U1)] bool exclusiveIfHasGeometry);
 
 		/// <summary>
 		///		getGlobalPlacement                                      (http://rdf.bg/ifcdoc/CS64/getGlobalPlacement.html)
@@ -5007,10 +5038,10 @@ namespace RDF
 		///	This is all done semantically, i.e. it can be seen as a derived call representing a small SDAI function adjust the origin of a model. 
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "setGlobalPlacement")]
-		public static extern int_t setGlobalPlacement(int_t model, ref double origin, bool includeRotation);
+		public static extern int_t setGlobalPlacement(int_t model, ref double origin, [param: MarshalAs(UnmanagedType.U1)] bool includeRotation);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "setGlobalPlacement")]
-		public static extern int_t setGlobalPlacement(int_t model, double[] origin, bool includeRotation);
+		public static extern int_t setGlobalPlacement(int_t model, double[] origin, [param: MarshalAs(UnmanagedType.U1)] bool includeRotation);
 
 		/// <summary>
 		///		getTimeStamp                                            (http://rdf.bg/ifcdoc/CS64/getTimeStamp.html)
@@ -5081,10 +5112,10 @@ namespace RDF
 		///	This call is deprecated, please use call engiGetAttrIndexExBN(..) instead.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityAttributeIndexEx")]
-		public static extern int_t engiGetEntityAttributeIndexEx(int_t entity, string attributeName, bool countedWithParents, bool countedWithInverse);
+		public static extern int_t engiGetEntityAttributeIndexEx(int_t entity, string attributeName, [param: MarshalAs(UnmanagedType.U1)] bool countedWithParents, [param: MarshalAs(UnmanagedType.U1)] bool countedWithInverse);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityAttributeIndexEx")]
-		public static extern int_t engiGetEntityAttributeIndexEx(int_t entity, byte[] attributeName, bool countedWithParents, bool countedWithInverse);
+		public static extern int_t engiGetEntityAttributeIndexEx(int_t entity, byte[] attributeName, [param: MarshalAs(UnmanagedType.U1)] bool countedWithParents, [param: MarshalAs(UnmanagedType.U1)] bool countedWithInverse);
 
 		/// <summary>
 		///		engiGetEntityArgumentName                               (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentName.html)
@@ -5192,7 +5223,16 @@ namespace RDF
 		///	This call is deprecated, please use call engiGetAttrTraits(..) instead.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttributeTraits")]
-		public static extern void engiGetAttributeTraits(int_t attribute, out IntPtr name, out int_t definingEntity, out bool isExplicit, out bool isInverse, out enum_express_attr_type attrType, out int_t domainEntity, out int_t aggregationDefinition, out bool isOptional);
+		public static extern void engiGetAttributeTraits(
+			int_t attribute, 
+			out IntPtr name, 
+			out int_t definingEntity,
+            [param: MarshalAs(UnmanagedType.U1)] out bool isExplicit,
+            [param: MarshalAs(UnmanagedType.U1)] out bool isInverse, 
+			out enum_express_attr_type attrType, 
+			out int_t domainEntity, 
+			out int_t aggregationDefinition,
+            [param: MarshalAs(UnmanagedType.U1)] out bool isOptional);
 
 		/// <summary>
 		///		engiGetEntityNoArguments                                (http://rdf.bg/ifcdoc/CS64/engiGetEntityNoArguments.html)
@@ -5235,7 +5275,7 @@ namespace RDF
 		///	This call is deprecated, please use call sdaiGetAggrByIndex(..) instead.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAggrElement")]
-		public static extern int_t engiGetAggrElement(int_t aggregate, int_t index, int_t valueType, out bool value);
+		public static extern int_t engiGetAggrElement(int_t aggregate, int_t index, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAggrElement")]
 		public static extern int_t engiGetAggrElement(int_t aggregate, int_t index, int_t valueType, out int_t value);
@@ -5377,7 +5417,7 @@ namespace RDF
 		///		bit 63:	(__INTERNAL_ERROR)					unspecified error
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "validateSetOptions")]
-		public static extern void validateSetOptions(int_t timeLimitSeconds, int_t issueCntLimit, bool showEachIssueOnce, UInt64 issueTypes, UInt64 mask);
+		public static extern void validateSetOptions(int_t timeLimitSeconds, int_t issueCntLimit, [param: MarshalAs(UnmanagedType.U1)] bool showEachIssueOnce, UInt64 issueTypes, UInt64 mask);
 
 		/// <summary>
 		///		validateGetOptions                                      (http://rdf.bg/ifcdoc/CS64/validateGetOptions.html)
@@ -5406,7 +5446,7 @@ namespace RDF
 		///		bit 63:	(__INTERNAL_ERROR)					unspecified error
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "validateGetOptions")]
-		public static extern UInt64 validateGetOptions(out int_t timeLimitSeconds, out int_t issueCntLimit, out bool showEachIssueOnce, UInt64 mask);
+		public static extern UInt64 validateGetOptions(out int_t timeLimitSeconds, out int_t issueCntLimit, [param: MarshalAs(UnmanagedType.U1)] out bool showEachIssueOnce, UInt64 mask);
 
 		/// <summary>
 		///		validateModel                                           (http://rdf.bg/ifcdoc/CS64/validateModel.html)
@@ -7738,7 +7778,7 @@ namespace RDF
 		[DllImport(enginedll, EntryPoint = "SetDatatypeProperty")]
 		public static extern Int64 SetDatatypeProperty(Int64 owlInstance, Int64 owlDatatypeProperty, string[] values, Int64 card);
 
-		public static Int64 SetDatatypeProperty(Int64 owlInstance, Int64 owlDatatypeProperty, bool value)
+		public static Int64 SetDatatypeProperty(Int64 owlInstance, Int64 owlDatatypeProperty, [param: MarshalAs(UnmanagedType.U1)] bool value)
 		{
 			System.Diagnostics.Debug.Assert(GetPropertyType(owlDatatypeProperty) == DATATYPEPROPERTY_TYPE_BOOLEAN);
 			const Int64 card = 1;

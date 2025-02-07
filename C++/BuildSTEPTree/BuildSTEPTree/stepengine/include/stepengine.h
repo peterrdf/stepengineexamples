@@ -87,7 +87,7 @@ typedef void			* UniqueRule;
 typedef	int_t			SdaiPrimitiveType;
 typedef	int_t			SdaiInteger;
 typedef	double			SdaiReal;
-typedef	unsigned char	SdaiBoolean;
+typedef	unsigned char	SdaiBoolean;		//	In deviation to ISO 10303-11 we use the 8 bit sized bool / byte / (unsigned) char as base type for SdaiBoolean (this seems more logical and reduces C# wrapper complexity)
 typedef	SchemaTypeDecl	SdaiEntity;
 typedef	int_t			SdaiInstance;
 typedef	int_t			SdaiModel;
@@ -108,9 +108,8 @@ typedef	void			* ValidationResults;
 typedef	void			* ValidationIssue;
 typedef	int_t			ValidationIssueLevel;
 
-#define	sdaiFALSE		((SdaiInteger) 0)
-#define	sdaiTRUE		((SdaiInteger) 1)
-#define	sdaiUNKNOWN		((SdaiInteger) 2)
+#define	sdaiFALSE		((SdaiBoolean) 0)
+#define	sdaiTRUE		((SdaiBoolean) 1)
 
 
 #ifdef __cplusplus
