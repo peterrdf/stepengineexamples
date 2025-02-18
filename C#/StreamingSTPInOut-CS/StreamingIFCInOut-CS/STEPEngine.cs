@@ -1280,8 +1280,8 @@ namespace RDF
 		///	This call can be used to check if an attribute is an inverse relation
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrInverse")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        public static extern bool engiIsAttrInverse(int_t attribute);
+		[return: MarshalAs(UnmanagedType.U1)]
+		public static extern bool engiIsAttrInverse(int_t attribute);
 
 		/// <summary>
 		///		engiIsAttrInverseBN                                     (http://rdf.bg/ifcdoc/CS64/engiIsAttrInverseBN.html)
@@ -1297,12 +1297,12 @@ namespace RDF
 		///			);
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrInverseBN")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        public static extern bool engiIsAttrInverseBN(int_t entity, string attributeName);
+		[return: MarshalAs(UnmanagedType.U1)]
+		public static extern bool engiIsAttrInverseBN(int_t entity, string attributeName);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrInverseBN")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        public static extern bool engiIsAttrInverseBN(int_t entity, byte[] attributeName);
+		[return: MarshalAs(UnmanagedType.U1)]
+		public static extern bool engiIsAttrInverseBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
 		///		engiIsAttrOptional                                      (http://rdf.bg/ifcdoc/CS64/engiIsAttrOptional.html)
@@ -1310,8 +1310,8 @@ namespace RDF
 		///	This call can be used to check if an attribute is optional.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrOptional")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        public static extern bool engiIsAttrOptional(int_t attribute);
+		[return: MarshalAs(UnmanagedType.U1)]
+		public static extern bool engiIsAttrOptional(int_t attribute);
 
 		/// <summary>
 		///		engiIsAttrOptionalBN                                    (http://rdf.bg/ifcdoc/CS64/engiIsAttrOptionalBN.html)
@@ -1327,12 +1327,12 @@ namespace RDF
 		///			);
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrOptionalBN")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        public static extern bool engiIsAttrOptionalBN(int_t entity, string attributeName);
+		[return: MarshalAs(UnmanagedType.U1)]
+		public static extern bool engiIsAttrOptionalBN(int_t entity, string attributeName);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrOptionalBN")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        public static extern bool engiIsAttrOptionalBN(int_t entity, byte[] attributeName);
+		[return: MarshalAs(UnmanagedType.U1)]
+		public static extern bool engiIsAttrOptionalBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
 		///		engiGetAttrDomainName                                   (http://rdf.bg/ifcdoc/CS64/engiGetAttrDomainName.html)
@@ -2316,8 +2316,8 @@ namespace RDF
 		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrExplicit")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        public static extern bool engiIsAttrExplicit(int_t attribute);
+		[return: MarshalAs(UnmanagedType.U1)]
+		public static extern bool engiIsAttrExplicit(int_t attribute);
 
 		/// <summary>
 		///		engiIsAttrExplicitBN                                    (http://rdf.bg/ifcdoc/CS64/engiIsAttrExplicitBN.html)
@@ -2325,12 +2325,12 @@ namespace RDF
 		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrExplicitBN")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        public static extern bool engiIsAttrExplicitBN(int_t entity, string attributeName);
+		[return: MarshalAs(UnmanagedType.U1)]
+		public static extern bool engiIsAttrExplicitBN(int_t entity, string attributeName);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrExplicitBN")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        public static extern bool engiIsAttrExplicitBN(int_t entity, byte[] attributeName);
+		[return: MarshalAs(UnmanagedType.U1)]
+		public static extern bool engiIsAttrExplicitBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
 		///		sdaiGetInstanceModel                                    (http://rdf.bg/ifcdoc/CS64/sdaiGetInstanceModel.html)
