@@ -94,9 +94,10 @@ typedef	int_t			SdaiModel;
 typedef	int_t			SdaiRep;
 typedef	const char		* SdaiString;
 typedef	void			* SdaiADB;
-typedef	void			* SdaiNPL;
 typedef	int_t			* SdaiAggr;
 typedef	SdaiAggr		SdaiArray;
+typedef SdaiAggr		SdaiList;
+typedef	SdaiList		SdaiNPL;
 typedef	void			* SdaiIterator;
 typedef	int_t			SdaiAggrIndex;
 typedef	void			* SdaiAttr;
@@ -1702,6 +1703,37 @@ static	inline	SdaiEntity	sdaiGetEntity(
 //}} End C++ polymorphic versions
 	extern "C" {
 #endif
+
+//
+//		sdaiGetComplexEntity                                           (http://rdf.bg/ifcdoc/CP64/sdaiGetComplexEntity.html)
+//				SdaiModel				model								IN
+//				SdaiNPL				    entityList							IN 
+//
+//				SdaiEntity				returns								OUT
+//
+//	This call retrieves a handle to an entity composed of the supplied simple entity types..
+//
+SdaiEntity		DECL STDC	sdaiGetComplexEntity(
+									SdaiModel				model,
+									SdaiNPL					entityList
+								);
+
+
+//
+//		sdaiGetComplexEntityBN                                           (http://rdf.bg/ifcdoc/CP64/sdaiGetComplexEntityBN.html)
+//				SdaiModel				model								IN
+//				SdaiInteger				nameNumber							IN 
+//				SdaiString				* nameVector						IN
+//
+//				SdaiEntity				returns								OUT
+//
+//	This call retrieves a handle to an entity composed of the supplied simple entity types..
+//
+SdaiEntity		DECL STDC	sdaiGetComplexEntityBN(
+									SdaiModel				model,
+									SdaiInteger				nameNumber, 
+									SdaiString				* nameVector
+								);
 
 //
 //		engiGetEntityModel                                      (http://rdf.bg/ifcdoc/CP64/engiGetEntityModel.html)
@@ -5705,6 +5737,39 @@ static	inline	SdaiInstance	sdaiCreateInstanceBN(
 //}} End C++ polymorphic versions
 	extern "C" {
 #endif
+
+//
+//		sdaiCreateComplexInstance                              (http://rdf.bg/ifcdoc/CP64/sdaiCreateComplexInstance.html)
+//				SdaiModel				model								IN
+//				SdaiNPL				    entityList							IN 
+//
+//				SdaiInstance			returns								OUT
+//
+//		This call creates a new application instance of the specified type, as determined by a constructed entity type 
+//      that is made up of the supplied simple entity types, in the specified SDAI model.
+//
+SdaiInstance	DECL STDC	sdaiCreateComplexInstance(
+									SdaiModel				model,
+									SdaiNPL					entityList
+								);
+
+
+//
+//		sdaiCreateComplexInstanceBN                              (http://rdf.bg/ifcdoc/CP64/sdaiCreateComplexInstanceBN.html)
+//				SdaiModel				model								IN
+//				SdaiInteger				nameNumber							IN 
+//				SdaiString				* nameVector						IN
+//
+//				SdaiInstance			returns								OUT
+//
+//		This call creates a new application instance of the specified type, as determined by a constructed entity type 
+//      that is made up of the supplied simple entity types, in the specified SDAI model.
+//
+SdaiInstance	DECL STDC	sdaiCreateComplexInstanceBN(
+									SdaiModel				model,
+									SdaiInteger				nameNumber, 
+									SdaiString				* nameVector
+								);
 
 //
 //		sdaiDeleteInstance                                      (http://rdf.bg/ifcdoc/CP64/sdaiDeleteInstance.html)
