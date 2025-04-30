@@ -103,7 +103,7 @@ typedef	int_t			SdaiAggrIndex;
 typedef	void			* SdaiAttr;
 typedef	void			* SchemaAggr;
 
-typedef	int64_t			ExpressID;
+typedef	uint64_t		ExpressID;
 
 typedef	void			* ValidationResults;
 typedef	void			* ValidationIssue;
