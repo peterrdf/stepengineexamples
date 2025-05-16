@@ -212,7 +212,7 @@ function loadInstances(updateViewer) {
           indicesPoints: [],
         }
 
-        if (textureIndex > 0) {
+        if (textureIndex >= 0) {
           conceptualFace.material.texture = {}
           conceptualFace.material.texture.name = Module.getTextureInfo(textureIndex)
         }
