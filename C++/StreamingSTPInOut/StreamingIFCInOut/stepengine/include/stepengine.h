@@ -3972,7 +3972,7 @@ SdaiEntity		DECL STDC	sdaiGetInstanceType(
 //
 //				SdaiInteger				returns								OUT
 //
-//	...
+//	Returns the number of elements within an aggregation.
 //
 SdaiInteger		DECL STDC	sdaiGetMemberCount(
 									SdaiAggr				aggregate
@@ -7901,6 +7901,12 @@ int_t			DECL STDC	sdaiErrorQuery(
 void			DECL STDC	owlGetModel(
 									SdaiModel				model,
 									int64_t					* owlModel
+								);
+
+
+bool			DECL STDC	owlConnectModel(
+									SdaiModel				model,
+									int64_t					owlModel
 								);
 
 //
