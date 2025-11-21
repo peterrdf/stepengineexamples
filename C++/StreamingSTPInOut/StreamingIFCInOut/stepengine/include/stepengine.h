@@ -2923,6 +2923,93 @@ void			DECL * STDC	sdaiGetADBValue(
 								);
 
 //
+//		sdaiPutADBValue                                         (https://rdf.bg/ifcdoc/CP64/sdaiPutADBValue.html)
+//				const SdaiADB			ADB									IN
+//				SdaiPrimitiveType		valueType							IN
+//				const void				* value								IN
+//
+//				void					returns
+//
+//	valueType argument to specify what type of data caller wants to put
+//	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiPutADBValue, and it works similarly for all put-functions.
+//	Note: with SDAI API it is impossible to check buffer type at compilation or execution time and this is responsibility of a caller to ensure that
+//		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
+//
+//
+//	Table 1 – Required value buffer depending on valueType (on the example of sdaiPutADBValue but valid for all put-functions)
+//
+//	valueType				C/C++														C#
+//
+//	sdaiINTEGER				int_t val = 123;											int_t val = 123;
+//							sdaiPutADBValue (ADB, sdaiINTEGER, &val);					stepengine.sdaiPutADBValue (ADB, stepengine.sdaiINTEGER, ref val);
+//
+//	sdaiREAL or sdaiNUMBER	double val = 123.456;										double val = 123.456;
+//							sdaiPutADBValue (ADB, sdaiREAL, &val);						stepengine.sdaiPutADBValue (ADB, stepengine.sdaiREAL, ref val);
+//
+//	sdaiBOOLEAN				SdaiBoolean val = sdaiTRUE;									bool val = true;
+//							sdaiPutADBValue (ADB, sdaiBOOLEAN, &val);					stepengine.sdaiPutADBValue (ADB, stepengine.sdaiBOOLEAN, ref val);
+//
+//	sdaiLOGICAL				const TCHAR* val = "U";										string val = "U";
+//							sdaiPutADBValue (ADB, sdaiLOGICAL, val);					stepengine.sdaiPutADBValue (ADB, stepengine.sdaiLOGICAL, val);
+//
+//	sdaiENUM				const TCHAR* val = "NOTDEFINED";							string val = "NOTDEFINED";
+//							sdaiPutADBValue (ADB, sdaiENUM, val);						stepengine.sdaiPutADBValue (ADB, stepengine.sdaiENUM, val);
+//
+//	sdaiBINARY				const TCHAR* val = "0123456ABC";							string val = "0123456ABC";
+//							sdaiPutADBValue (ADB, sdaiBINARY, val);						stepengine.sdaiPutADBValue (ADB, stepengine.sdaiBINARY, val);
+//
+//	sdaiSTRING				const char* val = "My Simple String";						string val = "My Simple String";
+//							sdaiPutADBValue (ADB, sdaiSTRING, val);						stepengine.sdaiPutADBValue (ADB, stepengine.sdaiSTRING, val);
+//
+//	sdaiUNICODE				const wchar_t* val = L"Any Unicode String";					string val = "Any Unicode String";
+//							sdaiPutADBValue (ADB, sdaiUNICODE, val);					stepengine.sdaiPutADBValue (ADB, stepengine.sdaiUNICODE, val);
+//
+//	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
+//							sdaiPutADBValue (ADB, sdaiEXPRESSSTRING, val);				stepengine.sdaiPutADBValue (ADB, stepengine.sdaiEXPRESSSTRING, val);
+//
+//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");	int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
+//							sdaiPutADBValue (ADB, sdaiINSTANCE, val);					stepengine.sdaiPutADBValue (ADB, stepengine.sdaiINSTANCE, val);
+//
+//	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);					int_t val = sdaiCreateAggr (inst, 0);
+//							sdaiPutAttr (val, sdaiINSTANCE, inst);						stepengine.sdaiPutAttr (val, stepengine.sdaiINSTANCE, inst);
+//							sdaiPutADBValue (ADB, sdaiAGGR, val);						stepengine.sdaiPutADBValue (ADB, stepengine.sdaiAGGR, val);
+//
+//	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
+//							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
+//							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					stepengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
+//							sdaiPutADBValue (ADB, sdaiADB, val);						stepengine.sdaiPutADBValue (ADB, stepengine.sdaiADB, val);	
+//							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
+//
+//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
+//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//
+//
+//	Table 2 - valueType can be requested depending on actual model data.
+//
+//	valueType		Works for following values in the model
+//				 	  integer	   real		.T. or .F.	   .U.		other enum	  binary	  string	 instance	   list		 $ (empty)
+//	sdaiINTEGER			Yes			 .			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiREAL			 .			Yes			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiNUMBER			 . 			Yes			 .			 .			 .			 .			 .			 .			 .			 .
+//	sdaiBOOLEAN			 .			 .			Yes			 .			 .			 .			 .			 .			 .			 .
+//	sdaiLOGICAL			 .			 .			Yes			Yes			 .			 .			 .			 .			 .			 .
+//	sdaiENUM			 .			 .			Yes			Yes			Yes			 .			 .			 .			 .			 .
+//	sdaiBINARY			 .			 .			 .			 .			 .			Yes			 .			 .			 .			 .
+//	sdaiSTRING			 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiUNICODE			 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiEXPRESSSTRING	 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
+//	sdaiINSTANCE		 .			 .			 .			 .			 .			 .			 .			Yes			 .			 .
+//	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
+//	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
+//
+void			DECL STDC	sdaiPutADBValue(
+									const SdaiADB			ADB,
+									SdaiPrimitiveType		valueType,
+									const void				* value
+								);
+
+//
 //		sdaiCreateEmptyADB                                      (https://rdf.bg/ifcdoc/CP64/sdaiCreateEmptyADB.html)
 //				SdaiADB					returns								OUT
 //
@@ -7289,6 +7376,36 @@ int_t			DECL STDC	getFilter(
 								);
 
 //
+//		setSerialization                                        (https://rdf.bg/ifcdoc/CP64/setSerialization.html)
+//				SdaiModel				model								IN
+//				int_t					setting								IN
+//				int_t					mask								IN
+//
+//				void					returns
+//
+//	...
+//
+void			DECL STDC	setSerialization(
+									SdaiModel				model,
+									int_t					setting,
+									int_t					mask
+								);
+
+//
+//		getSerialization                                        (https://rdf.bg/ifcdoc/CP64/getSerialization.html)
+//				SdaiModel				model								IN
+//				int_t					mask								IN
+//
+//				int_t					returns								OUT
+//
+//	...
+//
+int_t			DECL STDC	getSerialization(
+									SdaiModel				model,
+									int_t					mask
+								);
+
+//
 //  Uncategorized API Calls
 //
 
@@ -7903,7 +8020,18 @@ void			DECL STDC	owlGetModel(
 									int64_t					* owlModel
 								);
 
-
+//
+//		owlConnectModel                                         (https://rdf.bg/ifcdoc/CP64/owlConnectModel.html)
+//				SdaiModel				model								IN
+//				int64_t					owlModel							IN
+//
+//				bool					returns								OUT
+//
+//	By default a model for the Geometry Modelling Kernel will be created once required on-the-fly.
+//
+//	This call allows a user to use an existing model that will be connected. This connected model
+//	will not be destroyed at closing of the STEP model, i.e. within sdaiCloseModel().
+//
 bool			DECL STDC	owlConnectModel(
 									SdaiModel				model,
 									int64_t					owlModel
