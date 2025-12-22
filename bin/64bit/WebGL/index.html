@@ -766,8 +766,8 @@
 
                         Module.setWorld(
                             model.Xmin, model.Xmax,
-                            model.Ymin, model.Ymax,
-                            model.Zmin, model.Zmax
+                            -model.Zmax, -model.Zmin,
+                            model.Ymin, model.Ymax
                         );
 
                         await loadDecorationModelsWASM();
@@ -1116,7 +1116,7 @@
             resetMetadataUI();
             document.getElementById('leftside').style.display = 'none';
             document.getElementById('rightside').style.display = 'none';
-            document.getElementById('rightside-header').style.display = 'none';            
+            document.getElementById('rightside-header').style.display = 'none';
 
             // Load
             readLocalFile(fileObject, async function (fileContent) {
