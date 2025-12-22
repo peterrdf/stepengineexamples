@@ -109,3 +109,11 @@
     padding-right: 5px;
     pointer-events: none;
 }
+
+/*Svilen*/
+.property-name,
+.propertyset-name {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}

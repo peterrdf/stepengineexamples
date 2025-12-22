@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>RDF Ltd.</title>
+    <title>3DViewer, RDF LTD.</title>
     <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="favicon/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <!-- Font Awesome icons (free version)-->
     <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin="anonymous"></script>
     <!-- Google fonts-->
@@ -30,143 +30,687 @@
     <link href="css/custom.css?" rel="stylesheet" />
     <link href="css/rdf.css?" rel="stylesheet">
 
-    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.min.js"></script>
     <script type='text/javascript' src="jstree-3.2.1/jstree.min.js"></script>
-    <script type='text/javascript' src='js/gl-matrix-min.js'></script>
-    <script type="text/javascript" src="snap/snap.min.js"></script>
-    <script type="text/javascript" src="iscroll/iscroll.js"></script>
 
-    <script type="text/javascript" src="js/gunzip.min.js"></script>
-    <script type="text/javascript" src="js/jszip.min.js"></script>
-    <script type="text/javascript" src="js/jszip-utils.min.js"></script>
-    <script type="text/javascript" src="js/js.cookie.js"></script>
-    <script type='text/javascript' src='js/utils.js'></script>
-    <script type="text/javascript" src="settings.js"></script>
+    <script async src="emifcengine.js"></script>
+    <script src="scripts/gl-matrix-min.js"></script>
+    <script src="scripts/log.js"></script>
+    <script src="scripts/webgl.js"></script>
+    <script src="scripts/load.js"></script>
+    <script src="scripts/selectionbuffer.js"></script>
+    <script src="scripts/viewer.js"></script>
+    <script src="scripts/interaction.js"></script>
 
-    <script type="text/javascript">
-        function getParameterByName(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, '\\$&');
-            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
-        }
+    <script src="custom-js/ui.js"></script>
+    <script src="custom-js/list-tree.js"></script>
+    <script src="custom-js/properties.js"></script>
+    <script src="custom-js/rules.js"></script>
 
-        var p = getParameterByName("path") || "";
-        if (p == "")
-            p = "geom.js";
-        else
-            p += "/geom.js";
-        document.write("<scr" + "ipt type='text/javascript' src='" + p + "'></scr" + "ipt>");
-    </script>
-    <script type="text/javascript" src="owl.js"></script>
-    <script type="text/javascript" src="js/spin.min.js"></script>
-    <script type='text/javascript' src='js/viewer.js'></script>
+    <script>
+        var g_geometries = [];
 
-    <script id="shader-vs" type="x-shader/x-vertex">
-        attribute vec4 Position;
-        attribute vec3 Normal;
-        attribute vec2 UV;
+        async function beginLoadModel(model) {
+            try {
+                g_geometries = [];
 
-        uniform mat4 ProjectionMatrix;
-        uniform mat4 ModelViewMatrix;
-        uniform mat3 NormalMatrix;
-        uniform vec3 DiffuseMaterial;
-        uniform float EnableLighting;
-        uniform float EnableTexture;
-
-        varying vec3 EyespaceNormal;
-        varying vec3 Diffuse;
-        varying float _EnableLighting;
-        varying float _EnableTexture;
-        varying vec2 _UV;
-
-        void main()
-        {
-            if (EnableLighting > 0.5)
-            {
-                EyespaceNormal = NormalMatrix * Normal;
-                Diffuse = DiffuseMaterial;
+                g_viewer.preLoadModel();
+                g_viewer._model.name = model.name;
+                g_viewer._model.Xmin = g_viewer._worldDimensions.Xmin = model.Xmin;
+                g_viewer._model.Ymin = g_viewer._worldDimensions.Ymin = model.Ymin;
+                g_viewer._model.Zmin = g_viewer._worldDimensions.Zmin = model.Zmin;
+                g_viewer._model.Xmax = g_viewer._worldDimensions.Xmax = model.Xmax;
+                g_viewer._model.Ymax = g_viewer._worldDimensions.Ymax = model.Ymax;
+                g_viewer._model.Zmax = g_viewer._worldDimensions.Zmax = model.Zmax;
+                g_viewer._model.boundingSphereDiameter = g_viewer._worldDimensions.MaxDistance = model.boundingSphereDiameter;
+                g_viewer._model.scaleFactor = model.scaleFactor;
+                window.logInfo(`[beginLoadModel] Model: ${g_viewer._model.name}`);
+                window.logInfo(`[beginLoadModel] Xmin=${g_viewer._worldDimensions.Xmin}, Xmax=${g_viewer._worldDimensions.Xmax}, Ymin=${g_viewer._worldDimensions.Ymin}, Ymax=${g_viewer._worldDimensions.Ymax}, Zmin=${g_viewer._worldDimensions.Zmin}, Zmax=${g_viewer._worldDimensions.Zmax}`);
+                window.logInfo(`[beginLoadModel] Max distance=${g_viewer._worldDimensions.MaxDistance}`);
+                window.logInfo(`[beginLoadModel] Scale factor=${g_viewer._scaleFactor}`);
             }
-
-            _EnableLighting = EnableLighting;
-            _EnableTexture = EnableTexture;
-            _UV = UV;
-
-            gl_Position = ProjectionMatrix * ModelViewMatrix * Position;
-            gl_PointSize = 5.0;
+            catch (e) {
+                window.logErr(e);
+            }
         }
-    </script>
 
-    <script id="shader-fs" type="x-shader/x-fragment">
-        precision highp float;
-
-        varying vec3 EyespaceNormal;
-        varying vec3 Diffuse;
-        varying float _EnableLighting;
-        varying float _EnableTexture;
-        varying vec2 _UV;
-
-        uniform vec3 LightPosition;
-        uniform vec3 AmbientMaterial;
-        uniform vec3 SpecularMaterial;
-        uniform float Transparency;
-        uniform float Shininess;
-        uniform vec3 AmbientLightWeighting;
-        uniform vec3 DiffuseLightWeighting;
-        uniform vec3 SpecularLightWeighting;
-        uniform sampler2D Sampler;
-
-        void main()
-        {
-            if (_EnableTexture < 0.5)
-            {
-                if (_EnableLighting > 0.5)
-                {
-                    vec3 N = normalize(EyespaceNormal);
-                    vec3 L = normalize(LightPosition);
-                    vec3 E = vec3(0, 0, 1);
-                    vec3 H = normalize(L + E);
-
-                    float df = max(0.0, dot(N, L));
-                    float sf = max(0.0, dot(N, H));
-                    sf = pow(sf, Shininess);
-
-                    vec3 color =
-                        (AmbientMaterial * AmbientLightWeighting) +
-                        (df * Diffuse * DiffuseLightWeighting) +
-                        (sf * SpecularMaterial * SpecularLightWeighting);
-                    gl_FragColor = vec4(color, Transparency);
+        async function addGeometry(geometry) {
+            try {
+                if (!geometry || !geometry.instances || geometry.instances.length === 0) {
+                    window.logWarn("addGeometry: No instances found in geometry.");
+                    return;
                 }
-                else
-                {
-                    gl_FragColor = vec4(AmbientMaterial, 1);
+
+                // Keep original visible state
+                for (let i = 0; i < geometry.instances.length; i++) {
+                    const instance = geometry.instances[i];
+                    instance._visible = instance.visible;
+                }
+
+                // Geometry
+                g_geometries.push(geometry);
+            }
+            catch (e) {
+                window.logErr(e);
+            }
+        }
+
+        async function addGeometries(geometries) {
+            try {
+                if (!geometries || geometries.length === 0) {
+                    return;
+                }
+
+                for (let g = 0; g < geometries.length; g++) {
+                    // Keep original visible state
+                    for (let i = 0; i < geometries[g].instances.length; i++) {
+                        const instance = geometries[g].instances[i];
+                        instance._visible = instance.visible;
+                    }
+
+                    // Geometry
+                    g_geometries.push(geometries[g]);
                 }
             }
-            else
-            {
-                gl_FragColor = texture2D(Sampler, _UV);
+            catch (e) {
+                window.logErr(e);
             }
         }
-    </script>
 
-    <script id="code-js" type="text/javascript" src="custom-js/handlers.js"></script>
+        async function endLoadModel() {
+            try {
+                g_viewer.loadModel(g_geometries);
+            }
+            catch (e) {
+                window.logErr(e);
+            }
+            g_geometries = [];
+        }
+
+        async function loadDecorationModelsWASM() {
+            try {
+                if (Module.HEAP8) {
+                    window.logInfo(`Memory used: ${Module.HEAP8.length / 1024 / 1024} MB`);
+                }
+
+                const decorationModelsCount = Module.getDecorationModelsCount();
+                window.logInfo(`Decoration models count: ${decorationModelsCount}`);
+
+                const decorationModels = [];
+                for (let m = 0; m < decorationModelsCount; m++) {
+                    const modelData = Module.getDecorationModelData(m);
+                    console.time(`Loading decoration model: ${modelData.name}`);
+
+                    // Loading geometries
+                    const geometries = [];
+                    for (let i = 0; i < modelData.geometriesCount; i++) {
+                        const geometryData = Module.getDecorationModelGeometryData(modelData.modelIndex, i);
+                        if (geometryData.vertices.size === 0) {
+                            continue;
+                        }
+                        const verticesView = new Float32Array(
+                            Module.HEAPF32.buffer,
+                            geometryData.vertices.data,
+                            geometryData.vertices.size
+                        );
+                        const verticesArray = new Float32Array(verticesView); // FIX: Create a copy of the vertices data, not a view
+
+                        // Conceptual Faces
+                        const conceptualFacesArray = [];
+                        for (let j = 0; j < geometryData.conceptualFaces.size(); j++) {
+                            const faceData = geometryData.conceptualFaces.get(j);
+                            if (faceData.size === 0) {
+                                continue;
+                            }
+                            const conceptualFacesView = new Uint32Array(
+                                Module.HEAP32.buffer,
+                                faceData.data,
+                                faceData.size
+                            );
+                            const conceptualFaces = new Uint32Array(conceptualFacesView); // FIX: Create a copy of the vertices data, not a view
+
+                            if (faceData.texture?.length) {
+                                if (!g_viewer._textures[faceData.texture]) {
+                                    const texture = createTexture_WASM_FS.call(g_viewer, '/data/' + faceData.texture, textureFlipY);
+                                    if (texture) {
+                                        g_viewer._textures[faceData.texture] = texture;
+                                        window.logInfo(`Loaded texture: ${faceData.texture}`);
+                                    }
+                                }
+                            }
+
+                            conceptualFacesArray.push({
+                                indices: conceptualFaces,
+                                material: {
+                                    ambient: [0, 0, 0],
+                                    diffuse: [0, 0, 0],
+                                    specular: [0, 0, 0],
+                                    emissive: [0, 0, 0],
+                                    transparency: faceData.transparency,
+                                    texture: faceData.texture?.length ? {
+                                        name: faceData.texture
+                                    } : null
+                                }
+                            });
+
+                            if (faceData.material && (faceData.material.size() === 12)) {
+                                conceptualFacesArray[j].material.ambient = [];
+                                for (let k = 0; k < 3; k++) {
+                                    conceptualFacesArray[j].material.ambient.push(faceData.material.get(k));
+                                }
+                                conceptualFacesArray[j].material.diffuse = [];
+                                for (let k = 3; k < 6; k++) {
+                                    conceptualFacesArray[j].material.diffuse.push(faceData.material.get(k));
+                                }
+                                conceptualFacesArray[j].material.specular = [];
+                                for (let k = 6; k < 9; k++) {
+                                    conceptualFacesArray[j].material.specular.push(faceData.material.get(k));
+                                }
+                                conceptualFacesArray[j].material.emissive = [];
+                                for (let k = 9; k < 12; k++) {
+                                    conceptualFacesArray[j].material.emissive.push(faceData.material.get(k));
+                                }
+                            }
+                        }
+
+                        // Conceptual Faces Polygons
+                        const conceptualFacesPolygonsArray = [];
+                        for (let j = 0; j < geometryData.conceptualFacesPolygons.size(); j++) {
+                            const indexData = geometryData.conceptualFacesPolygons.get(j);
+                            if (indexData.size === 0) {
+                                continue;
+                            }
+                            const polygonsView = new Uint32Array(
+                                Module.HEAP32.buffer,
+                                indexData.data,
+                                indexData.size
+                            );
+                            const conceptualFacesPolygons = new Uint32Array(polygonsView); // FIX: Create a copy of the vertices data, not a view
+
+                            conceptualFacesPolygonsArray.push({
+                                indices: conceptualFacesPolygons
+                            });
+                        }
+
+                        // Lines
+                        const conceptualFacesLinesArray = [];
+                        for (let j = 0; j < geometryData.conceptualFacesLines.size(); j++) {
+                            const indexData = geometryData.conceptualFacesLines.get(j);
+                            if (indexData.size === 0) {
+                                continue;
+                            }
+                            const linesView = new Uint32Array(
+                                Module.HEAP32.buffer,
+                                indexData.data,
+                                indexData.size
+                            );
+                            const conceptualFacesLines = new Uint32Array(linesView); // FIX: Create a copy of the vertices data, not a view
+
+                            conceptualFacesLinesArray.push({
+                                indices: conceptualFacesLines,
+                                color: [0, 0, 0]
+                            });
+
+                            if (indexData.color && (indexData.color.size() === 3)) {
+                                conceptualFacesLinesArray[j].color[0] = indexData.color.get(0);
+                                conceptualFacesLinesArray[j].color[1] = indexData.color.get(1);
+                                conceptualFacesLinesArray[j].color[2] = indexData.color.get(2);
+                            }
+                        }
+
+                        // Points
+                        const conceptualFacesPointsArray = [];
+                        for (let j = 0; j < geometryData.conceptualFacesPoints.size(); j++) {
+                            const indexData = geometryData.conceptualFacesPoints.get(j);
+                            if (indexData.size === 0) {
+                                continue;
+                            }
+                            const pointsView = new Uint32Array(
+                                Module.HEAP32.buffer,
+                                indexData.data,
+                                indexData.size
+                            );
+                            const conceptualFacesPoints = new Uint32Array(pointsView); // FIX: Create a copy of the vertices data, not a view
+
+                            conceptualFacesPointsArray.push({
+                                indices: conceptualFacesPoints,
+                                color: [0, 0, 0]
+                            });
+
+                            if (indexData.color && (indexData.color.size() === 3)) {
+                                conceptualFacesPointsArray[j].color[0] = indexData.color.get(0);
+                                conceptualFacesPointsArray[j].color[1] = indexData.color.get(1);
+                                conceptualFacesPointsArray[j].color[2] = indexData.color.get(2);
+                            }
+                        }
+
+                        // Instances
+                        const instancesArray = [];
+                        for (let j = 0; j < geometryData.instances.size(); j++) {
+                            const instanceData = geometryData.instances.get(j);
+                            const instance = {
+                                id: instanceData.id,
+                                visible: instanceData.visible,
+                                matrix: null,
+                                parentId: instanceData.parentId,
+                                childrenIds: null
+                            };
+
+                            if (instanceData.matrix && (instanceData.matrix.size() === 16)) {
+                                instance.matrix = [];
+                                for (let k = 0; k < 16; k++) {
+                                    instance.matrix.push(instanceData.matrix.get(k));
+                                }
+                            }
+                            if (instanceData.childrenIds && (instanceData.childrenIds.size() > 0)) {
+                                instance.childrenIds = [];
+                                for (let k = 0; k < instanceData.childrenIds.size(); k++) {
+                                    instance.childrenIds.push(instanceData.childrenIds.get(k));
+                                }
+                            }
+
+                            instancesArray.push(instance);
+                        }
+
+                        const geometry = {
+                            vertices: verticesArray,
+                            vertexSizeInBytes: geometryData.vertexSizeInBytes,
+                            conceptualFaces: conceptualFacesArray,
+                            conceptualFacesPolygons: conceptualFacesPolygonsArray,
+                            conceptualFacesLines: conceptualFacesLinesArray,
+                            conceptualFacesPoints: conceptualFacesPointsArray,
+                            instances: instancesArray
+                        };
+
+                        // Keep original visible state
+                        for (let i = 0; i < geometry.instances.length; i++) {
+                            const instance = geometry.instances[i];
+                            instance._visible = instance.visible;
+                        }
+
+                        // Geometry
+                        geometries.push(geometry);
+                    } // for (let i = 0; i < modelData.geometriesCount; i++)
+
+                    const decorationModel = {
+                        name: modelData.name,
+                        Xmin: modelData.Xmin,
+                        Ymin: modelData.Ymin,
+                        Zmin: modelData.Zmin,
+                        Xmax: modelData.Xmax,
+                        Ymax: modelData.Ymax,
+                        Zmax: modelData.Zmax,
+                        boundingSphereDiameter: modelData.boundingSphereDiameter,
+                        scaleFactor: modelData.scaleFactor,
+                        geometries: geometries
+                    };
+                    decorationModels.push(decorationModel);
+
+                    console.timeEnd(`Loading decoration model: ${modelData.name}`);
+                } // for (let m = 0; m < decorationModelsCount; m++)
+
+                g_viewer.loadDecorationModels(decorationModels);
+
+                if (Module.HEAP8) {
+                    window.logInfo(`Memory used: ${Module.HEAP8.length / 1024 / 1024} MB`);
+                }
+            } catch (e) {
+                window.logErr(e);
+            }
+        }
+
+        async function loadModelWASM(modelPath) {
+            try {
+                let textureFlipY = false;
+                var fileExtension = getFileExtension(modelPath)
+                if (fileExtension === 'binz') {
+                    textureFlipY = true;
+                }
+
+                g_geometries = [];
+
+                if (Module.HEAP8) {
+                    window.logInfo(`Memory used: ${Module.HEAP8.length / 1024 / 1024} MB`);
+                }
+
+                console.time('Loading model (WASM)');
+                const modelData = Module.loadModel(modelPath);
+                if (modelData.modelIndex < 0) {
+                    window.logErr("Failed to load model.");
+                    return;
+                }
+                console.timeEnd('Loading model (WASM)');
+
+                // Begin model loading
+                console.time('Initializing WebGL (JavaScript)');
+                await beginLoadModel(modelData);
+
+                // Loading geometries
+                for (let i = 0; i < modelData.geometriesCount; i++) {
+                    const geometryData = Module.getGeometryData(modelData.modelIndex, i);
+                    const verticesView = new Float32Array(
+                        Module.HEAPF32.buffer,
+                        geometryData.vertices.data,
+                        geometryData.vertices.size
+                    );
+                    const verticesArray = new Float32Array(verticesView); // FIX: Create a copy of the vertices data, not a view
+
+                    // Conceptual Faces
+                    const conceptualFacesArray = [];
+                    for (let j = 0; j < geometryData.conceptualFaces.size(); j++) {
+                        const faceData = geometryData.conceptualFaces.get(j);
+                        if (faceData.size === 0) {
+                            continue;
+                        }
+                        const conceptualFacesView = new Uint32Array(
+                            Module.HEAP32.buffer,
+                            faceData.data,
+                            faceData.size
+                        );
+                        const conceptualFaces = new Uint32Array(conceptualFacesView); // FIX: Create a copy of the vertices data, not a view
+
+                        if (faceData.texture?.length) {
+                            if (!g_viewer._textures[faceData.texture]) {
+                                const texture = createTexture_WASM_FS.call(g_viewer, '/data/' + faceData.texture, textureFlipY);
+                                if (texture) {
+                                    g_viewer._textures[faceData.texture] = texture;
+                                    window.logInfo(`Loaded texture: ${faceData.texture}`);
+                                }
+                            }
+                        }
+
+                        conceptualFacesArray.push({
+                            indices: conceptualFaces,
+                            material: {
+                                ambient: [0, 0, 0],
+                                diffuse: [0, 0, 0],
+                                specular: [0, 0, 0],
+                                emissive: [0, 0, 0],
+                                transparency: faceData.transparency,
+                                texture: faceData.texture?.length ? {
+                                    name: faceData.texture
+                                } : null
+                            }
+                        });
+
+                        if (faceData.material && (faceData.material.size() === 12)) {
+                            conceptualFacesArray[j].material.ambient = [];
+                            for (let k = 0; k < 3; k++) {
+                                conceptualFacesArray[j].material.ambient.push(faceData.material.get(k));
+                            }
+                            conceptualFacesArray[j].material.diffuse = [];
+                            for (let k = 3; k < 6; k++) {
+                                conceptualFacesArray[j].material.diffuse.push(faceData.material.get(k));
+                            }
+                            conceptualFacesArray[j].material.specular = [];
+                            for (let k = 6; k < 9; k++) {
+                                conceptualFacesArray[j].material.specular.push(faceData.material.get(k));
+                            }
+                            conceptualFacesArray[j].material.emissive = [];
+                            for (let k = 9; k < 12; k++) {
+                                conceptualFacesArray[j].material.emissive.push(faceData.material.get(k));
+                            }
+                        }
+                    }
+
+                    // Conceptual Faces Polygons
+                    const conceptualFacesPolygonsArray = [];
+                    for (let j = 0; j < geometryData.conceptualFacesPolygons.size(); j++) {
+                        const indexData = geometryData.conceptualFacesPolygons.get(j);
+                        if (indexData.size === 0) {
+                            continue;
+                        }
+                        const polygonsView = new Uint32Array(
+                            Module.HEAP32.buffer,
+                            indexData.data,
+                            indexData.size
+                        );
+                        const conceptualFacesPolygons = new Uint32Array(polygonsView); // FIX: Create a copy of the vertices data, not a view
+
+                        conceptualFacesPolygonsArray.push({
+                            indices: conceptualFacesPolygons
+                        });
+                    }
+
+                    // Lines
+                    const conceptualFacesLinesArray = [];
+                    for (let j = 0; j < geometryData.conceptualFacesLines.size(); j++) {
+                        const indexData = geometryData.conceptualFacesLines.get(j);
+                        if (indexData.size === 0) {
+                            continue;
+                        }
+                        const linesView = new Uint32Array(
+                            Module.HEAP32.buffer,
+                            indexData.data,
+                            indexData.size
+                        );
+                        const conceptualFacesLines = new Uint32Array(linesView); // FIX: Create a copy of the vertices data, not a view
+
+                        conceptualFacesLinesArray.push({
+                            indices: conceptualFacesLines,
+                            color: [0, 0, 0]
+                        });
+
+                        if (indexData.color && (indexData.color.size() === 3)) {
+                            conceptualFacesLinesArray[j].color[0] = indexData.color.get(0);
+                            conceptualFacesLinesArray[j].color[1] = indexData.color.get(1);
+                            conceptualFacesLinesArray[j].color[2] = indexData.color.get(2);
+                        }
+                    }
+
+                    // Points
+                    const conceptualFacesPointsArray = [];
+                    for (let j = 0; j < geometryData.conceptualFacesPoints.size(); j++) {
+                        const indexData = geometryData.conceptualFacesPoints.get(j);
+                        if (indexData.size === 0) {
+                            continue;
+                        }
+                        const pointsView = new Uint32Array(
+                            Module.HEAP32.buffer,
+                            indexData.data,
+                            indexData.size
+                        );
+                        const conceptualFacesPoints = new Uint32Array(pointsView); // FIX: Create a copy of the vertices data, not a view
+
+                        conceptualFacesPointsArray.push({
+                            indices: conceptualFacesPoints,
+                            color: [0, 0, 0]
+                        });
+
+                        if (indexData.color && (indexData.color.size() === 3)) {
+                            conceptualFacesPointsArray[j].color[0] = indexData.color.get(0);
+                            conceptualFacesPointsArray[j].color[1] = indexData.color.get(1);
+                            conceptualFacesPointsArray[j].color[2] = indexData.color.get(2);
+                        }
+                    }
+
+                    // Instances
+                    const instancesArray = [];
+                    for (let j = 0; j < geometryData.instances.size(); j++) {
+                        const instanceData = geometryData.instances.get(j);
+                        const instance = {
+                            id: instanceData.id,
+                            visible: instanceData.visible,
+                            matrix: null,
+                            parentId: instanceData.parentId,
+                            childrenIds: null
+                        };
+
+                        if (instanceData.matrix && (instanceData.matrix.size() === 16)) {
+                            instance.matrix = [];
+                            for (let k = 0; k < 16; k++) {
+                                instance.matrix.push(instanceData.matrix.get(k));
+                            }
+                        }
+                        if (instanceData.childrenIds && (instanceData.childrenIds.size() > 0)) {
+                            instance.childrenIds = [];
+                            for (let k = 0; k < instanceData.childrenIds.size(); k++) {
+                                instance.childrenIds.push(instanceData.childrenIds.get(k));
+                            }
+                        }
+
+                        instancesArray.push(instance);
+                    }
+
+                    await addGeometry({
+                        vertices: verticesArray,
+                        vertexSizeInBytes: geometryData.vertexSizeInBytes,
+                        conceptualFaces: conceptualFacesArray,
+                        conceptualFacesPolygons: conceptualFacesPolygonsArray,
+                        conceptualFacesLines: conceptualFacesLinesArray,
+                        conceptualFacesPoints: conceptualFacesPointsArray,
+                        instances: instancesArray
+                    });
+                }
+
+                // Finalize model loading
+                await endLoadModel();
+                console.timeEnd('Initializing WebGL (JavaScript)');
+
+                if (Module.HEAP8) {
+                    window.logInfo(`Memory used: ${Module.HEAP8.length / 1024 / 1024} MB`);
+                }
+            } catch (e) {
+                window.logErr(e);
+            }
+        }
+
+        function onFacesChange(checkbox) {
+            _showFaces(checkbox.checked);
+        }
+
+        function onWireframesChange(checkbox) {
+            _showWireframes(checkbox.checked);
+        }
+
+        function onLinesChange(checkbox) {
+            _showLines(checkbox.checked);
+        }
+
+        function onPointsChange(checkbox) {
+            _showPoints(checkbox.checked);
+        }
+
+        function onModelCSChange(checkbox) {
+            _showModelCS(checkbox.checked);
+        }
+
+        function onWorldCSChange(checkbox) {
+            _showWorldCS(checkbox.checked);
+        }
+
+        function onNavigatorChange(checkbox) {
+            _showNavigator(checkbox.checked);
+        }
+
+        function onBackgroundColorChange(colorPicker) {
+            const color = colorPicker.value;
+            const r = parseInt(color.substr(1, 2), 16) / 255;
+            const g = parseInt(color.substr(3, 2), 16) / 255;
+            const b = parseInt(color.substr(5, 2), 16) / 255;
+            if (g_viewer) {
+                g_viewer._clearColor = [r, g, b, 1.0];
+            }
+
+            PENDING_DRAW_SCENE = true;
+        }
+
+        function onSelectionColorChange(colorPicker) {
+            const color = colorPicker.value;
+            const r = parseInt(color.substr(1, 2), 16) / 255;
+            const g = parseInt(color.substr(3, 2), 16) / 255;
+            const b = parseInt(color.substr(5, 2), 16) / 255;
+            SELECTED_INSTANCE_MATERIAL.ambient = [r, g, b];
+            SELECTED_INSTANCE_MATERIAL.diffuse = [r, g, b];
+            SELECTED_INSTANCE_MATERIAL.specular = [r, g, b];
+            SELECTED_INSTANCE_MATERIAL.emissive = [r, g, b];
+
+            PENDING_DRAW_SCENE = true;
+        }
+
+        function onSelectionTransparencyChange(slider) {
+            const transparency = slider.value;
+            document.getElementById('transparency-value').textContent = transparency + '%';
+            SELECTED_INSTANCE_MATERIAL.transparency = transparency / 100;
+
+            PENDING_DRAW_SCENE = true;
+        }
+
+        async function onResetSettings() {
+            // WebGL
+            _resetView();
+
+            // Settings
+            document.getElementById('faces-checkbox').checked = g_viewer._showConceptualFaces;
+            document.getElementById('wireframes-checkbox').checked = g_viewer._showConceptualFacesPolygons;
+            document.getElementById('lines-checkbox').checked = g_viewer._showLines;
+            document.getElementById('points-checkbox').checked = g_viewer._showPoints;
+            document.getElementById('model-cs-checkbox').checked = g_viewer._showModelCS;
+            document.getElementById('world-cs-checkbox').checked = g_viewer._showWorldCS;
+            document.getElementById('navigator-checkbox').checked = g_viewer._showNavigator;
+            document.getElementById('background-color-picker').value = '#E6E6E6';
+            document.getElementById('selection-color-picker').value = '#FF0000';
+            document.getElementById('transparency-slider').value = 100;
+
+            // UI
+            resetMetadataUI();
+            if (supportsMetadataUI()) {
+                await loadMetadataUI();
+            }
+        }
+
+        g_onRuntimeInitializedEvent = function () {
+            try {
+                setTimeout(() => {
+                    initializeWebGLViewer();
+                }, 100);
+
+            } catch (e) {
+                window.logErr(e);
+            }
+        }
+
+        g_onWebGLInitializedEvent = function () {
+            try {
+                setTimeout(async function () {
+                    await Module.setWorld(-1, 1, -1, 1, -1, 1);
+                    await loadDecorationModelsWASM();
+                }, 100);
+            } catch (e) {
+                window.logErr(e);
+            }
+        }
+
+        g_getViewSettings = function () {
+            const viewSettings = {
+                showConceptualFacesPolygons: true,
+                multiSelectionMode: false
+            };
+            return viewSettings;
+        }
+
+        g_onSelectEvent = function (instanceIDs) {
+            try {
+                displayInTree();
+            } catch (e) {
+                window.logErr(e);
+            }
+        };
+    </script>
 
 </head>
 
-<body id="page-top" class="model-page rdf-app" onload='runWebGLApp()'>
+<body id="page-top" class="model-page rdf-app">
     <header>
         <nav class="navbar navbar-expand-lg  text-uppercase fixed-top" id="mainNav">
             <div class="container-fluid">
                 <div class="dropdown main-menu">
                     <a class="title" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                        RDF Ltd.
+                        RDF LTD.
                     </a><span class="file-name">. </span>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <li><a class="dropdown-item main-item" href="#">RDF Ltd.</a></li>
+                        <li><a class="dropdown-item main-item" href="#">RDF LTD.</a></li>
                         <li><a class="dropdown-item main--menu-item" href="#" id="button-browse">Open</a></li>
                         <li><a class="dropdown-item main--menu-item" href="#" data-bs-toggle="modal" data-bs-target="#reg-modal-general">About us</a></li>
                         <li><a class="dropdown-item main--menu-item" href="#" data-bs-toggle="modal" data-bs-target="#reg-modal-general">Contact us</a></li>
@@ -175,12 +719,9 @@
                     </ul>
                 </div>
 
-                <ul class="nav nav-tabs mb-3" role="tablist">
+                <ul id="rightside-header" class="nav nav-tabs mb-3" role="tablist" style="display: none;">
                     <li class="nav-item" role="presentation"> <a class="nav-link active" id="ex1-tab-1" data-mdb-toggle="tab" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1" aria-selected="true">model</a> </li>
-
                     <li class="nav-item" role="presentation"> <a class="nav-link" id="ex1-tab-2" data-mdb-toggle="tab" href="#ex1-tabs-2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false">checker</a> </li>
-
-                    <!--li class="nav-item" role="presentation"> <a class="nav-link" id="ex1-tab-3" data-mdb-toggle="tab" href="#ex1-tabs-3" role="tab" aria-controls="ex1-tabs-3" aria-selected="false">add-on</a> </li-->
                 </ul>
             </div>
         </nav>
@@ -193,12 +734,12 @@
         <div id="labels-container"></div>
     </div>
 
-    <aside id="leftside">
+    <aside id="leftside" style="display: none;">
         <div class="col col-app-title">
             <div class="app-head">
                 <h2>
                     <span class="head-objects">Objects in: </span>
-                    <span class="file-name">3D file not loaded</span>
+                    <span id="file-name" class="file-name">3D model not loaded</span>
                 </h2>
             </div>
 
@@ -215,7 +756,7 @@
         </div>
     </aside>
 
-    <aside id="rightside">
+    <aside id="rightside" style="display: none;">
         <!-- Tabs content BEGIN -->
         <div class="tab-content" id="ex1-content">
             <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
@@ -272,24 +813,14 @@
         <!-- Tabs content END -->
     </aside>
 
-    <div class="zoom-nav" id="zoom-nav">
-        <a class="btn-front" id="btnFront" title="Front view" data="1"> <span>Front</span> </a>
-        <a class="btn-top" id="btnTop" title="Top view" data="3"> <span>Top</span> </a>
-        <a class="btn-left" id="btnLeft" title="Left view" data="5"> <span>Bottom</span> </a>
-        <a class="btn-perspective" id="btnPerspective" title="Default Perspective view" data="0"> <span>Perspective</span> </a>
-        <a class="btn-right" id="btnRight" title="Right view" data="6"> <span>Left</span> </a>
-        <a class="btn-bottom" id="btnBottom" title="Bottom view" data="4"> <span>Right</span> </a>
-        <a class="btn-rear" id="btnRear" title="Rear view" data="2"> <span>Rear</span> </a>
-    </div>
-
     <footer>
         <div class="copyright py-3 text-center text-white">
-            <div class="container"><small>Copyright &copy; rdf.bg 2024</small></div>
+            <div class="container"><small>Copyright &copy; rdf.bg 2026</small></div>
         </div>
     </footer>
 
     <!-- hidden input -->
-    <input id="load_ifc_file" type="file" accept=".ifc, .ifx, .ifcOWL, .ttl, .stp, .bin, .dxf, .dae, .zae, .obj, .gml, citygml, .xml, .json"
+    <input id="load_file" type="file" accept=".ifc, .step, .stp, .stpz, .gltf, .glb, .zae, .bin, .binz"
            onclick="this.value = null;" onchange="loadFile(this.files[0]);" style="display:none;" />
 
     <!-- modal content for Checker Report -->
@@ -320,23 +851,55 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body modal-rdf" id="settings-options">
-                    <div class="modal-body-report-container">
-                        <h4>
-                            RDF settings
-                        </h4>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="faces-checkbox" checked onchange="onFacesChange(this)">
+                        <label class="form-check-label" for="faces-checkbox">Faces</label>
                     </div>
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="switchCheck3dgrid" checked>
-                        <label class="form-check-label" for="switchCheck3dgrid">3D grid visibility</label>
+                        <input class="form-check-input" type="checkbox" id="wireframes-checkbox" checked onchange="onWireframesChange(this)">
+                        <label class="form-check-label" for="wireframes-checkbox">Wireframes</label>
                     </div>
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="resetSidebarsWidth">
-                        <label class="form-check-label" for="resetSidebarsWidth">Reset sidebar position</label>
+                        <input class="form-check-input" type="checkbox" id="lines-checkbox" checked onchange="onLinesChange(this)">
+                        <label class="form-check-label" for="lines-checkbox">Lines</label>
                     </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="points-checkbox" checked onchange="onPointsChange(this)">
+                        <label class="form-check-label" for="points-checkbox">Points</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="model-cs-checkbox" checked onchange="onModelCSChange(this)">
+                        <label class="form-check-label" for="model-cs-checkbox">Model CS</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="world-cs-checkbox" onchange="onWorldCSChange(this)">
+                        <label class="form-check-label" for="world-cs-checkbox">World CS</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="navigator-checkbox" checked onchange="onNavigatorChange(this)">
+                        <label class="form-check-label" for="navigator-checkbox">Navigator</label>
+                    </div>
+                    <div style="flex-direction: column; align-items: stretch; gap: 8px; padding: 12px 0; border-top: 1px solid rgba(60, 60, 60, 0.8); margin-top: 8px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <label for="background-color-picker">Background Color</label>
+                            <input type="color" id="background-color-picker" value="#E6E6E6" onchange="onBackgroundColorChange(this)" style="width: 50px; height: 30px; cursor: pointer; border: 1px solid rgba(60, 60, 60, 0.8); background: transparent;">
+                        </div>
+                    </div>
+                    <div style="flex-direction: column; align-items: stretch; gap: 8px; padding: 12px 0; border-top: 1px solid rgba(60, 60, 60, 0.8); margin-top: 8px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <label for="selection-color-picker">Selection Color</label>
+                            <input type="color" id="selection-color-picker" value="#FF0000" onchange="onSelectionColorChange(this)" style="width: 50px; height: 30px; cursor: pointer; border: 1px solid rgba(60, 60, 60, 0.8); background: transparent;">
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <label for="transparency-slider">Transparency</label>
+                            <span id="transparency-value" style="min-width: 35px; text-align: right; font-size: 11px; color: #999;">100%</span>
+                        </div>
+                        <input type="range" id="transparency-slider" min="0" max="100" value="100" oninput="onSelectionTransparencyChange(this)" style="width: 100%; cursor: pointer;">
+                    </div>
+                    <button class="reset-button" onclick="onResetSettings()">Reset</button>
                 </div>
                 <div class="modal-footer bg-transparent">
                     <a href="#" class="btn-rdf-modal" data-bs-dismiss="modal">Close</a>
-                    <a onclick="updateSettings()" class="btn-rdf-modal" data-bs-dismiss="modal">Save</a>
                 </div>
 
             </div>
@@ -372,16 +935,7 @@
 
     <div id="contextMenu" class="context-menu" style="display: none">
         <ul>
-            <li><a href="#" id="view-item">View</a></li>
-        </ul>
-    </div>
-
-    <div id="contextMenuCanvas" class="context-menu" style="display: none">
-        <ul>
-            <li><a href="#" id="view-faces">Show Faces</a></li>
-            <li><a href="#" id="view-wireframes">Show Wireframes</a></li>
-            <li><a href="#" id="view-bboxes">Show BBoxes</a></li>
-            <li><a href="#" id="view-tooltip">Show Tootltip</a></li>
+            <li><a href="#" id="view-item">Zoom To</a></li>
         </ul>
     </div>
 
@@ -441,88 +995,69 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.1/mdb.min.js"></script>
 
     <script>
-        const canvas = document.getElementById('canvas_container')
-        document.body.addEventListener('click', function (event) {
-            const menu = $('#contextMenuCanvas')
-            menu.hide()
-        })
+        function supportsMetadataUI() {
+            if (g_viewer?._model?.name) {
+                const fileExtension = getFileExtension(g_viewer._model.name).toLowerCase();
+                if (fileExtension === 'ifc' ||
+                    fileExtension === 'step' ||
+                    fileExtension === 'stp' ||
+                    fileExtension === 'stpz') {
+                    return true;
+                }
+            }
+            return false;
+        }
 
-        canvas.addEventListener('contextmenu', function (event) {
-            event.preventDefault()
+        function loadFile(fileObject) {
+            // UI
+            resetMetadataUI();
+            document.getElementById('leftside').style.display = 'none';
+            document.getElementById('rightside').style.display = 'none';
+            document.getElementById('rightside-header').style.display = 'none';            
 
-            const menu = $('#contextMenuCanvas')
+            // Load
+            readLocalFile(fileObject, async function (fileContent) {
+                try {
+                    Module['FS'].writeFile('/data/' + fileObject.name, fileContent);
+                    await loadModelWASM(`/data/${fileObject.name}`);
+                    await loadDecorationModelsWASM();
 
-            menu.show()
-            menu.css('left', event.pageX + 'px')
-            menu.css('top', event.pageY + 'px')
-        })
-
-        const viewFaces = document.getElementById('view-faces')
-        viewFaces.addEventListener('click', function (event) {
-            event.preventDefault()
-
-            g_viewer._viewTriangles = !g_viewer._viewTriangles
-
-            PENDING_DRAW_SCENE = true
-        })
-
-        const viewWireframes = document.getElementById('view-wireframes')
-        viewWireframes.addEventListener('click', function (event) {
-            event.preventDefault()
-
-            g_viewer._viewWireframes = !g_viewer._viewWireframes
-
-            PENDING_DRAW_SCENE = true
-        })
-
-        const viewBBoxes = document.getElementById('view-bboxes')
-        viewBBoxes.addEventListener('click', function (event) {
-            event.preventDefault()
-
-            g_viewer._viewBBox = !g_viewer._viewBBox
-            g_viewer._viewBBoxX = g_viewer._viewBBox
-            g_viewer._viewBBoxY = g_viewer._viewBBox
-            g_viewer._viewBBoxZ = g_viewer._viewBBox
-
-            PENDING_DRAW_SCENE = true
-        })
-
-        const viewTooltip = document.getElementById('view-tooltip')
-        viewTooltip.addEventListener('click', function (event) {
-            event.preventDefault()
-
-            g_viewer._viewTootlip = !g_viewer._viewTootlip
-
-            PENDING_DRAW_SCENE = true
-        })
+                    // UI
+                    const fileExtension = getFileExtension(fileObject.name).toLowerCase();
+                    if (supportsMetadataUI()) {
+                        document.getElementById('leftside').style.display = 'block';
+                        document.getElementById('file-name').innerText = fileObject.name;
+                        document.getElementById('rightside').style.display = 'block';
+                        //document.getElementById('rightside-header').style.display = 'block'; #todo: support for Model Checker
+                        await loadMetadataUI();
+                    }
+                }
+                catch (e) {
+                    window.logErr(e);
+                }
+            });
+        }
 
         $(function () {
             $('#tree-container').tooltip({ tooltipClass: "tooltip-styling" });
-        })
+        });
 
         $('#leftside').resizable({
             handles: "e",
             animate: true,
             ghost: true,
             maxWidth: 650,
-            minWidth: 220
-        })
+            minWidth: 50
+        });
 
         $('#rightside').resizable({
             handles: "w",
             animate: true,
             ghost: true,
             maxWidth: 650,
-            minWidth: 220,
-        })
+            minWidth: 50,
+        });
     </script>
-    <script src="custom-js/load.js"></script>
-    <script src="custom-js/interaction.js"></script>
-    <script src='custom-js/integrator.js'></script>
-    <script src="custom-js/list-tree.js"></script>
-    <script src="custom-js/properties.js"></script>
-    <script src="custom-js/rules.js"></script>
-    <script async src="emifcengine.js"></script>
 </body>
 
 </html>
