@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html class="model-page" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>3DViewer, RDF LTD.</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <!--link href="css/bootstrap.css" rel="stylesheet"-->
+    <!--link href="css/style.css" rel="stylesheet"-->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="https://cdn.maptiler.com/client-js/v1.8.1/maptiler-client.umd.min.js"></script>
+
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="css/icon-styles.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet" />
+    <link href="css/custom.css?" rel="stylesheet" />
+    <link href="css/rdf.css?" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.min.js"></script>
+    <script type='text/javascript' src="jstree-3.2.1/jstree.min.js"></script>
+
+    <script async src="emifcengine.js"></script>
+    <script src="scripts/gl-matrix-min.js"></script>
+    <script src="scripts/log.js"></script>
+    <script src="scripts/webgl.js"></script>
+    <script src="scripts/load.js"></script>
+    <script src="scripts/selectionbuffer.js"></script>
+    <script src="scripts/viewer.js"></script>
+    <script src="scripts/interaction.js"></script>
+
+    <script src="custom-js/ui.js"></script>
+    <script src="custom-js/list-tree.js"></script>
+    <script src="custom-js/properties.js"></script>
+    <script src="custom-js/rules.js"></script>
+    <script src="custom-js/gunzip.min.js"></script>
+    <script src="custom-js/utils.js"></script>
+
+    <script>
+        var g_geometries = [];
+
+        async function beginLoadModel(model) {
+            try {
+                g_geometries = [];
+
+                g_viewer.preLoadModel();
+                g_viewer._model.name = model.name;
+                g_viewer._model.Xmin = g_viewer._worldDimensions.Xmin = model.Xmin;
+                g_viewer._model.Ymin = g_viewer._worldDimensions.Ymin = model.Ymin;
+                g_viewer._model.Zmin = g_viewer._worldDimensions.Zmin = model.Zmin;
+                g_viewer._model.Xmax = g_viewer._worldDimensions.Xmax = model.Xmax;
+                g_viewer._model.Ymax = g_viewer._worldDimensions.Ymax = model.Ymax;
+                g_viewer._model.Zmax = g_viewer._worldDimensions.Zmax = model.Zmax;
+                g_viewer._model.boundingSphereDiameter = g_viewer._worldDimensions.MaxDistance = model.boundingSphereDiameter;
+                g_viewer._model.scaleFactor = model.scaleFactor;
+                window.logInfo(`[beginLoadModel] Model: ${g_viewer._model.name}`);
+                window.logInfo(`[beginLoadModel] Xmin=${g_viewer._worldDimensions.Xmin}, Xmax=${g_viewer._worldDimensions.Xmax}, Ymin=${g_viewer._worldDimensions.Ymin}, Ymax=${g_viewer._worldDimensions.Ymax}, Zmin=${g_viewer._worldDimensions.Zmin}, Zmax=${g_viewer._worldDimensions.Zmax}`);
+                window.logInfo(`[beginLoadModel] Max distance=${g_viewer._worldDimensions.MaxDistance}`);
+                window.logInfo(`[beginLoadModel] Scale factor=${g_viewer._scaleFactor}`);
+            }
+            catch (e) {
+                window.logErr(e);
+            }
+        }
+
+        async function addGeometry(geometry) {
+            try {
+                if (!geometry || !geometry.instances || geometry.instances.length === 0) {
+                    window.logWarn("addGeometry: No instances found in geometry.");
+                    return;
+                }
+
+                // Keep original visible state
+                for (let i = 0; i < geometry.instances.length; i++) {
+                    const instance = geometry.instances[i];
+                    instance._visible = instance.visible;
+                }
+
+                // Geometry
+                g_geometries.push(geometry);
+            }
+            catch (e) {
+                window.logErr(e);
+            }
+        }
+
+        async function addGeometries(geometries) {
+            try {
+                if (!geometries || geometries.length === 0) {
+                    return;
+                }
+
+                for (let g = 0; g < geometries.length; g++) {
+                    // Keep original visible state
+                    for (let i = 0; i < geometries[g].instances.length; i++) {
+                        const instance = geometries[g].instances[i];
+                        instance._visible = instance.visible;
+                    }
+
+                    // Geometry
+                    g_geometries.push(geometries[g]);
+                }
+            }
+            catch (e) {
+                window.logErr(e);
+            }
+        }
+
+        async function endLoadModel() {
+            try {
+                g_viewer.loadModel(g_geometries);
+            }
+            catch (e) {
+                window.logErr(e);
+            }
+            g_geometries = [];
+        }
+
+        async function loadDecorationModelsWASM() {
+            try {
+                if (Module.HEAP8) {
+                    window.logInfo(`Memory used: ${Module.HEAP8.length / 1024 / 1024} MB`);
+                }
+
+                const decorationModelsCount = Module.getDecorationModelsCount();
+                window.logInfo(`Decoration models count: ${decorationModelsCount}`);
+
+                const decorationModels = [];
+                for (let m = 0; m < decorationModelsCount; m++) {
+                    const modelData = Module.getDecorationModelData(m);
+                    console.time(`Loading decoration model: ${modelData.name}`);
+
+                    // Loading geometries
+                    const geometries = [];
+                    for (let i = 0; i < modelData.geometriesCount; i++) {
+                        const geometryData = Module.getDecorationModelGeometryData(modelData.modelIndex, i);
+                        if (geometryData.vertices.size === 0) {
+                            continue;
+                        }
+                        const verticesView = new Float32Array(
+                            Module.HEAPF32.buffer,
+                            geometryData.vertices.data,
+                            geometryData.vertices.size
+                        );
+                        const verticesArray = new Float32Array(verticesView); // FIX: Create a copy of the vertices data, not a view
+
+                        // Conceptual Faces
+                        const conceptualFacesArray = [];
+                        for (let j = 0; j < geometryData.conceptualFaces.size(); j++) {
+                            const faceData = geometryData.conceptualFaces.get(j);
+                            if (faceData.size === 0) {
+                                continue;
+                            }
+                            const conceptualFacesView = new Uint32Array(
+                                Module.HEAP32.buffer,
+                                faceData.data,
+                                faceData.size
+                            );
+                            const conceptualFaces = new Uint32Array(conceptualFacesView); // FIX: Create a copy of the vertices data, not a view
+
+                            if (faceData.texture?.length) {
+                                if (!g_viewer._textures[faceData.texture]) {
+                                    const texture = createTexture_WASM_FS.call(g_viewer, '/data/' + faceData.texture, textureFlipY);
+                                    if (texture) {
+                                        g_viewer._textures[faceData.texture] = texture;
+                                        window.logInfo(`Loaded texture: ${faceData.texture}`);
+                                    }
+                                }
+                            }
+
+                            conceptualFacesArray.push({
+                                indices: conceptualFaces,
+                                material: {
+                                    ambient: [0, 0, 0],
+                                    diffuse: [0, 0, 0],
+                                    specular: [0, 0, 0],
+                                    emissive: [0, 0, 0],
+                                    transparency: faceData.transparency,
+                                    texture: faceData.texture?.length ? {
+                                        name: faceData.texture
+                                    } : null
+                                }
+                            });
+
+                            if (faceData.material && (faceData.material.size() === 12)) {
+                                conceptualFacesArray[j].material.ambient = [];
+                                for (let k = 0; k < 3; k++) {
+                                    conceptualFacesArray[j].material.ambient.push(faceData.material.get(k));
+                                }
+                                conceptualFacesArray[j].material.diffuse = [];
+                                for (let k = 3; k < 6; k++) {
+                                    conceptualFacesArray[j].material.diffuse.push(faceData.material.get(k));
+                                }
+                                conceptualFacesArray[j].material.specular = [];
+                                for (let k = 6; k < 9; k++) {
+                                    conceptualFacesArray[j].material.specular.push(faceData.material.get(k));
+                                }
+                                conceptualFacesArray[j].material.emissive = [];
+                                for (let k = 9; k < 12; k++) {
+                                    conceptualFacesArray[j].material.emissive.push(faceData.material.get(k));
+                                }
+                            }
+                        }
+
+                        // Conceptual Faces Polygons
+                        const conceptualFacesPolygonsArray = [];
+                        for (let j = 0; j < geometryData.conceptualFacesPolygons.size(); j++) {
+                            const indexData = geometryData.conceptualFacesPolygons.get(j);
+                            if (indexData.size === 0) {
+                                continue;
+                            }
+                            const polygonsView = new Uint32Array(
+                                Module.HEAP32.buffer,
+                                indexData.data,
+                                indexData.size
+                            );
+                            const conceptualFacesPolygons = new Uint32Array(polygonsView); // FIX: Create a copy of the vertices data, not a view
+
+                            conceptualFacesPolygonsArray.push({
+                                indices: conceptualFacesPolygons
+                            });
+                        }
+
+                        // Lines
+                        const conceptualFacesLinesArray = [];
+                        for (let j = 0; j < geometryData.conceptualFacesLines.size(); j++) {
+                            const indexData = geometryData.conceptualFacesLines.get(j);
+                            if (indexData.size === 0) {
+                                continue;
+                            }
+                            const linesView = new Uint32Array(
+                                Module.HEAP32.buffer,
+                                indexData.data,
+                                indexData.size
+                            );
+                            const conceptualFacesLines = new Uint32Array(linesView); // FIX: Create a copy of the vertices data, not a view
+
+                            conceptualFacesLinesArray.push({
+                                indices: conceptualFacesLines,
+                                color: [0, 0, 0]
+                            });
+
+                            if (indexData.color && (indexData.color.size() === 3)) {
+                                conceptualFacesLinesArray[j].color[0] = indexData.color.get(0);
+                                conceptualFacesLinesArray[j].color[1] = indexData.color.get(1);
+                                conceptualFacesLinesArray[j].color[2] = indexData.color.get(2);
+                            }
+                        }
+
+                        // Points
+                        const conceptualFacesPointsArray = [];
+                        for (let j = 0; j < geometryData.conceptualFacesPoints.size(); j++) {
+                            const indexData = geometryData.conceptualFacesPoints.get(j);
+                            if (indexData.size === 0) {
+                                continue;
+                            }
+                            const pointsView = new Uint32Array(
+                                Module.HEAP32.buffer,
+                                indexData.data,
+                                indexData.size
+                            );
+                            const conceptualFacesPoints = new Uint32Array(pointsView); // FIX: Create a copy of the vertices data, not a view
+
+                            conceptualFacesPointsArray.push({
+                                indices: conceptualFacesPoints,
+                                color: [0, 0, 0]
+                            });
+
+                            if (indexData.color && (indexData.color.size() === 3)) {
+                                conceptualFacesPointsArray[j].color[0] = indexData.color.get(0);
+                                conceptualFacesPointsArray[j].color[1] = indexData.color.get(1);
+                                conceptualFacesPointsArray[j].color[2] = indexData.color.get(2);
+                            }
+                        }
+
+                        // Instances
+                        const instancesArray = [];
+                        for (let j = 0; j < geometryData.instances.size(); j++) {
+                            const instanceData = geometryData.instances.get(j);
+                            const instance = {
+                                id: instanceData.id,
+                                visible: instanceData.visible,
+                                matrix: null,
+                                parentId: instanceData.parentId,
+                                childrenIds: null
+                            };
+
+                            if (instanceData.matrix && (instanceData.matrix.size() === 16)) {
+                                instance.matrix = [];
+                                for (let k = 0; k < 16; k++) {
+                                    instance.matrix.push(instanceData.matrix.get(k));
+                                }
+                            }
+                            if (instanceData.childrenIds && (instanceData.childrenIds.size() > 0)) {
+                                instance.childrenIds = [];
+                                for (let k = 0; k < instanceData.childrenIds.size(); k++) {
+                                    instance.childrenIds.push(instanceData.childrenIds.get(k));
+                                }
+                            }
+
+                            instancesArray.push(instance);
+                        }
+
+                        const geometry = {
+                            vertices: verticesArray,
+                            vertexSizeInBytes: geometryData.vertexSizeInBytes,
+                            conceptualFaces: conceptualFacesArray,
+                            conceptualFacesPolygons: conceptualFacesPolygonsArray,
+                            conceptualFacesLines: conceptualFacesLinesArray,
+                            conceptualFacesPoints: conceptualFacesPointsArray,
+                            instances: instancesArray
+                        };
+
+                        // Keep original visible state
+                        for (let i = 0; i < geometry.instances.length; i++) {
+                            const instance = geometry.instances[i];
+                            instance._visible = instance.visible;
+                        }
+
+                        // Geometry
+                        geometries.push(geometry);
+                    } // for (let i = 0; i < modelData.geometriesCount; i++)
+
+                    const decorationModel = {
+                        name: modelData.name,
+                        Xmin: modelData.Xmin,
+                        Ymin: modelData.Ymin,
+                        Zmin: modelData.Zmin,
+                        Xmax: modelData.Xmax,
+                        Ymax: modelData.Ymax,
+                        Zmax: modelData.Zmax,
+                        boundingSphereDiameter: modelData.boundingSphereDiameter,
+                        scaleFactor: modelData.scaleFactor,
+                        geometries: geometries
+                    };
+                    decorationModels.push(decorationModel);
+
+                    console.timeEnd(`Loading decoration model: ${modelData.name}`);
+                } // for (let m = 0; m < decorationModelsCount; m++)
+
+                g_viewer.loadDecorationModels(decorationModels);
+
+                if (Module.HEAP8) {
+                    window.logInfo(`Memory used: ${Module.HEAP8.length / 1024 / 1024} MB`);
+                }
+            } catch (e) {
+                window.logErr(e);
+            }
+        }
+
+        async function loadModelWASM(modelPath) {
+            try {
+                let textureFlipY = false;
+                var fileExtension = getFileExtension(modelPath)
+                if (fileExtension === 'binz') {
+                    textureFlipY = true;
+                }
+
+                g_geometries = [];
+
+                if (Module.HEAP8) {
+                    window.logInfo(`Memory used: ${Module.HEAP8.length / 1024 / 1024} MB`);
+                }
+
+                console.time('Loading model (WASM)');
+                const modelData = Module.loadModel(modelPath);
+                if (modelData.modelIndex < 0) {
+                    window.logErr("Failed to load model.");
+                    return;
+                }
+                console.timeEnd('Loading model (WASM)');
+
+                // Begin model loading
+                console.time('Initializing WebGL (JavaScript)');
+                await beginLoadModel(modelData);
+
+                // Loading geometries
+                for (let i = 0; i < modelData.geometriesCount; i++) {
+                    const geometryData = Module.getGeometryData(modelData.modelIndex, i);
+                    const verticesView = new Float32Array(
+                        Module.HEAPF32.buffer,
+                        geometryData.vertices.data,
+                        geometryData.vertices.size
+                    );
+                    const verticesArray = new Float32Array(verticesView); // FIX: Create a copy of the vertices data, not a view
+
+                    // Conceptual Faces
+                    const conceptualFacesArray = [];
+                    for (let j = 0; j < geometryData.conceptualFaces.size(); j++) {
+                        const faceData = geometryData.conceptualFaces.get(j);
+                        if (faceData.size === 0) {
+                            continue;
+                        }
+                        const conceptualFacesView = new Uint32Array(
+                            Module.HEAP32.buffer,
+                            faceData.data,
+                            faceData.size
+                        );
+                        const conceptualFaces = new Uint32Array(conceptualFacesView); // FIX: Create a copy of the vertices data, not a view
+
+                        if (faceData.texture?.length) {
+                            if (!g_viewer._textures[faceData.texture]) {
+                                const texture = createTexture_WASM_FS.call(g_viewer, '/data/' + faceData.texture, textureFlipY);
+                                if (texture) {
+                                    g_viewer._textures[faceData.texture] = texture;
+                                    window.logInfo(`Loaded texture: ${faceData.texture}`);
+                                }
+                            }
+                        }
+
+                        conceptualFacesArray.push({
+                            indices: conceptualFaces,
+                            material: {
+                                ambient: [0, 0, 0],
+                                diffuse: [0, 0, 0],
+                                specular: [0, 0, 0],
+                                emissive: [0, 0, 0],
+                                transparency: faceData.transparency,
+                                texture: faceData.texture?.length ? {
+                                    name: faceData.texture
+                                } : null
+                            }
+                        });
+
+                        if (faceData.material && (faceData.material.size() === 12)) {
+                            conceptualFacesArray[j].material.ambient = [];
+                            for (let k = 0; k < 3; k++) {
+                                conceptualFacesArray[j].material.ambient.push(faceData.material.get(k));
+                            }
+                            conceptualFacesArray[j].material.diffuse = [];
+                            for (let k = 3; k < 6; k++) {
+                                conceptualFacesArray[j].material.diffuse.push(faceData.material.get(k));
+                            }
+                            conceptualFacesArray[j].material.specular = [];
+                            for (let k = 6; k < 9; k++) {
+                                conceptualFacesArray[j].material.specular.push(faceData.material.get(k));
+                            }
+                            conceptualFacesArray[j].material.emissive = [];
+                            for (let k = 9; k < 12; k++) {
+                                conceptualFacesArray[j].material.emissive.push(faceData.material.get(k));
+                            }
+                        }
+                    }
+
+                    // Conceptual Faces Polygons
+                    const conceptualFacesPolygonsArray = [];
+                    for (let j = 0; j < geometryData.conceptualFacesPolygons.size(); j++) {
+                        const indexData = geometryData.conceptualFacesPolygons.get(j);
+                        if (indexData.size === 0) {
+                            continue;
+                        }
+                        const polygonsView = new Uint32Array(
+                            Module.HEAP32.buffer,
+                            indexData.data,
+                            indexData.size
+                        );
+                        const conceptualFacesPolygons = new Uint32Array(polygonsView); // FIX: Create a copy of the vertices data, not a view
+
+                        conceptualFacesPolygonsArray.push({
+                            indices: conceptualFacesPolygons
+                        });
+                    }
+
+                    // Lines
+                    const conceptualFacesLinesArray = [];
+                    for (let j = 0; j < geometryData.conceptualFacesLines.size(); j++) {
+                        const indexData = geometryData.conceptualFacesLines.get(j);
+                        if (indexData.size === 0) {
+                            continue;
+                        }
+                        const linesView = new Uint32Array(
+                            Module.HEAP32.buffer,
+                            indexData.data,
+                            indexData.size
+                        );
+                        const conceptualFacesLines = new Uint32Array(linesView); // FIX: Create a copy of the vertices data, not a view
+
+                        conceptualFacesLinesArray.push({
+                            indices: conceptualFacesLines,
+                            color: [0, 0, 0]
+                        });
+
+                        if (indexData.color && (indexData.color.size() === 3)) {
+                            conceptualFacesLinesArray[j].color[0] = indexData.color.get(0);
+                            conceptualFacesLinesArray[j].color[1] = indexData.color.get(1);
+                            conceptualFacesLinesArray[j].color[2] = indexData.color.get(2);
+                        }
+                    }
+
+                    // Points
+                    const conceptualFacesPointsArray = [];
+                    for (let j = 0; j < geometryData.conceptualFacesPoints.size(); j++) {
+                        const indexData = geometryData.conceptualFacesPoints.get(j);
+                        if (indexData.size === 0) {
+                            continue;
+                        }
+                        const pointsView = new Uint32Array(
+                            Module.HEAP32.buffer,
+                            indexData.data,
+                            indexData.size
+                        );
+                        const conceptualFacesPoints = new Uint32Array(pointsView); // FIX: Create a copy of the vertices data, not a view
+
+                        conceptualFacesPointsArray.push({
+                            indices: conceptualFacesPoints,
+                            color: [0, 0, 0]
+                        });
+
+                        if (indexData.color && (indexData.color.size() === 3)) {
+                            conceptualFacesPointsArray[j].color[0] = indexData.color.get(0);
+                            conceptualFacesPointsArray[j].color[1] = indexData.color.get(1);
+                            conceptualFacesPointsArray[j].color[2] = indexData.color.get(2);
+                        }
+                    }
+
+                    // Instances
+                    const instancesArray = [];
+                    for (let j = 0; j < geometryData.instances.size(); j++) {
+                        const instanceData = geometryData.instances.get(j);
+                        const instance = {
+                            id: instanceData.id,
+                            visible: instanceData.visible,
+                            matrix: null,
+                            parentId: instanceData.parentId,
+                            childrenIds: null
+                        };
+
+                        if (instanceData.matrix && (instanceData.matrix.size() === 16)) {
+                            instance.matrix = [];
+                            for (let k = 0; k < 16; k++) {
+                                instance.matrix.push(instanceData.matrix.get(k));
+                            }
+                        }
+                        if (instanceData.childrenIds && (instanceData.childrenIds.size() > 0)) {
+                            instance.childrenIds = [];
+                            for (let k = 0; k < instanceData.childrenIds.size(); k++) {
+                                instance.childrenIds.push(instanceData.childrenIds.get(k));
+                            }
+                        }
+
+                        instancesArray.push(instance);
+                    }
+
+                    await addGeometry({
+                        vertices: verticesArray,
+                        vertexSizeInBytes: geometryData.vertexSizeInBytes,
+                        conceptualFaces: conceptualFacesArray,
+                        conceptualFacesPolygons: conceptualFacesPolygonsArray,
+                        conceptualFacesLines: conceptualFacesLinesArray,
+                        conceptualFacesPoints: conceptualFacesPointsArray,
+                        instances: instancesArray
+                    });
+                }
+
+                // Finalize model loading
+                await endLoadModel();
+                console.timeEnd('Initializing WebGL (JavaScript)');
+
+                if (Module.HEAP8) {
+                    window.logInfo(`Memory used: ${Module.HEAP8.length / 1024 / 1024} MB`);
+                }
+            } catch (e) {
+                window.logErr(e);
+            }
+        }
+
+        function onFacesChange(checkbox) {
+            _showFaces(checkbox.checked);
+        }
+
+        function onWireframesChange(checkbox) {
+            _showWireframes(checkbox.checked);
+        }
+
+        function onLinesChange(checkbox) {
+            _showLines(checkbox.checked);
+        }
+
+        function onPointsChange(checkbox) {
+            _showPoints(checkbox.checked);
+        }
+
+        function onModelCSChange(checkbox) {
+            _showModelCS(checkbox.checked);
+        }
+
+        function onWorldCSChange(checkbox) {
+            _showWorldCS(checkbox.checked);
+        }
+
+        function onNavigatorChange(checkbox) {
+            _showNavigator(checkbox.checked);
+        }
+
+        function onBackgroundColorChange(colorPicker) {
+            const color = colorPicker.value;
+            const r = parseInt(color.substr(1, 2), 16) / 255;
+            const g = parseInt(color.substr(3, 2), 16) / 255;
+            const b = parseInt(color.substr(5, 2), 16) / 255;
+            if (g_viewer) {
+                g_viewer._clearColor = [r, g, b, 1.0];
+            }
+
+            PENDING_DRAW_SCENE = true;
+        }
+
+        function onSelectionColorChange(colorPicker) {
+            const color = colorPicker.value;
+            const r = parseInt(color.substr(1, 2), 16) / 255;
+            const g = parseInt(color.substr(3, 2), 16) / 255;
+            const b = parseInt(color.substr(5, 2), 16) / 255;
+            SELECTED_INSTANCE_MATERIAL.ambient = [r, g, b];
+            SELECTED_INSTANCE_MATERIAL.diffuse = [r, g, b];
+            SELECTED_INSTANCE_MATERIAL.specular = [r, g, b];
+            SELECTED_INSTANCE_MATERIAL.emissive = [r, g, b];
+
+            PENDING_DRAW_SCENE = true;
+        }
+
+        function onSelectionTransparencyChange(slider) {
+            const transparency = slider.value;
+            document.getElementById('transparency-value').textContent = transparency + '%';
+            SELECTED_INSTANCE_MATERIAL.transparency = transparency / 100;
+
+            PENDING_DRAW_SCENE = true;
+        }
+
+        async function onResetSettings() {
+            // WebGL
+            _resetView();
+
+            // Settings
+            document.getElementById('faces-checkbox').checked = g_viewer._showConceptualFaces;
+            document.getElementById('wireframes-checkbox').checked = g_viewer._showConceptualFacesPolygons;
+            document.getElementById('lines-checkbox').checked = g_viewer._showLines;
+            document.getElementById('points-checkbox').checked = g_viewer._showPoints;
+            document.getElementById('model-cs-checkbox').checked = g_viewer._showModelCS;
+            document.getElementById('world-cs-checkbox').checked = g_viewer._showWorldCS;
+            document.getElementById('navigator-checkbox').checked = g_viewer._showNavigator;
+            document.getElementById('background-color-picker').value = '#E6E6E6';
+            document.getElementById('selection-color-picker').value = '#FF0000';
+            document.getElementById('transparency-slider').value = 100;
+
+            // UI
+            resetMetadataUI();
+            if (supportsMetadataUI()) {
+                await loadMetadataUI();
+            }
+        }
+
+        g_onRuntimeInitializedEvent = function () {
+            try {
+                setTimeout(() => {
+                    initializeWebGLViewer();
+                }, 100);
+
+            } catch (e) {
+                window.logErr(e);
+            }
+        }
+
+        g_onWebGLInitializedEvent = function () {
+            try {
+                var p = getParameterByName("path") || "geom.js";
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = p;
+                script.onload = async function () {
+                    try {
+                        const model = {
+                            name: p,
+                            Xmin: -1,
+                            Ymin: -1,
+                            Zmin: -1,
+                            Xmax: 1,
+                            Ymax: 1,
+                            Zmax: 1,
+                            boundingSphereDiameter: 2,
+                            scaleFactor: 1
+
+                        };
+
+                        if (g_instances.length > 0) {
+                            model.Xmin = g_instances[0].Xmin;
+                            model.Xmax = g_instances[0].Xmax;
+                            model.Ymin = g_instances[0].Ymin;
+                            model.Ymax = g_instances[0].Ymax;
+                            model.Zmin = g_instances[0].Zmin;
+                            model.Zmax = g_instances[0].Zmax;
+
+                            for (let i = 1; i < g_instances.length; i++) {
+                                model.Xmin = Math.min(model.Xmin, g_instances[i].Xmin);
+                                model.Ymin = Math.min(model.Ymin, g_instances[i].Ymin);
+                                model.Zmin = Math.min(model.Zmin, g_instances[i].Zmin);
+
+                                model.Xmax = Math.max(model.Xmax, g_instances[i].Xmax);
+                                model.Ymax = Math.max(model.Ymax, g_instances[i].Ymax);
+                                model.Zmax = Math.max(model.Zmax, g_instances[i].Zmax);
+                            } // for (var i = ...
+
+                            model.boundingSphereDiameter = model.Xmax - model.Xmin;
+                            model.boundingSphereDiameter = Math.max(model.boundingSphereDiameter, model.Ymax - model.Ymin);
+                            model.boundingSphereDiameter = Math.max(model.boundingSphereDiameter, model.Zmax - model.Zmin);
+                        } // if (g_instances.length > 0)
+
+                        await beginLoadModel(model);
+
+                        g_geometries = [];
+                        let index = 1;
+                        for (let i = 0; i < g_instances.length; i++) {
+                            const instance = g_instances[i];
+                            if (!instance.vertices) {
+                                continue;
+                            }
+
+                            // Y <=> Z
+                            for (let i = 0; i < instance.vertices.length; i += 3) {
+                                const y = instance.vertices[i + 1];
+                                instance.vertices[i + 1] = -instance.vertices[i + 2];
+                                instance.vertices[i + 2] = y;
+                            }
+
+                            // Convert
+                            for (let j = 0; j < instance.conceptualFaces.length; j++) {
+                                const conceptualFace = instance.conceptualFaces[j];
+                                conceptualFace.indices = new Uint32Array(conceptualFace.indices)
+                            }
+                            for (let j = 0; j < instance.conceptualFacesPolygons.length; j++) {
+                                const conceptualFacesPolygon = instance.conceptualFacesPolygons[j];
+                                conceptualFacesPolygon.indices = new Uint32Array(conceptualFacesPolygon.indices)
+                            }
+
+                            await addGeometry({
+                                vertices: new Float32Array(instance.vertices),
+                                vertexSizeInBytes: instance.vertexSizeInBytes,
+                                conceptualFaces: instance.conceptualFaces,
+                                conceptualFacesPolygons: instance.conceptualFacesPolygons,
+                                conceptualFacesLines: [],
+                                conceptualFacesPoints: [],
+                                instances: [{
+                                    id: index++,
+                                    bb: [instance.Xmin, -instance.Zmax, instance.Ymin, instance.Xmax, -instance.Zmin, instance.Ymax],
+                                    visible: instance.visible,
+                                    matrix: null,
+                                    parentId: -1,
+                                    childrenIds: null
+                                }]
+                            });
+                        }
+
+                        await endLoadModel();
+
+                        Module.setWorld(
+                            model.Xmin, model.Xmax,
+                            model.Ymin, model.Ymax,
+                            model.Zmin, model.Zmax
+                        );
+
+                        await loadDecorationModelsWASM();
+                    }
+                    catch (e) {
+                        window.logErr(e);
+                    }
+                };
+                script.onerror = function () {
+                    window.logErr('Failed to load dynamic script.');
+                };
+                document.head.appendChild(script);
+            } catch (e) {
+                window.logErr(e);
+            }
+        }
+
+        g_getViewSettings = function () {
+            const viewSettings = {
+                showConceptualFacesPolygons: true,
+                multiSelectionMode: false
+            };
+            return viewSettings;
+        }
+
+        g_onSelectEvent = function (instanceIDs) {
+            try {
+                displayInTree();
+            } catch (e) {
+                window.logErr(e);
+            }
+        };
+    </script>
+
+</head>
+
+<body id="page-top" class="model-page rdf-app">
+    <header>
+        <nav class="navbar navbar-expand-lg  text-uppercase fixed-top" id="mainNav">
+            <div class="container-fluid">
+                <div class="dropdown main-menu">
+                    <a class="title" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        RDF LTD.
+                    </a><span class="file-name">. </span>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li><a class="dropdown-item main-item" href="#">RDF LTD.</a></li>
+                        <!--<li><a class="dropdown-item main--menu-item" href="#" id="button-browse">Open</a></li>-->
+                        <li><a class="dropdown-item main--menu-item" href="#" data-bs-toggle="modal" data-bs-target="#reg-modal-general">About us</a></li>
+                        <li><a class="dropdown-item main--menu-item" href="#" data-bs-toggle="modal" data-bs-target="#reg-modal-general">Contact us</a></li>
+                        <li><a class="dropdown-item main--menu-item" href="#" data-bs-toggle="modal" data-bs-target="#reg-modal-general">Privacy &amp; policy</a></li>
+                        <li><a class="dropdown-item main--menu-item" href="#" data-bs-toggle="modal" data-bs-target="#reg-modal-settings">Settings</a></li>
+                    </ul>
+                </div>
+
+                <ul id="rightside-header" class="nav nav-tabs mb-3" role="tablist" style="display: none;">
+                    <li class="nav-item" role="presentation"> <a class="nav-link active" id="ex1-tab-1" data-mdb-toggle="tab" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1" aria-selected="true">model</a> </li>
+                    <li class="nav-item" role="presentation"> <a class="nav-link" id="ex1-tab-2" data-mdb-toggle="tab" href="#ex1-tabs-2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false">checker</a> </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div id='canvas_container' class="canvas_container" style="height: 100%; width: 100%;">
+        <canvas id='canvas-element-id' width='480' height='400'>
+            Your browser does not support the HTML5 canvas element.
+        </canvas>
+        <div id="labels-container"></div>
+    </div>
+
+    <aside id="leftside" style="display: none;">
+        <div class="col col-app-title">
+            <div class="app-head">
+                <h2>
+                    <span class="head-objects">Objects in: </span>
+                    <span id="file-name" class="file-name">3D model not loaded</span>
+                </h2>
+            </div>
+
+            <div id="select-container">
+                <div id="tree-container" class="col-app-content scrollable"></div>
+            </div>
+            <div class="app-bottom-bar">
+                <div class="app-controls">
+                    <div class="app-controls-group">Collapse<br /><a href="#" id="button-collapse-all">All</a><a href="#" id="button-collapse-selected">Selected</a></div><div class="app-controls-group" id="">Hide<br /><a href="#" id="button-hide-all">All</a><a href="#" id="button-hide-selected">Selected</a></div>
+                    <div class="app-controls-group">Tree<br /><span id="tree-labels"><a href="#">Not loaded</a></span></div>
+                </div>
+
+            </div>
+        </div>
+    </aside>
+
+    <aside id="rightside" style="display: none;">
+        <!-- Tabs content BEGIN -->
+        <div class="tab-content" id="ex1-content">
+            <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+                <!-- Tab #1 Content BEGIN -->
+                <div class="col col-app-title">
+                    <div class="app-head">
+                        <h2>Details:</h2>
+                    </div>
+                    <div class="col-app-content scrollable">
+                        <div id="propertyDetails">
+                            <ul class="rules-container"></ul>
+                        </div>
+                    </div>
+                    <div class="app-bottom-bar">
+                        <div class="app-controls">
+                            <div class="app-controls-group">Details interaction:<br /><a href="#" id="collapse-all-props">Collapse All</a><a href="#" id="expand-all-props">Expand All</a></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tab #1 Content END -->
+            </div>
+            <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+                <!-- Tab #2 Content BEGIN -->
+                <div class="col col-app-title">
+                    <div class="app-head">
+                        <h2 id="rhside01">Rule selection: <a class="btn-rdf-modal" onclick="checkRules()">Check Rules</a></h2>
+                    </div>
+                    <div id="flexible-content" class="split">
+                        <div class="col-app-content scrollable" id="split-0">
+                            <div id="ruleDetails">
+                                <ul class="rules-container"></ul>
+                            </div>
+                        </div>
+                        <div class="app-bottom-bar" id="split-1">
+                            <div class="app-controls">
+                                <h2>Rule Details:</h2>
+                                <div id="rule-details" class="scrollable"></div>
+                                <div class="app-controls-group interactionz">
+                                    Rule Interactions:<br />
+                                    <a href="#" id="collapse-all-rules">Collapse All</a><a href="#" id="expand-all-rules">Expand All</a>
+                                    <a class="" data-bs-toggle="modal" data-bs-target="#reg-modal" onclick="getReport()">Report</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tab #2 Content END -->
+            </div>
+            <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
+                <div id="console" class="scrollable"> </div>
+
+            </div>
+        </div>
+        <!-- Tabs content END -->
+    </aside>
+
+    <footer>
+        <div class="copyright py-3 text-center text-white">
+            <div class="container"><small>Copyright &copy; rdf.bg 2026</small></div>
+        </div>
+    </footer>
+
+    <!-- hidden input -->
+    <input id="load_file" type="file" accept=".ifc, .step, .stp, .stpz, .gltf, .glb, .zae, .bin, .binz"
+           onclick="this.value = null;" onchange="loadFile(this.files[0]);" style="display:none;" />
+
+    <!-- modal content for Checker Report -->
+    <div class="modal fade" id="reg-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog bg-transparent modal-lg">
+            <div class="modal-content bg-transparent">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Checker Report:</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body-report-container" id="report-content">{#your-dynamic-content-here#}</div>
+                </div>
+                <div class="modal-footer bg-transparent">
+                    <a class="btn-rdf-modal" data-bs-dismiss="modal">Close</a>
+                    <a class="btn-rdf-modal" onclick="saveReport()">Export</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal content for Settings -->
+    <div class="modal fade" id="reg-modal-settings" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog bg-transparent modal-sm">
+            <div class="modal-content bg-transparent">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Settings:</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body modal-rdf" id="settings-options">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="faces-checkbox" checked onchange="onFacesChange(this)">
+                        <label class="form-check-label" for="faces-checkbox">Faces</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="wireframes-checkbox" checked onchange="onWireframesChange(this)">
+                        <label class="form-check-label" for="wireframes-checkbox">Wireframes</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="lines-checkbox" checked onchange="onLinesChange(this)">
+                        <label class="form-check-label" for="lines-checkbox">Lines</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="points-checkbox" checked onchange="onPointsChange(this)">
+                        <label class="form-check-label" for="points-checkbox">Points</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="model-cs-checkbox" checked onchange="onModelCSChange(this)">
+                        <label class="form-check-label" for="model-cs-checkbox">Model CS</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="world-cs-checkbox" onchange="onWorldCSChange(this)">
+                        <label class="form-check-label" for="world-cs-checkbox">World CS</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="navigator-checkbox" checked onchange="onNavigatorChange(this)">
+                        <label class="form-check-label" for="navigator-checkbox">Navigator</label>
+                    </div>
+                    <div style="flex-direction: column; align-items: stretch; gap: 8px; padding: 12px 0; border-top: 1px solid rgba(60, 60, 60, 0.8); margin-top: 8px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <label for="background-color-picker">Background Color</label>
+                            <input type="color" id="background-color-picker" value="#E6E6E6" onchange="onBackgroundColorChange(this)" style="width: 50px; height: 30px; cursor: pointer; border: 1px solid rgba(60, 60, 60, 0.8); background: transparent;">
+                        </div>
+                    </div>
+                    <div style="flex-direction: column; align-items: stretch; gap: 8px; padding: 12px 0; border-top: 1px solid rgba(60, 60, 60, 0.8); margin-top: 8px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <label for="selection-color-picker">Selection Color</label>
+                            <input type="color" id="selection-color-picker" value="#FF0000" onchange="onSelectionColorChange(this)" style="width: 50px; height: 30px; cursor: pointer; border: 1px solid rgba(60, 60, 60, 0.8); background: transparent;">
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <label for="transparency-slider">Transparency</label>
+                            <span id="transparency-value" style="min-width: 35px; text-align: right; font-size: 11px; color: #999;">100%</span>
+                        </div>
+                        <input type="range" id="transparency-slider" min="0" max="100" value="100" oninput="onSelectionTransparencyChange(this)" style="width: 100%; cursor: pointer;">
+                    </div>
+                    <button class="reset-button" onclick="onResetSettings()">Reset</button>
+                </div>
+                <div class="modal-footer bg-transparent">
+                    <a href="#" class="btn-rdf-modal" data-bs-dismiss="modal">Close</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- modal content for rest of windows -->
+    <div class="modal fade" id="reg-modal-general" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog bg-transparent modal-lg">
+            <div class="modal-content bg-transparent">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Modal Window:</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body modal-rdf-body">
+                    <div class="modal-body-report-container" id="dynamic">
+                        <h4>
+                            Lorem Ipsum Content
+                        </h4>
+                    </div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra ante arcu, eget luctus diam ullamcorper iaculis. Curabitur varius urna eu mi pulvinar, at cursus ante rhoncus. Curabitur sodales blandit feugiat. Suspendisse tincidunt arcu vel ipsum pulvinar varius. Donec tempus eget neque rutrum lacinia. Morbi dui erat, efficitur at tempor eu, aliquam sed massa. Sed tempor pretium dapibus. Sed rhoncus nisl ac auctor vulputate. Aliquam erat volutpat. Phasellus diam mauris, finibus id dui vel, posuere pulvinar leo. Quisque vel lectus mauris. Phasellus id hendrerit lorem, ac tempus mi.</p>
+                    <p>Aenean feugiat pulvinar leo a finibus. Nunc pharetra dolor id nisi imperdiet, a lobortis diam dictum. Etiam porttitor sed justo in congue. Interdum et malesuada fames ac ante ipsum primis in faucibus. Maecenas finibus leo magna, nec auctor arcu accumsan in. Vivamus tempor eros et ante ornare sollicitudin. Fusce at congue massa, vitae aliquet sem. Nullam in ex ac mauris molestie blandit nec at justo. Nunc sollicitudin consequat felis, non sollicitudin elit convallis vel. Proin id dolor ac odio vulputate lacinia. Praesent eget mi in magna fringilla dictum.</p>
+                    <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Maecenas condimentum purus vel lacus hendrerit bibendum. Donec sit amet nulla in eros hendrerit placerat ac vitae risus. Quisque ullamcorper urna in ipsum lacinia, eu euismod metus molestie. Ut sit amet luctus libero, at faucibus erat. Duis sapien nibh, ultricies a felis sodales, consectetur rhoncus tortor. Pellentesque tincidunt sed nibh luctus molestie. Suspendisse faucibus lorem sed mi rutrum dignissim. Mauris pellentesque posuere egestas. Suspendisse non tincidunt ligula. Quisque iaculis posuere arcu vel lacinia. Vivamus tristique justo at lacus vulputate tristique. Fusce viverra nulla eu enim viverra, quis tempor massa efficitur.</p>
+                    <p>Proin pharetra consectetur nulla nec tincidunt. Proin malesuada dui sit amet placerat ornare. Quisque condimentum nisi interdum felis semper, et semper magna vestibulum. Pellentesque quis tincidunt est. Etiam pellentesque orci in molestie fermentum. Aenean bibendum vehicula neque scelerisque finibus. Nam volutpat, leo sit amet porttitor elementum, quam sapien sagittis turpis, vulputate rhoncus magna risus id nisi. Pellentesque mi lorem, blandit ac molestie quis, tincidunt vel enim. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed erat purus, consectetur sed leo eu, elementum tempor mi. Suspendisse faucibus feugiat semper. Curabitur bibendum nulla nec mi gravida, quis sodales ante semper.</p>
+                    <p>Maecenas maximus purus a euismod viverra. Cras laoreet pulvinar purus, in pharetra massa ornare et. Pellentesque ultricies urna nec dolor cursus fringilla quis eget quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas et mauris faucibus, malesuada leo dignissim, rutrum massa. Curabitur nec scelerisque ligula, vitae facilisis lorem. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+                </div>
+                <div class="modal-footer bg-transparent">
+                    <a href="#" class="btn-rdf-modal" data-bs-dismiss="modal">Close</a>
+                    <a href="#" class="btn-rdf-modal" data-bs-dismiss="modal">Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="contextMenu" class="context-menu" style="display: none">
+        <ul>
+            <li><a href="#" id="view-item">Zoom To</a></li>
+        </ul>
+    </div>
+
+    <div id="propety-templates" style="display:none">
+        <div id="propertyset-template">
+            <li class="single-rule">
+                <h5>
+                    <a class="arrow collapse"
+                       data-bs-toggle="collapse" href="#prop__PropertyOrder__" role="button" aria-expanded="true"
+                       aria-controls="prop__PropertyOrder__"> </a>
+                    <span class="propertyset-name" data="__PropertySetData__">__PropertySetName__</span>
+                </h5>
+                <div class="collapse show rule-enumerator" id="prop__PropertyOrder__">
+                    __PropertyTemplate__
+                </div>
+            </li>
+        </div>
+        <div id="property-template">
+            <div class="rule-title">
+                <h6>
+                    <span class="property-name rule-title-text"
+                          data="__PropertyData__"><i>__PropertyName__</i><em>__PropertyDescription__</em></span>
+                </h6>
+            </div>
+        </div>
+    </div>
+    <div id="rule-templates" style="display:none">
+        <div id="ruleset-template">
+            <li class="single-rule" id="ruleset__RuleSetData__">
+                <h5>
+                    <a class="arrow" data-bs-toggle="collapse" href="#rule__RuleOrder__" role="button" aria-expanded="true"
+                       aria-controls="rule__RuleOrder__"> </a><input type="checkbox" checked value="__RuleSetData__" class="ruleset-checkbox">
+                    <span class="ruleset-name" data="__RuleSetData__">__RuleSetName__</span>
+                </h5>
+                <div id="rule__RuleOrder__" class="collapse show">
+                    __RuleTemplate__
+                </div>
+            </li>
+        </div>
+        <div id="rule-template">
+            <div class="rule-container rule-enumerator hover-select" id="__RuleData__">
+                <div class="rule-title">
+                    <h6>
+                        <input type="checkbox" value="__RuleData__" class="rule-checkbox"><span class="rule-name rule-title-text" data="__RuleData__">__RuleName__</span><span class="rule-indicator" value="__RuleData__"></span>
+                    </h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.6.0/split.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+    <!-- MDB -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.1/mdb.min.js"></script>
+
+    <script>
+        function supportsMetadataUI() {
+            if (g_viewer?._model?.name) {
+                const fileExtension = getFileExtension(g_viewer._model.name).toLowerCase();
+                if (fileExtension === 'ifc' ||
+                    fileExtension === 'step' ||
+                    fileExtension === 'stp' ||
+                    fileExtension === 'stpz') {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function loadFile(fileObject) {
+            // UI
+            resetMetadataUI();
+            document.getElementById('leftside').style.display = 'none';
+            document.getElementById('rightside').style.display = 'none';
+            document.getElementById('rightside-header').style.display = 'none';            
+
+            // Load
+            readLocalFile(fileObject, async function (fileContent) {
+                try {
+                    Module['FS'].writeFile('/data/' + fileObject.name, fileContent);
+                    await loadModelWASM(`/data/${fileObject.name}`);
+                    await loadDecorationModelsWASM();
+
+                    // UI
+                    const fileExtension = getFileExtension(fileObject.name).toLowerCase();
+                    if (supportsMetadataUI()) {
+                        document.getElementById('leftside').style.display = 'block';
+                        document.getElementById('file-name').innerText = fileObject.name;
+                        document.getElementById('rightside').style.display = 'block';
+                        //document.getElementById('rightside-header').style.display = 'block'; #todo: support for Model Checker
+                        await loadMetadataUI();
+                    }
+                }
+                catch (e) {
+                    window.logErr(e);
+                }
+            });
+        }
+
+        $(function () {
+            $('#tree-container').tooltip({ tooltipClass: "tooltip-styling" });
+        });
+
+        $('#leftside').resizable({
+            handles: "e",
+            animate: true,
+            ghost: true,
+            maxWidth: 650,
+            minWidth: 50
+        });
+
+        $('#rightside').resizable({
+            handles: "w",
+            animate: true,
+            ghost: true,
+            maxWidth: 650,
+            minWidth: 50,
+        });
+    </script>
+</body>
+
+</html>

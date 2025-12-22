@@ -1,0 +1,14 @@
+NPM
+npm install http-server -g
+http-server
+
+Python
+python -m http.server 8000
+
+Node.js
+npx http-server
+
+Emscripten
+emrun emifcengine.html
+OR
+emrun --browser chrome emifcengine.html
