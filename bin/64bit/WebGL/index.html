@@ -717,6 +717,16 @@
                             model.boundingSphereDiameter = Math.max(model.boundingSphereDiameter, model.Zmax - model.Zmin);
                         } // if (g_instances.length > 0)
 
+                        // Y <=> -Z
+                        const modelY = {
+                            Ymin: model.Ymin,
+                            Ymax: model.Ymax
+                        };
+                        model.Ymin = -model.Zmax;
+                        model.Ymax = -model.Zmin;
+                        model.Zmin = modelY.Ymin;
+                        model.Zmax = modelY.Ymax;
+
                         await beginLoadModel(model);
 
                         g_geometries = [];
@@ -727,7 +737,7 @@
                                 continue;
                             }
 
-                            // Y <=> Z
+                            // Y <=> -Z
                             for (let i = 0; i < instance.vertices.length; i += 3) {
                                 const y = instance.vertices[i + 1];
                                 instance.vertices[i + 1] = -instance.vertices[i + 2];
@@ -766,8 +776,8 @@
 
                         Module.setWorld(
                             model.Xmin, model.Xmax,
-                            -model.Zmax, -model.Zmin,
-                            model.Ymin, model.Ymax
+                            model.Ymin, model.Ymax,
+                            model.Zmin, model.Zmax
                         );
 
                         await loadDecorationModelsWASM();
