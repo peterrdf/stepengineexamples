@@ -53,7 +53,14 @@ namespace StreamSTP_IN
 
             if (fs != null)
             {
-                mySTPModel = stepengine.engiOpenModelByStream(0, callback, "1");
+                mySTPModel = stepengine.engiOpenModelByStream(0, callback, "");
+
+                //
+                // Load the IFC model
+                //
+
+                stepengine.sdaiCloseModel(mySTPModel);
+
 
                 fs.Close();
             }
