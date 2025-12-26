@@ -56,11 +56,8 @@ namespace StreamSTP_IN
                 mySTPModel = stepengine.engiOpenModelByStream(0, callback, "");
 
                 //
-                // Load the IFC model
+                // Do something with the model here
                 //
-
-                stepengine.sdaiCloseModel(mySTPModel);
-
 
                 fs.Close();
             }

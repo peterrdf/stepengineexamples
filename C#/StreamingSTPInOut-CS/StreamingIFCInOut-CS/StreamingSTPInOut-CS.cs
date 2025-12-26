@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RDF;
+using StreamSTP_IN;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using StreamSTP_IN;
 
 namespace StreamingSTPInOut_CS
 {
@@ -23,6 +24,8 @@ namespace StreamingSTPInOut_CS
             StreamSTP_IN.IN mySTP_INStream = new StreamSTP_IN.IN();
 
             StreamSTP_OUT.OUT mySTP_OUTStream = new StreamSTP_OUT.OUT(mySTP_INStream.mySTPModel);
+
+            stepengine.sdaiCloseModel(mySTP_INStream.mySTPModel);
         }
     }
 }
