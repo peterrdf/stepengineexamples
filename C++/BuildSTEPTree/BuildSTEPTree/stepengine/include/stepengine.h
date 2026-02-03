@@ -7111,12 +7111,12 @@ static	inline	double	getProjectUnitConversionFactor(
 #endif
 
 //
-//		getProjectUnitConversionFactor                          (https://rdf.bg/ifcdoc/CP64/getProjectUnitConversionFactor.html)
+//		getProjectUnitConversionFactorW                         (https://rdf.bg/ifcdoc/CP64/getProjectUnitConversionFactorW.html)
 //				SdaiModel				model								IN
-//				SdaiString				unitType							IN
-//				SdaiString				* unitPrefix						IN / OUT
-//				SdaiString				* unitName							IN / OUT
-//				SdaiString				* SIUnitName						IN / OUT
+//				const wchar_t			* unitType							IN
+//				const wchar_t			** unitPrefix						IN / OUT
+//				const wchar_t			** unitName							IN / OUT
+//				const wchar_t			** SIUnitName						IN / OUT
 //
 //				double					returns								OUT
 //
@@ -7124,11 +7124,38 @@ static	inline	double	getProjectUnitConversionFactor(
 //
 double			DECL STDC	getProjectUnitConversionFactorW(
 									SdaiModel				model,
-									wchar_t					* unitType,
-									wchar_t					** unitPrefix,
-									wchar_t					** unitName,
-									wchar_t					** SIUnitName
+									const wchar_t			* unitType,
+									const wchar_t			** unitPrefix,
+									const wchar_t			** unitName,
+									const wchar_t			** SIUnitName
 								);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	double	getProjectUnitConversionFactorW(
+								SdaiModel				model,
+								wchar_t					* unitType,
+								wchar_t					** unitPrefix,
+								wchar_t					** unitName,
+								wchar_t					** SIUnitName
+							)
+{
+	return	getProjectUnitConversionFactorW(
+					model,
+					(const wchar_t*) unitType,
+					(const wchar_t**) unitPrefix,
+					(const wchar_t**) unitName,
+					(const wchar_t**) SIUnitName
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
 
 //
 //		getUnitInstanceConversionFactor                         (https://rdf.bg/ifcdoc/CP64/getUnitInstanceConversionFactor.html)
@@ -7178,12 +7205,12 @@ static	inline	double	getUnitInstanceConversionFactor(
 #endif
 
 //
-//		getUnitInstanceConversionFactorW                         (https://rdf.bg/ifcdoc/CP64/getUnitInstanceConversionFactor.html)
+//		getUnitInstanceConversionFactorW                        (https://rdf.bg/ifcdoc/CP64/getUnitInstanceConversionFactorW.html)
 //				SdaiInstance			unitInstance						IN
-//				SdaiString				* unitType							IN / OUT
-//				SdaiString				* unitPrefix						IN / OUT
-//				SdaiString				* unitName							IN / OUT
-//				SdaiString				* SIUnitName						IN / OUT
+//				const wchar_t			** unitType							IN / OUT
+//				const wchar_t			** unitPrefix						IN / OUT
+//				const wchar_t			** unitName							IN / OUT
+//				const wchar_t			** SIUnitName						IN / OUT
 //
 //				double					returns								OUT
 //
@@ -7191,11 +7218,38 @@ static	inline	double	getUnitInstanceConversionFactor(
 //
 double			DECL STDC	getUnitInstanceConversionFactorW(
 									SdaiInstance			unitInstance,
-									wchar_t					** unitType,
-									wchar_t					** unitPrefix,
-									wchar_t					** unitName,
-									wchar_t					** SIUnitName
+									const wchar_t			** unitType,
+									const wchar_t			** unitPrefix,
+									const wchar_t			** unitName,
+									const wchar_t			** SIUnitName
 								);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	double	getUnitInstanceConversionFactorW(
+								SdaiInstance			unitInstance,
+								wchar_t					** unitType,
+								wchar_t					** unitPrefix,
+								wchar_t					** unitName,
+								wchar_t					** SIUnitName
+							)
+{
+	return	getUnitInstanceConversionFactorW(
+					unitInstance,
+					(const wchar_t**) unitType,
+					(const wchar_t**) unitPrefix,
+					(const wchar_t**) unitName,
+					(const wchar_t**) SIUnitName
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
 
 //
 //		setBRepProperties                                       (https://rdf.bg/ifcdoc/CP64/setBRepProperties.html)
