@@ -2,7 +2,7 @@
 //  Author:  Peter Bonsma
 //  $Date: 1999-12-31 23:59:59 +0000 (Wed, 31 Jan 1999) $
 //  $Revision: 3999 $
-//  Project: IFC Engine Library
+//  Project: STEP Engine Library
 //
 //  Be aware a license fee for use of this library when used commercially is required
 //  For more info on commercial use please contact:  peter.bonsma@rdf.bg / contact@rdf.bg
@@ -64,12 +64,12 @@ typedef void(*LOGCB)(const char *);
 
 
 	sdaiUNICODE
-		this will convert all internal strings from/too unicode, the internal representation and what is written to the IFC file is mapped
+		this will convert all internal strings from/too unicode, the internal representation and what is written to the STEP file is mapped
 			"\" will be converted into "\\" to enable basic parses to still interpret file paths
 			"'" will be converted to \X1\hh\X0\ or \X2\00hh\X0\ to prevent basic interpreters to read files with strings containing these characters
 
 	sdaiSTRING
-		this will leave all information as is in the IFC file, the rules are that char's ( int ) 32 to 126 (inclusive) will be kept
+		this will leave all information as is in the STEP file, the rules are that char's ( int ) 32 to 126 (inclusive) will be kept
 		all other strings will be converted to \X1\hh\X0\ or \X2\00hh\X0\		*/
 
 
@@ -236,7 +236,7 @@ enum class enum_validation_status : unsigned char
 #endif
 
 //
-//		SetSPFFHeader                                           (https://rdf.bg/ifcdoc/CP64/SetSPFFHeader.html)
+//		SetSPFFHeader                                           (https://rdf.bg/stepdoc/CP64/SetSPFFHeader.html)
 //				SdaiModel				model								IN
 //				const char				* description						IN
 //				const char				* implementationLevel				IN
@@ -307,7 +307,7 @@ static	inline	void	SetSPFFHeader(
 #endif
 
 //
-//		SetSPFFHeaderItem                                       (https://rdf.bg/ifcdoc/CP64/SetSPFFHeaderItem.html)
+//		SetSPFFHeaderItem                                       (https://rdf.bg/stepdoc/CP64/SetSPFFHeaderItem.html)
 //				SdaiModel				model								IN
 //				int_t					itemIndex							IN
 //				int_t					itemSubIndex						IN
@@ -411,7 +411,7 @@ static	inline	int_t	SetSPFFHeaderItem(
 #endif
 
 //
-//		GetSPFFHeaderItem                                       (https://rdf.bg/ifcdoc/CP64/GetSPFFHeaderItem.html)
+//		GetSPFFHeaderItem                                       (https://rdf.bg/stepdoc/CP64/GetSPFFHeaderItem.html)
 //				SdaiModel				model								IN
 //				int_t					itemIndex							IN
 //				int_t					itemSubIndex						IN
@@ -515,7 +515,7 @@ static	inline	int_t	GetSPFFHeaderItem(
 #endif
 
 //
-//		GetDateTime                                             (https://rdf.bg/ifcdoc/CP64/GetDateTime.html)
+//		GetDateTime                                             (https://rdf.bg/stepdoc/CP64/GetDateTime.html)
 //				SdaiModel				model								IN
 //				const char				** dateTimeStamp					IN / OUT
 //
@@ -562,7 +562,7 @@ static	inline	const char	* GetDateTime(
 #endif
 
 //
-//		GetLibraryIdentifier                                    (https://rdf.bg/ifcdoc/CP64/GetLibraryIdentifier.html)
+//		GetLibraryIdentifier                                    (https://rdf.bg/stepdoc/CP64/GetLibraryIdentifier.html)
 //				const char				** libraryIdentifier				IN / OUT
 //
 //				const char				* returns							OUT
@@ -603,7 +603,7 @@ static	inline	const char	* GetLibraryIdentifier(
 #endif
 
 //
-//		GetSchemaName                                           (https://rdf.bg/ifcdoc/CP64/GetSchemaName.html)
+//		GetSchemaName                                           (https://rdf.bg/stepdoc/CP64/GetSchemaName.html)
 //				SdaiModel				model								IN
 //				SdaiString				* schemaName						IN / OUT
 //
@@ -650,7 +650,7 @@ static	inline	SdaiString	GetSchemaName(
 #endif
 
 //
-//		engiSetMappingSupport                                   (https://rdf.bg/ifcdoc/CP64/engiSetMappingSupport.html)
+//		engiSetMappingSupport                                   (https://rdf.bg/stepdoc/CP64/engiSetMappingSupport.html)
 //				SdaiEntity				entity								IN
 //				bool					enable								IN
 //
@@ -664,7 +664,7 @@ bool			DECL STDC	engiSetMappingSupport(
 								);
 
 //
-//		engiGetMappingSupport                                   (https://rdf.bg/ifcdoc/CP64/engiGetMappingSupport.html)
+//		engiGetMappingSupport                                   (https://rdf.bg/stepdoc/CP64/engiGetMappingSupport.html)
 //				SdaiEntity				entity								IN
 //
 //				bool					returns								OUT
@@ -680,7 +680,7 @@ bool			DECL STDC	engiGetMappingSupport(
 //
 
 //
-//		sdaiCreateModelBN                                       (https://rdf.bg/ifcdoc/CP64/sdaiCreateModelBN.html)
+//		sdaiCreateModelBN                                       (https://rdf.bg/stepdoc/CP64/sdaiCreateModelBN.html)
 //				SdaiRep					repository							IN
 //				SdaiString				fileName							IN
 //				SdaiString				schemaName							IN
@@ -731,8 +731,8 @@ static	inline	SdaiModel	sdaiCreateModelBN(
 
 	//	HEADER;
 	//	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
-	//	FILE_NAME('Header example.ifc', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
-	//	FILE_SCHEMA(('IFC4X3_ADD2'));
+	//	FILE_NAME('Header example.stp', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'STEP Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
+	//	FILE_SCHEMA(('Ap242_managed_model_based_3d_engineering_mim_lf'));
 	//	ENDSEC;
 
 	//  set Description
@@ -742,7 +742,7 @@ static	inline	SdaiModel	sdaiCreateModelBN(
 	SetSPFFHeaderItem(model, 1, 0, sdaiSTRING, "2;1");
 
 	//  set Name
-	//SetSPFFHeaderItem(model, 2, 0, sdaiSTRING, "Header example.ifc");
+	//SetSPFFHeaderItem(model, 2, 0, sdaiSTRING, "Header example.stp");
 
 	//  set Time Stamp
 	SetSPFFHeaderItem(model, 3, 0, sdaiSTRING, GetDateTime(model));			//	'2099-12-31T23:59:59'
@@ -754,7 +754,7 @@ static	inline	SdaiModel	sdaiCreateModelBN(
 	//SetSPFFHeaderItem(model, 5, 0, sdaiSTRING, "RDF Ltd.");
 
 	//	set Preprocessor Version
-	SetSPFFHeaderItem(model, 6, 0, sdaiSTRING, GetLibraryIdentifier());		//	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
+	SetSPFFHeaderItem(model, 6, 0, sdaiSTRING, GetLibraryIdentifier());		//	'STEP Engine Library, revision 9999, 2099-12-31T23:59:59'
 
 	//  set Originating System
 	//SetSPFFHeaderItem(model, 7, 0, sdaiSTRING, "Company - Application - 1.0.0.0");
@@ -763,7 +763,7 @@ static	inline	SdaiModel	sdaiCreateModelBN(
 	SetSPFFHeaderItem(model, 8, 0, sdaiSTRING, "none");
 
 	//	set File Schema
-	SetSPFFHeaderItem(model, 9, 0, sdaiSTRING, GetSchemaName(model));		//	'IFC4X3_ADD2'
+	SetSPFFHeaderItem(model, 9, 0, sdaiSTRING, GetSchemaName(model));		//	'Ap242_managed_model_based_3d_engineering_mim_lf'
 
 	return	model;
 }
@@ -784,7 +784,7 @@ static	inline	SdaiModel	sdaiCreateModelBN(
 #endif
 
 //
-//		sdaiCreateModelBNUnicode                                (https://rdf.bg/ifcdoc/CP64/sdaiCreateModelBNUnicode.html)
+//		sdaiCreateModelBNUnicode                                (https://rdf.bg/stepdoc/CP64/sdaiCreateModelBNUnicode.html)
 //				SdaiRep					repository							IN
 //				const wchar_t			* fileName							IN
 //				const wchar_t			* schemaName						IN
@@ -835,8 +835,8 @@ static	inline	SdaiModel	sdaiCreateModelBNUnicode(
 
 	//	HEADER;
 	//	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
-	//	FILE_NAME('Header example.ifc', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
-	//	FILE_SCHEMA(('IFC4X3_ADD2'));
+	//	FILE_NAME('Header example.stp', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'STEP Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
+	//	FILE_SCHEMA(('Ap242_managed_model_based_3d_engineering_mim_lf'));
 	//	ENDSEC;
 
 	//  set Description
@@ -846,7 +846,7 @@ static	inline	SdaiModel	sdaiCreateModelBNUnicode(
 	SetSPFFHeaderItem(model, 1, 0, sdaiUNICODE, L"2;1");
 
 	//  set Name
-	//SetSPFFHeaderItem(model, 2, 0, sdaiUNICODE, L"Header example.ifc");
+	//SetSPFFHeaderItem(model, 2, 0, sdaiUNICODE, L"Header example.stp");
 
 	//  set Time Stamp
 	SetSPFFHeaderItem(model, 3, 0, sdaiSTRING, GetDateTime(model));			//	'2099-12-31T23:59:59'
@@ -858,7 +858,7 @@ static	inline	SdaiModel	sdaiCreateModelBNUnicode(
 	//SetSPFFHeaderItem(model, 5, 0, sdaiUNICODE, L"RDF Ltd.");
 
 	//	set Preprocessor Version
-	SetSPFFHeaderItem(model, 6, 0, sdaiSTRING, GetLibraryIdentifier());		//	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
+	SetSPFFHeaderItem(model, 6, 0, sdaiSTRING, GetLibraryIdentifier());		//	'STEP Engine Library, revision 9999, 2099-12-31T23:59:59'
 
 	//  set Originating System
 	//SetSPFFHeaderItem(model, 7, 0, sdaiUNICODE, L"Company - Application - 1.0.0.0");
@@ -867,7 +867,7 @@ static	inline	SdaiModel	sdaiCreateModelBNUnicode(
 	SetSPFFHeaderItem(model, 8, 0, sdaiUNICODE, L"none");
 
 	//	set File Schema
-	SetSPFFHeaderItem(model, 9, 0, sdaiSTRING, GetSchemaName(model));		//	'IFC4X3_ADD2'
+	SetSPFFHeaderItem(model, 9, 0, sdaiSTRING, GetSchemaName(model));		//	'Ap242_managed_model_based_3d_engineering_mim_lf'
 
 	return	model;
 }
@@ -888,7 +888,7 @@ static	inline	SdaiModel	sdaiCreateModelBNUnicode(
 #endif
 
 //
-//		sdaiOpenModelBN                                         (https://rdf.bg/ifcdoc/CP64/sdaiOpenModelBN.html)
+//		sdaiOpenModelBN                                         (https://rdf.bg/stepdoc/CP64/sdaiOpenModelBN.html)
 //				SdaiRep					repository							IN
 //				SdaiString				fileName							IN
 //				SdaiString				schemaName							IN
@@ -929,7 +929,7 @@ static	inline	SdaiModel	sdaiOpenModelBN(
 #endif
 
 //
-//		sdaiOpenModelBNUnicode                                  (https://rdf.bg/ifcdoc/CP64/sdaiOpenModelBNUnicode.html)
+//		sdaiOpenModelBNUnicode                                  (https://rdf.bg/stepdoc/CP64/sdaiOpenModelBNUnicode.html)
 //				SdaiRep					repository							IN
 //				const wchar_t			* fileName							IN
 //				const wchar_t			* schemaName						IN
@@ -970,7 +970,7 @@ static	inline	SdaiModel	sdaiOpenModelBNUnicode(
 #endif
 
 //
-//		engiOpenModelByStream                                   (https://rdf.bg/ifcdoc/CP64/engiOpenModelByStream.html)
+//		engiOpenModelByStream                                   (https://rdf.bg/stepdoc/CP64/engiOpenModelByStream.html)
 //				SdaiRep					repository							IN
 //				const void				* callback							IN
 //				SdaiString				schemaName							IN
@@ -1011,7 +1011,7 @@ static	inline	SdaiModel	engiOpenModelByStream(
 #endif
 
 //
-//		engiOpenModelByArray                                    (https://rdf.bg/ifcdoc/CP64/engiOpenModelByArray.html)
+//		engiOpenModelByArray                                    (https://rdf.bg/stepdoc/CP64/engiOpenModelByArray.html)
 //				SdaiRep					repository							IN
 //				const unsigned char		* content							IN
 //				int_t					size								IN
@@ -1072,7 +1072,7 @@ static	inline	SdaiModel	engiOpenModelByArray(
 #endif
 
 //
-//		sdaiSaveModelBN                                         (https://rdf.bg/ifcdoc/CP64/sdaiSaveModelBN.html)
+//		sdaiSaveModelBN                                         (https://rdf.bg/stepdoc/CP64/sdaiSaveModelBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				fileName							IN
 //
@@ -1107,7 +1107,7 @@ static	inline	void	sdaiSaveModelBN(
 #endif
 
 //
-//		sdaiSaveModelBNUnicode                                  (https://rdf.bg/ifcdoc/CP64/sdaiSaveModelBNUnicode.html)
+//		sdaiSaveModelBNUnicode                                  (https://rdf.bg/stepdoc/CP64/sdaiSaveModelBNUnicode.html)
 //				SdaiModel				model								IN
 //				const wchar_t			* fileName							IN
 //
@@ -1142,7 +1142,7 @@ static	inline	void	sdaiSaveModelBNUnicode(
 #endif
 
 //
-//		engiSaveModelByStream                                   (https://rdf.bg/ifcdoc/CP64/engiSaveModelByStream.html)
+//		engiSaveModelByStream                                   (https://rdf.bg/stepdoc/CP64/engiSaveModelByStream.html)
 //				SdaiModel				model								IN
 //				const void				* callback							IN
 //				int_t					size								IN
@@ -1158,7 +1158,7 @@ void			DECL STDC	engiSaveModelByStream(
 								);
 
 //
-//		engiSaveModelByArray                                    (https://rdf.bg/ifcdoc/CP64/engiSaveModelByArray.html)
+//		engiSaveModelByArray                                    (https://rdf.bg/stepdoc/CP64/engiSaveModelByArray.html)
 //				SdaiModel				model								IN
 //				unsigned char			* content							IN / OUT
 //				int_t					* size								IN / OUT
@@ -1174,7 +1174,7 @@ void			DECL STDC	engiSaveModelByArray(
 								);
 
 //
-//		sdaiSaveModelAsXmlBN                                    (https://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsXmlBN.html)
+//		sdaiSaveModelAsXmlBN                                    (https://rdf.bg/stepdoc/CP64/sdaiSaveModelAsXmlBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				fileName							IN
 //
@@ -1209,7 +1209,7 @@ static	inline	void	sdaiSaveModelAsXmlBN(
 #endif
 
 //
-//		sdaiSaveModelAsXmlBNUnicode                             (https://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsXmlBNUnicode.html)
+//		sdaiSaveModelAsXmlBNUnicode                             (https://rdf.bg/stepdoc/CP64/sdaiSaveModelAsXmlBNUnicode.html)
 //				SdaiModel				model								IN
 //				const wchar_t			* fileName							IN
 //
@@ -1244,7 +1244,7 @@ static	inline	void	sdaiSaveModelAsXmlBNUnicode(
 #endif
 
 //
-//		sdaiSaveModelAsSimpleXmlBN                              (https://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsSimpleXmlBN.html)
+//		sdaiSaveModelAsSimpleXmlBN                              (https://rdf.bg/stepdoc/CP64/sdaiSaveModelAsSimpleXmlBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				fileName							IN
 //
@@ -1279,7 +1279,7 @@ static	inline	void	sdaiSaveModelAsSimpleXmlBN(
 #endif
 
 //
-//		sdaiSaveModelAsSimpleXmlBNUnicode                       (https://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsSimpleXmlBNUnicode.html)
+//		sdaiSaveModelAsSimpleXmlBNUnicode                       (https://rdf.bg/stepdoc/CP64/sdaiSaveModelAsSimpleXmlBNUnicode.html)
 //				SdaiModel				model								IN
 //				const wchar_t			* fileName							IN
 //
@@ -1314,7 +1314,7 @@ static	inline	void	sdaiSaveModelAsSimpleXmlBNUnicode(
 #endif
 
 //
-//		sdaiSaveModelAsJsonBN                                   (https://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsJsonBN.html)
+//		sdaiSaveModelAsJsonBN                                   (https://rdf.bg/stepdoc/CP64/sdaiSaveModelAsJsonBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				fileName							IN
 //
@@ -1349,7 +1349,7 @@ static	inline	void	sdaiSaveModelAsJsonBN(
 #endif
 
 //
-//		sdaiSaveModelAsJsonBNUnicode                            (https://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsJsonBNUnicode.html)
+//		sdaiSaveModelAsJsonBNUnicode                            (https://rdf.bg/stepdoc/CP64/sdaiSaveModelAsJsonBNUnicode.html)
 //				SdaiModel				model								IN
 //				const wchar_t			* fileName							IN
 //
@@ -1384,7 +1384,7 @@ static	inline	void	sdaiSaveModelAsJsonBNUnicode(
 #endif
 
 //
-//		engiSaveSchemaBN                                        (https://rdf.bg/ifcdoc/CP64/engiSaveSchemaBN.html)
+//		engiSaveSchemaBN                                        (https://rdf.bg/stepdoc/CP64/engiSaveSchemaBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				filePath							IN
 //
@@ -1419,7 +1419,7 @@ static	inline	bool	engiSaveSchemaBN(
 #endif
 
 //
-//		engiSaveSchemaBNUnicode                                 (https://rdf.bg/ifcdoc/CP64/engiSaveSchemaBNUnicode.html)
+//		engiSaveSchemaBNUnicode                                 (https://rdf.bg/stepdoc/CP64/engiSaveSchemaBNUnicode.html)
 //				SdaiModel				model								IN
 //				const wchar_t			* filePath							IN
 //
@@ -1454,7 +1454,7 @@ static	inline	bool	engiSaveSchemaBNUnicode(
 #endif
 
 //
-//		sdaiCloseModel                                          (https://rdf.bg/ifcdoc/CP64/sdaiCloseModel.html)
+//		sdaiCloseModel                                          (https://rdf.bg/stepdoc/CP64/sdaiCloseModel.html)
 //				SdaiModel				model								IN
 //
 //				void					returns
@@ -1469,7 +1469,7 @@ void			DECL STDC	sdaiCloseModel(
 								);
 
 //
-//		setPrecisionDoubleExport                                (https://rdf.bg/ifcdoc/CP64/setPrecisionDoubleExport.html)
+//		setPrecisionDoubleExport                                (https://rdf.bg/stepdoc/CP64/setPrecisionDoubleExport.html)
 //				SdaiModel				model								IN
 //				int_t					precisionCap						IN
 //				int_t					precisionRound						IN
@@ -1491,7 +1491,7 @@ void			DECL STDC	setPrecisionDoubleExport(
 //
 
 //
-//		engiGetNextTypeDeclarationIterator                      (https://rdf.bg/ifcdoc/CP64/engiGetNextTypeDeclarationIterator.html)
+//		engiGetNextTypeDeclarationIterator                      (https://rdf.bg/stepdoc/CP64/engiGetNextTypeDeclarationIterator.html)
 //				SdaiModel				model								IN
 //				SchemaTypeIterator		iterator							IN
 //
@@ -1509,7 +1509,7 @@ SchemaTypeIterator	DECL STDC	engiGetNextTypeDeclarationIterator(
 								);
 
 //
-//		engiGetTypeDeclarationFromIterator                      (https://rdf.bg/ifcdoc/CP64/engiGetTypeDeclarationFromIterator.html)
+//		engiGetTypeDeclarationFromIterator                      (https://rdf.bg/stepdoc/CP64/engiGetTypeDeclarationFromIterator.html)
 //				SdaiModel				model								IN
 //				SchemaTypeIterator		iterator							IN
 //
@@ -1526,7 +1526,7 @@ SchemaTypeDecl	DECL STDC	engiGetTypeDeclarationFromIterator(
 								);
 
 //
-//		engiGetSchemaScriptDeclarationByIterator                (https://rdf.bg/ifcdoc/CP64/engiGetSchemaScriptDeclarationByIterator.html)
+//		engiGetSchemaScriptDeclarationByIterator                (https://rdf.bg/stepdoc/CP64/engiGetSchemaScriptDeclarationByIterator.html)
 //				SdaiModel				model								IN
 //				ExpressScript			prev								IN
 //
@@ -1543,7 +1543,7 @@ ExpressScript	DECL STDC	engiGetSchemaScriptDeclarationByIterator(
 								);
 
 //
-//		engiGetDeclarationType                                  (https://rdf.bg/ifcdoc/CP64/engiGetDeclarationType.html)
+//		engiGetDeclarationType                                  (https://rdf.bg/stepdoc/CP64/engiGetDeclarationType.html)
 //				SchemaDecl				declaration							IN
 //
 //				enum_express_declaration	returns								OUT
@@ -1564,7 +1564,7 @@ enum_express_declaration	DECL STDC	engiGetDeclarationType(
 								);
 
 //
-//		engiGetEnumerationElement                               (https://rdf.bg/ifcdoc/CP64/engiGetEnumerationElement.html)
+//		engiGetEnumerationElement                               (https://rdf.bg/stepdoc/CP64/engiGetEnumerationElement.html)
 //				SchemaDecl				enumeration							IN
 //				SdaiInteger				index								IN
 //
@@ -1579,7 +1579,7 @@ SdaiString		DECL STDC	engiGetEnumerationElement(
 								);
 
 //
-//		engiGetSelectElement                                    (https://rdf.bg/ifcdoc/CP64/engiGetSelectElement.html)
+//		engiGetSelectElement                                    (https://rdf.bg/stepdoc/CP64/engiGetSelectElement.html)
 //				SchemaDecl				select								IN
 //				SdaiInteger				index								IN
 //
@@ -1594,7 +1594,7 @@ SchemaDecl		DECL STDC	engiGetSelectElement(
 								);
 
 //
-//		engiGetDefinedType                                      (https://rdf.bg/ifcdoc/CP64/engiGetDefinedType.html)
+//		engiGetDefinedType                                      (https://rdf.bg/stepdoc/CP64/engiGetDefinedType.html)
 //				SchemaDecl				definedType							IN
 //				SchemaDecl				* referencedDeclaration				IN / OUT
 //				SchemaAggr				* aggregationDefinition				IN / OUT
@@ -1610,7 +1610,7 @@ enum_express_attr_type	DECL STDC	engiGetDefinedType(
 								);
 
 //
-//		engiGetScriptText                                       (https://rdf.bg/ifcdoc/CP64/engiGetScriptText.html)
+//		engiGetScriptText                                       (https://rdf.bg/stepdoc/CP64/engiGetScriptText.html)
 //				ExpressScript			declaration							IN
 //				SdaiString				* label								IN / OUT
 //				SdaiString				* text								IN / OUT
@@ -1649,7 +1649,7 @@ static	inline	void	engiGetScriptText(
 #endif
 
 //
-//		engiEvaluateScriptExpression                            (https://rdf.bg/ifcdoc/CP64/engiEvaluateScriptExpression.html)
+//		engiEvaluateScriptExpression                            (https://rdf.bg/stepdoc/CP64/engiEvaluateScriptExpression.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				ExpressScript			expression							IN
@@ -1670,7 +1670,7 @@ void			DECL * STDC	engiEvaluateScriptExpression(
 								);
 
 //
-//		sdaiGetEntity                                           (https://rdf.bg/ifcdoc/CP64/sdaiGetEntity.html)
+//		sdaiGetEntity                                           (https://rdf.bg/stepdoc/CP64/sdaiGetEntity.html)
 //				SdaiModel				model								IN
 //				SdaiString				entityName							IN
 //
@@ -1705,7 +1705,7 @@ static	inline	SdaiEntity	sdaiGetEntity(
 #endif
 
 //
-//		sdaiGetComplexEntity                                    (https://rdf.bg/ifcdoc/CP64/sdaiGetComplexEntity.html)
+//		sdaiGetComplexEntity                                    (https://rdf.bg/stepdoc/CP64/sdaiGetComplexEntity.html)
 //				SdaiModel				model								IN
 //				SdaiNPL					entityList							IN
 //
@@ -1719,7 +1719,7 @@ SdaiEntity		DECL STDC	sdaiGetComplexEntity(
 								);
 
 //
-//		sdaiGetComplexEntityBN                                  (https://rdf.bg/ifcdoc/CP64/sdaiGetComplexEntityBN.html)
+//		sdaiGetComplexEntityBN                                  (https://rdf.bg/stepdoc/CP64/sdaiGetComplexEntityBN.html)
 //				SdaiModel				model								IN
 //				SdaiInteger				nameNumber							IN
 //				SdaiString				* nameVector						IN
@@ -1758,7 +1758,7 @@ static	inline	SdaiEntity	sdaiGetComplexEntityBN(
 #endif
 
 //
-//		engiGetEntityModel                                      (https://rdf.bg/ifcdoc/CP64/engiGetEntityModel.html)
+//		engiGetEntityModel                                      (https://rdf.bg/stepdoc/CP64/engiGetEntityModel.html)
 //				SdaiEntity				entity								IN
 //
 //				SdaiModel				returns								OUT
@@ -1770,7 +1770,7 @@ SdaiModel		DECL STDC	engiGetEntityModel(
 								);
 
 //
-//		engiGetAttrIndex                                        (https://rdf.bg/ifcdoc/CP64/engiGetAttrIndex.html)
+//		engiGetAttrIndex                                        (https://rdf.bg/stepdoc/CP64/engiGetAttrIndex.html)
 //				SdaiAttr				attribute							IN
 //
 //				int_t					returns								OUT
@@ -1783,7 +1783,7 @@ int_t			DECL STDC	engiGetAttrIndex(
 								);
 
 //
-//		engiGetAttrIndexBN                                      (https://rdf.bg/ifcdoc/CP64/engiGetAttrIndexBN.html)
+//		engiGetAttrIndexBN                                      (https://rdf.bg/stepdoc/CP64/engiGetAttrIndexBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -1827,7 +1827,7 @@ static	inline	int_t	engiGetAttrIndexBN(
 #endif
 
 //
-//		engiGetAttrIndexEx                                      (https://rdf.bg/ifcdoc/CP64/engiGetAttrIndexEx.html)
+//		engiGetAttrIndexEx                                      (https://rdf.bg/stepdoc/CP64/engiGetAttrIndexEx.html)
 //				SdaiAttr				attribute							IN
 //				bool					countedWithParents					IN
 //				bool					countedWithInverse					IN
@@ -1844,7 +1844,7 @@ int_t			DECL STDC	engiGetAttrIndexEx(
 								);
 
 //
-//		engiGetAttrIndexExBN                                    (https://rdf.bg/ifcdoc/CP64/engiGetAttrIndexExBN.html)
+//		engiGetAttrIndexExBN                                    (https://rdf.bg/stepdoc/CP64/engiGetAttrIndexExBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //				bool					countedWithParents					IN
@@ -1898,7 +1898,7 @@ static	inline	int_t	engiGetAttrIndexExBN(
 #endif
 
 //
-//		engiGetAttrNameByIndex                                  (https://rdf.bg/ifcdoc/CP64/engiGetAttrNameByIndex.html)
+//		engiGetAttrNameByIndex                                  (https://rdf.bg/stepdoc/CP64/engiGetAttrNameByIndex.html)
 //				SdaiEntity				entity								IN
 //				SdaiInteger				index								IN
 //				SdaiPrimitiveType		valueType							IN
@@ -1957,7 +1957,7 @@ static	inline	SdaiString	engiGetAttrNameByIndex(
 #endif
 
 //
-//		engiGetAttrTypeByIndex                                  (https://rdf.bg/ifcdoc/CP64/engiGetAttrTypeByIndex.html)
+//		engiGetAttrTypeByIndex                                  (https://rdf.bg/stepdoc/CP64/engiGetAttrTypeByIndex.html)
 //				SdaiEntity				entity								IN
 //				SdaiInteger				index								IN
 //				SdaiPrimitiveType		* attributeType						IN / OUT
@@ -1974,7 +1974,7 @@ void			DECL STDC	engiGetAttrTypeByIndex(
 								);
 
 //
-//		engiGetEntityCount                                      (https://rdf.bg/ifcdoc/CP64/engiGetEntityCount.html)
+//		engiGetEntityCount                                      (https://rdf.bg/stepdoc/CP64/engiGetEntityCount.html)
 //				SdaiModel				model								IN
 //
 //				SdaiInteger				returns								OUT
@@ -1986,7 +1986,7 @@ SdaiInteger		DECL STDC	engiGetEntityCount(
 								);
 
 //
-//		engiGetEntityElement                                    (https://rdf.bg/ifcdoc/CP64/engiGetEntityElement.html)
+//		engiGetEntityElement                                    (https://rdf.bg/stepdoc/CP64/engiGetEntityElement.html)
 //				SdaiModel				model								IN
 //				SdaiInteger				index								IN
 //
@@ -2000,7 +2000,7 @@ SdaiEntity		DECL STDC	engiGetEntityElement(
 								);
 
 //
-//		sdaiGetEntityExtent                                     (https://rdf.bg/ifcdoc/CP64/sdaiGetEntityExtent.html)
+//		sdaiGetEntityExtent                                     (https://rdf.bg/stepdoc/CP64/sdaiGetEntityExtent.html)
 //				SdaiModel				model								IN
 //				SdaiEntity				entity								IN
 //
@@ -2014,7 +2014,7 @@ SdaiAggr		DECL STDC	sdaiGetEntityExtent(
 								);
 
 //
-//		sdaiGetEntityExtentBN                                   (https://rdf.bg/ifcdoc/CP64/sdaiGetEntityExtentBN.html)
+//		sdaiGetEntityExtentBN                                   (https://rdf.bg/stepdoc/CP64/sdaiGetEntityExtentBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				entityName							IN
 //
@@ -2058,7 +2058,7 @@ static	inline	SdaiAggr	sdaiGetEntityExtentBN(
 #endif
 
 //
-//		engiGetEntityName                                       (https://rdf.bg/ifcdoc/CP64/engiGetEntityName.html)
+//		engiGetEntityName                                       (https://rdf.bg/stepdoc/CP64/engiGetEntityName.html)
 //				SdaiEntity				entity								IN
 //				SdaiPrimitiveType		valueType							IN
 //				SdaiString				* entityName						IN / OUT
@@ -2111,7 +2111,7 @@ static	inline	SdaiString	engiGetEntityName(
 #endif
 
 //
-//		engiGetEntityNoAttributes                               (https://rdf.bg/ifcdoc/CP64/engiGetEntityNoAttributes.html)
+//		engiGetEntityNoAttributes                               (https://rdf.bg/stepdoc/CP64/engiGetEntityNoAttributes.html)
 //				SdaiEntity				entity								IN
 //
 //				int_t					returns								OUT
@@ -2123,7 +2123,7 @@ int_t			DECL STDC	engiGetEntityNoAttributes(
 								);
 
 //
-//		engiGetEntityNoAttributesEx                             (https://rdf.bg/ifcdoc/CP64/engiGetEntityNoAttributesEx.html)
+//		engiGetEntityNoAttributesEx                             (https://rdf.bg/stepdoc/CP64/engiGetEntityNoAttributesEx.html)
 //				SdaiEntity				entity								IN
 //				bool					includeParent						IN
 //				bool					includeInverse						IN
@@ -2139,7 +2139,7 @@ int_t			DECL STDC	engiGetEntityNoAttributesEx(
 								);
 
 //
-//		engiGetEntityParent                                     (https://rdf.bg/ifcdoc/CP64/engiGetEntityParent.html)
+//		engiGetEntityParent                                     (https://rdf.bg/stepdoc/CP64/engiGetEntityParent.html)
 //				SdaiEntity				entity								IN
 //
 //				SdaiEntity				returns								OUT
@@ -2151,7 +2151,7 @@ SdaiEntity		DECL STDC	engiGetEntityParent(
 								);
 
 //
-//		engiGetEntityNoParents                                  (https://rdf.bg/ifcdoc/CP64/engiGetEntityNoParents.html)
+//		engiGetEntityNoParents                                  (https://rdf.bg/stepdoc/CP64/engiGetEntityNoParents.html)
 //				SdaiEntity				entity								IN
 //
 //				int_t					returns								OUT
@@ -2163,7 +2163,7 @@ int_t			DECL STDC	engiGetEntityNoParents(
 								);
 
 //
-//		engiGetEntityParentEx                                   (https://rdf.bg/ifcdoc/CP64/engiGetEntityParentEx.html)
+//		engiGetEntityParentEx                                   (https://rdf.bg/stepdoc/CP64/engiGetEntityParentEx.html)
 //				SdaiEntity				entity								IN
 //				SdaiInteger				index								IN
 //
@@ -2177,7 +2177,7 @@ SdaiEntity		DECL STDC	engiGetEntityParentEx(
 								);
 
 //
-//		engiGetAttrDerived                                      (https://rdf.bg/ifcdoc/CP64/engiGetAttrDerived.html)
+//		engiGetAttrDerived                                      (https://rdf.bg/stepdoc/CP64/engiGetAttrDerived.html)
 //				SdaiEntity				entity								IN
 //				const SdaiAttr			attribute							IN
 //
@@ -2191,7 +2191,7 @@ ExpressScript	DECL STDC	engiGetAttrDerived(
 								);
 
 //
-//		engiGetAttrDerivedBN                                    (https://rdf.bg/ifcdoc/CP64/engiGetAttrDerivedBN.html)
+//		engiGetAttrDerivedBN                                    (https://rdf.bg/stepdoc/CP64/engiGetAttrDerivedBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -2235,7 +2235,7 @@ static	inline	ExpressScript	engiGetAttrDerivedBN(
 #endif
 
 //
-//		engiIsAttrInverse                                       (https://rdf.bg/ifcdoc/CP64/engiIsAttrInverse.html)
+//		engiIsAttrInverse                                       (https://rdf.bg/stepdoc/CP64/engiIsAttrInverse.html)
 //				const SdaiAttr			attribute							IN
 //
 //				SdaiBoolean				returns								OUT
@@ -2247,7 +2247,7 @@ SdaiBoolean		DECL STDC	engiIsAttrInverse(
 								);
 
 //
-//		engiIsAttrInverseBN                                     (https://rdf.bg/ifcdoc/CP64/engiIsAttrInverseBN.html)
+//		engiIsAttrInverseBN                                     (https://rdf.bg/stepdoc/CP64/engiIsAttrInverseBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -2290,7 +2290,7 @@ static	inline	SdaiBoolean	engiIsAttrInverseBN(
 #endif
 
 //
-//		engiIsAttrOptional                                      (https://rdf.bg/ifcdoc/CP64/engiIsAttrOptional.html)
+//		engiIsAttrOptional                                      (https://rdf.bg/stepdoc/CP64/engiIsAttrOptional.html)
 //				const SdaiAttr			attribute							IN
 //
 //				SdaiBoolean				returns								OUT
@@ -2302,7 +2302,7 @@ SdaiBoolean		DECL STDC	engiIsAttrOptional(
 								);
 
 //
-//		engiIsAttrOptionalBN                                    (https://rdf.bg/ifcdoc/CP64/engiIsAttrOptionalBN.html)
+//		engiIsAttrOptionalBN                                    (https://rdf.bg/stepdoc/CP64/engiIsAttrOptionalBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -2345,7 +2345,7 @@ static	inline	SdaiBoolean	engiIsAttrOptionalBN(
 #endif
 
 //
-//		engiGetAttrDomainName                                   (https://rdf.bg/ifcdoc/CP64/engiGetAttrDomainName.html)
+//		engiGetAttrDomainName                                   (https://rdf.bg/stepdoc/CP64/engiGetAttrDomainName.html)
 //				const SdaiAttr			attribute							IN
 //				SdaiString				* domainName						IN / OUT
 //
@@ -2392,7 +2392,7 @@ static	inline	SdaiString	engiGetAttrDomainName(
 #endif
 
 //
-//		engiGetAttrDomainNameBN                                 (https://rdf.bg/ifcdoc/CP64/engiGetAttrDomainNameBN.html)
+//		engiGetAttrDomainNameBN                                 (https://rdf.bg/stepdoc/CP64/engiGetAttrDomainNameBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //				SdaiString				* domainName						IN / OUT
@@ -2467,7 +2467,7 @@ static	inline	SdaiString	engiGetAttrDomainNameBN(
 #endif
 
 //
-//		engiIsEntityAbstract                                    (https://rdf.bg/ifcdoc/CP64/engiIsEntityAbstract.html)
+//		engiIsEntityAbstract                                    (https://rdf.bg/stepdoc/CP64/engiIsEntityAbstract.html)
 //				SdaiEntity				entity								IN
 //
 //				int_t					returns								OUT
@@ -2479,7 +2479,7 @@ int_t			DECL STDC	engiIsEntityAbstract(
 								);
 
 //
-//		engiIsEntityAbstractBN                                  (https://rdf.bg/ifcdoc/CP64/engiIsEntityAbstractBN.html)
+//		engiIsEntityAbstractBN                                  (https://rdf.bg/stepdoc/CP64/engiIsEntityAbstractBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				entityName							IN
 //
@@ -2522,7 +2522,7 @@ static	inline	int_t	engiIsEntityAbstractBN(
 #endif
 
 //
-//		engiGetEnumerationValue                                 (https://rdf.bg/ifcdoc/CP64/engiGetEnumerationValue.html)
+//		engiGetEnumerationValue                                 (https://rdf.bg/stepdoc/CP64/engiGetEnumerationValue.html)
 //				const SdaiAttr			attribute							IN
 //				SdaiInteger				index								IN
 //				SdaiPrimitiveType		valueType							IN
@@ -2581,7 +2581,7 @@ static	inline	SdaiString	engiGetEnumerationValue(
 #endif
 
 //
-//		engiGetEntityAttributeByIterator                        (https://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeByIterator.html)
+//		engiGetEntityAttributeByIterator                        (https://rdf.bg/stepdoc/CP64/engiGetEntityAttributeByIterator.html)
 //				SdaiEntity				entity								IN
 //				SdaiAttr				prev								IN
 //
@@ -2599,7 +2599,7 @@ SdaiAttr		DECL STDC	engiGetEntityAttributeByIterator(
 								);
 
 //
-//		engiGetEntityAttributeByIndex                           (https://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeByIndex.html)
+//		engiGetEntityAttributeByIndex                           (https://rdf.bg/stepdoc/CP64/engiGetEntityAttributeByIndex.html)
 //				SdaiEntity				entity								IN
 //				SdaiAggrIndex			index								IN
 //				bool					countedWithParents					IN
@@ -2617,7 +2617,7 @@ SdaiAttr		DECL STDC	engiGetEntityAttributeByIndex(
 								);
 
 //
-//		engiGetAggregationDefinition                            (https://rdf.bg/ifcdoc/CP64/engiGetAggregationDefinition.html)
+//		engiGetAggregationDefinition                            (https://rdf.bg/stepdoc/CP64/engiGetAggregationDefinition.html)
 //				SchemaAggr				aggregationDefinition				IN
 //				enum_express_aggr		* aggregationType					IN / OUT
 //				int_t					* cardinalityMin					IN / OUT
@@ -2641,7 +2641,7 @@ void			DECL STDC	engiGetAggregationDefinition(
 								);
 
 //
-//		engiGetEntityUniqueRuleByIterator                       (https://rdf.bg/ifcdoc/CP64/engiGetEntityUniqueRuleByIterator.html)
+//		engiGetEntityUniqueRuleByIterator                       (https://rdf.bg/stepdoc/CP64/engiGetEntityUniqueRuleByIterator.html)
 //				SdaiEntity				entity								IN
 //				UniqueRule				prev								IN
 //				SdaiString				* label								IN / OUT
@@ -2697,7 +2697,7 @@ static	inline	UniqueRule	engiGetEntityUniqueRuleByIterator(
 #endif
 
 //
-//		engiGetEntityUniqueRuleAttributeByIterator              (https://rdf.bg/ifcdoc/CP64/engiGetEntityUniqueRuleAttributeByIterator.html)
+//		engiGetEntityUniqueRuleAttributeByIterator              (https://rdf.bg/stepdoc/CP64/engiGetEntityUniqueRuleAttributeByIterator.html)
 //				UniqueRule				rule								IN
 //				SdaiString				prev								IN
 //				SdaiString				* domain							IN / OUT
@@ -2738,7 +2738,7 @@ static	inline	SdaiString	engiGetEntityUniqueRuleAttributeByIterator(
 #endif
 
 //
-//		engiGetEntityWhereRuleByIterator                        (https://rdf.bg/ifcdoc/CP64/engiGetEntityWhereRuleByIterator.html)
+//		engiGetEntityWhereRuleByIterator                        (https://rdf.bg/stepdoc/CP64/engiGetEntityWhereRuleByIterator.html)
 //				SchemaDecl				declaration							IN
 //				ExpressScript			prev								IN
 //				SdaiString				* label								IN / OUT
@@ -2800,7 +2800,7 @@ static	inline	ExpressScript	engiGetEntityWhereRuleByIterator(
 #endif
 
 //
-//		sdaiGetADBType                                          (https://rdf.bg/ifcdoc/CP64/sdaiGetADBType.html)
+//		sdaiGetADBType                                          (https://rdf.bg/stepdoc/CP64/sdaiGetADBType.html)
 //				const SdaiADB			ADB									IN
 //
 //				SdaiPrimitiveType		returns								OUT
@@ -2812,7 +2812,7 @@ SdaiPrimitiveType	DECL STDC	sdaiGetADBType(
 								);
 
 //
-//		sdaiGetADBTypePath                                      (https://rdf.bg/ifcdoc/CP64/sdaiGetADBTypePath.html)
+//		sdaiGetADBTypePath                                      (https://rdf.bg/stepdoc/CP64/sdaiGetADBTypePath.html)
 //				const SdaiADB			ADB									IN
 //				int_t					typeNameNumber						IN
 //
@@ -2826,7 +2826,7 @@ SdaiString		DECL STDC	sdaiGetADBTypePath(
 								);
 
 //
-//		sdaiGetADBValue                                         (https://rdf.bg/ifcdoc/CP64/sdaiGetADBValue.html)
+//		sdaiGetADBValue                                         (https://rdf.bg/stepdoc/CP64/sdaiGetADBValue.html)
 //				const SdaiADB			ADB									IN
 //				SdaiPrimitiveType		valueType							IN
 //				void					* value								IN / OUT
@@ -2847,7 +2847,7 @@ SdaiString		DECL STDC	sdaiGetADBTypePath(
 //	value argument (*value) for sdaiADB, sdaiAGGR, or sdaiINSTANCE or value argument itself for other types (it has no useful meaning for C#).
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiGetADBValue but valid for all get-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiGetADBValue but valid for all get-functions)
 //
 //	valueType				C/C++												C#
 //
@@ -2891,7 +2891,7 @@ SdaiString		DECL STDC	sdaiGetADBTypePath(
 //							SdaiADB adb = nullptr;	//	it is important to initialize
 //							sdaiGetADBValue (ADB, sdaiADB, &adb);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
 //
@@ -2923,7 +2923,7 @@ void			DECL * STDC	sdaiGetADBValue(
 								);
 
 //
-//		sdaiPutADBValue                                         (https://rdf.bg/ifcdoc/CP64/sdaiPutADBValue.html)
+//		sdaiPutADBValue                                         (https://rdf.bg/stepdoc/CP64/sdaiPutADBValue.html)
 //				const SdaiADB			ADB									IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -2936,7 +2936,7 @@ void			DECL * STDC	sdaiGetADBValue(
 //		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiPutADBValue but valid for all put-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiPutADBValue but valid for all put-functions)
 //
 //	valueType				C/C++														C#
 //
@@ -2967,7 +2967,7 @@ void			DECL * STDC	sdaiGetADBValue(
 //	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 //							sdaiPutADBValue (ADB, sdaiEXPRESSSTRING, val);				stepengine.sdaiPutADBValue (ADB, stepengine.sdaiEXPRESSSTRING, val);
 //
-//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");	int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
+//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "PRODUCT");	int_t val = stepengine.sdaiCreateInstanceBN (model, "PRODUCT");
 //							sdaiPutADBValue (ADB, sdaiINSTANCE, val);					stepengine.sdaiPutADBValue (ADB, stepengine.sdaiINSTANCE, val);
 //
 //	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);					int_t val = sdaiCreateAggr (inst, 0);
@@ -2976,11 +2976,11 @@ void			DECL * STDC	sdaiGetADBValue(
 //
 //	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
-//							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					stepengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
+//							sdaiPutADBTypePath (val, 1, "INTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiPutADBValue (ADB, sdaiADB, val);						stepengine.sdaiPutADBValue (ADB, stepengine.sdaiADB, val);	
 //							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
 //
@@ -3010,7 +3010,7 @@ void			DECL STDC	sdaiPutADBValue(
 								);
 
 //
-//		sdaiCreateEmptyADB                                      (https://rdf.bg/ifcdoc/CP64/sdaiCreateEmptyADB.html)
+//		sdaiCreateEmptyADB                                      (https://rdf.bg/stepdoc/CP64/sdaiCreateEmptyADB.html)
 //				SdaiADB					returns								OUT
 //
 //	Creates an empty ADB (Attribute Data Block).
@@ -3019,7 +3019,7 @@ SdaiADB			DECL STDC	sdaiCreateEmptyADB(
 								);
 
 //
-//		sdaiDeleteADB                                           (https://rdf.bg/ifcdoc/CP64/sdaiDeleteADB.html)
+//		sdaiDeleteADB                                           (https://rdf.bg/stepdoc/CP64/sdaiDeleteADB.html)
 //				const SdaiADB			ADB									IN
 //
 //				void					returns
@@ -3031,7 +3031,7 @@ void			DECL STDC	sdaiDeleteADB(
 								);
 
 //
-//		sdaiGetAggrByIndex                                      (https://rdf.bg/ifcdoc/CP64/sdaiGetAggrByIndex.html)
+//		sdaiGetAggrByIndex                                      (https://rdf.bg/stepdoc/CP64/sdaiGetAggrByIndex.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiAggrIndex			index								IN
 //				SdaiPrimitiveType		valueType							IN
@@ -3053,7 +3053,7 @@ void			DECL STDC	sdaiDeleteADB(
 //	value argument (*value) for sdaiADB, sdaiAGGR, or sdaiINSTANCE or value argument itself for other types (it has no useful meaning for C#).
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiGetAggrByIndex but valid for all get-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiGetAggrByIndex but valid for all get-functions)
 //
 //	valueType				C/C++																C#
 //
@@ -3097,7 +3097,7 @@ void			DECL STDC	sdaiDeleteADB(
 //							SdaiADB adb = nullptr;	//	it is important to initialize
 //							sdaiGetAggrByIndex (aggregate, index, sdaiADB, &adb);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
 //
@@ -3169,7 +3169,7 @@ static	inline	SdaiInstance	sdaiGetAggrByIndex(
 #endif
 
 //
-//		sdaiPutAggrByIndex                                      (https://rdf.bg/ifcdoc/CP64/sdaiPutAggrByIndex.html)
+//		sdaiPutAggrByIndex                                      (https://rdf.bg/stepdoc/CP64/sdaiPutAggrByIndex.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiAggrIndex			index								IN
 //				SdaiPrimitiveType		valueType							IN
@@ -3183,7 +3183,7 @@ static	inline	SdaiInstance	sdaiGetAggrByIndex(
 //		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiPutAggrByIndex but valid for all put-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiPutAggrByIndex but valid for all put-functions)
 //
 //	valueType				C/C++															C#
 //
@@ -3214,7 +3214,7 @@ static	inline	SdaiInstance	sdaiGetAggrByIndex(
 //	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";		string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 //							sdaiPutAggrByIndex (aggregate, index, sdaiEXPRESSSTRING, val);	stepengine.sdaiPutAggrByIndex (aggregate, index, stepengine.sdaiEXPRESSSTRING, val);
 //
-//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");		int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
+//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "PRODUCT");		int_t val = stepengine.sdaiCreateInstanceBN (model, "PRODUCT");
 //							sdaiPutAggrByIndex (aggregate, index, sdaiINSTANCE, val);		stepengine.sdaiPutAggrByIndex (aggregate, index, stepengine.sdaiINSTANCE, val);
 //
 //	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);						int_t val = sdaiCreateAggr (inst, 0);
@@ -3223,11 +3223,11 @@ static	inline	SdaiInstance	sdaiGetAggrByIndex(
 //
 //	sdaiADB					int_t integerValue = 123;										int_t integerValue = 123;	
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);		int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
-//							sdaiPutADBTypePath (val, 1, "IFCINTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
+//							sdaiPutADBTypePath (val, 1, "INTEGER");							stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiPutAggrByIndex (aggregate, index, sdaiADB, val);			stepengine.sdaiPutAggrByIndex (aggregate, index, stepengine.sdaiADB, val);	
 //							sdaiDeleteADB (val);											stepengine.sdaiDeleteADB (val);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
 //
@@ -3300,7 +3300,7 @@ static	inline	void	sdaiPutAggrByIndex(
 #endif
 
 //
-//		engiGetAggrType                                         (https://rdf.bg/ifcdoc/CP64/engiGetAggrType.html)
+//		engiGetAggrType                                         (https://rdf.bg/stepdoc/CP64/engiGetAggrType.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiPrimitiveType		* aggregateType						IN / OUT
 //
@@ -3314,7 +3314,7 @@ void			DECL STDC	engiGetAggrType(
 								);
 
 //
-//		engiGetAggrTypex                                        (https://rdf.bg/ifcdoc/CP64/engiGetAggrTypex.html)
+//		engiGetAggrTypex                                        (https://rdf.bg/stepdoc/CP64/engiGetAggrTypex.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiPrimitiveType		* aggregateType						IN / OUT
 //
@@ -3328,7 +3328,7 @@ void			DECL STDC	engiGetAggrTypex(
 								);
 
 //
-//		sdaiGetAttr                                             (https://rdf.bg/ifcdoc/CP64/sdaiGetAttr.html)
+//		sdaiGetAttr                                             (https://rdf.bg/stepdoc/CP64/sdaiGetAttr.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAttr			attribute							IN
 //				SdaiPrimitiveType		valueType							IN
@@ -3350,7 +3350,7 @@ void			DECL STDC	engiGetAggrTypex(
 //	value argument (*value) for sdaiADB, sdaiAGGR, or sdaiINSTANCE or value argument itself for other types (it has no useful meaning for C#).
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiGetAttr but valid for all get-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiGetAttr but valid for all get-functions)
 //
 //	valueType				C/C++															C#
 //
@@ -3394,7 +3394,7 @@ void			DECL STDC	engiGetAggrTypex(
 //							SdaiADB adb = nullptr;	//	it is important to initialize
 //							sdaiGetAttr (instance, attribute, sdaiADB, &adb);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
 //
@@ -3466,7 +3466,7 @@ static	inline	SdaiInstance	sdaiGetAttr(
 #endif
 
 //
-//		sdaiGetAttrBN                                           (https://rdf.bg/ifcdoc/CP64/sdaiGetAttrBN.html)
+//		sdaiGetAttrBN                                           (https://rdf.bg/stepdoc/CP64/sdaiGetAttrBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //				SdaiPrimitiveType		valueType							IN
@@ -3488,7 +3488,7 @@ static	inline	SdaiInstance	sdaiGetAttr(
 //	value argument (*value) for sdaiADB, sdaiAGGR, or sdaiINSTANCE or value argument itself for other types (it has no useful meaning for C#).
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiGetAttrBN but valid for all get-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiGetAttrBN but valid for all get-functions)
 //
 //	valueType				C/C++																C#
 //
@@ -3532,7 +3532,7 @@ static	inline	SdaiInstance	sdaiGetAttr(
 //							SdaiADB adb = nullptr;	//	it is important to initialize
 //							sdaiGetAttrBN (instance, "attrName", sdaiADB, &adb);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
 //
@@ -3662,7 +3662,7 @@ static	inline	SdaiInstance	sdaiGetAttrBN(
 #endif
 
 //
-//		sdaiGetAttrBNUnicode                                    (https://rdf.bg/ifcdoc/CP64/sdaiGetAttrBNUnicode.html)
+//		sdaiGetAttrBNUnicode                                    (https://rdf.bg/stepdoc/CP64/sdaiGetAttrBNUnicode.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //				unsigned char			* buffer							IN / OUT
@@ -3705,7 +3705,7 @@ static	inline	int_t	sdaiGetAttrBNUnicode(
 #endif
 
 //
-//		sdaiGetStringAttrBN                                     (https://rdf.bg/ifcdoc/CP64/sdaiGetStringAttrBN.html)
+//		sdaiGetStringAttrBN                                     (https://rdf.bg/stepdoc/CP64/sdaiGetStringAttrBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //
@@ -3757,7 +3757,7 @@ static	inline	char	* sdaiGetStringAttrBN(
 #endif
 
 //
-//		sdaiGetInstanceAttrBN                                   (https://rdf.bg/ifcdoc/CP64/sdaiGetInstanceAttrBN.html)
+//		sdaiGetInstanceAttrBN                                   (https://rdf.bg/stepdoc/CP64/sdaiGetInstanceAttrBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //
@@ -3809,7 +3809,7 @@ static	inline	SdaiInstance	sdaiGetInstanceAttrBN(
 #endif
 
 //
-//		sdaiGetAggregationAttrBN                                (https://rdf.bg/ifcdoc/CP64/sdaiGetAggregationAttrBN.html)
+//		sdaiGetAggregationAttrBN                                (https://rdf.bg/stepdoc/CP64/sdaiGetAggregationAttrBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //
@@ -3861,7 +3861,7 @@ static	inline	SdaiAggr	sdaiGetAggregationAttrBN(
 #endif
 
 //
-//		sdaiGetAttrDefinition                                   (https://rdf.bg/ifcdoc/CP64/sdaiGetAttrDefinition.html)
+//		sdaiGetAttrDefinition                                   (https://rdf.bg/stepdoc/CP64/sdaiGetAttrDefinition.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -3896,7 +3896,7 @@ static	inline	SdaiAttr	sdaiGetAttrDefinition(
 #endif
 
 //
-//		engiGetAttrTraits                                       (https://rdf.bg/ifcdoc/CP64/engiGetAttrTraits.html)
+//		engiGetAttrTraits                                       (https://rdf.bg/stepdoc/CP64/engiGetAttrTraits.html)
 //				const SdaiAttr			attribute							IN
 //				SdaiString				* name								IN / OUT
 //				SdaiEntity				* definingEntity					IN / OUT
@@ -3959,7 +3959,7 @@ static	inline	void	engiGetAttrTraits(
 #endif
 
 //
-//		engiGetAttrName                                         (https://rdf.bg/ifcdoc/CP64/engiGetAttrName.html)
+//		engiGetAttrName                                         (https://rdf.bg/stepdoc/CP64/engiGetAttrName.html)
 //				const SdaiAttr			attribute							IN
 //
 //				SdaiString				returns								OUT
@@ -3971,7 +3971,7 @@ SdaiString		DECL STDC	engiGetAttrName(
 								);
 
 //
-//		engiGetAttrDefiningEntity                               (https://rdf.bg/ifcdoc/CP64/engiGetAttrDefiningEntity.html)
+//		engiGetAttrDefiningEntity                               (https://rdf.bg/stepdoc/CP64/engiGetAttrDefiningEntity.html)
 //				const SdaiAttr			attribute							IN
 //
 //				SdaiEntity				returns								OUT
@@ -3983,7 +3983,7 @@ SdaiEntity		DECL STDC	engiGetAttrDefiningEntity(
 								);
 
 //
-//		engiIsAttrExplicit                                      (https://rdf.bg/ifcdoc/CP64/engiIsAttrExplicit.html)
+//		engiIsAttrExplicit                                      (https://rdf.bg/stepdoc/CP64/engiIsAttrExplicit.html)
 //				const SdaiAttr			attribute							IN
 //
 //				SdaiBoolean				returns								OUT
@@ -3995,7 +3995,7 @@ SdaiBoolean		DECL STDC	engiIsAttrExplicit(
 								);
 
 //
-//		engiIsAttrExplicitBN                                    (https://rdf.bg/ifcdoc/CP64/engiIsAttrExplicitBN.html)
+//		engiIsAttrExplicitBN                                    (https://rdf.bg/stepdoc/CP64/engiIsAttrExplicitBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -4030,7 +4030,7 @@ static	inline	SdaiBoolean	engiIsAttrExplicitBN(
 #endif
 
 //
-//		sdaiGetInstanceModel                                    (https://rdf.bg/ifcdoc/CP64/sdaiGetInstanceModel.html)
+//		sdaiGetInstanceModel                                    (https://rdf.bg/stepdoc/CP64/sdaiGetInstanceModel.html)
 //				SdaiInstance			instance							IN
 //
 //				SdaiModel				returns								OUT
@@ -4042,7 +4042,7 @@ SdaiModel		DECL STDC	sdaiGetInstanceModel(
 								);
 
 //
-//		sdaiGetInstanceType                                     (https://rdf.bg/ifcdoc/CP64/sdaiGetInstanceType.html)
+//		sdaiGetInstanceType                                     (https://rdf.bg/stepdoc/CP64/sdaiGetInstanceType.html)
 //				SdaiInstance			instance							IN
 //
 //				SdaiEntity				returns								OUT
@@ -4054,7 +4054,7 @@ SdaiEntity		DECL STDC	sdaiGetInstanceType(
 								);
 
 //
-//		sdaiGetMemberCount                                      (https://rdf.bg/ifcdoc/CP64/sdaiGetMemberCount.html)
+//		sdaiGetMemberCount                                      (https://rdf.bg/stepdoc/CP64/sdaiGetMemberCount.html)
 //				SdaiAggr				aggregate							IN
 //
 //				SdaiInteger				returns								OUT
@@ -4066,7 +4066,7 @@ SdaiInteger		DECL STDC	sdaiGetMemberCount(
 								);
 
 //
-//		sdaiIsKindOf                                            (https://rdf.bg/ifcdoc/CP64/sdaiIsKindOf.html)
+//		sdaiIsKindOf                                            (https://rdf.bg/stepdoc/CP64/sdaiIsKindOf.html)
 //				SdaiInstance			instance							IN
 //				SdaiEntity				entity								IN
 //
@@ -4080,7 +4080,7 @@ int_t			DECL STDC	sdaiIsKindOf(
 								);
 
 //
-//		sdaiIsKindOfBN                                          (https://rdf.bg/ifcdoc/CP64/sdaiIsKindOfBN.html)
+//		sdaiIsKindOfBN                                          (https://rdf.bg/stepdoc/CP64/sdaiIsKindOfBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				entityName							IN
 //
@@ -4127,7 +4127,7 @@ static	inline	int_t	sdaiIsKindOfBN(
 #endif
 
 //
-//		engiGetAttrType                                         (https://rdf.bg/ifcdoc/CP64/engiGetAttrType.html)
+//		engiGetAttrType                                         (https://rdf.bg/stepdoc/CP64/engiGetAttrType.html)
 //				const SdaiAttr			attribute							IN
 //
 //				SdaiPrimitiveType		returns								OUT
@@ -4147,7 +4147,7 @@ SdaiPrimitiveType	DECL STDC	engiGetAttrType(
 								);
 
 //
-//		engiGetAttrTypeBN                                       (https://rdf.bg/ifcdoc/CP64/engiGetAttrTypeBN.html)
+//		engiGetAttrTypeBN                                       (https://rdf.bg/stepdoc/CP64/engiGetAttrTypeBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -4190,7 +4190,7 @@ static	inline	SdaiPrimitiveType	engiGetAttrTypeBN(
 #endif
 
 //
-//		engiGetInstanceAttrType                                 (https://rdf.bg/ifcdoc/CP64/engiGetInstanceAttrType.html)
+//		engiGetInstanceAttrType                                 (https://rdf.bg/stepdoc/CP64/engiGetInstanceAttrType.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAttr			attribute							IN
 //
@@ -4206,7 +4206,7 @@ SdaiPrimitiveType	DECL STDC	engiGetInstanceAttrType(
 								);
 
 //
-//		engiGetInstanceAttrTypeBN                               (https://rdf.bg/ifcdoc/CP64/engiGetInstanceAttrTypeBN.html)
+//		engiGetInstanceAttrTypeBN                               (https://rdf.bg/stepdoc/CP64/engiGetInstanceAttrTypeBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //
@@ -4252,7 +4252,7 @@ static	inline	SdaiPrimitiveType	engiGetInstanceAttrTypeBN(
 #endif
 
 //
-//		sdaiIsInstanceOf                                        (https://rdf.bg/ifcdoc/CP64/sdaiIsInstanceOf.html)
+//		sdaiIsInstanceOf                                        (https://rdf.bg/stepdoc/CP64/sdaiIsInstanceOf.html)
 //				SdaiInstance			instance							IN
 //				SdaiEntity				entity								IN
 //
@@ -4266,7 +4266,7 @@ int_t			DECL STDC	sdaiIsInstanceOf(
 								);
 
 //
-//		sdaiIsInstanceOfBN                                      (https://rdf.bg/ifcdoc/CP64/sdaiIsInstanceOfBN.html)
+//		sdaiIsInstanceOfBN                                      (https://rdf.bg/stepdoc/CP64/sdaiIsInstanceOfBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				entityName							IN
 //
@@ -4314,7 +4314,7 @@ static	inline	int_t	sdaiIsInstanceOfBN(
 #endif
 
 //
-//		sdaiIsEqual                                             (https://rdf.bg/ifcdoc/CP64/sdaiIsEqual.html)
+//		sdaiIsEqual                                             (https://rdf.bg/stepdoc/CP64/sdaiIsEqual.html)
 //				SdaiInstance			instanceI							IN
 //				SdaiInstance			instanceII							IN
 //
@@ -4328,7 +4328,7 @@ bool			DECL STDC	sdaiIsEqual(
 								);
 
 //
-//		sdaiValidateAttribute                                   (https://rdf.bg/ifcdoc/CP64/sdaiValidateAttribute.html)
+//		sdaiValidateAttribute                                   (https://rdf.bg/stepdoc/CP64/sdaiValidateAttribute.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAttr			attribute							IN
 //
@@ -4342,7 +4342,7 @@ int_t			DECL STDC	sdaiValidateAttribute(
 								);
 
 //
-//		sdaiValidateAttributeBN                                 (https://rdf.bg/ifcdoc/CP64/sdaiValidateAttributeBN.html)
+//		sdaiValidateAttributeBN                                 (https://rdf.bg/stepdoc/CP64/sdaiValidateAttributeBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //
@@ -4386,7 +4386,7 @@ static	inline	int_t	sdaiValidateAttributeBN(
 #endif
 
 //
-//		engiGetInstanceClassInfo                                (https://rdf.bg/ifcdoc/CP64/engiGetInstanceClassInfo.html)
+//		engiGetInstanceClassInfo                                (https://rdf.bg/stepdoc/CP64/engiGetInstanceClassInfo.html)
 //				SdaiInstance			instance							IN
 //
 //				char					* returns							OUT
@@ -4398,7 +4398,7 @@ char			DECL * STDC	engiGetInstanceClassInfo(
 								);
 
 //
-//		engiGetInstanceClassInfoUC                              (https://rdf.bg/ifcdoc/CP64/engiGetInstanceClassInfoUC.html)
+//		engiGetInstanceClassInfoUC                              (https://rdf.bg/stepdoc/CP64/engiGetInstanceClassInfoUC.html)
 //				SdaiInstance			instance							IN
 //
 //				char					* returns							OUT
@@ -4410,7 +4410,7 @@ char			DECL * STDC	engiGetInstanceClassInfoUC(
 								);
 
 //
-//		engiGetInstanceMetaInfo                                 (https://rdf.bg/ifcdoc/CP64/engiGetInstanceMetaInfo.html)
+//		engiGetInstanceMetaInfo                                 (https://rdf.bg/stepdoc/CP64/engiGetInstanceMetaInfo.html)
 //				SdaiInstance			instance							IN
 //				int_t					* localId							IN / OUT
 //				SdaiString				* entityName						IN / OUT
@@ -4453,7 +4453,7 @@ static	inline	int_t	engiGetInstanceMetaInfo(
 #endif
 
 //
-//		sdaiFindInstanceUsers                                   (https://rdf.bg/ifcdoc/CP64/sdaiFindInstanceUsers.html)
+//		sdaiFindInstanceUsers                                   (https://rdf.bg/stepdoc/CP64/sdaiFindInstanceUsers.html)
 //				SdaiInstance			instance							IN
 //				SdaiNPL					domain								IN
 //				SdaiNPL					resultList							IN
@@ -4470,7 +4470,7 @@ SdaiNPL			DECL STDC	sdaiFindInstanceUsers(
 								);
 
 //
-//		sdaiFindInstanceUsedIn                                  (https://rdf.bg/ifcdoc/CP64/sdaiFindInstanceUsedIn.html)
+//		sdaiFindInstanceUsedIn                                  (https://rdf.bg/stepdoc/CP64/sdaiFindInstanceUsedIn.html)
 //				SdaiInstance			instance							IN
 //				SdaiAttr				role								IN
 //				SdaiNPL					domain								IN
@@ -4489,7 +4489,7 @@ SdaiNPL			DECL STDC	sdaiFindInstanceUsedIn(
 								);
 
 //
-//		sdaiFindInstanceUsedInBN                                (https://rdf.bg/ifcdoc/CP64/sdaiFindInstanceUsedInBN.html)
+//		sdaiFindInstanceUsedInBN                                (https://rdf.bg/stepdoc/CP64/sdaiFindInstanceUsedInBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				roleName							IN
 //				SdaiNPL					domain								IN
@@ -4550,7 +4550,7 @@ static	inline	SdaiNPL	sdaiFindInstanceUsedInBN(
 #endif
 
 //
-//		sdaiPrepend                                             (https://rdf.bg/ifcdoc/CP64/sdaiPrepend.html)
+//		sdaiPrepend                                             (https://rdf.bg/stepdoc/CP64/sdaiPrepend.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -4563,7 +4563,7 @@ static	inline	SdaiNPL	sdaiFindInstanceUsedInBN(
 //		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiPrepend but valid for all put-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiPrepend but valid for all put-functions)
 //
 //	valueType				C/C++														C#
 //
@@ -4594,7 +4594,7 @@ static	inline	SdaiNPL	sdaiFindInstanceUsedInBN(
 //	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 //							sdaiPrepend (aggregate, sdaiEXPRESSSTRING, val);			stepengine.sdaiPrepend (aggregate, stepengine.sdaiEXPRESSSTRING, val);
 //
-//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");	int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
+//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "PRODUCT");	int_t val = stepengine.sdaiCreateInstanceBN (model, "PRODUCT");
 //							sdaiPrepend (aggregate, sdaiINSTANCE, val);					stepengine.sdaiPrepend (aggregate, stepengine.sdaiINSTANCE, val);
 //
 //	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);					int_t val = sdaiCreateAggr (inst, 0);
@@ -4603,11 +4603,11 @@ static	inline	SdaiNPL	sdaiFindInstanceUsedInBN(
 //
 //	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
-//							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					stepengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
+//							sdaiPutADBTypePath (val, 1, "INTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiPrepend (aggregate, sdaiADB, val);						stepengine.sdaiPrepend (aggregate, stepengine.sdaiADB, val);	
 //							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
 //
@@ -4675,7 +4675,7 @@ static	inline	void	sdaiPrepend(
 #endif
 
 //
-//		sdaiAppend                                              (https://rdf.bg/ifcdoc/CP64/sdaiAppend.html)
+//		sdaiAppend                                              (https://rdf.bg/stepdoc/CP64/sdaiAppend.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -4688,7 +4688,7 @@ static	inline	void	sdaiPrepend(
 //		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiAppend but valid for all put-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiAppend but valid for all put-functions)
 //
 //	valueType				C/C++														C#
 //
@@ -4719,7 +4719,7 @@ static	inline	void	sdaiPrepend(
 //	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 //							sdaiAppend (aggregate, sdaiEXPRESSSTRING, val);				stepengine.sdaiAppend (aggregate, stepengine.sdaiEXPRESSSTRING, val);
 //
-//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");	int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
+//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "PRODUCT");	int_t val = stepengine.sdaiCreateInstanceBN (model, "PRODUCT");
 //							sdaiAppend (aggregate, sdaiINSTANCE, val);					stepengine.sdaiAppend (aggregate, stepengine.sdaiINSTANCE, val);
 //
 //	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);					int_t val = sdaiCreateAggr (inst, 0);
@@ -4728,11 +4728,11 @@ static	inline	void	sdaiPrepend(
 //
 //	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
-//							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					stepengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
+//							sdaiPutADBTypePath (val, 1, "INTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiAppend (aggregate, sdaiADB, val);						stepengine.sdaiAppend (aggregate, stepengine.sdaiADB, val);	
 //							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
 //
@@ -4800,7 +4800,7 @@ static	inline	void	sdaiAppend(
 #endif
 
 //
-//		sdaiAdd                                                 (https://rdf.bg/ifcdoc/CP64/sdaiAdd.html)
+//		sdaiAdd                                                 (https://rdf.bg/stepdoc/CP64/sdaiAdd.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -4813,7 +4813,7 @@ static	inline	void	sdaiAppend(
 //		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiAdd but valid for all put-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiAdd but valid for all put-functions)
 //
 //	valueType				C/C++														C#
 //
@@ -4844,7 +4844,7 @@ static	inline	void	sdaiAppend(
 //	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 //							sdaiAdd (aggregate, sdaiEXPRESSSTRING, val);				stepengine.sdaiAdd (aggregate, stepengine.sdaiEXPRESSSTRING, val);
 //
-//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");	int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
+//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "PRODUCT");	int_t val = stepengine.sdaiCreateInstanceBN (model, "PRODUCT");
 //							sdaiAdd (aggregate, sdaiINSTANCE, val);						stepengine.sdaiAdd (aggregate, stepengine.sdaiINSTANCE, val);
 //
 //	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);					int_t val = sdaiCreateAggr (inst, 0);
@@ -4853,11 +4853,11 @@ static	inline	void	sdaiAppend(
 //
 //	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
-//							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					stepengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
+//							sdaiPutADBTypePath (val, 1, "INTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiAdd (aggregate, sdaiADB, val);							stepengine.sdaiAdd (aggregate, stepengine.sdaiADB, val);	
 //							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
 //
@@ -4925,7 +4925,7 @@ static	inline	void	sdaiAdd(
 #endif
 
 //
-//		sdaiInsertByIndex                                       (https://rdf.bg/ifcdoc/CP64/sdaiInsertByIndex.html)
+//		sdaiInsertByIndex                                       (https://rdf.bg/stepdoc/CP64/sdaiInsertByIndex.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiAggrIndex			index								IN
 //				SdaiPrimitiveType		valueType							IN
@@ -4939,7 +4939,7 @@ static	inline	void	sdaiAdd(
 //		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiInsertByIndex but valid for all put-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiInsertByIndex but valid for all put-functions)
 //
 //	valueType				C/C++															C#
 //
@@ -4970,7 +4970,7 @@ static	inline	void	sdaiAdd(
 //	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";		string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 //							sdaiInsertByIndex (aggregate, index, sdaiEXPRESSSTRING, val);	stepengine.sdaiInsertByIndex (aggregate, index, stepengine.sdaiEXPRESSSTRING, val);
 //
-//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");		int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
+//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "PRODUCT");		int_t val = stepengine.sdaiCreateInstanceBN (model, "PRODUCT");
 //							sdaiInsertByIndex (aggregate, index, sdaiINSTANCE, val);		stepengine.sdaiInsertByIndex (aggregate, index, stepengine.sdaiINSTANCE, val);
 //
 //	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);						int_t val = sdaiCreateAggr (inst, 0);
@@ -4979,11 +4979,11 @@ static	inline	void	sdaiAdd(
 //
 //	sdaiADB					int_t integerValue = 123;										int_t integerValue = 123;	
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);		int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
-//							sdaiPutADBTypePath (val, 1, "IFCINTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
+//							sdaiPutADBTypePath (val, 1, "INTEGER");							stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiInsertByIndex (aggregate, index, sdaiADB, val);				stepengine.sdaiInsertByIndex (aggregate, index, stepengine.sdaiADB, val);	
 //							sdaiDeleteADB (val);											stepengine.sdaiDeleteADB (val);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
 //
@@ -5056,7 +5056,7 @@ static	inline	void	sdaiInsertByIndex(
 #endif
 
 //
-//		sdaiInsertBefore                                        (https://rdf.bg/ifcdoc/CP64/sdaiInsertBefore.html)
+//		sdaiInsertBefore                                        (https://rdf.bg/stepdoc/CP64/sdaiInsertBefore.html)
 //				const SdaiIterator		iterator							IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -5069,7 +5069,7 @@ static	inline	void	sdaiInsertByIndex(
 //		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiInsertBefore but valid for all put-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiInsertBefore but valid for all put-functions)
 //
 //	valueType				C/C++														C#
 //
@@ -5100,7 +5100,7 @@ static	inline	void	sdaiInsertByIndex(
 //	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 //							sdaiInsertBefore (iterator, sdaiEXPRESSSTRING, val);		stepengine.sdaiInsertBefore (iterator, stepengine.sdaiEXPRESSSTRING, val);
 //
-//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");	int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
+//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "PRODUCT");	int_t val = stepengine.sdaiCreateInstanceBN (model, "PRODUCT");
 //							sdaiInsertBefore (iterator, sdaiINSTANCE, val);				stepengine.sdaiInsertBefore (iterator, stepengine.sdaiINSTANCE, val);
 //
 //	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);					int_t val = sdaiCreateAggr (inst, 0);
@@ -5109,11 +5109,11 @@ static	inline	void	sdaiInsertByIndex(
 //
 //	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
-//							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					stepengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
+//							sdaiPutADBTypePath (val, 1, "INTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiInsertBefore (iterator, sdaiADB, val);					stepengine.sdaiInsertBefore (iterator, stepengine.sdaiADB, val);	
 //							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
 //
@@ -5181,7 +5181,7 @@ static	inline	void	sdaiInsertBefore(
 #endif
 
 //
-//		sdaiInsertAfter                                         (https://rdf.bg/ifcdoc/CP64/sdaiInsertAfter.html)
+//		sdaiInsertAfter                                         (https://rdf.bg/stepdoc/CP64/sdaiInsertAfter.html)
 //				const SdaiIterator		iterator							IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -5194,7 +5194,7 @@ static	inline	void	sdaiInsertBefore(
 //		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiInsertAfter but valid for all put-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiInsertAfter but valid for all put-functions)
 //
 //	valueType				C/C++														C#
 //
@@ -5225,7 +5225,7 @@ static	inline	void	sdaiInsertBefore(
 //	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 //							sdaiInsertAfter (iterator, sdaiEXPRESSSTRING, val);			stepengine.sdaiInsertAfter (iterator, stepengine.sdaiEXPRESSSTRING, val);
 //
-//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");	int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
+//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "PRODUCT");	int_t val = stepengine.sdaiCreateInstanceBN (model, "PRODUCT");
 //							sdaiInsertAfter (iterator, sdaiINSTANCE, val);				stepengine.sdaiInsertAfter (iterator, stepengine.sdaiINSTANCE, val);
 //
 //	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);					int_t val = sdaiCreateAggr (inst, 0);
@@ -5234,11 +5234,11 @@ static	inline	void	sdaiInsertBefore(
 //
 //	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
-//							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					stepengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
+//							sdaiPutADBTypePath (val, 1, "INTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiInsertAfter (iterator, sdaiADB, val);					stepengine.sdaiInsertAfter (iterator, stepengine.sdaiADB, val);	
 //							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
 //
@@ -5306,7 +5306,7 @@ static	inline	void	sdaiInsertAfter(
 #endif
 
 //
-//		sdaiCreateADB                                           (https://rdf.bg/ifcdoc/CP64/sdaiCreateADB.html)
+//		sdaiCreateADB                                           (https://rdf.bg/stepdoc/CP64/sdaiCreateADB.html)
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
 //
@@ -5318,7 +5318,7 @@ static	inline	void	sdaiInsertAfter(
 //		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiCreateADB but valid for all put-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiCreateADB but valid for all put-functions)
 //
 //	valueType				C/C++														C#
 //
@@ -5349,7 +5349,7 @@ static	inline	void	sdaiInsertAfter(
 //	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 //							SdaiADB adb = sdaiCreateADB (sdaiEXPRESSSTRING, val);		int_t adb = stepengine.sdaiCreateADB (stepengine.sdaiEXPRESSSTRING, val);
 //
-//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");	int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
+//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "PRODUCT");	int_t val = stepengine.sdaiCreateInstanceBN (model, "PRODUCT");
 //							SdaiADB adb = sdaiCreateADB (sdaiINSTANCE, val);			int_t adb = stepengine.sdaiCreateADB (stepengine.sdaiINSTANCE, val);
 //
 //	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);					int_t val = sdaiCreateAggr (inst, 0);
@@ -5358,7 +5358,7 @@ static	inline	void	sdaiInsertAfter(
 //
 //	sdaiADB					not applicable
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //
 //
@@ -5420,7 +5420,7 @@ static	inline	SdaiADB	sdaiCreateADB(
 #endif
 
 //
-//		sdaiCreateAggr                                          (https://rdf.bg/ifcdoc/CP64/sdaiCreateAggr.html)
+//		sdaiCreateAggr                                          (https://rdf.bg/stepdoc/CP64/sdaiCreateAggr.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAttr			attribute							IN
 //
@@ -5437,7 +5437,7 @@ SdaiAggr		DECL STDC	sdaiCreateAggr(
 								);
 
 //
-//		sdaiCreateAggrBN                                        (https://rdf.bg/ifcdoc/CP64/sdaiCreateAggrBN.html)
+//		sdaiCreateAggrBN                                        (https://rdf.bg/stepdoc/CP64/sdaiCreateAggrBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //
@@ -5491,7 +5491,7 @@ static	inline	SdaiAggr	sdaiCreateAggrBN(
 #endif
 
 //
-//		sdaiCreateNPL                                           (https://rdf.bg/ifcdoc/CP64/sdaiCreateNPL.html)
+//		sdaiCreateNPL                                           (https://rdf.bg/stepdoc/CP64/sdaiCreateNPL.html)
 //				SdaiNPL					returns								OUT
 //
 //	...
@@ -5500,7 +5500,7 @@ SdaiNPL			DECL STDC	sdaiCreateNPL(
 								);
 
 //
-//		sdaiDeleteNPL                                           (https://rdf.bg/ifcdoc/CP64/sdaiDeleteNPL.html)
+//		sdaiDeleteNPL                                           (https://rdf.bg/stepdoc/CP64/sdaiDeleteNPL.html)
 //				SdaiNPL					list								IN
 //
 //				void					returns
@@ -5512,7 +5512,7 @@ void			DECL STDC	sdaiDeleteNPL(
 								);
 
 //
-//		sdaiCreateNestedAggr                                    (https://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggr.html)
+//		sdaiCreateNestedAggr                                    (https://rdf.bg/stepdoc/CP64/sdaiCreateNestedAggr.html)
 //				SdaiAggr				aggregate							IN
 //
 //				SdaiAggr				returns								OUT
@@ -5524,7 +5524,7 @@ SdaiAggr		DECL STDC	sdaiCreateNestedAggr(
 								);
 
 //
-//		sdaiCreateNestedAggrByIndex                             (https://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByIndex.html)
+//		sdaiCreateNestedAggrByIndex                             (https://rdf.bg/stepdoc/CP64/sdaiCreateNestedAggrByIndex.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiAggrIndex			index								IN
 //
@@ -5539,7 +5539,7 @@ SdaiAggr		DECL STDC	sdaiCreateNestedAggrByIndex(
 								);
 
 //
-//		sdaiInsertNestedAggrByIndex                             (https://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrByIndex.html)
+//		sdaiInsertNestedAggrByIndex                             (https://rdf.bg/stepdoc/CP64/sdaiInsertNestedAggrByIndex.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiAggrIndex			index								IN
 //
@@ -5554,7 +5554,7 @@ SdaiAggr		DECL STDC	sdaiInsertNestedAggrByIndex(
 								);
 
 //
-//		sdaiCreateNestedAggrByItr                               (https://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByItr.html)
+//		sdaiCreateNestedAggrByItr                               (https://rdf.bg/stepdoc/CP64/sdaiCreateNestedAggrByItr.html)
 //				SdaiIterator			iterator							IN
 //
 //				SdaiAggr				returns								OUT
@@ -5567,7 +5567,7 @@ SdaiAggr		DECL STDC	sdaiCreateNestedAggrByItr(
 								);
 
 //
-//		sdaiInsertNestedAggrBefore                              (https://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrBefore.html)
+//		sdaiInsertNestedAggrBefore                              (https://rdf.bg/stepdoc/CP64/sdaiInsertNestedAggrBefore.html)
 //				SdaiIterator			iterator							IN
 //
 //				SdaiAggr				returns								OUT
@@ -5580,7 +5580,7 @@ SdaiAggr		DECL STDC	sdaiInsertNestedAggrBefore(
 								);
 
 //
-//		sdaiInsertNestedAggrAfter                               (https://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrAfter.html)
+//		sdaiInsertNestedAggrAfter                               (https://rdf.bg/stepdoc/CP64/sdaiInsertNestedAggrAfter.html)
 //				SdaiIterator			iterator							IN
 //
 //				SdaiAggr				returns								OUT
@@ -5593,7 +5593,7 @@ SdaiAggr		DECL STDC	sdaiInsertNestedAggrAfter(
 								);
 
 //
-//		sdaiCreateNestedAggrADB                                 (https://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrADB.html)
+//		sdaiCreateNestedAggrADB                                 (https://rdf.bg/stepdoc/CP64/sdaiCreateNestedAggrADB.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiADB					selaggrInstance						IN
 //
@@ -5611,7 +5611,7 @@ SdaiAggr		DECL STDC	sdaiCreateNestedAggrADB(
 								);
 
 //
-//		sdaiCreateNestedAggrByIndexADB                          (https://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByIndexADB.html)
+//		sdaiCreateNestedAggrByIndexADB                          (https://rdf.bg/stepdoc/CP64/sdaiCreateNestedAggrByIndexADB.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiAggrIndex			index								IN
 //				SdaiADB					selaggrInstance						IN
@@ -5630,7 +5630,7 @@ SdaiAggr		DECL STDC	sdaiCreateNestedAggrByIndexADB(
 								);
 
 //
-//		sdaiInsertNestedAggrByIndexADB                          (https://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrByIndexADB.html)
+//		sdaiInsertNestedAggrByIndexADB                          (https://rdf.bg/stepdoc/CP64/sdaiInsertNestedAggrByIndexADB.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiAggrIndex			index								IN
 //				SdaiADB					selaggrInstance						IN
@@ -5649,7 +5649,7 @@ SdaiAggr		DECL STDC	sdaiInsertNestedAggrByIndexADB(
 								);
 
 //
-//		sdaiCreateNestedAggrByItrADB                            (https://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByItrADB.html)
+//		sdaiCreateNestedAggrByItrADB                            (https://rdf.bg/stepdoc/CP64/sdaiCreateNestedAggrByItrADB.html)
 //				SdaiIterator			iterator							IN
 //				SdaiADB					selaggrInstance						IN
 //
@@ -5666,7 +5666,7 @@ SdaiAggr		DECL STDC	sdaiCreateNestedAggrByItrADB(
 								);
 
 //
-//		sdaiInsertNestedAggrBeforeADB                           (https://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrBeforeADB.html)
+//		sdaiInsertNestedAggrBeforeADB                           (https://rdf.bg/stepdoc/CP64/sdaiInsertNestedAggrBeforeADB.html)
 //				SdaiIterator			iterator							IN
 //				SdaiADB					selaggrInstance						IN
 //
@@ -5683,7 +5683,7 @@ SdaiAggr		DECL STDC	sdaiInsertNestedAggrBeforeADB(
 								);
 
 //
-//		sdaiInsertNestedAggrAfterADB                            (https://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrAfterADB.html)
+//		sdaiInsertNestedAggrAfterADB                            (https://rdf.bg/stepdoc/CP64/sdaiInsertNestedAggrAfterADB.html)
 //				SdaiIterator			iterator							IN
 //				SdaiADB					selaggrInstance						IN
 //
@@ -5700,7 +5700,7 @@ SdaiAggr		DECL STDC	sdaiInsertNestedAggrAfterADB(
 								);
 
 //
-//		sdaiRemoveByIndex                                       (https://rdf.bg/ifcdoc/CP64/sdaiRemoveByIndex.html)
+//		sdaiRemoveByIndex                                       (https://rdf.bg/stepdoc/CP64/sdaiRemoveByIndex.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiAggrIndex			index								IN
 //
@@ -5714,7 +5714,7 @@ void			DECL STDC	sdaiRemoveByIndex(
 								);
 
 //
-//		sdaiRemoveByIterator                                    (https://rdf.bg/ifcdoc/CP64/sdaiRemoveByIterator.html)
+//		sdaiRemoveByIterator                                    (https://rdf.bg/stepdoc/CP64/sdaiRemoveByIterator.html)
 //				SdaiIterator			iterator							IN
 //
 //				void					returns
@@ -5727,7 +5727,7 @@ void			DECL STDC	sdaiRemoveByIterator(
 								);
 
 //
-//		sdaiRemove                                              (https://rdf.bg/ifcdoc/CP64/sdaiRemove.html)
+//		sdaiRemove                                              (https://rdf.bg/stepdoc/CP64/sdaiRemove.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -5741,7 +5741,7 @@ void			DECL STDC	sdaiRemoveByIterator(
 //		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiRemove but valid for all put-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiRemove but valid for all put-functions)
 //
 //	valueType				C/C++														C#
 //
@@ -5781,7 +5781,7 @@ void			DECL STDC	sdaiRemoveByIterator(
 //	sdaiADB					SdaiADB val = ...											int_t val = ...
 //							sdaiRemove (aggregate, sdaiADB, val);						stepengine.sdaiRemove (aggregate, stepengine.sdaiADB, val);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //
 //
@@ -5848,7 +5848,7 @@ static	inline	void	sdaiRemove(
 #endif
 
 //
-//		sdaiTestArrayByIndex                                    (https://rdf.bg/ifcdoc/CP64/sdaiTestArrayByIndex.html)
+//		sdaiTestArrayByIndex                                    (https://rdf.bg/stepdoc/CP64/sdaiTestArrayByIndex.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiAggrIndex			index								IN
 //
@@ -5862,7 +5862,7 @@ SdaiBoolean		DECL STDC	sdaiTestArrayByIndex(
 								);
 
 //
-//		sdaiTestArrayByItr                                      (https://rdf.bg/ifcdoc/CP64/sdaiTestArrayByItr.html)
+//		sdaiTestArrayByItr                                      (https://rdf.bg/stepdoc/CP64/sdaiTestArrayByItr.html)
 //				SdaiIterator			iterator							IN
 //
 //				SdaiBoolean				returns								OUT
@@ -5874,7 +5874,7 @@ SdaiBoolean		DECL STDC	sdaiTestArrayByItr(
 								);
 
 //
-//		sdaiCreateInstance                                      (https://rdf.bg/ifcdoc/CP64/sdaiCreateInstance.html)
+//		sdaiCreateInstance                                      (https://rdf.bg/stepdoc/CP64/sdaiCreateInstance.html)
 //				SdaiModel				model								IN
 //				SdaiEntity				entity								IN
 //
@@ -5888,7 +5888,7 @@ SdaiInstance	DECL STDC	sdaiCreateInstance(
 								);
 
 //
-//		sdaiCreateInstanceBN                                    (https://rdf.bg/ifcdoc/CP64/sdaiCreateInstanceBN.html)
+//		sdaiCreateInstanceBN                                    (https://rdf.bg/stepdoc/CP64/sdaiCreateInstanceBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				entityName							IN
 //
@@ -5932,7 +5932,7 @@ static	inline	SdaiInstance	sdaiCreateInstanceBN(
 #endif
 
 //
-//		sdaiCreateComplexInstance                               (https://rdf.bg/ifcdoc/CP64/sdaiCreateComplexInstance.html)
+//		sdaiCreateComplexInstance                               (https://rdf.bg/stepdoc/CP64/sdaiCreateComplexInstance.html)
 //				SdaiModel				model								IN
 //				SdaiNPL					entityList							IN
 //
@@ -5947,7 +5947,7 @@ SdaiInstance	DECL STDC	sdaiCreateComplexInstance(
 								);
 
 //
-//		sdaiCreateComplexInstanceBN                             (https://rdf.bg/ifcdoc/CP64/sdaiCreateComplexInstanceBN.html)
+//		sdaiCreateComplexInstanceBN                             (https://rdf.bg/stepdoc/CP64/sdaiCreateComplexInstanceBN.html)
 //				SdaiModel				model								IN
 //				SdaiInteger				nameNumber							IN
 //				SdaiString				* nameVector						IN
@@ -5987,7 +5987,7 @@ static	inline	SdaiInstance	sdaiCreateComplexInstanceBN(
 #endif
 
 //
-//		sdaiDeleteInstance                                      (https://rdf.bg/ifcdoc/CP64/sdaiDeleteInstance.html)
+//		sdaiDeleteInstance                                      (https://rdf.bg/stepdoc/CP64/sdaiDeleteInstance.html)
 //				SdaiInstance			instance							IN
 //
 //				void					returns
@@ -5999,7 +5999,7 @@ void			DECL STDC	sdaiDeleteInstance(
 								);
 
 //
-//		sdaiPutADBTypePath                                      (https://rdf.bg/ifcdoc/CP64/sdaiPutADBTypePath.html)
+//		sdaiPutADBTypePath                                      (https://rdf.bg/stepdoc/CP64/sdaiPutADBTypePath.html)
 //				const SdaiADB			ADB									IN
 //				int_t					pathCount							IN
 //				SdaiString				path								IN
@@ -6038,7 +6038,7 @@ static	inline	void	sdaiPutADBTypePath(
 #endif
 
 //
-//		sdaiPutAttr                                             (https://rdf.bg/ifcdoc/CP64/sdaiPutAttr.html)
+//		sdaiPutAttr                                             (https://rdf.bg/stepdoc/CP64/sdaiPutAttr.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAttr			attribute							IN
 //				SdaiPrimitiveType		valueType							IN
@@ -6052,7 +6052,7 @@ static	inline	void	sdaiPutADBTypePath(
 //		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiPutAttr but valid for all put-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiPutAttr but valid for all put-functions)
 //
 //	valueType				C/C++														C#
 //
@@ -6083,7 +6083,7 @@ static	inline	void	sdaiPutADBTypePath(
 //	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 //							sdaiPutAttr (instance, attribute, sdaiEXPRESSSTRING, val);	stepengine.sdaiPutAttr (instance, attribute, stepengine.sdaiEXPRESSSTRING, val);
 //
-//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");	int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
+//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "PRODUCT");	int_t val = stepengine.sdaiCreateInstanceBN (model, "PRODUCT");
 //							sdaiPutAttr (instance, attribute, sdaiINSTANCE, val);		stepengine.sdaiPutAttr (instance, attribute, stepengine.sdaiINSTANCE, val);
 //
 //	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);					int_t val = sdaiCreateAggr (inst, 0);
@@ -6092,11 +6092,11 @@ static	inline	void	sdaiPutADBTypePath(
 //
 //	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
-//							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					stepengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
+//							sdaiPutADBTypePath (val, 1, "INTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiPutAttr (instance, attribute, sdaiADB, val);			stepengine.sdaiPutAttr (instance, attribute, stepengine.sdaiADB, val);	
 //							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
 //
@@ -6169,7 +6169,7 @@ static	inline	void	sdaiPutAttr(
 #endif
 
 //
-//		sdaiPutAttrBN                                           (https://rdf.bg/ifcdoc/CP64/sdaiPutAttrBN.html)
+//		sdaiPutAttrBN                                           (https://rdf.bg/stepdoc/CP64/sdaiPutAttrBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //				SdaiPrimitiveType		valueType							IN
@@ -6183,7 +6183,7 @@ static	inline	void	sdaiPutAttr(
 //		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiPutAttrBN but valid for all put-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiPutAttrBN but valid for all put-functions)
 //
 //	valueType				C/C++															C#
 //
@@ -6214,7 +6214,7 @@ static	inline	void	sdaiPutAttr(
 //	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";		string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 //							sdaiPutAttrBN (instance, "attrName", sdaiEXPRESSSTRING, val);	stepengine.sdaiPutAttrBN (instance, "attrName", stepengine.sdaiEXPRESSSTRING, val);
 //
-//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");		int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
+//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "PRODUCT");		int_t val = stepengine.sdaiCreateInstanceBN (model, "PRODUCT");
 //							sdaiPutAttrBN (instance, "attrName", sdaiINSTANCE, val);		stepengine.sdaiPutAttrBN (instance, "attrName", stepengine.sdaiINSTANCE, val);
 //
 //	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);						int_t val = sdaiCreateAggr (inst, 0);
@@ -6223,11 +6223,11 @@ static	inline	void	sdaiPutAttr(
 //
 //	sdaiADB					int_t integerValue = 123;										int_t integerValue = 123;	
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);		int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
-//							sdaiPutADBTypePath (val, 1, "IFCINTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
+//							sdaiPutADBTypePath (val, 1, "INTEGER");							stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiPutAttrBN (instance, "attrName", sdaiADB, val);				stepengine.sdaiPutAttrBN (instance, "attrName", stepengine.sdaiADB, val);	
 //							sdaiDeleteADB (val);											stepengine.sdaiDeleteADB (val);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
 //
@@ -6362,7 +6362,7 @@ static	inline	void	sdaiPutAttrBN(
 #endif
 
 //
-//		sdaiUnsetAttr                                           (https://rdf.bg/ifcdoc/CP64/sdaiUnsetAttr.html)
+//		sdaiUnsetAttr                                           (https://rdf.bg/stepdoc/CP64/sdaiUnsetAttr.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAttr			attribute							IN
 //
@@ -6376,7 +6376,7 @@ void			DECL STDC	sdaiUnsetAttr(
 								);
 
 //
-//		sdaiUnsetAttrBN                                         (https://rdf.bg/ifcdoc/CP64/sdaiUnsetAttrBN.html)
+//		sdaiUnsetAttrBN                                         (https://rdf.bg/stepdoc/CP64/sdaiUnsetAttrBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //
@@ -6422,7 +6422,7 @@ static	inline	void	sdaiUnsetAttrBN(
 #endif
 
 //
-//		engiSetComment                                          (https://rdf.bg/ifcdoc/CP64/engiSetComment.html)
+//		engiSetComment                                          (https://rdf.bg/stepdoc/CP64/engiSetComment.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				comment								IN
 //
@@ -6457,7 +6457,7 @@ static	inline	void	engiSetComment(
 #endif
 
 //
-//		engiGetInstanceLocalId                                  (https://rdf.bg/ifcdoc/CP64/engiGetInstanceLocalId.html)
+//		engiGetInstanceLocalId                                  (https://rdf.bg/stepdoc/CP64/engiGetInstanceLocalId.html)
 //				SdaiInstance			instance							IN
 //
 //				ExpressID				returns								OUT
@@ -6469,7 +6469,7 @@ ExpressID		DECL STDC	engiGetInstanceLocalId(
 								);
 
 //
-//		sdaiTestAttr                                            (https://rdf.bg/ifcdoc/CP64/sdaiTestAttr.html)
+//		sdaiTestAttr                                            (https://rdf.bg/stepdoc/CP64/sdaiTestAttr.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAttr			attribute							IN
 //
@@ -6483,7 +6483,7 @@ int_t			DECL STDC	sdaiTestAttr(
 								);
 
 //
-//		sdaiTestAttrBN                                          (https://rdf.bg/ifcdoc/CP64/sdaiTestAttrBN.html)
+//		sdaiTestAttrBN                                          (https://rdf.bg/stepdoc/CP64/sdaiTestAttrBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //
@@ -6524,7 +6524,7 @@ static	inline	int_t	sdaiTestAttrBN(
 #endif
 
 //
-//		sdaiCreateInstanceEI                                    (https://rdf.bg/ifcdoc/CP64/sdaiCreateInstanceEI.html)
+//		sdaiCreateInstanceEI                                    (https://rdf.bg/stepdoc/CP64/sdaiCreateInstanceEI.html)
 //				SdaiModel				model								IN
 //				SdaiEntity				entity								IN
 //				ExpressID				expressID							IN
@@ -6540,7 +6540,7 @@ SdaiInstance	DECL STDC	sdaiCreateInstanceEI(
 								);
 
 //
-//		sdaiCreateInstanceBNEI                                  (https://rdf.bg/ifcdoc/CP64/sdaiCreateInstanceBNEI.html)
+//		sdaiCreateInstanceBNEI                                  (https://rdf.bg/stepdoc/CP64/sdaiCreateInstanceBNEI.html)
 //				SdaiModel				model								IN
 //				SdaiString				entityName							IN
 //				ExpressID				expressID							IN
@@ -6579,7 +6579,7 @@ static	inline	SdaiInstance	sdaiCreateInstanceBNEI(
 #endif
 
 //
-//		sdaiCreateIterator                                      (https://rdf.bg/ifcdoc/CP64/sdaiCreateIterator.html)
+//		sdaiCreateIterator                                      (https://rdf.bg/stepdoc/CP64/sdaiCreateIterator.html)
 //				const SdaiAggr			aggregate							IN
 //
 //				SdaiIterator			returns								OUT
@@ -6593,7 +6593,7 @@ SdaiIterator	DECL STDC	sdaiCreateIterator(
 								);
 
 //
-//		sdaiDeleteIterator                                      (https://rdf.bg/ifcdoc/CP64/sdaiDeleteIterator.html)
+//		sdaiDeleteIterator                                      (https://rdf.bg/stepdoc/CP64/sdaiDeleteIterator.html)
 //				SdaiIterator			iterator							IN
 //
 //				void					returns
@@ -6605,7 +6605,7 @@ void			DECL STDC	sdaiDeleteIterator(
 								);
 
 //
-//		sdaiBeginning                                           (https://rdf.bg/ifcdoc/CP64/sdaiBeginning.html)
+//		sdaiBeginning                                           (https://rdf.bg/stepdoc/CP64/sdaiBeginning.html)
 //				SdaiIterator			iterator							IN
 //
 //				void					returns
@@ -6617,7 +6617,7 @@ void			DECL STDC	sdaiBeginning(
 								);
 
 //
-//		sdaiNext                                                (https://rdf.bg/ifcdoc/CP64/sdaiNext.html)
+//		sdaiNext                                                (https://rdf.bg/stepdoc/CP64/sdaiNext.html)
 //				SdaiIterator			iterator							IN
 //
 //				SdaiBoolean				returns								OUT
@@ -6629,7 +6629,7 @@ SdaiBoolean		DECL STDC	sdaiNext(
 								);
 
 //
-//		sdaiPrevious                                            (https://rdf.bg/ifcdoc/CP64/sdaiPrevious.html)
+//		sdaiPrevious                                            (https://rdf.bg/stepdoc/CP64/sdaiPrevious.html)
 //				SdaiIterator			iterator							IN
 //
 //				int_t					returns								OUT
@@ -6645,7 +6645,7 @@ int_t			DECL STDC	sdaiPrevious(
 								);
 
 //
-//		sdaiEnd                                                 (https://rdf.bg/ifcdoc/CP64/sdaiEnd.html)
+//		sdaiEnd                                                 (https://rdf.bg/stepdoc/CP64/sdaiEnd.html)
 //				SdaiIterator			iterator							IN
 //
 //				void					returns
@@ -6657,7 +6657,7 @@ void			DECL STDC	sdaiEnd(
 								);
 
 //
-//		sdaiIsMember                                            (https://rdf.bg/ifcdoc/CP64/sdaiIsMember.html)
+//		sdaiIsMember                                            (https://rdf.bg/stepdoc/CP64/sdaiIsMember.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -6673,7 +6673,7 @@ void			DECL STDC	sdaiEnd(
 //		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiIsMember but valid for all put-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiIsMember but valid for all put-functions)
 //
 //	valueType				C/C++														C#
 //
@@ -6713,7 +6713,7 @@ void			DECL STDC	sdaiEnd(
 //	sdaiADB					SdaiADB val = ...											int_t val = ...
 //							sdaiIsMember (sdaiADB, val);								stepengine.sdaiIsMember (stepengine.sdaiADB, val);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //
 //
@@ -6780,7 +6780,7 @@ static	inline	SdaiBoolean	sdaiIsMember(
 #endif
 
 //
-//		sdaiGetAggrElementBoundByItr                            (https://rdf.bg/ifcdoc/CP64/sdaiGetAggrElementBoundByItr.html)
+//		sdaiGetAggrElementBoundByItr                            (https://rdf.bg/stepdoc/CP64/sdaiGetAggrElementBoundByItr.html)
 //				SdaiIterator			iterator							IN
 //
 //				SdaiInteger				returns								OUT
@@ -6793,7 +6793,7 @@ SdaiInteger		DECL STDC	sdaiGetAggrElementBoundByItr(
 								);
 
 //
-//		sdaiGetAggrElementBoundByIndex                          (https://rdf.bg/ifcdoc/CP64/sdaiGetAggrElementBoundByIndex.html)
+//		sdaiGetAggrElementBoundByIndex                          (https://rdf.bg/stepdoc/CP64/sdaiGetAggrElementBoundByIndex.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiAggrIndex			index								IN
 //
@@ -6808,7 +6808,7 @@ SdaiInteger		DECL STDC	sdaiGetAggrElementBoundByIndex(
 								);
 
 //
-//		sdaiGetLowerBound                                       (https://rdf.bg/ifcdoc/CP64/sdaiGetLowerBound.html)
+//		sdaiGetLowerBound                                       (https://rdf.bg/stepdoc/CP64/sdaiGetLowerBound.html)
 //				SdaiAggr				aggregate							IN
 //
 //				SdaiInteger				returns								OUT
@@ -6820,7 +6820,7 @@ SdaiInteger		DECL STDC	sdaiGetLowerBound(
 								);
 
 //
-//		sdaiGetUpperBound                                       (https://rdf.bg/ifcdoc/CP64/sdaiGetUpperBound.html)
+//		sdaiGetUpperBound                                       (https://rdf.bg/stepdoc/CP64/sdaiGetUpperBound.html)
 //				SdaiAggr				aggregate							IN
 //
 //				SdaiInteger				returns								OUT
@@ -6832,7 +6832,7 @@ SdaiInteger		DECL STDC	sdaiGetUpperBound(
 								);
 
 //
-//		sdaiGetLowerIndex                                       (https://rdf.bg/ifcdoc/CP64/sdaiGetLowerIndex.html)
+//		sdaiGetLowerIndex                                       (https://rdf.bg/stepdoc/CP64/sdaiGetLowerIndex.html)
 //				SdaiAggr				aggregate							IN
 //
 //				SdaiInteger				returns								OUT
@@ -6844,7 +6844,7 @@ SdaiInteger		DECL STDC	sdaiGetLowerIndex(
 								);
 
 //
-//		sdaiGetUpperIndex                                       (https://rdf.bg/ifcdoc/CP64/sdaiGetUpperIndex.html)
+//		sdaiGetUpperIndex                                       (https://rdf.bg/stepdoc/CP64/sdaiGetUpperIndex.html)
 //				SdaiAggr				aggregate							IN
 //
 //				SdaiInteger				returns								OUT
@@ -6856,7 +6856,7 @@ SdaiInteger		DECL STDC	sdaiGetUpperIndex(
 								);
 
 //
-//		sdaiUnsetArrayByIndex                                   (https://rdf.bg/ifcdoc/CP64/sdaiUnsetArrayByIndex.html)
+//		sdaiUnsetArrayByIndex                                   (https://rdf.bg/stepdoc/CP64/sdaiUnsetArrayByIndex.html)
 //				SdaiArray				array								IN
 //				SdaiAggrIndex			index								IN
 //
@@ -6871,7 +6871,7 @@ void			DECL STDC	sdaiUnsetArrayByIndex(
 								);
 
 //
-//		sdaiUnsetArrayByItr                                     (https://rdf.bg/ifcdoc/CP64/sdaiUnsetArrayByItr.html)
+//		sdaiUnsetArrayByItr                                     (https://rdf.bg/stepdoc/CP64/sdaiUnsetArrayByItr.html)
 //				SdaiIterator			iterator							IN
 //
 //				void					returns
@@ -6884,7 +6884,7 @@ void			DECL STDC	sdaiUnsetArrayByItr(
 								);
 
 //
-//		sdaiReindexArray                                        (https://rdf.bg/ifcdoc/CP64/sdaiReindexArray.html)
+//		sdaiReindexArray                                        (https://rdf.bg/stepdoc/CP64/sdaiReindexArray.html)
 //				SdaiArray				array								IN
 //
 //				void					returns
@@ -6897,7 +6897,7 @@ void			DECL STDC	sdaiReindexArray(
 								);
 
 //
-//		sdaiResetArrayIndex                                     (https://rdf.bg/ifcdoc/CP64/sdaiResetArrayIndex.html)
+//		sdaiResetArrayIndex                                     (https://rdf.bg/stepdoc/CP64/sdaiResetArrayIndex.html)
 //				SdaiArray				array								IN
 //				SdaiAggrIndex			lower								IN
 //				SdaiAggrIndex			upper								IN
@@ -6914,7 +6914,7 @@ void			DECL STDC	sdaiResetArrayIndex(
 								);
 
 //
-//		engiEnableDerivedAttributes                             (https://rdf.bg/ifcdoc/CP64/engiEnableDerivedAttributes.html)
+//		engiEnableDerivedAttributes                             (https://rdf.bg/stepdoc/CP64/engiEnableDerivedAttributes.html)
 //				SdaiModel				model								IN
 //				SdaiBoolean				enable								IN
 //
@@ -6929,7 +6929,7 @@ SdaiBoolean		DECL STDC	engiEnableDerivedAttributes(
 								);
 
 //
-//		engiEvaluateAllDerivedAttributes                        (https://rdf.bg/ifcdoc/CP64/engiEvaluateAllDerivedAttributes.html)
+//		engiEvaluateAllDerivedAttributes                        (https://rdf.bg/stepdoc/CP64/engiEvaluateAllDerivedAttributes.html)
 //				SdaiModel				model								IN
 //				SdaiBoolean				includeNullValues					IN
 //
@@ -6943,7 +6943,7 @@ void			DECL STDC	engiEvaluateAllDerivedAttributes(
 								);
 
 //
-//		setSegmentation                                         (https://rdf.bg/ifcdoc/CP64/setSegmentation.html)
+//		setSegmentation                                         (https://rdf.bg/stepdoc/CP64/setSegmentation.html)
 //				SdaiModel				model								IN
 //				int_t					segmentationParts					IN
 //				double					segmentationLength					IN
@@ -6966,7 +6966,7 @@ void			DECL STDC	setSegmentation(
 								);
 
 //
-//		getSegmentation                                         (https://rdf.bg/ifcdoc/CP64/getSegmentation.html)
+//		getSegmentation                                         (https://rdf.bg/stepdoc/CP64/getSegmentation.html)
 //				SdaiModel				model								IN
 //				int_t					* segmentationParts					IN / OUT
 //				double					* segmentationLength				IN / OUT
@@ -6986,7 +6986,7 @@ void			DECL STDC	getSegmentation(
 								);
 
 //
-//		setEpsilon                                              (https://rdf.bg/ifcdoc/CP64/setEpsilon.html)
+//		setEpsilon                                              (https://rdf.bg/stepdoc/CP64/setEpsilon.html)
 //				SdaiModel				model								IN
 //				int_t					mask								IN
 //				double					absoluteEpsilon						IN
@@ -7004,7 +7004,7 @@ void			DECL STDC	setEpsilon(
 								);
 
 //
-//		getEpsilon                                              (https://rdf.bg/ifcdoc/CP64/getEpsilon.html)
+//		getEpsilon                                              (https://rdf.bg/stepdoc/CP64/getEpsilon.html)
 //				SdaiModel				model								IN
 //				int_t					mask								IN
 //				double					* absoluteEpsilon					IN / OUT
@@ -7026,7 +7026,7 @@ int_t			DECL STDC	getEpsilon(
 //
 
 //
-//		circleSegments                                          (https://rdf.bg/ifcdoc/CP64/circleSegments.html)
+//		circleSegments                                          (https://rdf.bg/stepdoc/CP64/circleSegments.html)
 //				int_t					circles								IN
 //				int_t					smallCircles						IN
 //
@@ -7045,7 +7045,7 @@ void			DECL STDC	circleSegments(
 								);
 
 //
-//		setMaximumSegmentationLength                            (https://rdf.bg/ifcdoc/CP64/setMaximumSegmentationLength.html)
+//		setMaximumSegmentationLength                            (https://rdf.bg/stepdoc/CP64/setMaximumSegmentationLength.html)
 //				SdaiModel				model								IN
 //				double					length								IN
 //
@@ -7064,7 +7064,7 @@ void			DECL STDC	setMaximumSegmentationLength(
 								);
 
 //
-//		getProjectUnitConversionFactor                          (https://rdf.bg/ifcdoc/CP64/getProjectUnitConversionFactor.html)
+//		getProjectUnitConversionFactor                          (https://rdf.bg/stepdoc/CP64/getProjectUnitConversionFactor.html)
 //				SdaiModel				model								IN
 //				SdaiString				unitType							IN
 //				SdaiString				* unitPrefix						IN / OUT
@@ -7111,7 +7111,7 @@ static	inline	double	getProjectUnitConversionFactor(
 #endif
 
 //
-//		getProjectUnitConversionFactorW                         (https://rdf.bg/ifcdoc/CP64/getProjectUnitConversionFactorW.html)
+//		getProjectUnitConversionFactorW                         (https://rdf.bg/stepdoc/CP64/getProjectUnitConversionFactorW.html)
 //				SdaiModel				model								IN
 //				const wchar_t			* unitType							IN
 //				const wchar_t			** unitPrefix						IN / OUT
@@ -7158,7 +7158,7 @@ static	inline	double	getProjectUnitConversionFactorW(
 #endif
 
 //
-//		getUnitInstanceConversionFactor                         (https://rdf.bg/ifcdoc/CP64/getUnitInstanceConversionFactor.html)
+//		getUnitInstanceConversionFactor                         (https://rdf.bg/stepdoc/CP64/getUnitInstanceConversionFactor.html)
 //				SdaiInstance			unitInstance						IN
 //				SdaiString				* unitType							IN / OUT
 //				SdaiString				* unitPrefix						IN / OUT
@@ -7205,7 +7205,7 @@ static	inline	double	getUnitInstanceConversionFactor(
 #endif
 
 //
-//		getUnitInstanceConversionFactorW                        (https://rdf.bg/ifcdoc/CP64/getUnitInstanceConversionFactorW.html)
+//		getUnitInstanceConversionFactorW                        (https://rdf.bg/stepdoc/CP64/getUnitInstanceConversionFactorW.html)
 //				SdaiInstance			unitInstance						IN
 //				const wchar_t			** unitType							IN / OUT
 //				const wchar_t			** unitPrefix						IN / OUT
@@ -7252,7 +7252,7 @@ static	inline	double	getUnitInstanceConversionFactorW(
 #endif
 
 //
-//		setBRepProperties                                       (https://rdf.bg/ifcdoc/CP64/setBRepProperties.html)
+//		setBRepProperties                                       (https://rdf.bg/stepdoc/CP64/setBRepProperties.html)
 //				SdaiModel				model								IN
 //				int64_t					consistencyCheck					IN
 //				double					fraction							IN
@@ -7297,7 +7297,7 @@ void			DECL STDC	setBRepProperties(
 								);
 
 //
-//		cleanMemory                                             (https://rdf.bg/ifcdoc/CP64/cleanMemory.html)
+//		cleanMemory                                             (https://rdf.bg/stepdoc/CP64/cleanMemory.html)
 //				SdaiModel				model								IN
 //				int_t					mode								IN
 //
@@ -7316,7 +7316,7 @@ void			DECL STDC	cleanMemory(
 								);
 
 //
-//		internalGetP21Line                                      (https://rdf.bg/ifcdoc/CP64/internalGetP21Line.html)
+//		internalGetP21Line                                      (https://rdf.bg/stepdoc/CP64/internalGetP21Line.html)
 //				SdaiInstance			instance							IN
 //
 //				ExpressID				returns								OUT
@@ -7328,7 +7328,7 @@ ExpressID		DECL STDC	internalGetP21Line(
 								);
 
 //
-//		internalForceInstanceFromP21Line                        (https://rdf.bg/ifcdoc/CP64/internalForceInstanceFromP21Line.html)
+//		internalForceInstanceFromP21Line                        (https://rdf.bg/stepdoc/CP64/internalForceInstanceFromP21Line.html)
 //				SdaiModel				model								IN
 //				ExpressID				P21Line								IN
 //
@@ -7342,7 +7342,7 @@ SdaiInstance	DECL STDC	internalForceInstanceFromP21Line(
 								);
 
 //
-//		internalGetInstanceFromP21Line                          (https://rdf.bg/ifcdoc/CP64/internalGetInstanceFromP21Line.html)
+//		internalGetInstanceFromP21Line                          (https://rdf.bg/stepdoc/CP64/internalGetInstanceFromP21Line.html)
 //				SdaiModel				model								IN
 //				ExpressID				P21Line								IN
 //
@@ -7356,7 +7356,7 @@ SdaiInstance	DECL STDC	internalGetInstanceFromP21Line(
 								);
 
 //
-//		internalGetXMLID                                        (https://rdf.bg/ifcdoc/CP64/internalGetXMLID.html)
+//		internalGetXMLID                                        (https://rdf.bg/stepdoc/CP64/internalGetXMLID.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				* XMLID								IN / OUT
 //
@@ -7403,7 +7403,7 @@ static	inline	SdaiString	internalGetXMLID(
 #endif
 
 //
-//		setStringUnicode                                        (https://rdf.bg/ifcdoc/CP64/setStringUnicode.html)
+//		setStringUnicode                                        (https://rdf.bg/stepdoc/CP64/setStringUnicode.html)
 //				int_t					unicode								IN
 //
 //				int_t					returns								OUT
@@ -7419,7 +7419,7 @@ int_t			DECL STDC	setStringUnicode(
 								);
 
 //
-//		getStringUnicode                                        (https://rdf.bg/ifcdoc/CP64/getStringUnicode.html)
+//		getStringUnicode                                        (https://rdf.bg/stepdoc/CP64/getStringUnicode.html)
 //				int_t					returns								OUT
 //
 //	...
@@ -7428,7 +7428,7 @@ int_t			DECL STDC	getStringUnicode(
 								);
 
 //
-//		engiSetStringEncoding                                   (https://rdf.bg/ifcdoc/CP64/engiSetStringEncoding.html)
+//		engiSetStringEncoding                                   (https://rdf.bg/stepdoc/CP64/engiSetStringEncoding.html)
 //				SdaiModel				model								IN
 //				enum_string_encoding	encoding							IN
 //
@@ -7444,7 +7444,7 @@ int_t			DECL STDC	engiSetStringEncoding(
 								);
 
 //
-//		setFilter                                               (https://rdf.bg/ifcdoc/CP64/setFilter.html)
+//		setFilter                                               (https://rdf.bg/stepdoc/CP64/setFilter.html)
 //				SdaiModel				model								IN
 //				int_t					setting								IN
 //				int_t					mask								IN
@@ -7460,7 +7460,7 @@ void			DECL STDC	setFilter(
 								);
 
 //
-//		getFilter                                               (https://rdf.bg/ifcdoc/CP64/getFilter.html)
+//		getFilter                                               (https://rdf.bg/stepdoc/CP64/getFilter.html)
 //				SdaiModel				model								IN
 //				int_t					mask								IN
 //
@@ -7474,7 +7474,7 @@ int_t			DECL STDC	getFilter(
 								);
 
 //
-//		setSerialization                                        (https://rdf.bg/ifcdoc/CP64/setSerialization.html)
+//		setSerialization                                        (https://rdf.bg/stepdoc/CP64/setSerialization.html)
 //				SdaiModel				model								IN
 //				int_t					setting								IN
 //				int_t					mask								IN
@@ -7490,7 +7490,7 @@ void			DECL STDC	setSerialization(
 								);
 
 //
-//		getSerialization                                        (https://rdf.bg/ifcdoc/CP64/getSerialization.html)
+//		getSerialization                                        (https://rdf.bg/stepdoc/CP64/getSerialization.html)
 //				SdaiModel				model								IN
 //				int_t					mask								IN
 //
@@ -7508,7 +7508,7 @@ int_t			DECL STDC	getSerialization(
 //
 
 //
-//		xxxxGetEntityAndSubTypesExtent                          (https://rdf.bg/ifcdoc/CP64/xxxxGetEntityAndSubTypesExtent.html)
+//		xxxxGetEntityAndSubTypesExtent                          (https://rdf.bg/stepdoc/CP64/xxxxGetEntityAndSubTypesExtent.html)
 //				SdaiModel				model								IN
 //				SdaiEntity				entity								IN
 //
@@ -7522,7 +7522,7 @@ SdaiAggr		DECL STDC	xxxxGetEntityAndSubTypesExtent(
 								);
 
 //
-//		xxxxGetEntityAndSubTypesExtentBN                        (https://rdf.bg/ifcdoc/CP64/xxxxGetEntityAndSubTypesExtentBN.html)
+//		xxxxGetEntityAndSubTypesExtentBN                        (https://rdf.bg/stepdoc/CP64/xxxxGetEntityAndSubTypesExtentBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				entityName							IN
 //
@@ -7564,7 +7564,7 @@ static	inline	SdaiAggr	xxxxGetEntityAndSubTypesExtentBN(
 #endif
 
 //
-//		xxxxGetAllInstances                                     (https://rdf.bg/ifcdoc/CP64/xxxxGetAllInstances.html)
+//		xxxxGetAllInstances                                     (https://rdf.bg/stepdoc/CP64/xxxxGetAllInstances.html)
 //				SdaiModel				model								IN
 //
 //				SdaiAggr				returns								OUT
@@ -7576,7 +7576,7 @@ SdaiAggr		DECL STDC	xxxxGetAllInstances(
 								);
 
 //
-//		xxxxGetInstancesUsing                                   (https://rdf.bg/ifcdoc/CP64/xxxxGetInstancesUsing.html)
+//		xxxxGetInstancesUsing                                   (https://rdf.bg/stepdoc/CP64/xxxxGetInstancesUsing.html)
 //				SdaiInstance			instance							IN
 //
 //				SdaiAggr				returns								OUT
@@ -7590,7 +7590,7 @@ SdaiAggr		DECL STDC	xxxxGetInstancesUsing(
 								);
 
 //
-//		xxxxDeleteFromAggregation                               (https://rdf.bg/ifcdoc/CP64/xxxxDeleteFromAggregation.html)
+//		xxxxDeleteFromAggregation                               (https://rdf.bg/stepdoc/CP64/xxxxDeleteFromAggregation.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAggr			aggregate							IN
 //				int_t					elementIndex						IN
@@ -7606,7 +7606,7 @@ int_t			DECL STDC	xxxxDeleteFromAggregation(
 								);
 
 //
-//		xxxxGetAttrDefinitionByValue                            (https://rdf.bg/ifcdoc/CP64/xxxxGetAttrDefinitionByValue.html)
+//		xxxxGetAttrDefinitionByValue                            (https://rdf.bg/stepdoc/CP64/xxxxGetAttrDefinitionByValue.html)
 //				SdaiInstance			instance							IN
 //				const void				* value								IN
 //
@@ -7620,7 +7620,7 @@ SdaiAttr		DECL STDC	xxxxGetAttrDefinitionByValue(
 								);
 
 //
-//		xxxxGetAttrNameByIndex                                  (https://rdf.bg/ifcdoc/CP64/xxxxGetAttrNameByIndex.html)
+//		xxxxGetAttrNameByIndex                                  (https://rdf.bg/stepdoc/CP64/xxxxGetAttrNameByIndex.html)
 //				SdaiInstance			instance							IN
 //				SdaiInteger				index								IN
 //				SdaiString				* name								IN / OUT
@@ -7673,7 +7673,7 @@ static	inline	SdaiString	xxxxGetAttrNameByIndex(
 #endif
 
 //
-//		iterateOverInstances                                    (https://rdf.bg/ifcdoc/CP64/iterateOverInstances.html)
+//		iterateOverInstances                                    (https://rdf.bg/stepdoc/CP64/iterateOverInstances.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				SdaiEntity				* entity							IN / OUT
@@ -7717,7 +7717,7 @@ static	inline	SdaiInstance	iterateOverInstances(
 #endif
 
 //
-//		iterateOverProperties                                   (https://rdf.bg/ifcdoc/CP64/iterateOverProperties.html)
+//		iterateOverProperties                                   (https://rdf.bg/stepdoc/CP64/iterateOverProperties.html)
 //				SdaiEntity				entity								IN
 //				SdaiInteger				index								IN
 //
@@ -7732,7 +7732,7 @@ int_t			DECL STDC	iterateOverProperties(
 								);
 
 //
-//		sdaiGetAggrByIterator                                   (https://rdf.bg/ifcdoc/CP64/sdaiGetAggrByIterator.html)
+//		sdaiGetAggrByIterator                                   (https://rdf.bg/stepdoc/CP64/sdaiGetAggrByIterator.html)
 //				SdaiIterator			iterator							IN
 //				SdaiPrimitiveType		valueType							IN
 //				void					* value								IN / OUT
@@ -7753,7 +7753,7 @@ int_t			DECL STDC	iterateOverProperties(
 //	value argument (*value) for sdaiADB, sdaiAGGR, or sdaiINSTANCE or value argument itself for other types (it has no useful meaning for C#).
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiGetAggrByIterator but valid for all get-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiGetAggrByIterator but valid for all get-functions)
 //
 //	valueType				C/C++															C#
 //
@@ -7797,7 +7797,7 @@ int_t			DECL STDC	iterateOverProperties(
 //							SdaiADB adb = nullptr;	//	it is important to initialize
 //							sdaiGetAggrByIterator (iterator, sdaiADB, &adb);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
 //
@@ -7864,7 +7864,7 @@ static	inline	SdaiInstance	sdaiGetAggrByIterator(
 #endif
 
 //
-//		sdaiPutAggrByIterator                                   (https://rdf.bg/ifcdoc/CP64/sdaiPutAggrByIterator.html)
+//		sdaiPutAggrByIterator                                   (https://rdf.bg/stepdoc/CP64/sdaiPutAggrByIterator.html)
 //				SdaiIterator			iterator							IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -7877,7 +7877,7 @@ static	inline	SdaiInstance	sdaiGetAggrByIterator(
 //		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
 //
 //
-//	Table 1 – Required value buffer depending on valueType (on the example of sdaiPutAggrByIterator but valid for all put-functions)
+//	Table 1 ï¿½ Required value buffer depending on valueType (on the example of sdaiPutAggrByIterator but valid for all put-functions)
 //
 //	valueType				C/C++														C#
 //
@@ -7908,7 +7908,7 @@ static	inline	SdaiInstance	sdaiGetAggrByIterator(
 //	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 //							sdaiPutAggrByIterator (iterator, sdaiEXPRESSSTRING, val);	stepengine.sdaiPutAggrByIterator (iterator, stepengine.sdaiEXPRESSSTRING, val);
 //
-//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");	int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
+//	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "PRODUCT");	int_t val = stepengine.sdaiCreateInstanceBN (model, "PRODUCT");
 //							sdaiPutAggrByIterator (iterator, sdaiINSTANCE, val);		stepengine.sdaiPutAggrByIterator (iterator, stepengine.sdaiINSTANCE, val);
 //
 //	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);					int_t val = sdaiCreateAggr (inst, 0);
@@ -7917,11 +7917,11 @@ static	inline	SdaiInstance	sdaiGetAggrByIterator(
 //
 //	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
-//							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					stepengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
+//							sdaiPutADBTypePath (val, 1, "INTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiPutAggrByIterator (iterator, sdaiADB, val);				stepengine.sdaiPutAggrByIterator (iterator, stepengine.sdaiADB, val);	
 //							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
 //
-//	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
+//	TCHAR is ï¿½charï¿½ or ï¿½wchar_tï¿½ depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
 //	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
 //
@@ -7989,7 +7989,7 @@ static	inline	void	sdaiPutAggrByIterator(
 #endif
 
 //
-//		internalSetLink                                         (https://rdf.bg/ifcdoc/CP64/internalSetLink.html)
+//		internalSetLink                                         (https://rdf.bg/stepdoc/CP64/internalSetLink.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //				int_t					linked_id							IN
@@ -8028,7 +8028,7 @@ static	inline	void	internalSetLink(
 #endif
 
 //
-//		internalAddAggrLink                                     (https://rdf.bg/ifcdoc/CP64/internalAddAggrLink.html)
+//		internalAddAggrLink                                     (https://rdf.bg/stepdoc/CP64/internalAddAggrLink.html)
 //				const SdaiAggr			aggregate							IN
 //				int_t					linked_id							IN
 //
@@ -8042,7 +8042,7 @@ void			DECL STDC	internalAddAggrLink(
 								);
 
 //
-//		engiGetNotReferedAggr                                   (https://rdf.bg/ifcdoc/CP64/engiGetNotReferedAggr.html)
+//		engiGetNotReferedAggr                                   (https://rdf.bg/stepdoc/CP64/engiGetNotReferedAggr.html)
 //				SdaiModel				model								IN
 //				int_t					* value								IN / OUT
 //
@@ -8056,7 +8056,7 @@ void			DECL STDC	engiGetNotReferedAggr(
 								);
 
 //
-//		engiGetAttributeAggr                                    (https://rdf.bg/ifcdoc/CP64/engiGetAttributeAggr.html)
+//		engiGetAttributeAggr                                    (https://rdf.bg/stepdoc/CP64/engiGetAttributeAggr.html)
 //				SdaiInstance			instance							IN
 //				int_t					* value								IN / OUT
 //
@@ -8070,7 +8070,7 @@ void			DECL STDC	engiGetAttributeAggr(
 								);
 
 //
-//		engiGetAggrUnknownElement                               (https://rdf.bg/ifcdoc/CP64/engiGetAggrUnknownElement.html)
+//		engiGetAggrUnknownElement                               (https://rdf.bg/stepdoc/CP64/engiGetAggrUnknownElement.html)
 //				const SdaiAggr			aggregate							IN
 //				int_t					elementIndex						IN
 //				SdaiPrimitiveType		* valueType							IN / OUT
@@ -8088,7 +8088,7 @@ void			DECL STDC	engiGetAggrUnknownElement(
 								);
 
 //
-//		sdaiErrorQuery                                          (https://rdf.bg/ifcdoc/CP64/sdaiErrorQuery.html)
+//		sdaiErrorQuery                                          (https://rdf.bg/stepdoc/CP64/sdaiErrorQuery.html)
 //				int_t					returns								OUT
 //
 //	...
@@ -8101,7 +8101,7 @@ int_t			DECL STDC	sdaiErrorQuery(
 //
 
 //
-//		owlGetModel                                             (https://rdf.bg/ifcdoc/CP64/owlGetModel.html)
+//		owlGetModel                                             (https://rdf.bg/stepdoc/CP64/owlGetModel.html)
 //				SdaiModel				model								IN
 //				int64_t					* owlModel							IN / OUT
 //
@@ -8119,7 +8119,7 @@ void			DECL STDC	owlGetModel(
 								);
 
 //
-//		owlConnectModel                                         (https://rdf.bg/ifcdoc/CP64/owlConnectModel.html)
+//		owlConnectModel                                         (https://rdf.bg/stepdoc/CP64/owlConnectModel.html)
 //				SdaiModel				model								IN
 //				int64_t					owlModel							IN
 //
@@ -8136,7 +8136,7 @@ bool			DECL STDC	owlConnectModel(
 								);
 
 //
-//		owlGetInstance                                          (https://rdf.bg/ifcdoc/CP64/owlGetInstance.html)
+//		owlGetInstance                                          (https://rdf.bg/stepdoc/CP64/owlGetInstance.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				int64_t					* owlInstance						IN / OUT
@@ -8156,7 +8156,7 @@ void			DECL STDC	owlGetInstance(
 								);
 
 //
-//		owlMaterialInstance                                     (https://rdf.bg/ifcdoc/CP64/owlMaterialInstance.html)
+//		owlMaterialInstance                                     (https://rdf.bg/stepdoc/CP64/owlMaterialInstance.html)
 //				SdaiInstance			instanceBase						IN
 //				SdaiInstance			instanceContext						IN
 //				int64_t					* owlInstance						IN / OUT
@@ -8172,7 +8172,7 @@ void			DECL STDC	owlMaterialInstance(
 								);
 
 //
-//		owlBuildInstance                                        (https://rdf.bg/ifcdoc/CP64/owlBuildInstance.html)
+//		owlBuildInstance                                        (https://rdf.bg/stepdoc/CP64/owlBuildInstance.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				int64_t					* owlInstance						IN / OUT
@@ -8193,7 +8193,7 @@ void			DECL STDC	owlBuildInstance(
 								);
 
 //
-//		owlBuildInstanceInContext                               (https://rdf.bg/ifcdoc/CP64/owlBuildInstanceInContext.html)
+//		owlBuildInstanceInContext                               (https://rdf.bg/stepdoc/CP64/owlBuildInstanceInContext.html)
 //				SdaiInstance			instanceBase						IN
 //				SdaiInstance			instanceContext						IN
 //				int64_t					* owlInstance						IN / OUT
@@ -8214,7 +8214,7 @@ void			DECL STDC	owlBuildInstanceInContext(
 								);
 
 //
-//		engiInstanceUsesSegmentation                            (https://rdf.bg/ifcdoc/CP64/engiInstanceUsesSegmentation.html)
+//		engiInstanceUsesSegmentation                            (https://rdf.bg/stepdoc/CP64/engiInstanceUsesSegmentation.html)
 //				SdaiInstance			instance							IN
 //
 //				bool					returns								OUT
@@ -8226,7 +8226,7 @@ bool			DECL STDC	engiInstanceUsesSegmentation(
 								);
 
 //
-//		owlBuildInstances                                       (https://rdf.bg/ifcdoc/CP64/owlBuildInstances.html)
+//		owlBuildInstances                                       (https://rdf.bg/stepdoc/CP64/owlBuildInstances.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				int64_t					* owlInstanceComplete				IN / OUT
@@ -8246,7 +8246,7 @@ void			DECL STDC	owlBuildInstances(
 								);
 
 //
-//		owlGetMappedItem                                        (https://rdf.bg/ifcdoc/CP64/owlGetMappedItem.html)
+//		owlGetMappedItem                                        (https://rdf.bg/stepdoc/CP64/owlGetMappedItem.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				int64_t					* owlInstance						IN / OUT
@@ -8264,7 +8264,7 @@ void			DECL STDC	owlGetMappedItem(
 								);
 
 //
-//		getInstanceDerivedPropertiesInModelling                 (https://rdf.bg/ifcdoc/CP64/getInstanceDerivedPropertiesInModelling.html)
+//		getInstanceDerivedPropertiesInModelling                 (https://rdf.bg/stepdoc/CP64/getInstanceDerivedPropertiesInModelling.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				double					* height							IN / OUT
@@ -8284,7 +8284,7 @@ int_t			DECL STDC	getInstanceDerivedPropertiesInModelling(
 								);
 
 //
-//		getInstanceDerivedBoundingBox                           (https://rdf.bg/ifcdoc/CP64/getInstanceDerivedBoundingBox.html)
+//		getInstanceDerivedBoundingBox                           (https://rdf.bg/stepdoc/CP64/getInstanceDerivedBoundingBox.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				double					* Ox								IN / OUT
@@ -8310,7 +8310,7 @@ int_t			DECL STDC	getInstanceDerivedBoundingBox(
 								);
 
 //
-//		getInstanceTransformationMatrix                         (https://rdf.bg/ifcdoc/CP64/getInstanceTransformationMatrix.html)
+//		getInstanceTransformationMatrix                         (https://rdf.bg/stepdoc/CP64/getInstanceTransformationMatrix.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				double					* _11								IN / OUT
@@ -8356,7 +8356,7 @@ int_t			DECL STDC	getInstanceTransformationMatrix(
 								);
 
 //
-//		getInstanceDerivedTransformationMatrix                  (https://rdf.bg/ifcdoc/CP64/getInstanceDerivedTransformationMatrix.html)
+//		getInstanceDerivedTransformationMatrix                  (https://rdf.bg/stepdoc/CP64/getInstanceDerivedTransformationMatrix.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				double					* _11								IN / OUT
@@ -8402,7 +8402,7 @@ int_t			DECL STDC	getInstanceDerivedTransformationMatrix(
 								);
 
 //
-//		internalGetBoundingBox                                  (https://rdf.bg/ifcdoc/CP64/internalGetBoundingBox.html)
+//		internalGetBoundingBox                                  (https://rdf.bg/stepdoc/CP64/internalGetBoundingBox.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //
@@ -8416,7 +8416,7 @@ void			DECL * STDC	internalGetBoundingBox(
 								);
 
 //
-//		internalGetCenter                                       (https://rdf.bg/ifcdoc/CP64/internalGetCenter.html)
+//		internalGetCenter                                       (https://rdf.bg/stepdoc/CP64/internalGetCenter.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //
@@ -8430,7 +8430,7 @@ void			DECL * STDC	internalGetCenter(
 								);
 
 //
-//		getRootAxis2Placement                                   (https://rdf.bg/ifcdoc/CP64/getRootAxis2Placement.html)
+//		getRootAxis2Placement                                   (https://rdf.bg/stepdoc/CP64/getRootAxis2Placement.html)
 //				SdaiModel				model								IN
 //				bool					exclusiveIfHasGeometry				IN
 //
@@ -8444,7 +8444,7 @@ int_t			DECL STDC	getRootAxis2Placement(
 								);
 
 //
-//		getGlobalPlacement                                      (https://rdf.bg/ifcdoc/CP64/getGlobalPlacement.html)
+//		getGlobalPlacement                                      (https://rdf.bg/stepdoc/CP64/getGlobalPlacement.html)
 //				SdaiModel				model								IN
 //				double					* origin							IN / OUT
 //
@@ -8460,7 +8460,7 @@ SdaiInstance	DECL STDC	getGlobalPlacement(
 								);
 
 //
-//		setGlobalPlacement                                      (https://rdf.bg/ifcdoc/CP64/setGlobalPlacement.html)
+//		setGlobalPlacement                                      (https://rdf.bg/stepdoc/CP64/setGlobalPlacement.html)
 //				SdaiModel				model								IN
 //				const double			* origin							IN
 //				bool					includeRotation						IN
@@ -8477,7 +8477,7 @@ SdaiInstance	DECL STDC	setGlobalPlacement(
 								);
 
 //
-//		getTimeStamp                                            (https://rdf.bg/ifcdoc/CP64/getTimeStamp.html)
+//		getTimeStamp                                            (https://rdf.bg/stepdoc/CP64/getTimeStamp.html)
 //				SdaiModel				model								IN
 //
 //				int_t					returns								OUT
@@ -8489,7 +8489,7 @@ int_t			DECL STDC	getTimeStamp(
 								);
 
 //
-//		setInstanceReference                                    (https://rdf.bg/ifcdoc/CP64/setInstanceReference.html)
+//		setInstanceReference                                    (https://rdf.bg/stepdoc/CP64/setInstanceReference.html)
 //				SdaiInstance			instance							IN
 //				int_t					value								IN
 //
@@ -8503,7 +8503,7 @@ int_t			DECL STDC	setInstanceReference(
 								);
 
 //
-//		getInstanceReference                                    (https://rdf.bg/ifcdoc/CP64/getInstanceReference.html)
+//		getInstanceReference                                    (https://rdf.bg/stepdoc/CP64/getInstanceReference.html)
 //				SdaiInstance			instance							IN
 //
 //				int_t					returns								OUT
@@ -8515,7 +8515,7 @@ int_t			DECL STDC	getInstanceReference(
 								);
 
 //
-//		inferenceInstance                                       (https://rdf.bg/ifcdoc/CP64/inferenceInstance.html)
+//		inferenceInstance                                       (https://rdf.bg/stepdoc/CP64/inferenceInstance.html)
 //				SdaiInstance			instance							IN
 //
 //				SdaiInstance			returns								OUT
@@ -8535,7 +8535,7 @@ SdaiInstance	DECL STDC	inferenceInstance(
 								);
 
 //
-//		sdaiValidateSchemaInstance                              (https://rdf.bg/ifcdoc/CP64/sdaiValidateSchemaInstance.html)
+//		sdaiValidateSchemaInstance                              (https://rdf.bg/stepdoc/CP64/sdaiValidateSchemaInstance.html)
 //				SdaiInstance			instance							IN
 //
 //				int_t					returns								OUT
@@ -8551,7 +8551,7 @@ int_t			DECL STDC	sdaiValidateSchemaInstance(
 //
 
 //
-//		engiGetEntityAttributeIndex                             (https://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeIndex.html)
+//		engiGetEntityAttributeIndex                             (https://rdf.bg/stepdoc/CP64/engiGetEntityAttributeIndex.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -8586,7 +8586,7 @@ static	inline	int_t	engiGetEntityAttributeIndex(
 #endif
 
 //
-//		engiGetEntityAttributeIndexEx                           (https://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeIndexEx.html)
+//		engiGetEntityAttributeIndexEx                           (https://rdf.bg/stepdoc/CP64/engiGetEntityAttributeIndexEx.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //				bool					countedWithParents					IN
@@ -8629,7 +8629,7 @@ static	inline	int_t	engiGetEntityAttributeIndexEx(
 #endif
 
 //
-//		engiGetEntityArgumentName                               (https://rdf.bg/ifcdoc/CP64/engiGetEntityArgumentName.html)
+//		engiGetEntityArgumentName                               (https://rdf.bg/stepdoc/CP64/engiGetEntityArgumentName.html)
 //				SdaiEntity				entity								IN
 //				SdaiInteger				index								IN
 //				SdaiPrimitiveType		valueType							IN
@@ -8688,7 +8688,7 @@ static	inline	SdaiString	engiGetEntityArgumentName(
 #endif
 
 //
-//		engiGetEntityArgumentType                               (https://rdf.bg/ifcdoc/CP64/engiGetEntityArgumentType.html)
+//		engiGetEntityArgumentType                               (https://rdf.bg/stepdoc/CP64/engiGetEntityArgumentType.html)
 //				SdaiEntity				entity								IN
 //				SdaiInteger				index								IN
 //				SdaiPrimitiveType		* attributeType						IN / OUT
@@ -8704,7 +8704,7 @@ void			DECL STDC	engiGetEntityArgumentType(
 								);
 
 //
-//		engiGetAttrOptional                                     (https://rdf.bg/ifcdoc/CP64/engiGetAttrOptional.html)
+//		engiGetAttrOptional                                     (https://rdf.bg/stepdoc/CP64/engiGetAttrOptional.html)
 //				const SdaiAttr			attribute							IN
 //
 //				int_t					returns								OUT
@@ -8716,7 +8716,7 @@ int_t			DECL STDC	engiGetAttrOptional(
 								);
 
 //
-//		engiGetAttrOptionalBN                                   (https://rdf.bg/ifcdoc/CP64/engiGetAttrOptionalBN.html)
+//		engiGetAttrOptionalBN                                   (https://rdf.bg/stepdoc/CP64/engiGetAttrOptionalBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -8759,7 +8759,7 @@ static	inline	int_t	engiGetAttrOptionalBN(
 #endif
 
 //
-//		engiGetAttrInverse                                      (https://rdf.bg/ifcdoc/CP64/engiGetAttrInverse.html)
+//		engiGetAttrInverse                                      (https://rdf.bg/stepdoc/CP64/engiGetAttrInverse.html)
 //				const SdaiAttr			attribute							IN
 //
 //				int_t					returns								OUT
@@ -8771,7 +8771,7 @@ int_t			DECL STDC	engiGetAttrInverse(
 								);
 
 //
-//		engiGetAttrInverseBN                                    (https://rdf.bg/ifcdoc/CP64/engiGetAttrInverseBN.html)
+//		engiGetAttrInverseBN                                    (https://rdf.bg/stepdoc/CP64/engiGetAttrInverseBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -8814,7 +8814,7 @@ static	inline	int_t	engiGetAttrInverseBN(
 #endif
 
 //
-//		engiAttrIsInverse                                       (https://rdf.bg/ifcdoc/CP64/engiAttrIsInverse.html)
+//		engiAttrIsInverse                                       (https://rdf.bg/stepdoc/CP64/engiAttrIsInverse.html)
 //				const SdaiAttr			attribute							IN
 //
 //				int_t					returns								OUT
@@ -8826,7 +8826,7 @@ int_t			DECL STDC	engiAttrIsInverse(
 								);
 
 //
-//		engiGetAttrDomain                                       (https://rdf.bg/ifcdoc/CP64/engiGetAttrDomain.html)
+//		engiGetAttrDomain                                       (https://rdf.bg/stepdoc/CP64/engiGetAttrDomain.html)
 //				const SdaiAttr			attribute							IN
 //				SdaiString				* domainName						IN / OUT
 //
@@ -8873,7 +8873,7 @@ static	inline	SdaiString	engiGetAttrDomain(
 #endif
 
 //
-//		engiGetAttrDomainBN                                     (https://rdf.bg/ifcdoc/CP64/engiGetAttrDomainBN.html)
+//		engiGetAttrDomainBN                                     (https://rdf.bg/stepdoc/CP64/engiGetAttrDomainBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //				SdaiString				* domainName						IN / OUT
@@ -8948,7 +8948,7 @@ static	inline	SdaiString	engiGetAttrDomainBN(
 #endif
 
 //
-//		engiGetEntityIsAbstract                                 (https://rdf.bg/ifcdoc/CP64/engiGetEntityIsAbstract.html)
+//		engiGetEntityIsAbstract                                 (https://rdf.bg/stepdoc/CP64/engiGetEntityIsAbstract.html)
 //				SdaiEntity				entity								IN
 //
 //				int_t					returns								OUT
@@ -8960,7 +8960,7 @@ int_t			DECL STDC	engiGetEntityIsAbstract(
 								);
 
 //
-//		engiGetEntityIsAbstractBN                               (https://rdf.bg/ifcdoc/CP64/engiGetEntityIsAbstractBN.html)
+//		engiGetEntityIsAbstractBN                               (https://rdf.bg/stepdoc/CP64/engiGetEntityIsAbstractBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				entityName							IN
 //
@@ -9003,7 +9003,7 @@ static	inline	int_t	engiGetEntityIsAbstractBN(
 #endif
 
 //
-//		engiGetAttributeTraits                                  (https://rdf.bg/ifcdoc/CP64/engiGetAttributeTraits.html)
+//		engiGetAttributeTraits                                  (https://rdf.bg/stepdoc/CP64/engiGetAttributeTraits.html)
 //				const SdaiAttr			attribute							IN
 //				const char				** name								IN / OUT
 //				SdaiEntity				* definingEntity					IN / OUT
@@ -9066,7 +9066,7 @@ static	inline	void	engiGetAttributeTraits(
 #endif
 
 //
-//		engiGetEntityNoArguments                                (https://rdf.bg/ifcdoc/CP64/engiGetEntityNoArguments.html)
+//		engiGetEntityNoArguments                                (https://rdf.bg/stepdoc/CP64/engiGetEntityNoArguments.html)
 //				SdaiEntity				entity								IN
 //
 //				int_t					returns								OUT
@@ -9078,7 +9078,7 @@ int_t			DECL STDC	engiGetEntityNoArguments(
 								);
 
 //
-//		engiGetArgumentType                                     (https://rdf.bg/ifcdoc/CP64/engiGetArgumentType.html)
+//		engiGetArgumentType                                     (https://rdf.bg/stepdoc/CP64/engiGetArgumentType.html)
 //				const SdaiAttr			attribute							IN
 //
 //				SdaiPrimitiveType		returns								OUT
@@ -9090,7 +9090,7 @@ SdaiPrimitiveType	DECL STDC	engiGetArgumentType(
 								);
 
 //
-//		engiGetAttributeType                                    (https://rdf.bg/ifcdoc/CP64/engiGetAttributeType.html)
+//		engiGetAttributeType                                    (https://rdf.bg/stepdoc/CP64/engiGetAttributeType.html)
 //				const SdaiAttr			attribute							IN
 //
 //				SdaiPrimitiveType		returns								OUT
@@ -9102,7 +9102,7 @@ SdaiPrimitiveType	DECL STDC	engiGetAttributeType(
 								);
 
 //
-//		engiGetEntityArgumentIndex                              (https://rdf.bg/ifcdoc/CP64/engiGetEntityArgumentIndex.html)
+//		engiGetEntityArgumentIndex                              (https://rdf.bg/stepdoc/CP64/engiGetEntityArgumentIndex.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				argumentName						IN
 //
@@ -9137,7 +9137,7 @@ static	inline	int_t	engiGetEntityArgumentIndex(
 #endif
 
 //
-//		engiGetAggrElement                                      (https://rdf.bg/ifcdoc/CP64/engiGetAggrElement.html)
+//		engiGetAggrElement                                      (https://rdf.bg/stepdoc/CP64/engiGetAggrElement.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiInteger				index								IN
 //				SdaiPrimitiveType		valueType							IN
@@ -9155,7 +9155,7 @@ void			DECL * STDC	engiGetAggrElement(
 								);
 
 //
-//		engiGetEntityArgument                                   (https://rdf.bg/ifcdoc/CP64/engiGetEntityArgument.html)
+//		engiGetEntityArgument                                   (https://rdf.bg/stepdoc/CP64/engiGetEntityArgument.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				argumentName						IN
 //
@@ -9190,7 +9190,7 @@ static	inline	SdaiAttr	engiGetEntityArgument(
 #endif
 
 //
-//		sdaiGetADBTypePathx                                     (https://rdf.bg/ifcdoc/CP64/sdaiGetADBTypePathx.html)
+//		sdaiGetADBTypePathx                                     (https://rdf.bg/stepdoc/CP64/sdaiGetADBTypePathx.html)
 //				const SdaiADB			ADB									IN
 //				int_t					typeNameNumber						IN
 //				SdaiString				* path								IN / OUT
@@ -9243,7 +9243,7 @@ static	inline	SdaiString	sdaiGetADBTypePathx(
 #endif
 
 //
-//		xxxxOpenModelByStream                                   (https://rdf.bg/ifcdoc/CP64/xxxxOpenModelByStream.html)
+//		xxxxOpenModelByStream                                   (https://rdf.bg/stepdoc/CP64/xxxxOpenModelByStream.html)
 //				int_t					repository							IN
 //				const void				* callback							IN
 //				SdaiString				schemaName							IN
@@ -9282,7 +9282,7 @@ static	inline	int_t	xxxxOpenModelByStream(
 #endif
 
 //
-//		sdaiplusGetAggregationType                              (https://rdf.bg/ifcdoc/CP64/sdaiplusGetAggregationType.html)
+//		sdaiplusGetAggregationType                              (https://rdf.bg/stepdoc/CP64/sdaiplusGetAggregationType.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAggr			aggregate							IN
 //
@@ -9296,7 +9296,7 @@ int_t			DECL STDC	sdaiplusGetAggregationType(
 								);
 
 //
-//		xxxxGetAttrType                                         (https://rdf.bg/ifcdoc/CP64/xxxxGetAttrType.html)
+//		xxxxGetAttrType                                         (https://rdf.bg/stepdoc/CP64/xxxxGetAttrType.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAttr			attribute							IN
 //				SdaiString				* attributeType						IN / OUT
@@ -9335,7 +9335,7 @@ static	inline	int_t	xxxxGetAttrType(
 #endif
 
 //
-//		xxxxGetAttrTypeBN                                       (https://rdf.bg/ifcdoc/CP64/xxxxGetAttrTypeBN.html)
+//		xxxxGetAttrTypeBN                                       (https://rdf.bg/stepdoc/CP64/xxxxGetAttrTypeBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //				SdaiString				* attributeType						IN / OUT
@@ -9386,7 +9386,7 @@ static	inline	int_t	xxxxGetAttrTypeBN(
 #endif
 
 //
-//		GetSPFFHeaderItemUnicode                                (https://rdf.bg/ifcdoc/CP64/GetSPFFHeaderItemUnicode.html)
+//		GetSPFFHeaderItemUnicode                                (https://rdf.bg/stepdoc/CP64/GetSPFFHeaderItemUnicode.html)
 //				SdaiModel				model								IN
 //				int_t					itemIndex							IN
 //				int_t					itemSubIndex						IN
@@ -9410,7 +9410,7 @@ int_t			DECL STDC	GetSPFFHeaderItemUnicode(
 //
 
 //
-//		validateSetOptions                                      (https://rdf.bg/ifcdoc/CP64/validateSetOptions.html)
+//		validateSetOptions                                      (https://rdf.bg/stepdoc/CP64/validateSetOptions.html)
 //				int_t					timeLimitSeconds					IN
 //				int_t					issueCntLimit						IN
 //				bool					showEachIssueOnce					IN
@@ -9450,7 +9450,7 @@ void			DECL STDC	validateSetOptions(
 								);
 
 //
-//		validateGetOptions                                      (https://rdf.bg/ifcdoc/CP64/validateGetOptions.html)
+//		validateGetOptions                                      (https://rdf.bg/stepdoc/CP64/validateGetOptions.html)
 //				int_t					* timeLimitSeconds					IN / OUT
 //				int_t					* issueCntLimit						IN / OUT
 //				bool					* showEachIssueOnce					IN / OUT
@@ -9489,7 +9489,7 @@ uint64_t		DECL STDC	validateGetOptions(
 								);
 
 //
-//		validateModel                                           (https://rdf.bg/ifcdoc/CP64/validateModel.html)
+//		validateModel                                           (https://rdf.bg/stepdoc/CP64/validateModel.html)
 //				SdaiModel				model								IN
 //
 //				ValidationResults		returns								OUT
@@ -9501,7 +9501,7 @@ ValidationResults	DECL STDC	validateModel(
 								);
 
 //
-//		validateInstance                                        (https://rdf.bg/ifcdoc/CP64/validateInstance.html)
+//		validateInstance                                        (https://rdf.bg/stepdoc/CP64/validateInstance.html)
 //				SdaiInstance			instance							IN
 //
 //				ValidationResults		returns								OUT
@@ -9513,7 +9513,7 @@ ValidationResults	DECL STDC	validateInstance(
 								);
 
 //
-//		validateFreeResults                                     (https://rdf.bg/ifcdoc/CP64/validateFreeResults.html)
+//		validateFreeResults                                     (https://rdf.bg/stepdoc/CP64/validateFreeResults.html)
 //				ValidationResults		results								IN
 //
 //				void					returns
@@ -9525,7 +9525,7 @@ void			DECL STDC	validateFreeResults(
 								);
 
 //
-//		validateGetFirstIssue                                   (https://rdf.bg/ifcdoc/CP64/validateGetFirstIssue.html)
+//		validateGetFirstIssue                                   (https://rdf.bg/stepdoc/CP64/validateGetFirstIssue.html)
 //				ValidationResults		results								IN
 //
 //				ValidationIssue			returns								OUT
@@ -9538,7 +9538,7 @@ ValidationIssue	DECL STDC	validateGetFirstIssue(
 								);
 
 //
-//		validateGetNextIssue                                    (https://rdf.bg/ifcdoc/CP64/validateGetNextIssue.html)
+//		validateGetNextIssue                                    (https://rdf.bg/stepdoc/CP64/validateGetNextIssue.html)
 //				ValidationIssue			issue								IN
 //
 //				ValidationIssue			returns								OUT
@@ -9551,7 +9551,7 @@ ValidationIssue	DECL STDC	validateGetNextIssue(
 								);
 
 //
-//		validateGetStatus                                       (https://rdf.bg/ifcdoc/CP64/validateGetStatus.html)
+//		validateGetStatus                                       (https://rdf.bg/stepdoc/CP64/validateGetStatus.html)
 //				ValidationResults		results								IN
 //
 //				enum_validation_status	returns								OUT
@@ -9569,7 +9569,7 @@ enum_validation_status	DECL STDC	validateGetStatus(
 								);
 
 //
-//		validateGetIssueType                                    (https://rdf.bg/ifcdoc/CP64/validateGetIssueType.html)
+//		validateGetIssueType                                    (https://rdf.bg/stepdoc/CP64/validateGetIssueType.html)
 //				ValidationIssue			issue								IN
 //
 //				enum_validation_type	returns								OUT
@@ -9599,7 +9599,7 @@ enum_validation_type	DECL STDC	validateGetIssueType(
 								);
 
 //
-//		validateGetInstance                                     (https://rdf.bg/ifcdoc/CP64/validateGetInstance.html)
+//		validateGetInstance                                     (https://rdf.bg/stepdoc/CP64/validateGetInstance.html)
 //				ValidationIssue			issue								IN
 //
 //				SdaiInstance			returns								OUT
@@ -9611,7 +9611,7 @@ SdaiInstance	DECL STDC	validateGetInstance(
 								);
 
 //
-//		validateGetInstanceRelated                              (https://rdf.bg/ifcdoc/CP64/validateGetInstanceRelated.html)
+//		validateGetInstanceRelated                              (https://rdf.bg/stepdoc/CP64/validateGetInstanceRelated.html)
 //				ValidationIssue			issue								IN
 //
 //				SdaiInstance			returns								OUT
@@ -9623,7 +9623,7 @@ SdaiInstance	DECL STDC	validateGetInstanceRelated(
 								);
 
 //
-//		validateGetEntity                                       (https://rdf.bg/ifcdoc/CP64/validateGetEntity.html)
+//		validateGetEntity                                       (https://rdf.bg/stepdoc/CP64/validateGetEntity.html)
 //				ValidationIssue			issue								IN
 //
 //				SdaiEntity				returns								OUT
@@ -9635,7 +9635,7 @@ SdaiEntity		DECL STDC	validateGetEntity(
 								);
 
 //
-//		validateGetAttr                                         (https://rdf.bg/ifcdoc/CP64/validateGetAttr.html)
+//		validateGetAttr                                         (https://rdf.bg/stepdoc/CP64/validateGetAttr.html)
 //				ValidationIssue			issue								IN
 //
 //				SdaiAttr				returns								OUT
@@ -9647,7 +9647,7 @@ SdaiAttr		DECL STDC	validateGetAttr(
 								);
 
 //
-//		validateGetAggrLevel                                    (https://rdf.bg/ifcdoc/CP64/validateGetAggrLevel.html)
+//		validateGetAggrLevel                                    (https://rdf.bg/stepdoc/CP64/validateGetAggrLevel.html)
 //				ValidationIssue			issue								IN
 //
 //				ValidationIssueLevel	returns								OUT
@@ -9659,7 +9659,7 @@ ValidationIssueLevel	DECL STDC	validateGetAggrLevel(
 								);
 
 //
-//		validateGetAggrIndArray                                 (https://rdf.bg/ifcdoc/CP64/validateGetAggrIndArray.html)
+//		validateGetAggrIndArray                                 (https://rdf.bg/stepdoc/CP64/validateGetAggrIndArray.html)
 //				ValidationIssue			issue								IN
 //
 //				const int_t				* returns							OUT
@@ -9671,7 +9671,7 @@ const int_t		DECL * STDC	validateGetAggrIndArray(
 								);
 
 //
-//		validateGetIssueLevel                                   (https://rdf.bg/ifcdoc/CP64/validateGetIssueLevel.html)
+//		validateGetIssueLevel                                   (https://rdf.bg/stepdoc/CP64/validateGetIssueLevel.html)
 //				ValidationIssue			issue								IN
 //
 //				int_t					returns								OUT
@@ -9683,7 +9683,7 @@ int_t			DECL STDC	validateGetIssueLevel(
 								);
 
 //
-//		validateGetDescription                                  (https://rdf.bg/ifcdoc/CP64/validateGetDescription.html)
+//		validateGetDescription                                  (https://rdf.bg/stepdoc/CP64/validateGetDescription.html)
 //				ValidationIssue			issue								IN
 //
 //				SdaiString				returns								OUT
@@ -9699,7 +9699,7 @@ SdaiString		DECL STDC	validateGetDescription(
 //
 
 //
-//		initializeModellingInstance                             (https://rdf.bg/ifcdoc/CP64/initializeModellingInstance.html)
+//		initializeModellingInstance                             (https://rdf.bg/stepdoc/CP64/initializeModellingInstance.html)
 //				SdaiModel				model								IN
 //				int_t					* noVertices						IN / OUT
 //				int_t					* noIndices							IN / OUT
@@ -9719,7 +9719,7 @@ int_t			DECL STDC	initializeModellingInstance(
 								);
 
 //
-//		finalizeModelling                                       (https://rdf.bg/ifcdoc/CP64/finalizeModelling.html)
+//		finalizeModelling                                       (https://rdf.bg/stepdoc/CP64/finalizeModelling.html)
 //				SdaiModel				model								IN
 //				float					* vertices							IN / OUT
 //				int_t					* indices							IN / OUT
@@ -9737,7 +9737,7 @@ int_t			DECL STDC	finalizeModelling(
 								);
 
 //
-//		getInstanceInModelling                                  (https://rdf.bg/ifcdoc/CP64/getInstanceInModelling.html)
+//		getInstanceInModelling                                  (https://rdf.bg/stepdoc/CP64/getInstanceInModelling.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				int_t					mode								IN
@@ -9759,7 +9759,7 @@ int_t			DECL STDC	getInstanceInModelling(
 								);
 
 //
-//		setVertexOffset                                         (https://rdf.bg/ifcdoc/CP64/setVertexOffset.html)
+//		setVertexOffset                                         (https://rdf.bg/stepdoc/CP64/setVertexOffset.html)
 //				SdaiModel				model								IN
 //				double					x									IN
 //				double					y									IN
@@ -9777,7 +9777,7 @@ void			DECL STDC	setVertexOffset(
 								);
 
 //
-//		setFormat                                               (https://rdf.bg/ifcdoc/CP64/setFormat.html)
+//		setFormat                                               (https://rdf.bg/stepdoc/CP64/setFormat.html)
 //				SdaiModel				model								IN
 //				int_t					setting								IN
 //				int_t					mask								IN
@@ -9793,7 +9793,7 @@ void			DECL STDC	setFormat(
 								);
 
 //
-//		getConceptualFaceCnt                                    (https://rdf.bg/ifcdoc/CP64/getConceptualFaceCnt.html)
+//		getConceptualFaceCnt                                    (https://rdf.bg/stepdoc/CP64/getConceptualFaceCnt.html)
 //				SdaiInstance			instance							IN
 //
 //				int_t					returns								OUT
@@ -9805,7 +9805,7 @@ int_t			DECL STDC	getConceptualFaceCnt(
 								);
 
 //
-//		getConceptualFaceEx                                     (https://rdf.bg/ifcdoc/CP64/getConceptualFaceEx.html)
+//		getConceptualFaceEx                                     (https://rdf.bg/stepdoc/CP64/getConceptualFaceEx.html)
 //				SdaiInstance			instance							IN
 //				int_t					index								IN
 //				int_t					* startIndexTriangles				IN / OUT
@@ -9839,7 +9839,7 @@ int_t			DECL STDC	getConceptualFaceEx(
 								);
 
 //
-//		createGeometryConversion                                (https://rdf.bg/ifcdoc/CP64/createGeometryConversion.html)
+//		createGeometryConversion                                (https://rdf.bg/stepdoc/CP64/createGeometryConversion.html)
 //				SdaiInstance			instance							IN
 //				int64_t					* owlInstance						IN / OUT
 //
@@ -9853,7 +9853,7 @@ void			DECL STDC	createGeometryConversion(
 								);
 
 //
-//		convertInstance                                         (https://rdf.bg/ifcdoc/CP64/convertInstance.html)
+//		convertInstance                                         (https://rdf.bg/stepdoc/CP64/convertInstance.html)
 //				SdaiInstance			instance							IN
 //
 //				void					returns
@@ -9865,7 +9865,7 @@ void			DECL STDC	convertInstance(
 								);
 
 //
-//		initializeModellingInstanceEx                           (https://rdf.bg/ifcdoc/CP64/initializeModellingInstanceEx.html)
+//		initializeModellingInstanceEx                           (https://rdf.bg/stepdoc/CP64/initializeModellingInstanceEx.html)
 //				SdaiModel				model								IN
 //				int_t					* noVertices						IN / OUT
 //				int_t					* noIndices							IN / OUT
@@ -9887,7 +9887,7 @@ int_t			DECL STDC	initializeModellingInstanceEx(
 								);
 
 //
-//		exportModellingAsOWL                                    (https://rdf.bg/ifcdoc/CP64/exportModellingAsOWL.html)
+//		exportModellingAsOWL                                    (https://rdf.bg/stepdoc/CP64/exportModellingAsOWL.html)
 //				SdaiModel				model								IN
 //				SdaiString				fileName							IN
 //

@@ -62,7 +62,7 @@ namespace RDF
 		public const Int64 EXPORT_CONCEPTUAL_FACE_POLYGONS = (1<<13); 
 		///	<summary>Polygon lines (wireframe) exported as tuples (edges) - else as list (loop)</summary>
 		public const Int64 EXPORT_POLYGONS_AS_TUPLES = (1<<14); 
-		///	<summary>Normal's are exported to be in line with the original semantic form description (orthogonal to conceptual face, could be non orthogonal to the planar face or triangle) - else all normal vectors of triangles are transformed orthogonal to the planar face or triangle they belong to</summary>
+		///	<summary>Normals are exported to be in line with the original semantic form description (orthogonal to conceprual face, could be non orthogonal to the planar face or triangle) - else all normals of triangles are transformed orthogonal to the palnar face or triangle they belong to</summary>
 		public const Int64 EXPORT_ADVANCED_NORMALS = (1<<15); 
 		///	<summary>Where possible DirectX compatibility is given to exported data. Unsets FORMAT_FLAG_OPENGL, FORMAT_FLAG_VERSION_0001, FORMAT_FLAG_VERSION_0010</summary>
 		public const Int64 EXPORT_DIRECTX = (1<<16); 
@@ -110,7 +110,7 @@ namespace RDF
 		///	<summary>get color blue component in range 0..1</summary>
 		public static double GET_B(UInt32 clr) { return GET_B255(clr) / 255.0; }
 
-		///	<summary>get color transparency in range 0..1</summary>
+		///	<summary>get color trancparency in range 0..1</summary>
 		public static double GET_W(UInt32 clr) { return GET_W255(clr) / 255.0; }
 
 		///	<summary>get color from array of 4 components in range 0..255</summary>
@@ -119,7 +119,7 @@ namespace RDF
 		///	<summary>get color from array of 4 components in range 0..1</summary>
 		public static UInt32 RGBW(double[] r) { return RGBW(r[0], r[1], r[2], r[3]); }
 
-		///	<summary>get color comments in range 0..255 to array of 4 elements</summary>
+		///	<summary>get color comonents in range 0..255 to arry of 4 elements</summary>
 		public static byte[] GET_COMPONENTS255(UInt32 clr)
 		{
 			var	r = new byte[4]; 
@@ -130,7 +130,7 @@ namespace RDF
 			return	r; 
 		}
 
-		///	<summary>get color comments in range 0..1 to array of 4 elements</summary>
+		///	<summary>get color comonents in range 0..1 to arry of 4 elements</summary>
 		public static double[] GET_COMPONENTS(UInt32 clr)
 		{
 			var	r = new double[4]; 
@@ -255,7 +255,7 @@ namespace RDF
         //
 
 		/// <summary>
-		///		SetSPFFHeader                                           (https://rdf.bg/ifcdoc/CS64/SetSPFFHeader.html)
+		///		SetSPFFHeader                                           (http://rdf.bg/ifcdoc/CS64/SetSPFFHeader.html)
 		///
 		///	This call is an aggregate of several SetSPFFHeaderItem calls. In several cases the header can be set easily with this call. In case an argument is zero, this argument will not be updated, i.e. it will not be filled with 0.
 		/// </summary>
@@ -266,7 +266,7 @@ namespace RDF
 		public static extern void SetSPFFHeader(int_t model, byte[] description, byte[] implementationLevel, byte[] name, byte[] timeStamp, byte[] author, byte[] organization, byte[] preprocessorVersion, byte[] originatingSystem, byte[] authorization, byte[] fileSchema);
 
 		/// <summary>
-		///		SetSPFFHeaderItem                                       (https://rdf.bg/ifcdoc/CS64/SetSPFFHeaderItem.html)
+		///		SetSPFFHeaderItem                                       (http://rdf.bg/ifcdoc/CS64/SetSPFFHeaderItem.html)
 		///
 		///	This call can be used to write a specific header item, the source code example is larger to show and explain how this call can be used.
 		/// </summary>
@@ -277,7 +277,7 @@ namespace RDF
 		public static extern int_t SetSPFFHeaderItem(int_t model, int_t itemIndex, int_t itemSubIndex, int_t valueType, byte[] value);
 
 		/// <summary>
-		///		GetSPFFHeaderItem                                       (https://rdf.bg/ifcdoc/CS64/GetSPFFHeaderItem.html)
+		///		GetSPFFHeaderItem                                       (http://rdf.bg/ifcdoc/CS64/GetSPFFHeaderItem.html)
 		///
 		///	This call can be used to read a specific header item, the source code example is larger to show and explain how this call can be used.
 		/// </summary>
@@ -285,7 +285,7 @@ namespace RDF
 		public static extern int_t GetSPFFHeaderItem(int_t model, int_t itemIndex, int_t itemSubIndex, int_t valueType, out IntPtr value);
 
 		/// <summary>
-		///		GetDateTime                                             (https://rdf.bg/ifcdoc/CS64/GetDateTime.html)
+		///		GetDateTime                                             (http://rdf.bg/ifcdoc/CS64/GetDateTime.html)
 		///
 		///	Returns an current date and time according to ISO 8601 without time zone, i.e. formatted as '2099-12-31T23:59:59'.
 		/// </summary>
@@ -300,7 +300,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		GetLibraryIdentifier                                    (https://rdf.bg/ifcdoc/CS64/GetLibraryIdentifier.html)
+		///		GetLibraryIdentifier                                    (http://rdf.bg/ifcdoc/CS64/GetLibraryIdentifier.html)
 		///
 		///	Returns an identifier for the current instance of this library including date stamp and revision number.
 		/// </summary>
@@ -315,7 +315,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		GetSchemaName                                           (https://rdf.bg/ifcdoc/CS64/GetSchemaName.html)
+		///		GetSchemaName                                           (http://rdf.bg/ifcdoc/CS64/GetSchemaName.html)
 		///
 		///	Returns the value as defined by SCHEMA in the loaded EXPRESS schema.
 		/// </summary>
@@ -330,7 +330,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		engiSetMappingSupport                                   (https://rdf.bg/ifcdoc/CS64/engiSetMappingSupport.html)
+		///		engiSetMappingSupport                                   (http://rdf.bg/ifcdoc/CS64/engiSetMappingSupport.html)
 		///
 		///	...
 		/// </summary>
@@ -339,7 +339,7 @@ namespace RDF
         public static extern bool engiSetMappingSupport(int_t entity, [param: MarshalAs(UnmanagedType.U1)] bool enable);
 
 		/// <summary>
-		///		engiGetMappingSupport                                   (https://rdf.bg/ifcdoc/CS64/engiGetMappingSupport.html)
+		///		engiGetMappingSupport                                   (http://rdf.bg/ifcdoc/CS64/engiGetMappingSupport.html)
 		///
 		///	...
 		/// </summary>
@@ -358,7 +358,7 @@ namespace RDF
         public delegate void WriteCallBackFunction(IntPtr value, Int64 size);
 
 		/// <summary>
-		///		sdaiCreateModelBN                                       (https://rdf.bg/ifcdoc/CS64/sdaiCreateModelBN.html)
+		///		sdaiCreateModelBN                                       (http://rdf.bg/ifcdoc/CS64/sdaiCreateModelBN.html)
 		///
 		///	This function creates and empty model (we expect with a schema file given).
 		///	Attributes repository and fileName will be ignored, they are their because of backward compatibility.
@@ -382,7 +382,7 @@ namespace RDF
 
             //	HEADER;
             //	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
-            //	FILE_NAME('Header example.ifc', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
+            //	FILE_NAME('Header example.stp', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
             //	FILE_SCHEMA(('IFC4X3_ADD2'));
             //	ENDSEC;
 
@@ -393,7 +393,7 @@ namespace RDF
             RDF.stepengine.SetSPFFHeaderItem(model, 1, 0, RDF.stepengine.sdaiSTRING, "2;1");
 
             //  set Name
-            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.ifc");
+            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.stp");
 
             //  set Time Stamp
             RDF.stepengine.SetSPFFHeaderItem(model, 3, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetDateTime(model));         //	'2099-12-31T23:59:59'
@@ -425,7 +425,7 @@ namespace RDF
 
             //	HEADER;
             //	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
-            //	FILE_NAME('Header example.ifc', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
+            //	FILE_NAME('Header example.stp', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
             //	FILE_SCHEMA(('IFC4X3_ADD2'));
             //	ENDSEC;
 
@@ -436,7 +436,7 @@ namespace RDF
             RDF.stepengine.SetSPFFHeaderItem(model, 1, 0, RDF.stepengine.sdaiSTRING, "2;1");
 
             //  set Name
-            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.ifc");
+            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.stp");
 
             //  set Time Stamp
             RDF.stepengine.SetSPFFHeaderItem(model, 3, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetDateTime(model));         //	'2099-12-31T23:59:59'
@@ -468,7 +468,7 @@ namespace RDF
 
             //	HEADER;
             //	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
-            //	FILE_NAME('Header example.ifc', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
+            //	FILE_NAME('Header example.stp', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
             //	FILE_SCHEMA(('IFC4X3_ADD2'));
             //	ENDSEC;
 
@@ -479,7 +479,7 @@ namespace RDF
             RDF.stepengine.SetSPFFHeaderItem(model, 1, 0, RDF.stepengine.sdaiSTRING, "2;1");
 
             //  set Name
-			//RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.ifc");
+			//RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.stp");
 
             //  set Time Stamp
             RDF.stepengine.SetSPFFHeaderItem(model, 3, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetDateTime(model));         //	'2099-12-31T23:59:59'
@@ -511,7 +511,7 @@ namespace RDF
 
             //	HEADER;
             //	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
-            //	FILE_NAME('Header example.ifc', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
+            //	FILE_NAME('Header example.stp', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
             //	FILE_SCHEMA(('IFC4X3_ADD2'));
             //	ENDSEC;
 
@@ -522,7 +522,7 @@ namespace RDF
             RDF.stepengine.SetSPFFHeaderItem(model, 1, 0, RDF.stepengine.sdaiSTRING, "2;1");
 
             //  set Name
-            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.ifc");
+            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.stp");
 
             //  set Time Stamp
             RDF.stepengine.SetSPFFHeaderItem(model, 3, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetDateTime(model));         //	'2099-12-31T23:59:59'
@@ -549,7 +549,7 @@ namespace RDF
         }
 
 		/// <summary>
-		///		sdaiCreateModelBNUnicode                                (https://rdf.bg/ifcdoc/CS64/sdaiCreateModelBNUnicode.html)
+		///		sdaiCreateModelBNUnicode                                (http://rdf.bg/ifcdoc/CS64/sdaiCreateModelBNUnicode.html)
 		///
 		///	This function creates and empty model (we expect with a schema file given).
 		///	Attributes repository and fileName will be ignored, they are their because of backward compatibility.
@@ -573,7 +573,7 @@ namespace RDF
 
             //	HEADER;
             //	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
-            //	FILE_NAME('Header example.ifc', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
+            //	FILE_NAME('Header example.stp', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
             //	FILE_SCHEMA(('IFC4X3_ADD2'));
             //	ENDSEC;
 
@@ -584,7 +584,7 @@ namespace RDF
             RDF.stepengine.SetSPFFHeaderItem(model, 1, 0, RDF.stepengine.sdaiSTRING, "2;1");
 
             //  set Name
-            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.ifc");
+            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.stp");
 
             //  set Time Stamp
             RDF.stepengine.SetSPFFHeaderItem(model, 3, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetDateTime(model));         //	'2099-12-31T23:59:59'
@@ -616,7 +616,7 @@ namespace RDF
 
             //	HEADER;
             //	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
-            //	FILE_NAME('Header example.ifc', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
+            //	FILE_NAME('Header example.stp', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
             //	FILE_SCHEMA(('IFC4X3_ADD2'));
             //	ENDSEC;
 
@@ -627,7 +627,7 @@ namespace RDF
             RDF.stepengine.SetSPFFHeaderItem(model, 1, 0, RDF.stepengine.sdaiSTRING, "2;1");
 
             //  set Name
-            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.ifc");
+            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.stp");
 
             //  set Time Stamp
             RDF.stepengine.SetSPFFHeaderItem(model, 3, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetDateTime(model));         //	'2099-12-31T23:59:59'
@@ -659,7 +659,7 @@ namespace RDF
 
             //	HEADER;
             //	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
-            //	FILE_NAME('Header example.ifc', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
+            //	FILE_NAME('Header example.stp', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
             //	FILE_SCHEMA(('IFC4X3_ADD2'));
             //	ENDSEC;
 
@@ -670,7 +670,7 @@ namespace RDF
             RDF.stepengine.SetSPFFHeaderItem(model, 1, 0, RDF.stepengine.sdaiSTRING, "2;1");
 
             //  set Name
-			//RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.ifc");
+			//RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.stp");
 
             //  set Time Stamp
             RDF.stepengine.SetSPFFHeaderItem(model, 3, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetDateTime(model));         //	'2099-12-31T23:59:59'
@@ -702,7 +702,7 @@ namespace RDF
 
             //	HEADER;
             //	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
-            //	FILE_NAME('Header example.ifc', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
+            //	FILE_NAME('Header example.stp', '2099-12-31T23:59:59', ('Peter Bonsma'), ('RDF Ltd.'), 'IFC Engine Library, revision 9999, 2099-12-31T23:59:59', 'Company - Application - 1.0.0.0', 'none');
             //	FILE_SCHEMA(('IFC4X3_ADD2'));
             //	ENDSEC;
 
@@ -713,7 +713,7 @@ namespace RDF
             RDF.stepengine.SetSPFFHeaderItem(model, 1, 0, RDF.stepengine.sdaiSTRING, "2;1");
 
             //  set Name
-            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.ifc");
+            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.stp");
 
             //  set Time Stamp
             RDF.stepengine.SetSPFFHeaderItem(model, 3, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetDateTime(model));         //	'2099-12-31T23:59:59'
@@ -740,7 +740,7 @@ namespace RDF
         }
 
 		/// <summary>
-		///		sdaiOpenModelBN                                         (https://rdf.bg/ifcdoc/CS64/sdaiOpenModelBN.html)
+		///		sdaiOpenModelBN                                         (http://rdf.bg/ifcdoc/CS64/sdaiOpenModelBN.html)
 		///
 		///	This function opens the model on location fileName.
 		///	Attribute repository will be ignored, they are their because of backward compatibility.
@@ -759,7 +759,7 @@ namespace RDF
 		public static extern int_t sdaiOpenModelBN(int_t repository, byte[] fileName, byte[] schemaName);
 
 		/// <summary>
-		///		sdaiOpenModelBNUnicode                                  (https://rdf.bg/ifcdoc/CS64/sdaiOpenModelBNUnicode.html)
+		///		sdaiOpenModelBNUnicode                                  (http://rdf.bg/ifcdoc/CS64/sdaiOpenModelBNUnicode.html)
 		///
 		///	This function opens the model on location fileName.
 		///	Attribute repository will be ignored, they are their because of backward compatibility.
@@ -778,7 +778,7 @@ namespace RDF
 		public static extern int_t sdaiOpenModelBNUnicode(int_t repository, byte[] fileName, byte[] schemaName);
 
 		/// <summary>
-		///		engiOpenModelByStream                                   (https://rdf.bg/ifcdoc/CS64/engiOpenModelByStream.html)
+		///		engiOpenModelByStream                                   (http://rdf.bg/ifcdoc/CS64/engiOpenModelByStream.html)
 		///
 		///	This function opens the model via a stream.
 		///	Attribute repository will be ignored, they are their because of backward compatibility.
@@ -791,7 +791,7 @@ namespace RDF
 		public static extern int_t engiOpenModelByStream(int_t repository, [MarshalAs(UnmanagedType.FunctionPtr)] ReadCallBackFunction callback, byte[] schemaName);
 
 		/// <summary>
-		///		engiOpenModelByArray                                    (https://rdf.bg/ifcdoc/CS64/engiOpenModelByArray.html)
+		///		engiOpenModelByArray                                    (http://rdf.bg/ifcdoc/CS64/engiOpenModelByArray.html)
 		///
 		///	This function opens the model via an array.
 		///	Attribute repository will be ignored, they are their because of backward compatibility.
@@ -804,7 +804,7 @@ namespace RDF
 		public static extern int_t engiOpenModelByArray(int_t repository, byte[] content, int_t size, byte[] schemaName);
 
 		/// <summary>
-		///		sdaiSaveModelBN                                         (https://rdf.bg/ifcdoc/CS64/sdaiSaveModelBN.html)
+		///		sdaiSaveModelBN                                         (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelBN.html)
 		///
 		///	This function saves the model (char file name).
 		/// </summary>
@@ -815,7 +815,7 @@ namespace RDF
 		public static extern void sdaiSaveModelBN(int_t model, byte[] fileName);
 
 		/// <summary>
-		///		sdaiSaveModelBNUnicode                                  (https://rdf.bg/ifcdoc/CS64/sdaiSaveModelBNUnicode.html)
+		///		sdaiSaveModelBNUnicode                                  (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelBNUnicode.html)
 		///
 		///	This function saves the model (wchar, i.e. Unicode file name).
 		/// </summary>
@@ -826,7 +826,7 @@ namespace RDF
 		public static extern void sdaiSaveModelBNUnicode(int_t model, byte[] fileName);
 
 		/// <summary>
-		///		engiSaveModelByStream                                   (https://rdf.bg/ifcdoc/CS64/engiSaveModelByStream.html)
+		///		engiSaveModelByStream                                   (http://rdf.bg/ifcdoc/CS64/engiSaveModelByStream.html)
 		///
 		///	This function saves the model as a stream.
 		/// </summary>
@@ -834,7 +834,7 @@ namespace RDF
 		public static extern void engiSaveModelByStream(int_t model, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, int_t size);
 
 		/// <summary>
-		///		engiSaveModelByArray                                    (https://rdf.bg/ifcdoc/CS64/engiSaveModelByArray.html)
+		///		engiSaveModelByArray                                    (http://rdf.bg/ifcdoc/CS64/engiSaveModelByArray.html)
 		///
 		///	This function saves the model as an array.
 		/// </summary>
@@ -842,7 +842,7 @@ namespace RDF
 		public static extern void engiSaveModelByArray(int_t model, byte[] content, out int_t size);
 
 		/// <summary>
-		///		sdaiSaveModelAsXmlBN                                    (https://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsXmlBN.html)
+		///		sdaiSaveModelAsXmlBN                                    (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsXmlBN.html)
 		///
 		///	This function saves the model as XML according to IFC2x3's way of XML serialization (char file name).
 		/// </summary>
@@ -853,7 +853,7 @@ namespace RDF
 		public static extern void sdaiSaveModelAsXmlBN(int_t model, byte[] fileName);
 
 		/// <summary>
-		///		sdaiSaveModelAsXmlBNUnicode                             (https://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsXmlBNUnicode.html)
+		///		sdaiSaveModelAsXmlBNUnicode                             (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsXmlBNUnicode.html)
 		///
 		///	This function saves the model as XML according to IFC2x3's way of XML serialization (wchar, i.e. Unicode file name).
 		/// </summary>
@@ -864,7 +864,7 @@ namespace RDF
 		public static extern void sdaiSaveModelAsXmlBNUnicode(int_t model, byte[] fileName);
 
 		/// <summary>
-		///		sdaiSaveModelAsSimpleXmlBN                              (https://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsSimpleXmlBN.html)
+		///		sdaiSaveModelAsSimpleXmlBN                              (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsSimpleXmlBN.html)
 		///
 		///	This function saves the model as XML according to IFC4's way of XML serialization (char file name).
 		/// </summary>
@@ -875,7 +875,7 @@ namespace RDF
 		public static extern void sdaiSaveModelAsSimpleXmlBN(int_t model, byte[] fileName);
 
 		/// <summary>
-		///		sdaiSaveModelAsSimpleXmlBNUnicode                       (https://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsSimpleXmlBNUnicode.html)
+		///		sdaiSaveModelAsSimpleXmlBNUnicode                       (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsSimpleXmlBNUnicode.html)
 		///
 		///	This function saves the model as XML according to IFC4's way of XML serialization (wchar, i.e. Unicode file name).
 		/// </summary>
@@ -886,7 +886,7 @@ namespace RDF
 		public static extern void sdaiSaveModelAsSimpleXmlBNUnicode(int_t model, byte[] fileName);
 
 		/// <summary>
-		///		sdaiSaveModelAsJsonBN                                   (https://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsJsonBN.html)
+		///		sdaiSaveModelAsJsonBN                                   (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsJsonBN.html)
 		///
 		///	This function saves the model as JSON according to IFC4's way of JSON serialization (char file name).
 		/// </summary>
@@ -897,7 +897,7 @@ namespace RDF
 		public static extern void sdaiSaveModelAsJsonBN(int_t model, byte[] fileName);
 
 		/// <summary>
-		///		sdaiSaveModelAsJsonBNUnicode                            (https://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsJsonBNUnicode.html)
+		///		sdaiSaveModelAsJsonBNUnicode                            (http://rdf.bg/ifcdoc/CS64/sdaiSaveModelAsJsonBNUnicode.html)
 		///
 		///	This function saves the model as JSON according to IFC4's way of JSON serialization (wchar, i.e. Unicode file name).
 		/// </summary>
@@ -908,7 +908,7 @@ namespace RDF
 		public static extern void sdaiSaveModelAsJsonBNUnicode(int_t model, byte[] fileName);
 
 		/// <summary>
-		///		engiSaveSchemaBN                                        (https://rdf.bg/ifcdoc/CS64/engiSaveSchemaBN.html)
+		///		engiSaveSchemaBN                                        (http://rdf.bg/ifcdoc/CS64/engiSaveSchemaBN.html)
 		///
 		///	This function saves the schema.
 		/// </summary>
@@ -919,7 +919,7 @@ namespace RDF
 		public static extern byte engiSaveSchemaBN(int_t model, byte[] filePath);
 
 		/// <summary>
-		///		engiSaveSchemaBNUnicode                                 (https://rdf.bg/ifcdoc/CS64/engiSaveSchemaBNUnicode.html)
+		///		engiSaveSchemaBNUnicode                                 (http://rdf.bg/ifcdoc/CS64/engiSaveSchemaBNUnicode.html)
 		///
 		///	This function saves the schema (wchar, i.e. Unicode file name).
 		/// </summary>
@@ -930,7 +930,7 @@ namespace RDF
 		public static extern byte engiSaveSchemaBNUnicode(int_t model, byte[] filePath);
 
 		/// <summary>
-		///		sdaiCloseModel                                          (https://rdf.bg/ifcdoc/CS64/sdaiCloseModel.html)
+		///		sdaiCloseModel                                          (http://rdf.bg/ifcdoc/CS64/sdaiCloseModel.html)
 		///
 		///	This function closes the model. After this call no instance handles will be available including all
 		///	handles referencing the geometry of this specific file, in default compilation the model itself will
@@ -941,7 +941,7 @@ namespace RDF
 		public static extern void sdaiCloseModel(int_t model);
 
 		/// <summary>
-		///		setPrecisionDoubleExport                                (https://rdf.bg/ifcdoc/CS64/setPrecisionDoubleExport.html)
+		///		setPrecisionDoubleExport                                (http://rdf.bg/ifcdoc/CS64/setPrecisionDoubleExport.html)
 		///
 		///	...
 		/// </summary>
@@ -953,7 +953,7 @@ namespace RDF
         //
 
 		/// <summary>
-		///		engiGetNextTypeDeclarationIterator                      (https://rdf.bg/ifcdoc/CS64/engiGetNextTypeDeclarationIterator.html)
+		///		engiGetNextTypeDeclarationIterator                      (http://rdf.bg/ifcdoc/CS64/engiGetNextTypeDeclarationIterator.html)
 		///
 		///	This call returns next iterator of EXPRESS schema declarations for entities and types.
 		///	If the input iterator is NULL it returns first iterator.
@@ -965,7 +965,7 @@ namespace RDF
 		public static extern int_t engiGetNextTypeDeclarationIterator(int_t model, int_t iterator);
 
 		/// <summary>
-		///		engiGetTypeDeclarationFromIterator                      (https://rdf.bg/ifcdoc/CS64/engiGetTypeDeclarationFromIterator.html)
+		///		engiGetTypeDeclarationFromIterator                      (http://rdf.bg/ifcdoc/CS64/engiGetTypeDeclarationFromIterator.html)
 		///
 		///	This call returns handle to the EXPRESS schema declaration from iterator.
 		///	The declaration can be ENTITY, TYPE ENUM, TYPE SELECT, or defined TYPE.
@@ -976,7 +976,7 @@ namespace RDF
 		public static extern int_t engiGetTypeDeclarationFromIterator(int_t model, int_t iterator);
 
 		/// <summary>
-		///		engiGetSchemaScriptDeclarationByIterator                (https://rdf.bg/ifcdoc/CS64/engiGetSchemaScriptDeclarationByIterator.html)
+		///		engiGetSchemaScriptDeclarationByIterator                (http://rdf.bg/ifcdoc/CS64/engiGetSchemaScriptDeclarationByIterator.html)
 		///
 		///	This call iterates EXPRESS schema declarations of FUNCTION, PROCEDURE or RULE.
 		///	If prev is NULL it returns first declaration of above kinds.
@@ -987,7 +987,7 @@ namespace RDF
 		public static extern int_t engiGetSchemaScriptDeclarationByIterator(int_t model, int_t prev);
 
 		/// <summary>
-		///		engiGetDeclarationType                                  (https://rdf.bg/ifcdoc/CS64/engiGetDeclarationType.html)
+		///		engiGetDeclarationType                                  (http://rdf.bg/ifcdoc/CS64/engiGetDeclarationType.html)
 		///
 		///	This call returns a type of the EXPRESS schema declarations from its handle.
 		///
@@ -1013,7 +1013,7 @@ namespace RDF
 		public static extern IntPtr engiGetEnumerationElement(int_t enumeration, int_t index);
 
 		/// <summary>
-		///		engiGetSelectElement                                    (https://rdf.bg/ifcdoc/CS64/engiGetSelectElement.html)
+		///		engiGetSelectElement                                    (http://rdf.bg/ifcdoc/CS64/engiGetSelectElement.html)
 		///
 		///	This call returns a declaration handle of the select element with the given index (zero based).
 		///	It returns 0 if the index out of range.
@@ -1022,7 +1022,7 @@ namespace RDF
 		public static extern int_t engiGetSelectElement(int_t select, int_t index);
 
 		/// <summary>
-		///		engiGetDefinedType                                      (https://rdf.bg/ifcdoc/CS64/engiGetDefinedType.html)
+		///		engiGetDefinedType                                      (http://rdf.bg/ifcdoc/CS64/engiGetDefinedType.html)
 		///
 		///	This call returns a simple type for defined type handle and can inquire referenced type, if any.
 		/// </summary>
@@ -1030,7 +1030,7 @@ namespace RDF
 		public static extern enum_express_attr_type engiGetDefinedType(int_t definedType, out int_t referencedDeclaration, out int_t aggregationDefinition);
 
 		/// <summary>
-		///		engiGetScriptText                                       (https://rdf.bg/ifcdoc/CS64/engiGetScriptText.html)
+		///		engiGetScriptText                                       (http://rdf.bg/ifcdoc/CS64/engiGetScriptText.html)
 		///
 		///	This call returns name and body text for entity local (where) rule, schema rule, function or procedure.
 		/// </summary>
@@ -1049,7 +1049,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		engiEvaluateScriptExpression                            (https://rdf.bg/ifcdoc/CS64/engiEvaluateScriptExpression.html)
+		///		engiEvaluateScriptExpression                            (http://rdf.bg/ifcdoc/CS64/engiEvaluateScriptExpression.html)
 		///
 		///	This function can evaluate EXPRESS expression for entity where rule or derived attribute,
 		///	valueType, value and return type work similary to sdaiGetAttr.
@@ -1083,7 +1083,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		sdaiGetEntity                                           (https://rdf.bg/ifcdoc/CS64/sdaiGetEntity.html)
+		///		sdaiGetEntity                                           (http://rdf.bg/ifcdoc/CS64/sdaiGetEntity.html)
 		///
 		///	This call retrieves a handle to an entity based on a given entity name.
 		/// </summary>
@@ -1094,23 +1094,7 @@ namespace RDF
 		public static extern int_t sdaiGetEntity(int_t model, byte[] entityName);
 
 		/// <summary>
-		///		sdaiGetComplexEntity                                    (https://rdf.bg/ifcdoc/CS64/sdaiGetComplexEntity.html)
-		///
-		///	This call retrieves a handle to an entity composed of the supplied simple entity types.
-		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetComplexEntity")]
-		public static extern int_t sdaiGetComplexEntity(int_t model, int_t entityList);
-
-		/// <summary>
-		///		sdaiGetComplexEntityBN                                  (https://rdf.bg/ifcdoc/CS64/sdaiGetComplexEntityBN.html)
-		///
-		///	This call retrieves a handle to an entity composed of the supplied simple entity types.
-		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetComplexEntityBN")]
-		public static extern int_t sdaiGetComplexEntityBN(int_t model, int_t nameNumber, out IntPtr nameVector);
-
-		/// <summary>
-		///		engiGetEntityModel                                      (https://rdf.bg/ifcdoc/CS64/engiGetEntityModel.html)
+		///		engiGetEntityModel                                      (http://rdf.bg/ifcdoc/CS64/engiGetEntityModel.html)
 		///
 		///	This call retrieves a model based on a given entity handle.
 		/// </summary>
@@ -1118,27 +1102,9 @@ namespace RDF
 		public static extern int_t engiGetEntityModel(int_t entity);
 
 		/// <summary>
-		///		engiGetAttrIndex                                        (https://rdf.bg/ifcdoc/CS64/engiGetAttrIndex.html)
+		///		engiGetAttrIndexBN                                      (http://rdf.bg/ifcdoc/CS64/engiGetAttrIndexBN.html)
 		///
-		///	This call works for non-complex entities and entities without multiple inheritance,
-		///	it is advised not to use this call for other schemas.
-		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrIndex")]
-		public static extern int_t engiGetAttrIndex(int_t attribute);
-
-		/// <summary>
-		///		engiGetAttrIndexBN                                      (https://rdf.bg/ifcdoc/CS64/engiGetAttrIndexBN.html)
-		///
-		///	This call works for non-complex entities and entities without multiple inheritance,
-		///	it is advised not to use this call for other schemas.
-		///
-		///	Technically engiGetAttrIndexBN will transform into the following call
-		///		engiGetAttrIndex(
-		///				sdaiGetAttrDefinition(
-		///						entity,
-		///						attributeName
-		///					)
-		///			);
+		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrIndexBN")]
 		public static extern int_t engiGetAttrIndexBN(int_t entity, string attributeName);
@@ -1147,29 +1113,9 @@ namespace RDF
 		public static extern int_t engiGetAttrIndexBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
-		///		engiGetAttrIndexEx                                      (https://rdf.bg/ifcdoc/CS64/engiGetAttrIndexEx.html)
+		///		engiGetAttrIndexExBN                                    (http://rdf.bg/ifcdoc/CS64/engiGetAttrIndexExBN.html)
 		///
-		///	This call works for non-complex entities and entities without multiple inheritance,
-		///	it is advised not to use this call for other schemas.
-		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrIndexEx")]
-		public static extern int_t engiGetAttrIndexEx(int_t attribute, [param: MarshalAs(UnmanagedType.U1)] bool countedWithParents, [param: MarshalAs(UnmanagedType.U1)] bool countedWithInverse);
-
-		/// <summary>
-		///		engiGetAttrIndexExBN                                    (https://rdf.bg/ifcdoc/CS64/engiGetAttrIndexExBN.html)
-		///
-		///	This call works for non-complex entities and entities without multiple inheritance,
-		///	it is advised not to use this call for other schemas.
-		///
-		///	Technically engiGetAttrIndexExBN will transform into the following call
-		///		engiGetAttrIndexEx(
-		///				sdaiGetAttrDefinition(
-		///						entity,
-		///						attributeName
-		///					),
-		///				countedWithParents,
-		///				countedWithInverse
-		///			);
+		///	..
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrIndexExBN")]
 		public static extern int_t engiGetAttrIndexExBN(int_t entity, string attributeName, [param: MarshalAs(UnmanagedType.U1)] bool countedWithParents, [param: MarshalAs(UnmanagedType.U1)] bool countedWithInverse);
@@ -1178,7 +1124,7 @@ namespace RDF
 		public static extern int_t engiGetAttrIndexExBN(int_t entity, byte[] attributeName, [param: MarshalAs(UnmanagedType.U1)] bool countedWithParents, [param: MarshalAs(UnmanagedType.U1)] bool countedWithInverse);
 
 		/// <summary>
-		///		engiGetAttrNameByIndex                                  (https://rdf.bg/ifcdoc/CS64/engiGetAttrNameByIndex.html)
+		///		engiGetAttrNameByIndex                                  (http://rdf.bg/ifcdoc/CS64/engiGetAttrNameByIndex.html)
 		///
 		///	This call can be used to retrieve the name of the n-th argument of the given entity. Arguments of parent entities are included in the index. Both explicit and inverse attributes are included.
 		/// </summary>
@@ -1193,7 +1139,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		engiGetAttrTypeByIndex                                  (https://rdf.bg/ifcdoc/CS64/engiGetAttrTypeByIndex.html)
+		///		engiGetAttrTypeByIndex                                  (http://rdf.bg/ifcdoc/CS64/engiGetAttrTypeByIndex.html)
 		///
 		///	This call can be used to retrieve the type of the n-th argument of the given entity. In case of a select argument no relevant information is given by this call as it depends on the instance.
 		///	Arguments of parent entities are included in the index. Both explicit and inverse attributes are included.
@@ -1202,7 +1148,7 @@ namespace RDF
 		public static extern void engiGetAttrTypeByIndex(int_t entity, int_t index, out int_t attributeType);
 
 		/// <summary>
-		///		engiGetEntityCount                                      (https://rdf.bg/ifcdoc/CS64/engiGetEntityCount.html)
+		///		engiGetEntityCount                                      (http://rdf.bg/ifcdoc/CS64/engiGetEntityCount.html)
 		///
 		///	Returns the total number of entities within the loaded schema.
 		/// </summary>
@@ -1210,7 +1156,7 @@ namespace RDF
 		public static extern int_t engiGetEntityCount(int_t model);
 
 		/// <summary>
-		///		engiGetEntityElement                                    (https://rdf.bg/ifcdoc/CS64/engiGetEntityElement.html)
+		///		engiGetEntityElement                                    (http://rdf.bg/ifcdoc/CS64/engiGetEntityElement.html)
 		///
 		///	This call returns a specific entity based on an index, the index needs to be 0 or higher but lower then the number of entities in the loaded schema.
 		/// </summary>
@@ -1218,7 +1164,7 @@ namespace RDF
 		public static extern int_t engiGetEntityElement(int_t model, int_t index);
 
 		/// <summary>
-		///		sdaiGetEntityExtent                                     (https://rdf.bg/ifcdoc/CS64/sdaiGetEntityExtent.html)
+		///		sdaiGetEntityExtent                                     (http://rdf.bg/ifcdoc/CS64/sdaiGetEntityExtent.html)
 		///
 		///	This call retrieves an aggregation that contains all instances of the entity given.
 		/// </summary>
@@ -1226,7 +1172,7 @@ namespace RDF
 		public static extern int_t sdaiGetEntityExtent(int_t model, int_t entity);
 
 		/// <summary>
-		///		sdaiGetEntityExtentBN                                   (https://rdf.bg/ifcdoc/CS64/sdaiGetEntityExtentBN.html)
+		///		sdaiGetEntityExtentBN                                   (http://rdf.bg/ifcdoc/CS64/sdaiGetEntityExtentBN.html)
 		///
 		///	This call retrieves an aggregation that contains all instances of the entity given.
 		///
@@ -1246,7 +1192,7 @@ namespace RDF
 		public static extern int_t sdaiGetEntityExtentBN(int_t model, byte[] entityName);
 
 		/// <summary>
-		///		engiGetEntityName                                       (https://rdf.bg/ifcdoc/CS64/engiGetEntityName.html)
+		///		engiGetEntityName                                       (http://rdf.bg/ifcdoc/CS64/engiGetEntityName.html)
 		///
 		///	This call can be used to get the name of the given entity.
 		/// </summary>
@@ -1261,7 +1207,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		engiGetEntityNoAttributes                               (https://rdf.bg/ifcdoc/CS64/engiGetEntityNoAttributes.html)
+		///		engiGetEntityNoAttributes                               (http://rdf.bg/ifcdoc/CS64/engiGetEntityNoAttributes.html)
 		///
 		///	This call returns the number of arguments, this includes the arguments of its (nested) parents and inverse arguments.
 		/// </summary>
@@ -1269,7 +1215,7 @@ namespace RDF
 		public static extern int_t engiGetEntityNoAttributes(int_t entity);
 
 		/// <summary>
-		///		engiGetEntityNoAttributesEx                             (https://rdf.bg/ifcdoc/CS64/engiGetEntityNoAttributesEx.html)
+		///		engiGetEntityNoAttributesEx                             (http://rdf.bg/ifcdoc/CS64/engiGetEntityNoAttributesEx.html)
 		///
 		///	This call returns the number of attributes, inclusion of parents and inverse depends on includeParent and includeInverse values.
 		/// </summary>
@@ -1277,7 +1223,7 @@ namespace RDF
 		public static extern int_t engiGetEntityNoAttributesEx(int_t entity, [param: MarshalAs(UnmanagedType.U1)] bool includeParent, [param: MarshalAs(UnmanagedType.U1)] bool includeInverse);
 
 		/// <summary>
-		///		engiGetEntityParent                                     (https://rdf.bg/ifcdoc/CS64/engiGetEntityParent.html)
+		///		engiGetEntityParent                                     (http://rdf.bg/ifcdoc/CS64/engiGetEntityParent.html)
 		///
 		///	Returns the first parent entity, for example the parent of IfcObject is IfcObjectDefinition, of IfcObjectDefinition is IfcRoot and of IfcRoot is 0.
 		/// </summary>
@@ -1285,7 +1231,7 @@ namespace RDF
 		public static extern int_t engiGetEntityParent(int_t entity);
 
 		/// <summary>
-		///		engiGetEntityNoParents                                  (https://rdf.bg/ifcdoc/CS64/engiGetEntityNoParents.html)
+		///		engiGetEntityNoParents                                  (http://rdf.bg/ifcdoc/CS64/engiGetEntityNoParents.html)
 		///
 		///	Returns number of parent entities.
 		/// </summary>
@@ -1293,7 +1239,7 @@ namespace RDF
 		public static extern int_t engiGetEntityNoParents(int_t entity);
 
 		/// <summary>
-		///		engiGetEntityParentEx                                   (https://rdf.bg/ifcdoc/CS64/engiGetEntityParentEx.html)
+		///		engiGetEntityParentEx                                   (http://rdf.bg/ifcdoc/CS64/engiGetEntityParentEx.html)
 		///
 		///	Returns the N-th parent of entity or NULL if index exceeds number of parents.
 		/// </summary>
@@ -1301,7 +1247,7 @@ namespace RDF
 		public static extern int_t engiGetEntityParentEx(int_t entity, int_t index);
 
 		/// <summary>
-		///		engiGetAttrDerived                                      (https://rdf.bg/ifcdoc/CS64/engiGetAttrDerived.html)
+		///		engiGetAttrDerived                                      (http://rdf.bg/ifcdoc/CS64/engiGetAttrDerived.html)
 		///
 		///	This call can be used to check if an attribute is defined schema wise in the context of a certain entity.
 		/// </summary>
@@ -1309,7 +1255,7 @@ namespace RDF
 		public static extern int_t engiGetAttrDerived(int_t entity, int_t attribute);
 
 		/// <summary>
-		///		engiGetAttrDerivedBN                                    (https://rdf.bg/ifcdoc/CS64/engiGetAttrDerivedBN.html)
+		///		engiGetAttrDerivedBN                                    (http://rdf.bg/ifcdoc/CS64/engiGetAttrDerivedBN.html)
 		///
 		///	This call can be used to check if an attribute is defined schema wise in the context of a certain entity.
 		///
@@ -1329,16 +1275,16 @@ namespace RDF
 		public static extern int_t engiGetAttrDerivedBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
-		///		engiIsAttrInverse                                       (https://rdf.bg/ifcdoc/CS64/engiIsAttrInverse.html)
+		///		engiIsAttrInverse                                       (http://rdf.bg/ifcdoc/CS64/engiIsAttrInverse.html)
 		///
 		///	This call can be used to check if an attribute is an inverse relation
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrInverse")]
-		[return: MarshalAs(UnmanagedType.U1)]
-		public static extern bool engiIsAttrInverse(int_t attribute);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrInverse(int_t attribute);
 
 		/// <summary>
-		///		engiIsAttrInverseBN                                     (https://rdf.bg/ifcdoc/CS64/engiIsAttrInverseBN.html)
+		///		engiIsAttrInverseBN                                     (http://rdf.bg/ifcdoc/CS64/engiIsAttrInverseBN.html)
 		///
 		///	This call can be used to check if an attribute is an inverse relation.
 		///
@@ -1351,24 +1297,24 @@ namespace RDF
 		///			);
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrInverseBN")]
-		[return: MarshalAs(UnmanagedType.U1)]
-		public static extern bool engiIsAttrInverseBN(int_t entity, string attributeName);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrInverseBN(int_t entity, string attributeName);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrInverseBN")]
-		[return: MarshalAs(UnmanagedType.U1)]
-		public static extern bool engiIsAttrInverseBN(int_t entity, byte[] attributeName);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrInverseBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
-		///		engiIsAttrOptional                                      (https://rdf.bg/ifcdoc/CS64/engiIsAttrOptional.html)
+		///		engiIsAttrOptional                                      (http://rdf.bg/ifcdoc/CS64/engiIsAttrOptional.html)
 		///
 		///	This call can be used to check if an attribute is optional.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrOptional")]
-		[return: MarshalAs(UnmanagedType.U1)]
-		public static extern bool engiIsAttrOptional(int_t attribute);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrOptional(int_t attribute);
 
 		/// <summary>
-		///		engiIsAttrOptionalBN                                    (https://rdf.bg/ifcdoc/CS64/engiIsAttrOptionalBN.html)
+		///		engiIsAttrOptionalBN                                    (http://rdf.bg/ifcdoc/CS64/engiIsAttrOptionalBN.html)
 		///
 		///	This call can be used to check if an attribute is optional.
 		///
@@ -1381,15 +1327,15 @@ namespace RDF
 		///			);
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrOptionalBN")]
-		[return: MarshalAs(UnmanagedType.U1)]
-		public static extern bool engiIsAttrOptionalBN(int_t entity, string attributeName);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrOptionalBN(int_t entity, string attributeName);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrOptionalBN")]
-		[return: MarshalAs(UnmanagedType.U1)]
-		public static extern bool engiIsAttrOptionalBN(int_t entity, byte[] attributeName);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrOptionalBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
-		///		engiGetAttrDomainName                                   (https://rdf.bg/ifcdoc/CS64/engiGetAttrDomainName.html)
+		///		engiGetAttrDomainName                                   (http://rdf.bg/ifcdoc/CS64/engiGetAttrDomainName.html)
 		///
 		///	This call can be used to get the domain of an attribute.
 		/// </summary>
@@ -1406,7 +1352,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		engiGetAttrDomainNameBN                                 (https://rdf.bg/ifcdoc/CS64/engiGetAttrDomainNameBN.html)
+		///		engiGetAttrDomainNameBN                                 (http://rdf.bg/ifcdoc/CS64/engiGetAttrDomainNameBN.html)
 		///
 		///	This call can be used to get the domain of an attribute.
 		///
@@ -1440,7 +1386,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		engiIsEntityAbstract                                    (https://rdf.bg/ifcdoc/CS64/engiIsEntityAbstract.html)
+		///		engiIsEntityAbstract                                    (http://rdf.bg/ifcdoc/CS64/engiIsEntityAbstract.html)
 		///
 		///	This call can be used to check if an entity is abstract.
 		/// </summary>
@@ -1448,7 +1394,7 @@ namespace RDF
 		public static extern int_t engiIsEntityAbstract(int_t entity);
 
 		/// <summary>
-		///		engiIsEntityAbstractBN                                  (https://rdf.bg/ifcdoc/CS64/engiIsEntityAbstractBN.html)
+		///		engiIsEntityAbstractBN                                  (http://rdf.bg/ifcdoc/CS64/engiIsEntityAbstractBN.html)
 		///
 		///	This call can be used to check if an entity is abstract.
 		///
@@ -1467,7 +1413,7 @@ namespace RDF
 		public static extern int_t engiIsEntityAbstractBN(int_t model, byte[] entityName);
 
 		/// <summary>
-		///		engiGetEnumerationValue                                 (https://rdf.bg/ifcdoc/CS64/engiGetEnumerationValue.html)
+		///		engiGetEnumerationValue                                 (http://rdf.bg/ifcdoc/CS64/engiGetEnumerationValue.html)
 		///
 		///	Allows to retrieve enumeration values of an attribute by index.
 		/// </summary>
@@ -1482,7 +1428,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		engiGetEntityAttributeByIterator                        (https://rdf.bg/ifcdoc/CS64/engiGetEntityAttributeByIterator.html)
+		///		engiGetEntityAttributeByIterator                        (http://rdf.bg/ifcdoc/CS64/engiGetEntityAttributeByIterator.html)
 		///
 		///	Iterates attribute definition of the entity.
 		///	Includes explicit, inverse and derived attributes defined by this or parent entities.
@@ -1494,7 +1440,7 @@ namespace RDF
 		public static extern int_t engiGetEntityAttributeByIterator(int_t entity, int_t prev);
 
 		/// <summary>
-		///		engiGetEntityAttributeByIndex                           (https://rdf.bg/ifcdoc/CS64/engiGetEntityAttributeByIndex.html)
+		///		engiGetEntityAttributeByIndex                           (http://rdf.bg/ifcdoc/CS64/engiGetEntityAttributeByIndex.html)
 		///
 		///	Return attribute definition from attribute index.
 		/// </summary>
@@ -1502,7 +1448,7 @@ namespace RDF
 		public static extern int_t engiGetEntityAttributeByIndex(int_t entity, int_t index, [param: MarshalAs(UnmanagedType.U1)] bool countedWithParents, [param: MarshalAs(UnmanagedType.U1)] bool countedWithInverse);
 
 		/// <summary>
-		///		engiGetAggregationDefinition                            (https://rdf.bg/ifcdoc/CS64/engiGetAggregationDefinition.html)
+		///		engiGetAggregationDefinition                            (http://rdf.bg/ifcdoc/CS64/engiGetAggregationDefinition.html)
 		///
 		///	...
 		/// </summary>
@@ -1510,7 +1456,7 @@ namespace RDF
 		public static extern void engiGetAggregationDefinition(int_t aggregationDefinition, out enum_express_aggr aggregationType, out int_t cardinalityMin, out int_t cardinalityMax, [param: MarshalAs(UnmanagedType.U1)] out bool optional, [param: MarshalAs(UnmanagedType.U1)] out bool unique, out int_t nextAggregationLevel);
 
 		/// <summary>
-		///		engiGetEntityUniqueRuleByIterator                       (https://rdf.bg/ifcdoc/CS64/engiGetEntityUniqueRuleByIterator.html)
+		///		engiGetEntityUniqueRuleByIterator                       (http://rdf.bg/ifcdoc/CS64/engiGetEntityUniqueRuleByIterator.html)
 		///
 		///	Iterates unique rules of the entity.
 		///	Includes this but not parent entities.
@@ -1531,7 +1477,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		engiGetEntityUniqueRuleAttributeByIterator              (https://rdf.bg/ifcdoc/CS64/engiGetEntityUniqueRuleAttributeByIterator.html)
+		///		engiGetEntityUniqueRuleAttributeByIterator              (http://rdf.bg/ifcdoc/CS64/engiGetEntityUniqueRuleAttributeByIterator.html)
 		///
 		///	Iterates attributes of unique rule.
 		///	Returns first attribute name if prev is NULL.
@@ -1556,7 +1502,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		engiGetEntityWhereRuleByIterator                        (https://rdf.bg/ifcdoc/CS64/engiGetEntityWhereRuleByIterator.html)
+		///		engiGetEntityWhereRuleByIterator                        (http://rdf.bg/ifcdoc/CS64/engiGetEntityWhereRuleByIterator.html)
 		///
 		///	Iterates where rules of the entity or defined type.
 		///	Declaration can be ENTITY or DEFINED_TYPE.
@@ -1583,7 +1529,7 @@ namespace RDF
         //
 
 		/// <summary>
-		///		sdaiGetADBType                                          (https://rdf.bg/ifcdoc/CS64/sdaiGetADBType.html)
+		///		sdaiGetADBType                                          (http://rdf.bg/ifcdoc/CS64/sdaiGetADBType.html)
 		///
 		///	This call can be used to get the used type within this ADB type.
 		/// </summary>
@@ -1591,7 +1537,7 @@ namespace RDF
 		public static extern int_t sdaiGetADBType(int_t ADB);
 
 		/// <summary>
-		///		sdaiGetADBTypePath                                      (https://rdf.bg/ifcdoc/CS64/sdaiGetADBTypePath.html)
+		///		sdaiGetADBTypePath                                      (http://rdf.bg/ifcdoc/CS64/sdaiGetADBTypePath.html)
 		///
 		///	This call can be used to get the path of an ADB type.
 		/// </summary>
@@ -1599,7 +1545,7 @@ namespace RDF
 		public static extern IntPtr sdaiGetADBTypePath(int_t ADB, int_t typeNameNumber);
 
 		/// <summary>
-		///		sdaiGetADBValue                                         (https://rdf.bg/ifcdoc/CS64/sdaiGetADBValue.html)
+		///		sdaiGetADBValue                                         (http://rdf.bg/ifcdoc/CS64/sdaiGetADBValue.html)
 		///
 		///	valueType argument to specify what type of data caller wants to get and
 		///	value argument where the caller should provide a buffer, and the function will write the result to.
@@ -1714,104 +1660,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		sdaiPutADBValue                                         (https://rdf.bg/ifcdoc/CS64/sdaiPutADBValue.html)
-		///
-		///	valueType argument to specify what type of data caller wants to put
-		///	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiPutADBValue, and it works similarly for all put-functions.
-		///	Note: with SDAI API it is impossible to check buffer type at compilation or execution time and this is responsibility of a caller to ensure that
-		///		  requested valueType is matching with the value argument, a mismatch will lead to unpredictable results.
-		///
-		///
-		///	Table 1 – Required value buffer depending on valueType (on the example of sdaiPutADBValue but valid for all put-functions)
-		///
-		///	valueType				C/C++														C#
-		///
-		///	sdaiINTEGER				int_t val = 123;											int_t val = 123;
-		///							sdaiPutADBValue (ADB, sdaiINTEGER, &val);					stepengine.sdaiPutADBValue (ADB, stepengine.sdaiINTEGER, ref val);
-		///
-		///	sdaiREAL or sdaiNUMBER	double val = 123.456;										double val = 123.456;
-		///							sdaiPutADBValue (ADB, sdaiREAL, &val);						stepengine.sdaiPutADBValue (ADB, stepengine.sdaiREAL, ref val);
-		///
-		///	sdaiBOOLEAN				SdaiBoolean val = sdaiTRUE;									bool val = true;
-		///							sdaiPutADBValue (ADB, sdaiBOOLEAN, &val);					stepengine.sdaiPutADBValue (ADB, stepengine.sdaiBOOLEAN, ref val);
-		///
-		///	sdaiLOGICAL				const TCHAR* val = "U";										string val = "U";
-		///							sdaiPutADBValue (ADB, sdaiLOGICAL, val);					stepengine.sdaiPutADBValue (ADB, stepengine.sdaiLOGICAL, val);
-		///
-		///	sdaiENUM				const TCHAR* val = "NOTDEFINED";							string val = "NOTDEFINED";
-		///							sdaiPutADBValue (ADB, sdaiENUM, val);						stepengine.sdaiPutADBValue (ADB, stepengine.sdaiENUM, val);
-		///
-		///	sdaiBINARY				const TCHAR* val = "0123456ABC";							string val = "0123456ABC";
-		///							sdaiPutADBValue (ADB, sdaiBINARY, val);						stepengine.sdaiPutADBValue (ADB, stepengine.sdaiBINARY, val);
-		///
-		///	sdaiSTRING				const char* val = "My Simple String";						string val = "My Simple String";
-		///							sdaiPutADBValue (ADB, sdaiSTRING, val);						stepengine.sdaiPutADBValue (ADB, stepengine.sdaiSTRING, val);
-		///
-		///	sdaiUNICODE				const wchar_t* val = L"Any Unicode String";					string val = "Any Unicode String";
-		///							sdaiPutADBValue (ADB, sdaiUNICODE, val);					stepengine.sdaiPutADBValue (ADB, stepengine.sdaiUNICODE, val);
-		///
-		///	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
-		///							sdaiPutADBValue (ADB, sdaiEXPRESSSTRING, val);				stepengine.sdaiPutADBValue (ADB, stepengine.sdaiEXPRESSSTRING, val);
-		///
-		///	sdaiINSTANCE			SdaiInstance val = sdaiCreateInstanceBN (model, "IFCSITE");	int_t val = stepengine.sdaiCreateInstanceBN (model, "IFCSITE");
-		///							sdaiPutADBValue (ADB, sdaiINSTANCE, val);					stepengine.sdaiPutADBValue (ADB, stepengine.sdaiINSTANCE, val);
-		///
-		///	sdaiAGGR				SdaiAggr val = sdaiCreateAggr (inst, 0);					int_t val = sdaiCreateAggr (inst, 0);
-		///							sdaiPutAttr (val, sdaiINSTANCE, inst);						stepengine.sdaiPutAttr (val, stepengine.sdaiINSTANCE, inst);
-		///							sdaiPutADBValue (ADB, sdaiAGGR, val);						stepengine.sdaiPutADBValue (ADB, stepengine.sdaiAGGR, val);
-		///
-		///	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
-		///							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
-		///							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					stepengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
-		///							sdaiPutADBValue (ADB, sdaiADB, val);						stepengine.sdaiPutADBValue (ADB, stepengine.sdaiADB, val);	
-		///							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
-		///
-		///	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
-		///	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-		///	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
-		///
-		///
-		///	Table 2 - valueType can be requested depending on actual model data.
-		///
-		///	valueType		Works for following values in the model
-		///				 	  integer	   real		.T. or .F.	   .U.		other enum	  binary	  string	 instance	   list		 $ (empty)
-		///	sdaiINTEGER			Yes			 .			 .			 .			 .			 .			 .			 .			 .			 .
-		///	sdaiREAL			 .			Yes			 .			 .			 .			 .			 .			 .			 .			 .
-		///	sdaiNUMBER			 . 			Yes			 .			 .			 .			 .			 .			 .			 .			 .
-		///	sdaiBOOLEAN			 .			 .			Yes			 .			 .			 .			 .			 .			 .			 .
-		///	sdaiLOGICAL			 .			 .			Yes			Yes			 .			 .			 .			 .			 .			 .
-		///	sdaiENUM			 .			 .			Yes			Yes			Yes			 .			 .			 .			 .			 .
-		///	sdaiBINARY			 .			 .			 .			 .			 .			Yes			 .			 .			 .			 .
-		///	sdaiSTRING			 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
-		///	sdaiUNICODE			 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
-		///	sdaiEXPRESSSTRING	 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
-		///	sdaiINSTANCE		 .			 .			 .			 .			 .			 .			 .			Yes			 .			 .
-		///	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
-		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
-		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutADBValue")]
-		public static extern void sdaiPutADBValue(int_t ADB, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
-
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutADBValue")]
-		public static extern void sdaiPutADBValue(int_t ADB, int_t valueType, ref int_t value);
-
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutADBValue")]
-		public static extern void sdaiPutADBValue(int_t ADB, int_t valueType, int_t value);
-
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutADBValue")]
-		public static extern void sdaiPutADBValue(int_t ADB, int_t valueType, ref double value);
-
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutADBValue")]
-		public static extern void sdaiPutADBValue(int_t ADB, int_t valueType, ref IntPtr value);
-
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutADBValue")]
-		public static extern void sdaiPutADBValue(int_t ADB, int_t valueType, byte[] value);
-
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutADBValue")]
-		public static extern void sdaiPutADBValue(int_t ADB, int_t valueType, string value);
-
-		/// <summary>
-		///		sdaiCreateEmptyADB                                      (https://rdf.bg/ifcdoc/CS64/sdaiCreateEmptyADB.html)
+		///		sdaiCreateEmptyADB                                      (http://rdf.bg/ifcdoc/CS64/sdaiCreateEmptyADB.html)
 		///
 		///	Creates an empty ADB (Attribute Data Block).
 		/// </summary>
@@ -1819,7 +1668,7 @@ namespace RDF
 		public static extern int_t sdaiCreateEmptyADB();
 
 		/// <summary>
-		///		sdaiDeleteADB                                           (https://rdf.bg/ifcdoc/CS64/sdaiDeleteADB.html)
+		///		sdaiDeleteADB                                           (http://rdf.bg/ifcdoc/CS64/sdaiDeleteADB.html)
 		///
 		///	Deletes an ADB (Attribute Data Block).
 		/// </summary>
@@ -1827,7 +1676,7 @@ namespace RDF
 		public static extern void sdaiDeleteADB(int_t ADB);
 
 		/// <summary>
-		///		sdaiGetAggrByIndex                                      (https://rdf.bg/ifcdoc/CS64/sdaiGetAggrByIndex.html)
+		///		sdaiGetAggrByIndex                                      (http://rdf.bg/ifcdoc/CS64/sdaiGetAggrByIndex.html)
 		///
 		///	valueType argument to specify what type of data caller wants to get and
 		///	value argument where the caller should provide a buffer, and the function will write the result to.
@@ -1942,7 +1791,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		sdaiPutAggrByIndex                                      (https://rdf.bg/ifcdoc/CS64/sdaiPutAggrByIndex.html)
+		///		sdaiPutAggrByIndex                                      (http://rdf.bg/ifcdoc/CS64/sdaiPutAggrByIndex.html)
 		///
 		///	valueType argument to specify what type of data caller wants to put
 		///	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiPutAggrByIndex, and it works similarly for all put-functions.
@@ -2039,7 +1888,7 @@ namespace RDF
 		public static extern void sdaiPutAggrByIndex(int_t aggregate, int_t index, int_t valueType, string value);
 
 		/// <summary>
-		///		engiGetAggrType                                         (https://rdf.bg/ifcdoc/CS64/engiGetAggrType.html)
+		///		engiGetAggrType                                         (http://rdf.bg/ifcdoc/CS64/engiGetAggrType.html)
 		///
 		///	...
 		/// </summary>
@@ -2047,7 +1896,7 @@ namespace RDF
 		public static extern void engiGetAggrType(int_t aggregate, out int_t aggregateType);
 
 		/// <summary>
-		///		engiGetAggrTypex                                        (https://rdf.bg/ifcdoc/CS64/engiGetAggrTypex.html)
+		///		engiGetAggrTypex                                        (http://rdf.bg/ifcdoc/CS64/engiGetAggrTypex.html)
 		///
 		///	...
 		/// </summary>
@@ -2055,7 +1904,7 @@ namespace RDF
 		public static extern void engiGetAggrTypex(int_t aggregate, out int_t aggregateType);
 
 		/// <summary>
-		///		sdaiGetAttr                                             (https://rdf.bg/ifcdoc/CS64/sdaiGetAttr.html)
+		///		sdaiGetAttr                                             (http://rdf.bg/ifcdoc/CS64/sdaiGetAttr.html)
 		///
 		///	valueType argument to specify what type of data caller wants to get and
 		///	value argument where the caller should provide a buffer, and the function will write the result to.
@@ -2170,7 +2019,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		sdaiGetAttrBN                                           (https://rdf.bg/ifcdoc/CS64/sdaiGetAttrBN.html)
+		///		sdaiGetAttrBN                                           (http://rdf.bg/ifcdoc/CS64/sdaiGetAttrBN.html)
 		///
 		///	valueType argument to specify what type of data caller wants to get and
 		///	value argument where the caller should provide a buffer, and the function will write the result to.
@@ -2310,7 +2159,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		sdaiGetAttrBNUnicode                                    (https://rdf.bg/ifcdoc/CS64/sdaiGetAttrBNUnicode.html)
+		///		sdaiGetAttrBNUnicode                                    (http://rdf.bg/ifcdoc/CS64/sdaiGetAttrBNUnicode.html)
 		///
 		///	...
 		/// </summary>
@@ -2321,7 +2170,7 @@ namespace RDF
 		public static extern int_t sdaiGetAttrBNUnicode(int_t instance, byte[] attributeName, byte[] buffer, int_t bufferLength);
 
 		/// <summary>
-		///		sdaiGetStringAttrBN                                     (https://rdf.bg/ifcdoc/CS64/sdaiGetStringAttrBN.html)
+		///		sdaiGetStringAttrBN                                     (http://rdf.bg/ifcdoc/CS64/sdaiGetStringAttrBN.html)
 		///
 		///	This function is a specific version of sdaiGetAttrBN(..), where the valueType is sdaiSTRING.
 		///	This call can be useful in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
@@ -2349,7 +2198,7 @@ namespace RDF
 		public static extern IntPtr sdaiGetStringAttrBN(int_t instance, byte[] attributeName);
 
 		/// <summary>
-		///		sdaiGetInstanceAttrBN                                   (https://rdf.bg/ifcdoc/CS64/sdaiGetInstanceAttrBN.html)
+		///		sdaiGetInstanceAttrBN                                   (http://rdf.bg/ifcdoc/CS64/sdaiGetInstanceAttrBN.html)
 		///
 		///	This function is a specific version of sdaiGetAttrBN(..), where the valueType is sdaiINSTANCE.
 		///	This call can be useful in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
@@ -2377,7 +2226,7 @@ namespace RDF
 		public static extern int_t sdaiGetInstanceAttrBN(int_t instance, byte[] attributeName);
 
 		/// <summary>
-		///		sdaiGetAggregationAttrBN                                (https://rdf.bg/ifcdoc/CS64/sdaiGetAggregationAttrBN.html)
+		///		sdaiGetAggregationAttrBN                                (http://rdf.bg/ifcdoc/CS64/sdaiGetAggregationAttrBN.html)
 		///
 		///	This function is a specific version of sdaiGetAttrBN(..), where the valueType is sdaiAGGR.
 		///	This call can be useful in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
@@ -2405,7 +2254,7 @@ namespace RDF
 		public static extern int_t sdaiGetAggregationAttrBN(int_t instance, byte[] attributeName);
 
 		/// <summary>
-		///		sdaiGetAttrDefinition                                   (https://rdf.bg/ifcdoc/CS64/sdaiGetAttrDefinition.html)
+		///		sdaiGetAttrDefinition                                   (http://rdf.bg/ifcdoc/CS64/sdaiGetAttrDefinition.html)
 		///
 		///	...
 		/// </summary>
@@ -2416,7 +2265,7 @@ namespace RDF
 		public static extern int_t sdaiGetAttrDefinition(int_t entity, byte[] attributeName);
 
 		/// <summary>
-		///		engiGetAttrTraits                                       (https://rdf.bg/ifcdoc/CS64/engiGetAttrTraits.html)
+		///		engiGetAttrTraits                                       (http://rdf.bg/ifcdoc/CS64/engiGetAttrTraits.html)
 		///
 		///	...
 		/// </summary>
@@ -2440,7 +2289,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		engiGetAttrName                                         (https://rdf.bg/ifcdoc/CS64/engiGetAttrName.html)
+		///		engiGetAttrName                                         (http://rdf.bg/ifcdoc/CS64/engiGetAttrName.html)
 		///
 		///	...
 		/// </summary>
@@ -2454,7 +2303,7 @@ namespace RDF
         }
 
 		/// <summary>
-		///		engiGetAttrDefiningEntity                               (https://rdf.bg/ifcdoc/CS64/engiGetAttrDefiningEntity.html)
+		///		engiGetAttrDefiningEntity                               (http://rdf.bg/ifcdoc/CS64/engiGetAttrDefiningEntity.html)
 		///
 		///	...
 		/// </summary>
@@ -2462,29 +2311,29 @@ namespace RDF
 		public static extern int_t engiGetAttrDefiningEntity(int_t attribute);
 
 		/// <summary>
-		///		engiIsAttrExplicit                                      (https://rdf.bg/ifcdoc/CS64/engiIsAttrExplicit.html)
+		///		engiIsAttrExplicit                                      (http://rdf.bg/ifcdoc/CS64/engiIsAttrExplicit.html)
 		///
 		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrExplicit")]
-		[return: MarshalAs(UnmanagedType.U1)]
-		public static extern bool engiIsAttrExplicit(int_t attribute);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrExplicit(int_t attribute);
 
 		/// <summary>
-		///		engiIsAttrExplicitBN                                    (https://rdf.bg/ifcdoc/CS64/engiIsAttrExplicitBN.html)
+		///		engiIsAttrExplicitBN                                    (http://rdf.bg/ifcdoc/CS64/engiIsAttrExplicitBN.html)
 		///
 		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrExplicitBN")]
-		[return: MarshalAs(UnmanagedType.U1)]
-		public static extern bool engiIsAttrExplicitBN(int_t entity, string attributeName);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrExplicitBN(int_t entity, string attributeName);
 
 		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrExplicitBN")]
-		[return: MarshalAs(UnmanagedType.U1)]
-		public static extern bool engiIsAttrExplicitBN(int_t entity, byte[] attributeName);
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool engiIsAttrExplicitBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
-		///		sdaiGetInstanceModel                                    (https://rdf.bg/ifcdoc/CS64/sdaiGetInstanceModel.html)
+		///		sdaiGetInstanceModel                                    (http://rdf.bg/ifcdoc/CS64/sdaiGetInstanceModel.html)
 		///
 		///	Returns the model based on an instance.
 		/// </summary>
@@ -2492,7 +2341,7 @@ namespace RDF
 		public static extern int_t sdaiGetInstanceModel(int_t instance);
 
 		/// <summary>
-		///		sdaiGetInstanceType                                     (https://rdf.bg/ifcdoc/CS64/sdaiGetInstanceType.html)
+		///		sdaiGetInstanceType                                     (http://rdf.bg/ifcdoc/CS64/sdaiGetInstanceType.html)
 		///
 		///	Returns the entity based on an instance.
 		/// </summary>
@@ -2500,15 +2349,15 @@ namespace RDF
 		public static extern int_t sdaiGetInstanceType(int_t instance);
 
 		/// <summary>
-		///		sdaiGetMemberCount                                      (https://rdf.bg/ifcdoc/CS64/sdaiGetMemberCount.html)
+		///		sdaiGetMemberCount                                      (http://rdf.bg/ifcdoc/CS64/sdaiGetMemberCount.html)
 		///
-		///	Returns the number of elements within an aggregation.
+		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetMemberCount")]
 		public static extern int_t sdaiGetMemberCount(int_t aggregate);
 
 		/// <summary>
-		///		sdaiIsKindOf                                            (https://rdf.bg/ifcdoc/CS64/sdaiIsKindOf.html)
+		///		sdaiIsKindOf                                            (http://rdf.bg/ifcdoc/CS64/sdaiIsKindOf.html)
 		///
 		///	This call checks if an instance is a type of a certain given entity.
 		/// </summary>
@@ -2516,7 +2365,7 @@ namespace RDF
 		public static extern int_t sdaiIsKindOf(int_t instance, int_t entity);
 
 		/// <summary>
-		///		sdaiIsKindOfBN                                          (https://rdf.bg/ifcdoc/CS64/sdaiIsKindOfBN.html)
+		///		sdaiIsKindOfBN                                          (http://rdf.bg/ifcdoc/CS64/sdaiIsKindOfBN.html)
 		///
 		///	This call checks if an instance is a type of a certain given entity.
 		///
@@ -2539,7 +2388,7 @@ namespace RDF
 		public static extern int_t sdaiIsKindOfBN(int_t instance, byte[] entityName);
 
 		/// <summary>
-		///		engiGetAttrType                                         (https://rdf.bg/ifcdoc/CS64/engiGetAttrType.html)
+		///		engiGetAttrType                                         (http://rdf.bg/ifcdoc/CS64/engiGetAttrType.html)
 		///
 		///	Returns primitive SDAI data type for the attribute according to schema, e.g. sdaiINTEGER
 		///
@@ -2555,7 +2404,7 @@ namespace RDF
 		public static extern int_t engiGetAttrType(int_t attribute);
 
 		/// <summary>
-		///		engiGetAttrTypeBN                                       (https://rdf.bg/ifcdoc/CS64/engiGetAttrTypeBN.html)
+		///		engiGetAttrTypeBN                                       (http://rdf.bg/ifcdoc/CS64/engiGetAttrTypeBN.html)
 		///
 		///	Combines sdaiGetAttrDefinition and engiGetAttrType.
 		///
@@ -2574,7 +2423,7 @@ namespace RDF
 		public static extern int_t engiGetAttrTypeBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
-		///		engiGetInstanceAttrType                                 (https://rdf.bg/ifcdoc/CS64/engiGetInstanceAttrType.html)
+		///		engiGetInstanceAttrType                                 (http://rdf.bg/ifcdoc/CS64/engiGetInstanceAttrType.html)
 		///
 		///	Returns SDAI type for actual data stored in the instance for the attribute.
 		///	It may be primitive type, sdaiAGGR or sdaiADB.
@@ -2584,7 +2433,7 @@ namespace RDF
 		public static extern int_t engiGetInstanceAttrType(int_t instance, int_t attribute);
 
 		/// <summary>
-		///		engiGetInstanceAttrTypeBN                               (https://rdf.bg/ifcdoc/CS64/engiGetInstanceAttrTypeBN.html)
+		///		engiGetInstanceAttrTypeBN                               (http://rdf.bg/ifcdoc/CS64/engiGetInstanceAttrTypeBN.html)
 		///
 		///	Combines sdaiGetAttrDefinition and engiGetInstanceAttrType.
 		///
@@ -2606,7 +2455,7 @@ namespace RDF
 		public static extern int_t engiGetInstanceAttrTypeBN(int_t instance, byte[] attributeName);
 
 		/// <summary>
-		///		sdaiIsInstanceOf                                        (https://rdf.bg/ifcdoc/CS64/sdaiIsInstanceOf.html)
+		///		sdaiIsInstanceOf                                        (http://rdf.bg/ifcdoc/CS64/sdaiIsInstanceOf.html)
 		///
 		///	This call checks if an instance is an exact instance of a given entity.
 		/// </summary>
@@ -2614,7 +2463,7 @@ namespace RDF
 		public static extern int_t sdaiIsInstanceOf(int_t instance, int_t entity);
 
 		/// <summary>
-		///		sdaiIsInstanceOfBN                                      (https://rdf.bg/ifcdoc/CS64/sdaiIsInstanceOfBN.html)
+		///		sdaiIsInstanceOfBN                                      (http://rdf.bg/ifcdoc/CS64/sdaiIsInstanceOfBN.html)
 		///
 		///	This call checks if an instance is an exact instance of a given entity.
 		///
@@ -2638,7 +2487,7 @@ namespace RDF
 		public static extern int_t sdaiIsInstanceOfBN(int_t instance, byte[] entityName);
 
 		/// <summary>
-		///		sdaiIsEqual                                             (https://rdf.bg/ifcdoc/CS64/sdaiIsEqual.html)
+		///		sdaiIsEqual                                             (http://rdf.bg/ifcdoc/CS64/sdaiIsEqual.html)
 		///
 		///	...
 		/// </summary>
@@ -2646,7 +2495,7 @@ namespace RDF
 		public static extern byte sdaiIsEqual(int_t instanceI, int_t instanceII);
 
 		/// <summary>
-		///		sdaiValidateAttribute                                   (https://rdf.bg/ifcdoc/CS64/sdaiValidateAttribute.html)
+		///		sdaiValidateAttribute                                   (http://rdf.bg/ifcdoc/CS64/sdaiValidateAttribute.html)
 		///
 		///	...
 		/// </summary>
@@ -2654,7 +2503,7 @@ namespace RDF
 		public static extern int_t sdaiValidateAttribute(int_t instance, int_t attribute);
 
 		/// <summary>
-		///		sdaiValidateAttributeBN                                 (https://rdf.bg/ifcdoc/CS64/sdaiValidateAttributeBN.html)
+		///		sdaiValidateAttributeBN                                 (http://rdf.bg/ifcdoc/CS64/sdaiValidateAttributeBN.html)
 		///
 		///	Technically it will transform into the following call
 		///		sdaiValidateAttribute(
@@ -2674,7 +2523,7 @@ namespace RDF
 		public static extern int_t sdaiValidateAttributeBN(int_t instance, byte[] attributeName);
 
 		/// <summary>
-		///		engiGetInstanceClassInfo                                (https://rdf.bg/ifcdoc/CS64/engiGetInstanceClassInfo.html)
+		///		engiGetInstanceClassInfo                                (http://rdf.bg/ifcdoc/CS64/engiGetInstanceClassInfo.html)
 		///
 		///	...
 		/// </summary>
@@ -2682,7 +2531,7 @@ namespace RDF
 		public static extern IntPtr engiGetInstanceClassInfo(int_t instance);
 
 		/// <summary>
-		///		engiGetInstanceClassInfoUC                              (https://rdf.bg/ifcdoc/CS64/engiGetInstanceClassInfoUC.html)
+		///		engiGetInstanceClassInfoUC                              (http://rdf.bg/ifcdoc/CS64/engiGetInstanceClassInfoUC.html)
 		///
 		///	...
 		/// </summary>
@@ -2690,7 +2539,7 @@ namespace RDF
 		public static extern IntPtr engiGetInstanceClassInfoUC(int_t instance);
 
 		/// <summary>
-		///		engiGetInstanceMetaInfo                                 (https://rdf.bg/ifcdoc/CS64/engiGetInstanceMetaInfo.html)
+		///		engiGetInstanceMetaInfo                                 (http://rdf.bg/ifcdoc/CS64/engiGetInstanceMetaInfo.html)
 		///
 		///	...
 		/// </summary>
@@ -2698,41 +2547,17 @@ namespace RDF
 		public static extern int_t engiGetInstanceMetaInfo(int_t instance, out int_t localId, out IntPtr entityName, out IntPtr entityNameUC);
 
 		/// <summary>
-		///		sdaiFindInstanceUsers                                   (https://rdf.bg/ifcdoc/CS64/sdaiFindInstanceUsers.html)
+		///		sdaiFindInstanceUsers                                   (http://rdf.bg/ifcdoc/CS64/sdaiFindInstanceUsers.html)
 		///
-		///	The function returns the identifiers of all the entity instances in the defined domain
-		///	that reference the specified entity instance.
+		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiFindInstanceUsers")]
 		public static extern int_t sdaiFindInstanceUsers(int_t instance, int_t domain, int_t resultList);
 
 		/// <summary>
-		///		sdaiFindInstanceUsedIn                                  (https://rdf.bg/ifcdoc/CS64/sdaiFindInstanceUsedIn.html)
+		///		sdaiFindInstanceUsedInBN                                (http://rdf.bg/ifcdoc/CS64/sdaiFindInstanceUsedInBN.html)
 		///
-		///	The function returns the identifiers of all the entity instances in the defined domain
-		///	that reference the specified entity instance by the specified attribute (role).
-		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiFindInstanceUsedIn")]
-		public static extern int_t sdaiFindInstanceUsedIn(int_t instance, int_t role, int_t domain, int_t resultList);
-
-		/// <summary>
-		///		sdaiFindInstanceUsedInBN                                (https://rdf.bg/ifcdoc/CS64/sdaiFindInstanceUsedInBN.html)
-		///
-		///	The function returns the identifiers of all the entity instances in the defined domain
-		///	that reference the specified entity instance by the specified attribute (with roleName).
-		///
-		///	Technically sdaiFindInstanceUsedInBN will transform into the following call
-		///		sdaiFindInstanceUsedIn(
-		///				instance,
-		///				sdaiGetAttrDefinition(
-		///						sdaiGetInstanceType(
-		///								instance
-		///							),
-		///						roleName
-		///					),
-		///				domain,
-		///				resultList
-		///			);
+		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiFindInstanceUsedInBN")]
 		public static extern int_t sdaiFindInstanceUsedInBN(int_t instance, string roleName, int_t domain, int_t resultList);
@@ -2745,7 +2570,7 @@ namespace RDF
         //
 
 		/// <summary>
-		///		sdaiPrepend                                             (https://rdf.bg/ifcdoc/CS64/sdaiPrepend.html)
+		///		sdaiPrepend                                             (http://rdf.bg/ifcdoc/CS64/sdaiPrepend.html)
 		///
 		///	valueType argument to specify what type of data caller wants to put
 		///	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiPrepend, and it works similarly for all put-functions.
@@ -2852,7 +2677,7 @@ namespace RDF
         }
 
 		/// <summary>
-		///		sdaiAppend                                              (https://rdf.bg/ifcdoc/CS64/sdaiAppend.html)
+		///		sdaiAppend                                              (http://rdf.bg/ifcdoc/CS64/sdaiAppend.html)
 		///
 		///	valueType argument to specify what type of data caller wants to put
 		///	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiAppend, and it works similarly for all put-functions.
@@ -2959,7 +2784,7 @@ namespace RDF
         }
 
 		/// <summary>
-		///		sdaiAdd                                                 (https://rdf.bg/ifcdoc/CS64/sdaiAdd.html)
+		///		sdaiAdd                                                 (http://rdf.bg/ifcdoc/CS64/sdaiAdd.html)
 		///
 		///	valueType argument to specify what type of data caller wants to put
 		///	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiAdd, and it works similarly for all put-functions.
@@ -3066,7 +2891,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		sdaiInsertByIndex                                       (https://rdf.bg/ifcdoc/CS64/sdaiInsertByIndex.html)
+		///		sdaiInsertByIndex                                       (http://rdf.bg/ifcdoc/CS64/sdaiInsertByIndex.html)
 		///
 		///	valueType argument to specify what type of data caller wants to put
 		///	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiInsertByIndex, and it works similarly for all put-functions.
@@ -3173,7 +2998,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		sdaiInsertBefore                                        (https://rdf.bg/ifcdoc/CS64/sdaiInsertBefore.html)
+		///		sdaiInsertBefore                                        (http://rdf.bg/ifcdoc/CS64/sdaiInsertBefore.html)
 		///
 		///	valueType argument to specify what type of data caller wants to put
 		///	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiInsertBefore, and it works similarly for all put-functions.
@@ -3270,7 +3095,7 @@ namespace RDF
 		public static extern void sdaiInsertBefore(int_t iterator, int_t valueType, string value);
 
 		/// <summary>
-		///		sdaiInsertAfter                                         (https://rdf.bg/ifcdoc/CS64/sdaiInsertAfter.html)
+		///		sdaiInsertAfter                                         (http://rdf.bg/ifcdoc/CS64/sdaiInsertAfter.html)
 		///
 		///	valueType argument to specify what type of data caller wants to put
 		///	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiInsertAfter, and it works similarly for all put-functions.
@@ -3367,7 +3192,7 @@ namespace RDF
 		public static extern void sdaiInsertAfter(int_t iterator, int_t valueType, string value);
 
 		/// <summary>
-		///		sdaiCreateADB                                           (https://rdf.bg/ifcdoc/CS64/sdaiCreateADB.html)
+		///		sdaiCreateADB                                           (http://rdf.bg/ifcdoc/CS64/sdaiCreateADB.html)
 		///
 		///	valueType argument to specify what type of data caller wants to put
 		///	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiCreateADB, and it works similarly for all put-functions.
@@ -3470,7 +3295,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		sdaiCreateAggr                                          (https://rdf.bg/ifcdoc/CS64/sdaiCreateAggr.html)
+		///		sdaiCreateAggr                                          (http://rdf.bg/ifcdoc/CS64/sdaiCreateAggr.html)
 		///
 		///	This call creates an aggregation.
 		///	The instance has to be present,
@@ -3481,7 +3306,7 @@ namespace RDF
 		public static extern int_t sdaiCreateAggr(int_t instance, int_t attribute);
 
 		/// <summary>
-		///		sdaiCreateAggrBN                                        (https://rdf.bg/ifcdoc/CS64/sdaiCreateAggrBN.html)
+		///		sdaiCreateAggrBN                                        (http://rdf.bg/ifcdoc/CS64/sdaiCreateAggrBN.html)
 		///
 		///	This call creates an aggregation.
 		///	The instance has to be present,
@@ -3511,7 +3336,7 @@ namespace RDF
 		public static extern int_t sdaiCreateAggrBN(int_t instance, byte[] attributeName);
 
 		/// <summary>
-		///		sdaiCreateNPL                                           (https://rdf.bg/ifcdoc/CS64/sdaiCreateNPL.html)
+		///		sdaiCreateNPL                                           (http://rdf.bg/ifcdoc/CS64/sdaiCreateNPL.html)
 		///
 		///	...
 		/// </summary>
@@ -3519,7 +3344,7 @@ namespace RDF
 		public static extern int_t sdaiCreateNPL();
 
 		/// <summary>
-		///		sdaiDeleteNPL                                           (https://rdf.bg/ifcdoc/CS64/sdaiDeleteNPL.html)
+		///		sdaiDeleteNPL                                           (http://rdf.bg/ifcdoc/CS64/sdaiDeleteNPL.html)
 		///
 		///	...
 		/// </summary>
@@ -3527,7 +3352,7 @@ namespace RDF
 		public static extern void sdaiDeleteNPL(int_t list);
 
 		/// <summary>
-		///		sdaiCreateNestedAggr                                    (https://rdf.bg/ifcdoc/CS64/sdaiCreateNestedAggr.html)
+		///		sdaiCreateNestedAggr                                    (http://rdf.bg/ifcdoc/CS64/sdaiCreateNestedAggr.html)
 		///
 		///	This call creates an aggregation within an aggregation.
 		/// </summary>
@@ -3535,7 +3360,7 @@ namespace RDF
 		public static extern int_t sdaiCreateNestedAggr(int_t aggregate);
 
 		/// <summary>
-		///		sdaiCreateNestedAggrByIndex                             (https://rdf.bg/ifcdoc/CS64/sdaiCreateNestedAggrByIndex.html)
+		///		sdaiCreateNestedAggrByIndex                             (http://rdf.bg/ifcdoc/CS64/sdaiCreateNestedAggrByIndex.html)
 		///
 		///	The function creates an aggregate instance and replaces the existing member of the specified ordered aggregate instance
 		///	referenced by the specified index.
@@ -3544,7 +3369,7 @@ namespace RDF
 		public static extern int_t sdaiCreateNestedAggrByIndex(int_t aggregate, int_t index);
 
 		/// <summary>
-		///		sdaiInsertNestedAggrByIndex                             (https://rdf.bg/ifcdoc/CS64/sdaiInsertNestedAggrByIndex.html)
+		///		sdaiInsertNestedAggrByIndex                             (http://rdf.bg/ifcdoc/CS64/sdaiInsertNestedAggrByIndex.html)
 		///
 		///	The function creates an aggregate instance as a member of the specified ordered aggregate instance.
 		///	The newly created aggregate is inserted into the aggregate at the position referenced by the specified index.
@@ -3553,7 +3378,7 @@ namespace RDF
 		public static extern int_t sdaiInsertNestedAggrByIndex(int_t aggregate, int_t index);
 
 		/// <summary>
-		///		sdaiCreateNestedAggrByItr                               (https://rdf.bg/ifcdoc/CS64/sdaiCreateNestedAggrByItr.html)
+		///		sdaiCreateNestedAggrByItr                               (http://rdf.bg/ifcdoc/CS64/sdaiCreateNestedAggrByItr.html)
 		///
 		///	The function creates an aggregate instance replacing the current member of the aggregate instance
 		///	referenced by the specified iterator.
@@ -3562,7 +3387,7 @@ namespace RDF
 		public static extern int_t sdaiCreateNestedAggrByItr(int_t iterator);
 
 		/// <summary>
-		///		sdaiInsertNestedAggrBefore                              (https://rdf.bg/ifcdoc/CS64/sdaiInsertNestedAggrBefore.html)
+		///		sdaiInsertNestedAggrBefore                              (http://rdf.bg/ifcdoc/CS64/sdaiInsertNestedAggrBefore.html)
 		///
 		///	The function creates an aggregate instance as a member of a list instance.
 		///	The newly created aggregate is inserted into the list instance before the member referenced by the specified iterator.
@@ -3571,7 +3396,7 @@ namespace RDF
 		public static extern int_t sdaiInsertNestedAggrBefore(int_t iterator);
 
 		/// <summary>
-		///		sdaiInsertNestedAggrAfter                               (https://rdf.bg/ifcdoc/CS64/sdaiInsertNestedAggrAfter.html)
+		///		sdaiInsertNestedAggrAfter                               (http://rdf.bg/ifcdoc/CS64/sdaiInsertNestedAggrAfter.html)
 		///
 		///	The function creates an aggregate instance as a member of a list instance.
 		///	The newly created aggregate is inserted into the list instance after the member referenced by the specified iterator.
@@ -3580,7 +3405,7 @@ namespace RDF
 		public static extern int_t sdaiInsertNestedAggrAfter(int_t iterator);
 
 		/// <summary>
-		///		sdaiCreateNestedAggrADB                                 (https://rdf.bg/ifcdoc/CS64/sdaiCreateNestedAggrADB.html)
+		///		sdaiCreateNestedAggrADB                                 (http://rdf.bg/ifcdoc/CS64/sdaiCreateNestedAggrADB.html)
 		///
 		///	The CreateNestedAggrABD function creates an aggregate instance as a member of (an unordered)
 		///	aggregate instance in the case where the type of the aggregate to create is a SELECT TYPE and
@@ -3592,7 +3417,7 @@ namespace RDF
 		public static extern int_t sdaiCreateNestedAggrADB(int_t aggregate, int_t selaggrInstance);
 
 		/// <summary>
-		///		sdaiCreateNestedAggrByIndexADB                          (https://rdf.bg/ifcdoc/CS64/sdaiCreateNestedAggrByIndexADB.html)
+		///		sdaiCreateNestedAggrByIndexADB                          (http://rdf.bg/ifcdoc/CS64/sdaiCreateNestedAggrByIndexADB.html)
 		///
 		///	The function creates an aggregate instance and replaces the existing member of the specified ordered aggregate instance 
 		///	referenced by the specified index.
@@ -3603,7 +3428,7 @@ namespace RDF
 		public static extern int_t sdaiCreateNestedAggrByIndexADB(int_t aggregate, int_t index, int_t selaggrInstance);
 
 		/// <summary>
-		///		sdaiInsertNestedAggrByIndexADB                          (https://rdf.bg/ifcdoc/CS64/sdaiInsertNestedAggrByIndexADB.html)
+		///		sdaiInsertNestedAggrByIndexADB                          (http://rdf.bg/ifcdoc/CS64/sdaiInsertNestedAggrByIndexADB.html)
 		///
 		///	The function creates an aggregate instance as member of the specified ordered aggregate instance. 
 		///	The newly created aggregate is inserted into the aggregate at the position referenced by the specified index.
@@ -3614,7 +3439,7 @@ namespace RDF
 		public static extern int_t sdaiInsertNestedAggrByIndexADB(int_t aggregate, int_t index, int_t selaggrInstance);
 
 		/// <summary>
-		///		sdaiCreateNestedAggrByItrADB                            (https://rdf.bg/ifcdoc/CS64/sdaiCreateNestedAggrByItrADB.html)
+		///		sdaiCreateNestedAggrByItrADB                            (http://rdf.bg/ifcdoc/CS64/sdaiCreateNestedAggrByItrADB.html)
 		///
 		///	The function creates an aggregate instance replacing the current member of the aggregate instance 
 		///	referenced by the specified iterator where the type of the aggregate to create is a SELECT TYPE and ambiguous,
@@ -3625,7 +3450,7 @@ namespace RDF
 		public static extern int_t sdaiCreateNestedAggrByItrADB(int_t iterator, int_t selaggrInstance);
 
 		/// <summary>
-		///		sdaiInsertNestedAggrBeforeADB                           (https://rdf.bg/ifcdoc/CS64/sdaiInsertNestedAggrBeforeADB.html)
+		///		sdaiInsertNestedAggrBeforeADB                           (http://rdf.bg/ifcdoc/CS64/sdaiInsertNestedAggrBeforeADB.html)
 		///
 		///	The function creates an aggregate instance as a member of a list instance where the type of the aggregate to create is a SELECT TYPE and ambiguous.
 		///	The newly created aggregate is inserted into the list instance before the member referenced by the specified iterator.
@@ -3636,7 +3461,7 @@ namespace RDF
 		public static extern int_t sdaiInsertNestedAggrBeforeADB(int_t iterator, int_t selaggrInstance);
 
 		/// <summary>
-		///		sdaiInsertNestedAggrAfterADB                            (https://rdf.bg/ifcdoc/CS64/sdaiInsertNestedAggrAfterADB.html)
+		///		sdaiInsertNestedAggrAfterADB                            (http://rdf.bg/ifcdoc/CS64/sdaiInsertNestedAggrAfterADB.html)
 		///
 		///	The function creates an aggregate instance as a member of a list instance where the type of the aggregate to create is a SELECT TYPE and ambiguous.
 		///	The newly created aggregate is inserted into the list instance after the member referenced by the specified iterator.
@@ -3647,7 +3472,7 @@ namespace RDF
 		public static extern int_t sdaiInsertNestedAggrAfterADB(int_t iterator, int_t selaggrInstance);
 
 		/// <summary>
-		///		sdaiRemoveByIndex                                       (https://rdf.bg/ifcdoc/CS64/sdaiRemoveByIndex.html)
+		///		sdaiRemoveByIndex                                       (http://rdf.bg/ifcdoc/CS64/sdaiRemoveByIndex.html)
 		///
 		///	The function removes the member of the specified list referenced by the specified index.
 		/// </summary>
@@ -3655,7 +3480,7 @@ namespace RDF
 		public static extern void sdaiRemoveByIndex(int_t aggregate, int_t index);
 
 		/// <summary>
-		///		sdaiRemoveByIterator                                    (https://rdf.bg/ifcdoc/CS64/sdaiRemoveByIterator.html)
+		///		sdaiRemoveByIterator                                    (http://rdf.bg/ifcdoc/CS64/sdaiRemoveByIterator.html)
 		///
 		///	The function removes the current member of an aggregate instance, that is not an array, referenced by the specified iterator.
 		///	After executing the function, the iterator position set as if the sdaiNext function had been invoked before the member was removed.
@@ -3664,7 +3489,7 @@ namespace RDF
 		public static extern void sdaiRemoveByIterator(int_t iterator);
 
 		/// <summary>
-		///		sdaiRemove                                              (https://rdf.bg/ifcdoc/CS64/sdaiRemove.html)
+		///		sdaiRemove                                              (http://rdf.bg/ifcdoc/CS64/sdaiRemove.html)
 		///
 		///	The function removes one occurrence of the specified value from the specified unordered aggregate instance.
 		///
@@ -3757,25 +3582,25 @@ namespace RDF
 		public static extern void sdaiRemove(int_t aggregate, int_t valueType, string value);
 
 		/// <summary>
-		///		sdaiTestArrayByIndex                                    (https://rdf.bg/ifcdoc/CS64/sdaiTestArrayByIndex.html)
+		///		sdaiTestArrayByIndex                                    (http://rdf.bg/ifcdoc/CS64/sdaiTestArrayByIndex.html)
 		///
 		///	The function tests whether the member of the specified array referenced by the specified index position has a value.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiTestArrayByIndex")]
         [return: MarshalAs(UnmanagedType.U1)]
-		public static extern bool sdaiTestArrayByIndex(int_t aggregate, int_t index);
+        public static extern bool sdaiTestArrayByIndex(int_t aggregate, int_t index);
 
 		/// <summary>
-		///		sdaiTestArrayByItr                                      (https://rdf.bg/ifcdoc/CS64/sdaiTestArrayByItr.html)
+		///		sdaiTestArrayByItr                                      (http://rdf.bg/ifcdoc/CS64/sdaiTestArrayByItr.html)
 		///
 		///	The function tests whether the member of the specified array referenced by the specified index position has a value.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "sdaiTestArrayByItr")]
         [return: MarshalAs(UnmanagedType.U1)]
-		public static extern bool sdaiTestArrayByItr(int_t iterator);
+        public static extern bool sdaiTestArrayByItr(int_t iterator);
 
 		/// <summary>
-		///		sdaiCreateInstance                                      (https://rdf.bg/ifcdoc/CS64/sdaiCreateInstance.html)
+		///		sdaiCreateInstance                                      (http://rdf.bg/ifcdoc/CS64/sdaiCreateInstance.html)
 		///
 		///	This call creates an instance of the given entity.
 		/// </summary>
@@ -3783,7 +3608,7 @@ namespace RDF
 		public static extern int_t sdaiCreateInstance(int_t model, int_t entity);
 
 		/// <summary>
-		///		sdaiCreateInstanceBN                                    (https://rdf.bg/ifcdoc/CS64/sdaiCreateInstanceBN.html)
+		///		sdaiCreateInstanceBN                                    (http://rdf.bg/ifcdoc/CS64/sdaiCreateInstanceBN.html)
 		///
 		///	This call creates an instance of the given entity.
 		///
@@ -3803,25 +3628,7 @@ namespace RDF
 		public static extern int_t sdaiCreateInstanceBN(int_t model, byte[] entityName);
 
 		/// <summary>
-		///		sdaiCreateComplexInstance                               (https://rdf.bg/ifcdoc/CS64/sdaiCreateComplexInstance.html)
-		///
-		///	This call creates a new application instance of the specified type, as determined by a constructed entity type
-		///	that is made up of the supplied simple entity types, in the specified SDAI model.
-		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateComplexInstance")]
-		public static extern int_t sdaiCreateComplexInstance(int_t model, int_t entityList);
-
-		/// <summary>
-		///		sdaiCreateComplexInstanceBN                             (https://rdf.bg/ifcdoc/CS64/sdaiCreateComplexInstanceBN.html)
-		///
-		///	This call creates a new application instance of the specified type, as determined by a constructed entity type
-		///	that is made up of the supplied simple entity types, in the specified SDAI model.
-		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateComplexInstanceBN")]
-		public static extern int_t sdaiCreateComplexInstanceBN(int_t model, int_t nameNumber, out IntPtr nameVector);
-
-		/// <summary>
-		///		sdaiDeleteInstance                                      (https://rdf.bg/ifcdoc/CS64/sdaiDeleteInstance.html)
+		///		sdaiDeleteInstance                                      (http://rdf.bg/ifcdoc/CS64/sdaiDeleteInstance.html)
 		///
 		///	This call will delete an existing instance.
 		/// </summary>
@@ -3829,7 +3636,7 @@ namespace RDF
 		public static extern void sdaiDeleteInstance(int_t instance);
 
 		/// <summary>
-		///		sdaiPutADBTypePath                                      (https://rdf.bg/ifcdoc/CS64/sdaiPutADBTypePath.html)
+		///		sdaiPutADBTypePath                                      (http://rdf.bg/ifcdoc/CS64/sdaiPutADBTypePath.html)
 		///
 		///	...
 		/// </summary>
@@ -3840,7 +3647,7 @@ namespace RDF
 		public static extern void sdaiPutADBTypePath(int_t ADB, int_t pathCount, byte[] path);
 
 		/// <summary>
-		///		sdaiPutAttr                                             (https://rdf.bg/ifcdoc/CS64/sdaiPutAttr.html)
+		///		sdaiPutAttr                                             (http://rdf.bg/ifcdoc/CS64/sdaiPutAttr.html)
 		///
 		///	valueType argument to specify what type of data caller wants to put
 		///	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiPutAttr, and it works similarly for all put-functions.
@@ -3947,7 +3754,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		sdaiPutAttrBN                                           (https://rdf.bg/ifcdoc/CS64/sdaiPutAttrBN.html)
+		///		sdaiPutAttrBN                                           (http://rdf.bg/ifcdoc/CS64/sdaiPutAttrBN.html)
 		///
 		///	valueType argument to specify what type of data caller wants to put
 		///	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiPutAttrBN, and it works similarly for all put-functions.
@@ -4088,7 +3895,7 @@ namespace RDF
 		public static extern void sdaiPutAttrBN(int_t instance, byte[] attributeName, int_t valueType, string value);
 
 		/// <summary>
-		///		sdaiUnsetAttr                                           (https://rdf.bg/ifcdoc/CS64/sdaiUnsetAttr.html)
+		///		sdaiUnsetAttr                                           (http://rdf.bg/ifcdoc/CS64/sdaiUnsetAttr.html)
 		///
 		///	This call removes all data from a specific attribute for the given instance.
 		/// </summary>
@@ -4096,7 +3903,7 @@ namespace RDF
 		public static extern void sdaiUnsetAttr(int_t instance, int_t attribute);
 
 		/// <summary>
-		///		sdaiUnsetAttrBN                                         (https://rdf.bg/ifcdoc/CS64/sdaiUnsetAttrBN.html)
+		///		sdaiUnsetAttrBN                                         (http://rdf.bg/ifcdoc/CS64/sdaiUnsetAttrBN.html)
 		///
 		///	This call removes all data from a specific attribute for the given instance.
 		///
@@ -4118,7 +3925,7 @@ namespace RDF
 		public static extern void sdaiUnsetAttrBN(int_t instance, byte[] attributeName);
 
 		/// <summary>
-		///		engiSetComment                                          (https://rdf.bg/ifcdoc/CS64/engiSetComment.html)
+		///		engiSetComment                                          (http://rdf.bg/ifcdoc/CS64/engiSetComment.html)
 		///
 		///	This call can be used to add a comment to an instance when exporting the content. The comment is available in the exported/saved IFC file.
 		/// </summary>
@@ -4129,7 +3936,7 @@ namespace RDF
 		public static extern void engiSetComment(int_t instance, byte[] comment);
 
 		/// <summary>
-		///		engiGetInstanceLocalId                                  (https://rdf.bg/ifcdoc/CS64/engiGetInstanceLocalId.html)
+		///		engiGetInstanceLocalId                                  (http://rdf.bg/ifcdoc/CS64/engiGetInstanceLocalId.html)
 		///
 		///	...
 		/// </summary>
@@ -4137,7 +3944,7 @@ namespace RDF
 		public static extern Int64 engiGetInstanceLocalId(int_t instance);
 
 		/// <summary>
-		///		sdaiTestAttr                                            (https://rdf.bg/ifcdoc/CS64/sdaiTestAttr.html)
+		///		sdaiTestAttr                                            (http://rdf.bg/ifcdoc/CS64/sdaiTestAttr.html)
 		///
 		///	...
 		/// </summary>
@@ -4145,7 +3952,7 @@ namespace RDF
 		public static extern int_t sdaiTestAttr(int_t instance, int_t attribute);
 
 		/// <summary>
-		///		sdaiTestAttrBN                                          (https://rdf.bg/ifcdoc/CS64/sdaiTestAttrBN.html)
+		///		sdaiTestAttrBN                                          (http://rdf.bg/ifcdoc/CS64/sdaiTestAttrBN.html)
 		///
 		///	Technically it will transform into the following call
 		///		sdaiGetAttrDefinition(
@@ -4162,7 +3969,7 @@ namespace RDF
 		public static extern int_t sdaiTestAttrBN(int_t instance, byte[] attributeName);
 
 		/// <summary>
-		///		sdaiCreateInstanceEI                                    (https://rdf.bg/ifcdoc/CS64/sdaiCreateInstanceEI.html)
+		///		sdaiCreateInstanceEI                                    (http://rdf.bg/ifcdoc/CS64/sdaiCreateInstanceEI.html)
 		///
 		///	This call creates an instance at a specific given express ID, the instance is only created if the express ID was not used yet.
 		/// </summary>
@@ -4170,7 +3977,7 @@ namespace RDF
 		public static extern int_t sdaiCreateInstanceEI(int_t model, int_t entity, Int64 expressID);
 
 		/// <summary>
-		///		sdaiCreateInstanceBNEI                                  (https://rdf.bg/ifcdoc/CS64/sdaiCreateInstanceBNEI.html)
+		///		sdaiCreateInstanceBNEI                                  (http://rdf.bg/ifcdoc/CS64/sdaiCreateInstanceBNEI.html)
 		///
 		///	This call creates an instance at a specific given express ID, the instance is only created if the express ID was not used yet.
 		/// </summary>
@@ -4181,7 +3988,7 @@ namespace RDF
 		public static extern int_t sdaiCreateInstanceBNEI(int_t model, byte[] entityName, Int64 expressID);
 
 		/// <summary>
-		///		sdaiCreateIterator                                      (https://rdf.bg/ifcdoc/CS64/sdaiCreateIterator.html)
+		///		sdaiCreateIterator                                      (http://rdf.bg/ifcdoc/CS64/sdaiCreateIterator.html)
 		///
 		///	This function creates an iterator associated with the specified aggregate instance.
 		///	The iterator is positioned as if the sdaiBeginning function had been executed such that so that no
@@ -4191,7 +3998,7 @@ namespace RDF
 		public static extern int_t sdaiCreateIterator(int_t aggregate);
 
 		/// <summary>
-		///		sdaiDeleteIterator                                      (https://rdf.bg/ifcdoc/CS64/sdaiDeleteIterator.html)
+		///		sdaiDeleteIterator                                      (http://rdf.bg/ifcdoc/CS64/sdaiDeleteIterator.html)
 		///
 		///	This function deletes the specified iterator.
 		/// </summary>
@@ -4199,7 +4006,7 @@ namespace RDF
 		public static extern void sdaiDeleteIterator(int_t iterator);
 
 		/// <summary>
-		///		sdaiBeginning                                           (https://rdf.bg/ifcdoc/CS64/sdaiBeginning.html)
+		///		sdaiBeginning                                           (http://rdf.bg/ifcdoc/CS64/sdaiBeginning.html)
 		///
 		///	The function positions the iterator at the beginning of its associated aggregate instance such that there is no current member.
 		/// </summary>
@@ -4207,7 +4014,7 @@ namespace RDF
 		public static extern void sdaiBeginning(int_t iterator);
 
 		/// <summary>
-		///		sdaiNext                                                (https://rdf.bg/ifcdoc/CS64/sdaiNext.html)
+		///		sdaiNext                                                (http://rdf.bg/ifcdoc/CS64/sdaiNext.html)
 		///
 		///	This function positions the iterator to the succeeding member of the associated aggregate instance.
 		/// </summary>
@@ -4216,7 +4023,7 @@ namespace RDF
         public static extern bool sdaiNext(int_t iterator);
 
 		/// <summary>
-		///		sdaiPrevious                                            (https://rdf.bg/ifcdoc/CS64/sdaiPrevious.html)
+		///		sdaiPrevious                                            (http://rdf.bg/ifcdoc/CS64/sdaiPrevious.html)
 		///
 		///	This function positions the specified iterator so that the preceding member of its subject
 		///	ordered aggregate instance shall become the current member.
@@ -4228,7 +4035,7 @@ namespace RDF
 		public static extern int_t sdaiPrevious(int_t iterator);
 
 		/// <summary>
-		///		sdaiEnd                                                 (https://rdf.bg/ifcdoc/CS64/sdaiEnd.html)
+		///		sdaiEnd                                                 (http://rdf.bg/ifcdoc/CS64/sdaiEnd.html)
 		///
 		///	This function positions the specified iterator at the end of the ordered aggregate instance members such that there is no current member.
 		/// </summary>
@@ -4236,7 +4043,7 @@ namespace RDF
 		public static extern void sdaiEnd(int_t iterator);
 
 		/// <summary>
-		///		sdaiIsMember                                            (https://rdf.bg/ifcdoc/CS64/sdaiIsMember.html)
+		///		sdaiIsMember                                            (http://rdf.bg/ifcdoc/CS64/sdaiIsMember.html)
 		///
 		///	The function determines whether the specified primitive or instance value is contained
 		///	in the aggregate. In the case of aggregate members represented by ADBs, both the data value and data
@@ -4338,7 +4145,7 @@ namespace RDF
         public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, string value);
 
 		/// <summary>
-		///		sdaiGetAggrElementBoundByItr                            (https://rdf.bg/ifcdoc/CS64/sdaiGetAggrElementBoundByItr.html)
+		///		sdaiGetAggrElementBoundByItr                            (http://rdf.bg/ifcdoc/CS64/sdaiGetAggrElementBoundByItr.html)
 		///
 		///	The function returns the current value of the real precision, the string width, or the binary width
 		///	for the current member referenced by the specified iterator.
@@ -4347,7 +4154,7 @@ namespace RDF
 		public static extern int_t sdaiGetAggrElementBoundByItr(int_t iterator);
 
 		/// <summary>
-		///		sdaiGetAggrElementBoundByIndex                          (https://rdf.bg/ifcdoc/CS64/sdaiGetAggrElementBoundByIndex.html)
+		///		sdaiGetAggrElementBoundByIndex                          (http://rdf.bg/ifcdoc/CS64/sdaiGetAggrElementBoundByIndex.html)
 		///
 		///	The function returns the current value of the real precision, the string width, or the binary width 
 		///	of the aggregate element at the specified index position in the specified ordered aggregate instance.
@@ -4356,7 +4163,7 @@ namespace RDF
 		public static extern int_t sdaiGetAggrElementBoundByIndex(int_t aggregate, int_t index);
 
 		/// <summary>
-		///		sdaiGetLowerBound                                       (https://rdf.bg/ifcdoc/CS64/sdaiGetLowerBound.html)
+		///		sdaiGetLowerBound                                       (http://rdf.bg/ifcdoc/CS64/sdaiGetLowerBound.html)
 		///
 		///	The function returns the current value of the lower bound, or index, of the specified aggregate instance.
 		/// </summary>
@@ -4364,7 +4171,7 @@ namespace RDF
 		public static extern int_t sdaiGetLowerBound(int_t aggregate);
 
 		/// <summary>
-		///		sdaiGetUpperBound                                       (https://rdf.bg/ifcdoc/CS64/sdaiGetUpperBound.html)
+		///		sdaiGetUpperBound                                       (http://rdf.bg/ifcdoc/CS64/sdaiGetUpperBound.html)
 		///
 		///	The function returns the current value of the upper bound, or index, of the specified aggregate instance.
 		/// </summary>
@@ -4372,7 +4179,7 @@ namespace RDF
 		public static extern int_t sdaiGetUpperBound(int_t aggregate);
 
 		/// <summary>
-		///		sdaiGetLowerIndex                                       (https://rdf.bg/ifcdoc/CS64/sdaiGetLowerIndex.html)
+		///		sdaiGetLowerIndex                                       (http://rdf.bg/ifcdoc/CS64/sdaiGetLowerIndex.html)
 		///
 		///	The function returns the value of the lower index of the specified array instance when it was created.
 		/// </summary>
@@ -4380,7 +4187,7 @@ namespace RDF
 		public static extern int_t sdaiGetLowerIndex(int_t aggregate);
 
 		/// <summary>
-		///		sdaiGetUpperIndex                                       (https://rdf.bg/ifcdoc/CS64/sdaiGetUpperIndex.html)
+		///		sdaiGetUpperIndex                                       (http://rdf.bg/ifcdoc/CS64/sdaiGetUpperIndex.html)
 		///
 		///	The function returns the value of the upper index of the specified array instance when it was created.
 		/// </summary>
@@ -4388,7 +4195,7 @@ namespace RDF
 		public static extern int_t sdaiGetUpperIndex(int_t aggregate);
 
 		/// <summary>
-		///		sdaiUnsetArrayByIndex                                   (https://rdf.bg/ifcdoc/CS64/sdaiUnsetArrayByIndex.html)
+		///		sdaiUnsetArrayByIndex                                   (http://rdf.bg/ifcdoc/CS64/sdaiUnsetArrayByIndex.html)
 		///
 		///	The function restores the unset (not assigned a value) status of the member
 		///	of the specified array at the specified index position.
@@ -4397,7 +4204,7 @@ namespace RDF
 		public static extern void sdaiUnsetArrayByIndex(int_t array, int_t index);
 
 		/// <summary>
-		///		sdaiUnsetArrayByItr                                     (https://rdf.bg/ifcdoc/CS64/sdaiUnsetArrayByItr.html)
+		///		sdaiUnsetArrayByItr                                     (http://rdf.bg/ifcdoc/CS64/sdaiUnsetArrayByItr.html)
 		///
 		///	The function restores the unset (not assigned a value) status of a member at the
 		///	position identified by the iterator in the array associated with the iterator.
@@ -4406,7 +4213,7 @@ namespace RDF
 		public static extern void sdaiUnsetArrayByItr(int_t iterator);
 
 		/// <summary>
-		///		sdaiReindexArray                                        (https://rdf.bg/ifcdoc/CS64/sdaiReindexArray.html)
+		///		sdaiReindexArray                                        (http://rdf.bg/ifcdoc/CS64/sdaiReindexArray.html)
 		///
 		///	The function resizes the specified array instance setting the lower, or upper index,
 		///	or both, based upon the current population of the application schema.
@@ -4415,7 +4222,7 @@ namespace RDF
 		public static extern void sdaiReindexArray(int_t array);
 
 		/// <summary>
-		///		sdaiResetArrayIndex                                     (https://rdf.bg/ifcdoc/CS64/sdaiResetArrayIndex.html)
+		///		sdaiResetArrayIndex                                     (http://rdf.bg/ifcdoc/CS64/sdaiResetArrayIndex.html)
 		///
 		///	The function shall resizes the specified array instance setting the lower and upper
 		///	index with the specified values.
@@ -4424,17 +4231,25 @@ namespace RDF
 		public static extern void sdaiResetArrayIndex(int_t array, int_t lower, int_t upper);
 
 		/// <summary>
-		///		engiEnableDerivedAttributes                             (https://rdf.bg/ifcdoc/CS64/engiEnableDerivedAttributes.html)
+		///		engiGetComplexInstanceNextPart                          (http://rdf.bg/ifcdoc/CS64/engiGetComplexInstanceNextPart.html)
+		///
+		///	The function returns next part of complex instance or NULL.
+		/// </summary>
+		[DllImport(STEPEngineDLL, EntryPoint = "engiGetComplexInstanceNextPart")]
+		public static extern int_t engiGetComplexInstanceNextPart(int_t instance);
+
+		/// <summary>
+		///		engiEnableDerivedAttributes                             (http://rdf.bg/ifcdoc/CS64/engiEnableDerivedAttributes.html)
 		///
 		///	The function enables calculation of derived attributes for sdaiGetAttr(BN) and other get value functions and dynamic aggregation indexes.
 		///	Returns success flag.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiEnableDerivedAttributes")]
         [return: MarshalAs(UnmanagedType.U1)]
-		public static extern bool engiEnableDerivedAttributes(int_t model, [param: MarshalAs(UnmanagedType.U1)] bool enable);
+        public static extern bool engiEnableDerivedAttributes(int_t model, [param: MarshalAs(UnmanagedType.U1)] bool enable);
 
 		/// <summary>
-		///		engiEvaluateAllDerivedAttributes                        (https://rdf.bg/ifcdoc/CS64/engiEvaluateAllDerivedAttributes.html)
+		///		engiEvaluateAllDerivedAttributes                        (http://rdf.bg/ifcdoc/CS64/engiEvaluateAllDerivedAttributes.html)
 		///
 		///	The function evaluates and replaces all * with values, optionally can handle $ values as derived attributes.
 		/// </summary>
@@ -4442,7 +4257,7 @@ namespace RDF
 		public static extern void engiEvaluateAllDerivedAttributes(int_t model, [param: MarshalAs(UnmanagedType.U1)] bool includeNullValues);
 
 		/// <summary>
-		///		setSegmentation                                         (https://rdf.bg/ifcdoc/CS64/setSegmentation.html)
+		///		setSegmentation                                         (http://rdf.bg/ifcdoc/CS64/setSegmentation.html)
 		///
 		///	This call sets the segmentation for any curved part of an object in case it is defined by a circle, ellipse, nurbs etc.
 		///
@@ -4457,7 +4272,7 @@ namespace RDF
 		public static extern void setSegmentation(int_t model, int_t segmentationParts, double segmentationLength);
 
 		/// <summary>
-		///		getSegmentation                                         (https://rdf.bg/ifcdoc/CS64/getSegmentation.html)
+		///		getSegmentation                                         (http://rdf.bg/ifcdoc/CS64/getSegmentation.html)
 		///
 		///	This returns the set values for segmentationParts and segmentationLength. Both attributes are optional.
 		///	The values can be changed through the API call setSegmentation().
@@ -4469,7 +4284,7 @@ namespace RDF
 		public static extern void getSegmentation(int_t model, out int_t segmentationParts, out double segmentationLength);
 
 		/// <summary>
-		///		setEpsilon                                              (https://rdf.bg/ifcdoc/CS64/setEpsilon.html)
+		///		setEpsilon                                              (http://rdf.bg/ifcdoc/CS64/setEpsilon.html)
 		///
 		///	...
 		/// </summary>
@@ -4477,7 +4292,7 @@ namespace RDF
 		public static extern void setEpsilon(int_t model, int_t mask, double absoluteEpsilon, double relativeEpsilon);
 
 		/// <summary>
-		///		getEpsilon                                              (https://rdf.bg/ifcdoc/CS64/getEpsilon.html)
+		///		getEpsilon                                              (http://rdf.bg/ifcdoc/CS64/getEpsilon.html)
 		///
 		///	...
 		/// </summary>
@@ -4489,7 +4304,7 @@ namespace RDF
         //
 
 		/// <summary>
-		///		circleSegments                                          (https://rdf.bg/ifcdoc/CS64/circleSegments.html)
+		///		circleSegments                                          (http://rdf.bg/ifcdoc/CS64/circleSegments.html)
 		///
 		///	Please use the setSegmentation call, note it is now a call that is model dependent.
 		///
@@ -4502,7 +4317,7 @@ namespace RDF
 		public static extern void circleSegments(int_t circles, int_t smallCircles);
 
 		/// <summary>
-		///		setMaximumSegmentationLength                            (https://rdf.bg/ifcdoc/CS64/setMaximumSegmentationLength.html)
+		///		setMaximumSegmentationLength                            (http://rdf.bg/ifcdoc/CS64/setMaximumSegmentationLength.html)
 		///
 		///	Please use setSegmentation call
 		///
@@ -4515,7 +4330,7 @@ namespace RDF
 		public static extern void setMaximumSegmentationLength(int_t model, double length);
 
 		/// <summary>
-		///		getProjectUnitConversionFactor                          (https://rdf.bg/ifcdoc/CS64/getProjectUnitConversionFactor.html)
+		///		getProjectUnitConversionFactor                          (http://rdf.bg/ifcdoc/CS64/getProjectUnitConversionFactor.html)
 		///
 		///	...
 		/// </summary>
@@ -4526,34 +4341,15 @@ namespace RDF
 		public static extern double getProjectUnitConversionFactor(int_t model, byte[] unitType, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName);
 
 		/// <summary>
-		///		getProjectUnitConversionFactorW                         (https://rdf.bg/ifcdoc/CS64/getProjectUnitConversionFactorW.html)
-		///
-		///	...
-		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getProjectUnitConversionFactorW")]
-		public static extern double getProjectUnitConversionFactorW(int_t model, string unitType, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName);
-
-		[DllImport(STEPEngineDLL, EntryPoint = "getProjectUnitConversionFactorW")]
-		public static extern double getProjectUnitConversionFactorW(int_t model, byte[] unitType, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName);
-
-		/// <summary>
-		///		getUnitInstanceConversionFactor                         (https://rdf.bg/ifcdoc/CS64/getUnitInstanceConversionFactor.html)
+		///		getUnitInstanceConversionFactor                         (http://rdf.bg/ifcdoc/CS64/getUnitInstanceConversionFactor.html)
 		///
 		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "getUnitInstanceConversionFactor")]
-		public static extern double getUnitInstanceConversionFactor(int_t unitInstance, out IntPtr unitType, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName);
+		public static extern double getUnitInstanceConversionFactor(int_t unitInstance, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName);
 
 		/// <summary>
-		///		getUnitInstanceConversionFactorW                        (https://rdf.bg/ifcdoc/CS64/getUnitInstanceConversionFactorW.html)
-		///
-		///	...
-		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getUnitInstanceConversionFactorW")]
-		public static extern double getUnitInstanceConversionFactorW(int_t unitInstance, out IntPtr unitType, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName);
-
-		/// <summary>
-		///		setBRepProperties                                       (https://rdf.bg/ifcdoc/CS64/setBRepProperties.html)
+		///		setBRepProperties                                       (http://rdf.bg/ifcdoc/CS64/setBRepProperties.html)
 		///
 		///	This call can be used to optimize Boundary Representation geometries.
 		///
@@ -4565,7 +4361,7 @@ namespace RDF
 		///			bit4  (16)		check if faces are wrongly turned opposite from each other
 		///			bit5  (32)		check if faces are inside-out
 		///			bit6  (64)		check if faces result in solid, if not generate both sided faces
-		///			bit7  (128)		invert direction of the face/normal information
+		///			bit7  (128)		invert direction of the face / normal information
 		///			bit8  (256)		export all faces as one conceptual face
 		///			bit9  (512)		remove irrelevant intermediate points on lines
 		///			bit10 (1024)	check and repair faces that are not defined in a perfect plane
@@ -4586,7 +4382,7 @@ namespace RDF
 		public static extern void setBRepProperties(int_t model, Int64 consistencyCheck, double fraction, double epsilon, int_t maxVerticesSize);
 
 		/// <summary>
-		///		cleanMemory                                             (https://rdf.bg/ifcdoc/CS64/cleanMemory.html)
+		///		cleanMemory                                             (http://rdf.bg/ifcdoc/CS64/cleanMemory.html)
 		///
 		///	This call forces cleaning of memory allocated.
 		///	The following mode values are effected:
@@ -4599,31 +4395,31 @@ namespace RDF
 		public static extern void cleanMemory(int_t model, int_t mode);
 
 		/// <summary>
-		///		internalGetP21Line                                      (https://rdf.bg/ifcdoc/CS64/internalGetP21Line.html)
+		///		internalGetP21Line                                      (http://rdf.bg/ifcdoc/CS64/internalGetP21Line.html)
 		///
-		///	Returns the line STEP/Express ID of an instance
+		///	Returns the line STEP / Express ID of an instance
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "internalGetP21Line")]
 		public static extern Int64 internalGetP21Line(int_t instance);
 
 		/// <summary>
-		///		internalForceInstanceFromP21Line                        (https://rdf.bg/ifcdoc/CS64/internalForceInstanceFromP21Line.html)
+		///		internalForceInstanceFromP21Line                        (http://rdf.bg/ifcdoc/CS64/internalForceInstanceFromP21Line.html)
 		///
-		///	Returns an instance based on the model and STEP/Express ID (even when the instance itself might be non-existant).
+		///	Returns an instance based on the model and STEP / Express ID (even when the instance itself might be non-existant).
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "internalForceInstanceFromP21Line")]
 		public static extern int_t internalForceInstanceFromP21Line(int_t model, Int64 P21Line);
 
 		/// <summary>
-		///		internalGetInstanceFromP21Line                          (https://rdf.bg/ifcdoc/CS64/internalGetInstanceFromP21Line.html)
+		///		internalGetInstanceFromP21Line                          (http://rdf.bg/ifcdoc/CS64/internalGetInstanceFromP21Line.html)
 		///
-		///	Returns an instance based on the model and STEP/Express ID
+		///	Returns an instance based on the model and STEP / Express ID
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "internalGetInstanceFromP21Line")]
 		public static extern int_t internalGetInstanceFromP21Line(int_t model, Int64 P21Line);
 
 		/// <summary>
-		///		internalGetXMLID                                        (https://rdf.bg/ifcdoc/CS64/internalGetXMLID.html)
+		///		internalGetXMLID                                        (http://rdf.bg/ifcdoc/CS64/internalGetXMLID.html)
 		///
 		///	In case an XML file is loaded the XML ID values are kept in memory and can be retrieved through this API call.
 		/// </summary>
@@ -4638,7 +4434,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		setStringUnicode                                        (https://rdf.bg/ifcdoc/CS64/setStringUnicode.html)
+		///		setStringUnicode                                        (http://rdf.bg/ifcdoc/CS64/setStringUnicode.html)
 		///
 		///	Set mode of interpretation for arguments of type char*
 		///		0 - char* (default)
@@ -4650,7 +4446,7 @@ namespace RDF
 		public static extern int_t setStringUnicode(int_t unicode);
 
 		/// <summary>
-		///		getStringUnicode                                        (https://rdf.bg/ifcdoc/CS64/getStringUnicode.html)
+		///		getStringUnicode                                        (http://rdf.bg/ifcdoc/CS64/getStringUnicode.html)
 		///
 		///	...
 		/// </summary>
@@ -4658,7 +4454,7 @@ namespace RDF
 		public static extern int_t getStringUnicode();
 
 		/// <summary>
-		///		engiSetStringEncoding                                   (https://rdf.bg/ifcdoc/CS64/engiSetStringEncoding.html)
+		///		engiSetStringEncoding                                   (http://rdf.bg/ifcdoc/CS64/engiSetStringEncoding.html)
 		///
 		///	Sets encoding for sdaiSTRING data type in put and get functions
 		///	if model is NULL it will set codepage for models, created after the call or for contexts when model is not known
@@ -4668,7 +4464,7 @@ namespace RDF
 		public static extern int_t engiSetStringEncoding(int_t model, byte encoding);
 
 		/// <summary>
-		///		setFilter                                               (https://rdf.bg/ifcdoc/CS64/setFilter.html)
+		///		setFilter                                               (http://rdf.bg/ifcdoc/CS64/setFilter.html)
 		///
 		///	...
 		/// </summary>
@@ -4676,35 +4472,19 @@ namespace RDF
 		public static extern void setFilter(int_t model, int_t setting, int_t mask);
 
 		/// <summary>
-		///		getFilter                                               (https://rdf.bg/ifcdoc/CS64/getFilter.html)
+		///		getFilter                                               (http://rdf.bg/ifcdoc/CS64/getFilter.html)
 		///
 		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "getFilter")]
 		public static extern int_t getFilter(int_t model, int_t mask);
 
-		/// <summary>
-		///		setSerialization                                        (https://rdf.bg/ifcdoc/CS64/setSerialization.html)
-		///
-		///	...
-		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "setSerialization")]
-		public static extern void setSerialization(int_t model, int_t setting, int_t mask);
-
-		/// <summary>
-		///		getSerialization                                        (https://rdf.bg/ifcdoc/CS64/getSerialization.html)
-		///
-		///	...
-		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getSerialization")]
-		public static extern int_t getSerialization(int_t model, int_t mask);
-
         //
         //  Uncategorized API Calls
         //
 
 		/// <summary>
-		///		xxxxGetEntityAndSubTypesExtent                          (https://rdf.bg/ifcdoc/CS64/xxxxGetEntityAndSubTypesExtent.html)
+		///		xxxxGetEntityAndSubTypesExtent                          (http://rdf.bg/ifcdoc/CS64/xxxxGetEntityAndSubTypesExtent.html)
 		///
 		///	Model input parameter is irrelevant, but is required for backwards compatibility.
 		/// </summary>
@@ -4712,7 +4492,7 @@ namespace RDF
 		public static extern int_t xxxxGetEntityAndSubTypesExtent(int_t model, int_t entity);
 
 		/// <summary>
-		///		xxxxGetEntityAndSubTypesExtentBN                        (https://rdf.bg/ifcdoc/CS64/xxxxGetEntityAndSubTypesExtentBN.html)
+		///		xxxxGetEntityAndSubTypesExtentBN                        (http://rdf.bg/ifcdoc/CS64/xxxxGetEntityAndSubTypesExtentBN.html)
 		///
 		///	Technically xxxxGetEntityAndSubTypesExtentBN will transform into the following call
 		///		xxxxGetEntityAndSubTypesExtent(
@@ -4730,7 +4510,7 @@ namespace RDF
 		public static extern int_t xxxxGetEntityAndSubTypesExtentBN(int_t model, byte[] entityName);
 
 		/// <summary>
-		///		xxxxGetAllInstances                                     (https://rdf.bg/ifcdoc/CS64/xxxxGetAllInstances.html)
+		///		xxxxGetAllInstances                                     (http://rdf.bg/ifcdoc/CS64/xxxxGetAllInstances.html)
 		///
 		///	This call returns an aggregation containing all instances.
 		/// </summary>
@@ -4738,7 +4518,7 @@ namespace RDF
 		public static extern int_t xxxxGetAllInstances(int_t model);
 
 		/// <summary>
-		///		xxxxGetInstancesUsing                                   (https://rdf.bg/ifcdoc/CS64/xxxxGetInstancesUsing.html)
+		///		xxxxGetInstancesUsing                                   (http://rdf.bg/ifcdoc/CS64/xxxxGetInstancesUsing.html)
 		///
 		///	This call returns an aggregation containing all instances referencing the given instance.
 		///
@@ -4748,7 +4528,7 @@ namespace RDF
 		public static extern int_t xxxxGetInstancesUsing(int_t instance);
 
 		/// <summary>
-		///		xxxxDeleteFromAggregation                               (https://rdf.bg/ifcdoc/CS64/xxxxDeleteFromAggregation.html)
+		///		xxxxDeleteFromAggregation                               (http://rdf.bg/ifcdoc/CS64/xxxxDeleteFromAggregation.html)
 		///
 		///	...
 		/// </summary>
@@ -4756,7 +4536,7 @@ namespace RDF
 		public static extern int_t xxxxDeleteFromAggregation(int_t instance, int_t aggregate, int_t elementIndex);
 
 		/// <summary>
-		///		xxxxGetAttrDefinitionByValue                            (https://rdf.bg/ifcdoc/CS64/xxxxGetAttrDefinitionByValue.html)
+		///		xxxxGetAttrDefinitionByValue                            (http://rdf.bg/ifcdoc/CS64/xxxxGetAttrDefinitionByValue.html)
 		///
 		///	...
 		/// </summary>
@@ -4764,7 +4544,7 @@ namespace RDF
 		public static extern int_t xxxxGetAttrDefinitionByValue(int_t instance, out IntPtr value);
 
 		/// <summary>
-		///		xxxxGetAttrNameByIndex                                  (https://rdf.bg/ifcdoc/CS64/xxxxGetAttrNameByIndex.html)
+		///		xxxxGetAttrNameByIndex                                  (http://rdf.bg/ifcdoc/CS64/xxxxGetAttrNameByIndex.html)
 		///
 		///	...
 		/// </summary>
@@ -4779,7 +4559,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		iterateOverInstances                                    (https://rdf.bg/ifcdoc/CS64/iterateOverInstances.html)
+		///		iterateOverInstances                                    (http://rdf.bg/ifcdoc/CS64/iterateOverInstances.html)
 		///
 		///	This function iterates over all available instances loaded in memory, it is the fastest way to find all instances.
 		///	Argument entity and entityName are both optional and if non-zero are filled with respectively the entity handle and entity name as char array.
@@ -4788,7 +4568,7 @@ namespace RDF
 		public static extern int_t iterateOverInstances(int_t model, int_t instance, out int_t entity, out IntPtr entityName);
 
 		/// <summary>
-		///		iterateOverProperties                                   (https://rdf.bg/ifcdoc/CS64/iterateOverProperties.html)
+		///		iterateOverProperties                                   (http://rdf.bg/ifcdoc/CS64/iterateOverProperties.html)
 		///
 		///	This function iterated over all available attributes of a specific given entity.
 		///	This call is typically used in combination with iterateOverInstances(..).
@@ -4797,7 +4577,7 @@ namespace RDF
 		public static extern int_t iterateOverProperties(int_t entity, int_t index);
 
 		/// <summary>
-		///		sdaiGetAggrByIterator                                   (https://rdf.bg/ifcdoc/CS64/sdaiGetAggrByIterator.html)
+		///		sdaiGetAggrByIterator                                   (http://rdf.bg/ifcdoc/CS64/sdaiGetAggrByIterator.html)
 		///
 		///	valueType argument to specify what type of data caller wants to get and
 		///	value argument where the caller should provide a buffer, and the function will write the result to.
@@ -4912,7 +4692,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		sdaiPutAggrByIterator                                   (https://rdf.bg/ifcdoc/CS64/sdaiPutAggrByIterator.html)
+		///		sdaiPutAggrByIterator                                   (http://rdf.bg/ifcdoc/CS64/sdaiPutAggrByIterator.html)
 		///
 		///	valueType argument to specify what type of data caller wants to put
 		///	Table 1 shows type of buffer the caller should provide depending on the valueType for sdaiPutAggrByIterator, and it works similarly for all put-functions.
@@ -5020,7 +4800,7 @@ namespace RDF
         }
 
 		/// <summary>
-		///		internalSetLink                                         (https://rdf.bg/ifcdoc/CS64/internalSetLink.html)
+		///		internalSetLink                                         (http://rdf.bg/ifcdoc/CS64/internalSetLink.html)
 		///
 		///	...
 		/// </summary>
@@ -5031,7 +4811,7 @@ namespace RDF
 		public static extern void internalSetLink(int_t instance, byte[] attributeName, int_t linked_id);
 
 		/// <summary>
-		///		internalAddAggrLink                                     (https://rdf.bg/ifcdoc/CS64/internalAddAggrLink.html)
+		///		internalAddAggrLink                                     (http://rdf.bg/ifcdoc/CS64/internalAddAggrLink.html)
 		///
 		///	...
 		/// </summary>
@@ -5039,7 +4819,7 @@ namespace RDF
 		public static extern void internalAddAggrLink(int_t aggregate, int_t linked_id);
 
 		/// <summary>
-		///		engiGetNotReferedAggr                                   (https://rdf.bg/ifcdoc/CS64/engiGetNotReferedAggr.html)
+		///		engiGetNotReferedAggr                                   (http://rdf.bg/ifcdoc/CS64/engiGetNotReferedAggr.html)
 		///
 		///	...
 		/// </summary>
@@ -5047,7 +4827,7 @@ namespace RDF
 		public static extern void engiGetNotReferedAggr(int_t model, out int_t value);
 
 		/// <summary>
-		///		engiGetAttributeAggr                                    (https://rdf.bg/ifcdoc/CS64/engiGetAttributeAggr.html)
+		///		engiGetAttributeAggr                                    (http://rdf.bg/ifcdoc/CS64/engiGetAttributeAggr.html)
 		///
 		///	...
 		/// </summary>
@@ -5055,7 +4835,7 @@ namespace RDF
 		public static extern void engiGetAttributeAggr(int_t instance, out int_t value);
 
 		/// <summary>
-		///		engiGetAggrUnknownElement                               (https://rdf.bg/ifcdoc/CS64/engiGetAggrUnknownElement.html)
+		///		engiGetAggrUnknownElement                               (http://rdf.bg/ifcdoc/CS64/engiGetAggrUnknownElement.html)
 		///
 		///	...
 		/// </summary>
@@ -5089,7 +4869,7 @@ namespace RDF
 //		}
 
 		/// <summary>
-		///		sdaiErrorQuery                                          (https://rdf.bg/ifcdoc/CS64/sdaiErrorQuery.html)
+		///		sdaiErrorQuery                                          (http://rdf.bg/ifcdoc/CS64/sdaiErrorQuery.html)
 		///
 		///	...
 		/// </summary>
@@ -5101,7 +4881,7 @@ namespace RDF
         //
 
 		/// <summary>
-		///		owlGetModel                                             (https://rdf.bg/ifcdoc/CS64/owlGetModel.html)
+		///		owlGetModel                                             (http://rdf.bg/ifcdoc/CS64/owlGetModel.html)
 		///
 		///	Returns a handle to the model within the Geometry Kernel.
 		///
@@ -5113,18 +4893,7 @@ namespace RDF
 		public static extern void owlGetModel(int_t model, out Int64 owlModel);
 
 		/// <summary>
-		///		owlConnectModel                                         (https://rdf.bg/ifcdoc/CS64/owlConnectModel.html)
-		///
-		///	By default a model for the Geometry Modelling Kernel will be created once required on-the-fly.
-		///
-		///	This call allows a user to use an existing model that will be connected. This connected model
-		///	will not be destroyed at closing of the STEP model, i.e. within sdaiCloseModel().
-		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "owlConnectModel")]
-		public static extern byte owlConnectModel(int_t model, Int64 owlModel);
-
-		/// <summary>
-		///		owlGetInstance                                          (https://rdf.bg/ifcdoc/CS64/owlGetInstance.html)
+		///		owlGetInstance                                          (http://rdf.bg/ifcdoc/CS64/owlGetInstance.html)
 		///
 		///	Returns a handle to the instance representing the head of design tree within the Geometry Kernel.
 		///
@@ -5136,7 +4905,7 @@ namespace RDF
 		public static extern void owlGetInstance(int_t model, int_t instance, out Int64 owlInstance);
 
 		/// <summary>
-		///		owlMaterialInstance                                     (https://rdf.bg/ifcdoc/CS64/owlMaterialInstance.html)
+		///		owlMaterialInstance                                     (http://rdf.bg/ifcdoc/CS64/owlMaterialInstance.html)
 		///
 		///	...
 		/// </summary>
@@ -5144,7 +4913,7 @@ namespace RDF
 		public static extern void owlMaterialInstance(int_t instanceBase, int_t instanceContext, out Int64 owlInstance);
 
 		/// <summary>
-		///		owlBuildInstance                                        (https://rdf.bg/ifcdoc/CS64/owlBuildInstance.html)
+		///		owlBuildInstance                                        (http://rdf.bg/ifcdoc/CS64/owlBuildInstance.html)
 		///
 		///	Returns a handle to the instance representing the head of design tree within the Geometry Kernel.
 		///	If no design tree is created yet it will be created on-the-fly.
@@ -5157,7 +4926,7 @@ namespace RDF
 		public static extern void owlBuildInstance(int_t model, int_t instance, out Int64 owlInstance);
 
 		/// <summary>
-		///		owlBuildInstanceInContext                               (https://rdf.bg/ifcdoc/CS64/owlBuildInstanceInContext.html)
+		///		owlBuildInstanceInContext                               (http://rdf.bg/ifcdoc/CS64/owlBuildInstanceInContext.html)
 		///
 		///	Returns a handle to the instance representing the head of design tree within the Geometry Kernel.
 		///	If no design tree is created yet it will be created on-the-fly.
@@ -5170,7 +4939,7 @@ namespace RDF
 		public static extern void owlBuildInstanceInContext(int_t instanceBase, int_t instanceContext, out Int64 owlInstance);
 
 		/// <summary>
-		///		engiInstanceUsesSegmentation                            (https://rdf.bg/ifcdoc/CS64/engiInstanceUsesSegmentation.html)
+		///		engiInstanceUsesSegmentation                            (http://rdf.bg/ifcdoc/CS64/engiInstanceUsesSegmentation.html)
 		///
 		///	...
 		/// </summary>
@@ -5178,7 +4947,7 @@ namespace RDF
 		public static extern byte engiInstanceUsesSegmentation(int_t instance);
 
 		/// <summary>
-		///		owlBuildInstances                                       (https://rdf.bg/ifcdoc/CS64/owlBuildInstances.html)
+		///		owlBuildInstances                                       (http://rdf.bg/ifcdoc/CS64/owlBuildInstances.html)
 		///
 		///	...
 		/// </summary>
@@ -5186,7 +4955,7 @@ namespace RDF
 		public static extern void owlBuildInstances(int_t model, int_t instance, out Int64 owlInstanceComplete, out Int64 owlInstanceSolids, out Int64 owlInstanceVoids);
 
 		/// <summary>
-		///		owlGetMappedItem                                        (https://rdf.bg/ifcdoc/CS64/owlGetMappedItem.html)
+		///		owlGetMappedItem                                        (http://rdf.bg/ifcdoc/CS64/owlGetMappedItem.html)
 		///
 		///	...
 		/// </summary>
@@ -5194,7 +4963,7 @@ namespace RDF
 		public static extern void owlGetMappedItem(int_t model, int_t instance, out Int64 owlInstance, out double transformationMatrix);
 
 		/// <summary>
-		///		getInstanceDerivedPropertiesInModelling                 (https://rdf.bg/ifcdoc/CS64/getInstanceDerivedPropertiesInModelling.html)
+		///		getInstanceDerivedPropertiesInModelling                 (http://rdf.bg/ifcdoc/CS64/getInstanceDerivedPropertiesInModelling.html)
 		///
 		///	...
 		/// </summary>
@@ -5202,7 +4971,7 @@ namespace RDF
 		public static extern int_t getInstanceDerivedPropertiesInModelling(int_t model, int_t instance, out double height, out double width, out double thickness);
 
 		/// <summary>
-		///		getInstanceDerivedBoundingBox                           (https://rdf.bg/ifcdoc/CS64/getInstanceDerivedBoundingBox.html)
+		///		getInstanceDerivedBoundingBox                           (http://rdf.bg/ifcdoc/CS64/getInstanceDerivedBoundingBox.html)
 		///
 		///	...
 		/// </summary>
@@ -5210,7 +4979,7 @@ namespace RDF
 		public static extern int_t getInstanceDerivedBoundingBox(int_t model, int_t instance, out double Ox, out double Oy, out double Oz, out double Vx, out double Vy, out double Vz);
 
 		/// <summary>
-		///		getInstanceTransformationMatrix                         (https://rdf.bg/ifcdoc/CS64/getInstanceTransformationMatrix.html)
+		///		getInstanceTransformationMatrix                         (http://rdf.bg/ifcdoc/CS64/getInstanceTransformationMatrix.html)
 		///
 		///	...
 		/// </summary>
@@ -5218,7 +4987,7 @@ namespace RDF
 		public static extern int_t getInstanceTransformationMatrix(int_t model, int_t instance, out double _11, out double _12, out double _13, out double _14, out double _21, out double _22, out double _23, out double _24, out double _31, out double _32, out double _33, out double _34, out double _41, out double _42, out double _43, out double _44);
 
 		/// <summary>
-		///		getInstanceDerivedTransformationMatrix                  (https://rdf.bg/ifcdoc/CS64/getInstanceDerivedTransformationMatrix.html)
+		///		getInstanceDerivedTransformationMatrix                  (http://rdf.bg/ifcdoc/CS64/getInstanceDerivedTransformationMatrix.html)
 		///
 		///	...
 		/// </summary>
@@ -5226,7 +4995,7 @@ namespace RDF
 		public static extern int_t getInstanceDerivedTransformationMatrix(int_t model, int_t instance, out double _11, out double _12, out double _13, out double _14, out double _21, out double _22, out double _23, out double _24, out double _31, out double _32, out double _33, out double _34, out double _41, out double _42, out double _43, out double _44);
 
 		/// <summary>
-		///		internalGetBoundingBox                                  (https://rdf.bg/ifcdoc/CS64/internalGetBoundingBox.html)
+		///		internalGetBoundingBox                                  (http://rdf.bg/ifcdoc/CS64/internalGetBoundingBox.html)
 		///
 		///	...
 		/// </summary>
@@ -5234,7 +5003,7 @@ namespace RDF
 		public static extern int_t internalGetBoundingBox(int_t model, int_t instance);
 
 		/// <summary>
-		///		internalGetCenter                                       (https://rdf.bg/ifcdoc/CS64/internalGetCenter.html)
+		///		internalGetCenter                                       (http://rdf.bg/ifcdoc/CS64/internalGetCenter.html)
 		///
 		///	...
 		/// </summary>
@@ -5242,7 +5011,7 @@ namespace RDF
 		public static extern int_t internalGetCenter(int_t model, int_t instance);
 
 		/// <summary>
-		///		getRootAxis2Placement                                   (https://rdf.bg/ifcdoc/CS64/getRootAxis2Placement.html)
+		///		getRootAxis2Placement                                   (http://rdf.bg/ifcdoc/CS64/getRootAxis2Placement.html)
 		///
 		///	...
 		/// </summary>
@@ -5250,7 +5019,7 @@ namespace RDF
 		public static extern int_t getRootAxis2Placement(int_t model, [param: MarshalAs(UnmanagedType.U1)] bool exclusiveIfHasGeometry);
 
 		/// <summary>
-		///		getGlobalPlacement                                      (https://rdf.bg/ifcdoc/CS64/getGlobalPlacement.html)
+		///		getGlobalPlacement                                      (http://rdf.bg/ifcdoc/CS64/getGlobalPlacement.html)
 		///
 		///	The call getGlobalPlacement is meant to be used together with setGlobalPlacement(..) and allows you to get and adjust the placement of a model.
 		///	This is all done semantically, i.e. it can be seen as a derived call representing a small SDAI function adjust (in case of set) the
@@ -5263,7 +5032,7 @@ namespace RDF
 		public static extern int_t getGlobalPlacement(int_t model, [Out] double[] origin);
 
 		/// <summary>
-		///		setGlobalPlacement                                      (https://rdf.bg/ifcdoc/CS64/setGlobalPlacement.html)
+		///		setGlobalPlacement                                      (http://rdf.bg/ifcdoc/CS64/setGlobalPlacement.html)
 		///
 		///	The call setGlobalPlacement allows you to adjust the placement of a model.
 		///	This is all done semantically, i.e. it can be seen as a derived call representing a small SDAI function adjust the origin of a model. 
@@ -5275,7 +5044,7 @@ namespace RDF
 		public static extern int_t setGlobalPlacement(int_t model, double[] origin, [param: MarshalAs(UnmanagedType.U1)] bool includeRotation);
 
 		/// <summary>
-		///		getTimeStamp                                            (https://rdf.bg/ifcdoc/CS64/getTimeStamp.html)
+		///		getTimeStamp                                            (http://rdf.bg/ifcdoc/CS64/getTimeStamp.html)
 		///
 		///	...
 		/// </summary>
@@ -5283,7 +5052,7 @@ namespace RDF
 		public static extern int_t getTimeStamp(int_t model);
 
 		/// <summary>
-		///		setInstanceReference                                    (https://rdf.bg/ifcdoc/CS64/setInstanceReference.html)
+		///		setInstanceReference                                    (http://rdf.bg/ifcdoc/CS64/setInstanceReference.html)
 		///
 		///	...
 		/// </summary>
@@ -5291,7 +5060,7 @@ namespace RDF
 		public static extern int_t setInstanceReference(int_t instance, int_t value);
 
 		/// <summary>
-		///		getInstanceReference                                    (https://rdf.bg/ifcdoc/CS64/getInstanceReference.html)
+		///		getInstanceReference                                    (http://rdf.bg/ifcdoc/CS64/getInstanceReference.html)
 		///
 		///	...
 		/// </summary>
@@ -5299,7 +5068,7 @@ namespace RDF
 		public static extern int_t getInstanceReference(int_t instance);
 
 		/// <summary>
-		///		inferenceInstance                                       (https://rdf.bg/ifcdoc/CS64/inferenceInstance.html)
+		///		inferenceInstance                                       (http://rdf.bg/ifcdoc/CS64/inferenceInstance.html)
 		///
 		///	This call allows certain constructs to complete implicitly already available data.
 		///	Specifically for IFC4.3 and higher calls using the instances of the following entities are supported:
@@ -5315,7 +5084,7 @@ namespace RDF
 		public static extern int_t inferenceInstance(int_t instance);
 
 		/// <summary>
-		///		sdaiValidateSchemaInstance                              (https://rdf.bg/ifcdoc/CS64/sdaiValidateSchemaInstance.html)
+		///		sdaiValidateSchemaInstance                              (http://rdf.bg/ifcdoc/CS64/sdaiValidateSchemaInstance.html)
 		///
 		///	...
 		/// </summary>
@@ -5327,7 +5096,7 @@ namespace RDF
         //
 
 		/// <summary>
-		///		engiGetEntityAttributeIndex                             (https://rdf.bg/ifcdoc/CS64/engiGetEntityAttributeIndex.html)
+		///		engiGetEntityAttributeIndex                             (http://rdf.bg/ifcdoc/CS64/engiGetEntityAttributeIndex.html)
 		///
 		///	This call is deprecated, please use call engiGetAttrIndexBN(..) instead.
 		/// </summary>
@@ -5338,7 +5107,7 @@ namespace RDF
 		public static extern int_t engiGetEntityAttributeIndex(int_t entity, byte[] attributeName);
 
 		/// <summary>
-		///		engiGetEntityAttributeIndexEx                           (https://rdf.bg/ifcdoc/CS64/engiGetEntityAttributeIndexEx.html)
+		///		engiGetEntityAttributeIndexEx                           (http://rdf.bg/ifcdoc/CS64/engiGetEntityAttributeIndexEx.html)
 		///
 		///	This call is deprecated, please use call engiGetAttrIndexExBN(..) instead.
 		/// </summary>
@@ -5349,7 +5118,7 @@ namespace RDF
 		public static extern int_t engiGetEntityAttributeIndexEx(int_t entity, byte[] attributeName, [param: MarshalAs(UnmanagedType.U1)] bool countedWithParents, [param: MarshalAs(UnmanagedType.U1)] bool countedWithInverse);
 
 		/// <summary>
-		///		engiGetEntityArgumentName                               (https://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentName.html)
+		///		engiGetEntityArgumentName                               (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentName.html)
 		///
 		///	This call is deprecated, please use call engiGetAttrNameByIndex(..) instead.
 		/// </summary>
@@ -5357,7 +5126,7 @@ namespace RDF
 		public static extern IntPtr engiGetEntityArgumentName(int_t entity, int_t index, int_t valueType, out IntPtr attributeName);
 
 		/// <summary>
-		///		engiGetEntityArgumentType                               (https://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentType.html)
+		///		engiGetEntityArgumentType                               (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentType.html)
 		///
 		///	This call is deprecated, please use call engiGetAttrTypeByIndex(..) instead.
 		/// </summary>
@@ -5365,7 +5134,7 @@ namespace RDF
 		public static extern void engiGetEntityArgumentType(int_t entity, int_t index, out int_t attributeType);
 
 		/// <summary>
-		///		engiGetAttrOptional                                     (https://rdf.bg/ifcdoc/CS64/engiGetAttrOptional.html)
+		///		engiGetAttrOptional                                     (http://rdf.bg/ifcdoc/CS64/engiGetAttrOptional.html)
 		///
 		///	This call is deprecated, please use call engiIsAttrOptional(..) instead.
 		/// </summary>
@@ -5373,17 +5142,9 @@ namespace RDF
 		public static extern int_t engiGetAttrOptional(int_t attribute);
 
 		/// <summary>
-		///		engiGetAttrOptionalBN                                   (https://rdf.bg/ifcdoc/CS64/engiGetAttrOptionalBN.html)
+		///		engiGetAttrOptionalBN                                   (http://rdf.bg/ifcdoc/CS64/engiGetAttrOptionalBN.html)
 		///
 		///	This call is deprecated, please use call engiIsAttrOptionalBN(..) instead.
-		///
-		///	Technically engiGetAttrOptionalBN will transform into the following call
-		///		engiGetAttrOptional(
-		///				sdaiGetAttrDefinition(
-		///						entity,
-		///						attributeName
-		///					)
-		///			);
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrOptionalBN")]
 		public static extern int_t engiGetAttrOptionalBN(int_t entity, string attributeName);
@@ -5392,7 +5153,7 @@ namespace RDF
 		public static extern int_t engiGetAttrOptionalBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
-		///		engiGetAttrInverse                                      (https://rdf.bg/ifcdoc/CS64/engiGetAttrInverse.html)
+		///		engiGetAttrInverse                                      (http://rdf.bg/ifcdoc/CS64/engiGetAttrInverse.html)
 		///
 		///	This call is deprecated, please use call engiIsAttrInverse(..) instead.
 		/// </summary>
@@ -5400,17 +5161,9 @@ namespace RDF
 		public static extern int_t engiGetAttrInverse(int_t attribute);
 
 		/// <summary>
-		///		engiGetAttrInverseBN                                    (https://rdf.bg/ifcdoc/CS64/engiGetAttrInverseBN.html)
+		///		engiGetAttrInverseBN                                    (http://rdf.bg/ifcdoc/CS64/engiGetAttrInverseBN.html)
 		///
 		///	This call is deprecated, please use call engiIsAttrInverseBN(..) instead.
-		///
-		///	Technically engiGetAttrInverseBN will transform into the following call
-		///		engiGetAttrInverse(
-		///				sdaiGetAttrDefinition(
-		///						entity,
-		///						attributeName
-		///					)
-		///			);
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrInverseBN")]
 		public static extern int_t engiGetAttrInverseBN(int_t entity, string attributeName);
@@ -5419,7 +5172,7 @@ namespace RDF
 		public static extern int_t engiGetAttrInverseBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
-		///		engiAttrIsInverse                                       (https://rdf.bg/ifcdoc/CS64/engiAttrIsInverse.html)
+		///		engiAttrIsInverse                                       (http://rdf.bg/ifcdoc/CS64/engiAttrIsInverse.html)
 		///
 		///	This call is deprecated, please use call engiIsAttrInverse(..) instead.
 		/// </summary>
@@ -5427,7 +5180,7 @@ namespace RDF
 		public static extern int_t engiAttrIsInverse(int_t attribute);
 
 		/// <summary>
-		///		engiGetAttrDomain                                       (https://rdf.bg/ifcdoc/CS64/engiGetAttrDomain.html)
+		///		engiGetAttrDomain                                       (http://rdf.bg/ifcdoc/CS64/engiGetAttrDomain.html)
 		///
 		///	This call is deprecated, please use call engiGetAttrDomainName(..) instead.
 		/// </summary>
@@ -5435,18 +5188,9 @@ namespace RDF
 		public static extern IntPtr engiGetAttrDomain(int_t attribute, out IntPtr domainName);
 
 		/// <summary>
-		///		engiGetAttrDomainBN                                     (https://rdf.bg/ifcdoc/CS64/engiGetAttrDomainBN.html)
+		///		engiGetAttrDomainBN                                     (http://rdf.bg/ifcdoc/CS64/engiGetAttrDomainBN.html)
 		///
 		///	This call is deprecated, please use call engiGetAttrDomainNameBN(..) instead.
-		///
-		///	Technically engiGetAttrDomainBN will transform into the following call
-		///		engiGetAttrDomain(
-		///				sdaiGetAttrDefinition(
-		///						entity,
-		///						attributeName
-		///					),
-		///				domainName
-		///			);
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrDomainBN")]
 		public static extern IntPtr engiGetAttrDomainBN(int_t entity, string attributeName, out IntPtr domainName);
@@ -5455,7 +5199,7 @@ namespace RDF
 		public static extern IntPtr engiGetAttrDomainBN(int_t entity, byte[] attributeName, out IntPtr domainName);
 
 		/// <summary>
-		///		engiGetEntityIsAbstract                                 (https://rdf.bg/ifcdoc/CS64/engiGetEntityIsAbstract.html)
+		///		engiGetEntityIsAbstract                                 (http://rdf.bg/ifcdoc/CS64/engiGetEntityIsAbstract.html)
 		///
 		///	This call is deprecated, please use call engiIsEntityAbstract(..) instead.
 		/// </summary>
@@ -5463,17 +5207,9 @@ namespace RDF
 		public static extern int_t engiGetEntityIsAbstract(int_t entity);
 
 		/// <summary>
-		///		engiGetEntityIsAbstractBN                               (https://rdf.bg/ifcdoc/CS64/engiGetEntityIsAbstractBN.html)
+		///		engiGetEntityIsAbstractBN                               (http://rdf.bg/ifcdoc/CS64/engiGetEntityIsAbstractBN.html)
 		///
-		///	This call is deprecated, please use call engiIsEntityAbstractBN(..) instead.
-		///
-		///	Technically engiGetEntityIsAbstractBN will transform into the following call
-		///		engiGetEntityIsAbstract(
-		///				sdaiGetEntity(
-		///						model,
-		///						entityName
-		///					)
-		///			);
+		///	This call is deprecated, please use call engiIsEntityAbstractbn(..) instead.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityIsAbstractBN")]
 		public static extern int_t engiGetEntityIsAbstractBN(int_t model, string entityName);
@@ -5482,7 +5218,7 @@ namespace RDF
 		public static extern int_t engiGetEntityIsAbstractBN(int_t model, byte[] entityName);
 
 		/// <summary>
-		///		engiGetAttributeTraits                                  (https://rdf.bg/ifcdoc/CS64/engiGetAttributeTraits.html)
+		///		engiGetAttributeTraits                                  (http://rdf.bg/ifcdoc/CS64/engiGetAttributeTraits.html)
 		///
 		///	This call is deprecated, please use call engiGetAttrTraits(..) instead.
 		/// </summary>
@@ -5499,7 +5235,7 @@ namespace RDF
             [param: MarshalAs(UnmanagedType.U1)] out bool isOptional);
 
 		/// <summary>
-		///		engiGetEntityNoArguments                                (https://rdf.bg/ifcdoc/CS64/engiGetEntityNoArguments.html)
+		///		engiGetEntityNoArguments                                (http://rdf.bg/ifcdoc/CS64/engiGetEntityNoArguments.html)
 		///
 		///	This call is deprecated, please use call engiGetEntityNoAttributes(..) instead.
 		/// </summary>
@@ -5507,7 +5243,7 @@ namespace RDF
 		public static extern int_t engiGetEntityNoArguments(int_t entity);
 
 		/// <summary>
-		///		engiGetArgumentType                                     (https://rdf.bg/ifcdoc/CS64/engiGetArgumentType.html)
+		///		engiGetArgumentType                                     (http://rdf.bg/ifcdoc/CS64/engiGetArgumentType.html)
 		///
 		///	This call is deprecated, please use call engiGetAttrType(..) instead.
 		/// </summary>
@@ -5515,7 +5251,7 @@ namespace RDF
 		public static extern int_t engiGetArgumentType(int_t attribute);
 
 		/// <summary>
-		///		engiGetAttributeType                                    (https://rdf.bg/ifcdoc/CS64/engiGetAttributeType.html)
+		///		engiGetAttributeType                                    (http://rdf.bg/ifcdoc/CS64/engiGetAttributeType.html)
 		///
 		///	This call is deprecated, please use call engiGetAttrType(..) instead.
 		/// </summary>
@@ -5523,7 +5259,7 @@ namespace RDF
 		public static extern int_t engiGetAttributeType(int_t attribute);
 
 		/// <summary>
-		///		engiGetEntityArgumentIndex                              (https://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentIndex.html)
+		///		engiGetEntityArgumentIndex                              (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentIndex.html)
 		///
 		///	This call is deprecated, please use call engiGetAttrIndexBN(..) instead.
 		/// </summary>
@@ -5534,7 +5270,7 @@ namespace RDF
 		public static extern int_t engiGetEntityArgumentIndex(int_t entity, byte[] argumentName);
 
 		/// <summary>
-		///		engiGetAggrElement                                      (https://rdf.bg/ifcdoc/CS64/engiGetAggrElement.html)
+		///		engiGetAggrElement                                      (http://rdf.bg/ifcdoc/CS64/engiGetAggrElement.html)
 		///
 		///	This call is deprecated, please use call sdaiGetAggrByIndex(..) instead.
 		/// </summary>
@@ -5568,7 +5304,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		engiGetEntityArgument                                   (https://rdf.bg/ifcdoc/CS64/engiGetEntityArgument.html)
+		///		engiGetEntityArgument                                   (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgument.html)
 		///
 		///	This call is deprecated, please use call sdaiGetAttrDefinition(..) instead.
 		/// </summary>
@@ -5579,7 +5315,7 @@ namespace RDF
 		public static extern int_t engiGetEntityArgument(int_t entity, byte[] argumentName);
 
 		/// <summary>
-		///		sdaiGetADBTypePathx                                     (https://rdf.bg/ifcdoc/CS64/sdaiGetADBTypePathx.html)
+		///		sdaiGetADBTypePathx                                     (http://rdf.bg/ifcdoc/CS64/sdaiGetADBTypePathx.html)
 		///
 		///	This call is deprecated, please use call sdaiGetADBTypePath(..) instead.
 		/// </summary>
@@ -5594,7 +5330,7 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		xxxxOpenModelByStream                                   (https://rdf.bg/ifcdoc/CS64/xxxxOpenModelByStream.html)
+		///		xxxxOpenModelByStream                                   (http://rdf.bg/ifcdoc/CS64/xxxxOpenModelByStream.html)
 		///
 		///	This call is deprecated, please use call engiOpenModelByStream(..) instead.
 		/// </summary>
@@ -5605,7 +5341,7 @@ namespace RDF
 		public static extern int_t xxxxOpenModelByStream(int_t repository, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, byte[] schemaName);
 
 		/// <summary>
-		///		sdaiplusGetAggregationType                              (https://rdf.bg/ifcdoc/CS64/sdaiplusGetAggregationType.html)
+		///		sdaiplusGetAggregationType                              (http://rdf.bg/ifcdoc/CS64/sdaiplusGetAggregationType.html)
 		///
 		///	This call is deprecated, please use call .... instead.
 		/// </summary>
@@ -5613,15 +5349,15 @@ namespace RDF
 		public static extern int_t sdaiplusGetAggregationType(int_t instance, int_t aggregate);
 
 		/// <summary>
-		///		xxxxGetAttrType                                         (https://rdf.bg/ifcdoc/CS64/xxxxGetAttrType.html)
+		///		xxxxGetAttrType                                         (http://rdf.bg/ifcdoc/CS64/xxxxGetAttrType.html)
 		///
-		///	This call is deprecated, please use calls engiGetAttrType(..) instead.
+		///	...
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "xxxxGetAttrType")]
 		public static extern int_t xxxxGetAttrType(int_t instance, int_t attribute, out IntPtr attributeType);
 
 		/// <summary>
-		///		xxxxGetAttrTypeBN                                       (https://rdf.bg/ifcdoc/CS64/xxxxGetAttrTypeBN.html)
+		///		xxxxGetAttrTypeBN                                       (http://rdf.bg/ifcdoc/CS64/xxxxGetAttrTypeBN.html)
 		///
 		///	This call is deprecated, please use calls engiGetAttrTypeBN(..) instead.
 		///
@@ -5644,7 +5380,7 @@ namespace RDF
 		public static extern int_t xxxxGetAttrTypeBN(int_t instance, byte[] attributeName, out IntPtr attributeType);
 
 		/// <summary>
-		///		GetSPFFHeaderItemUnicode                                (https://rdf.bg/ifcdoc/CS64/GetSPFFHeaderItemUnicode.html)
+		///		GetSPFFHeaderItemUnicode                                (http://rdf.bg/ifcdoc/CS64/GetSPFFHeaderItemUnicode.html)
 		///
 		///	This call is deprecated, please use call GetSPFFHeaderItem instead
 		/// </summary>
@@ -5656,7 +5392,7 @@ namespace RDF
         //
 
 		/// <summary>
-		///		validateSetOptions                                      (https://rdf.bg/ifcdoc/CS64/validateSetOptions.html)
+		///		validateSetOptions                                      (http://rdf.bg/ifcdoc/CS64/validateSetOptions.html)
 		///
 		///	Allows to set a time limit in seconds, setting to 0 means no time limit.
 		///	Allows to set a count limit, setting to 0 means no count limit.
@@ -5677,14 +5413,14 @@ namespace RDF
 		///		bit 12:	(__WHERE_RULE)						where-rule check
 		///		bit 13:	(__UNIQUE_RULE)						unique-rule check
 		///		bit 14:	(__STAR_USAGE)						* is used only for derived arguments
-		///		bit 15:	(__CALL_ARGUMENT)					validateModel/validateInstance function argument should be model/instance
+		///		bit 15:	(__CALL_ARGUMENT)					validateModel / validateInstance function argument should be model / instance
 		///		bit 63:	(__INTERNAL_ERROR)					unspecified error
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "validateSetOptions")]
 		public static extern void validateSetOptions(int_t timeLimitSeconds, int_t issueCntLimit, [param: MarshalAs(UnmanagedType.U1)] bool showEachIssueOnce, UInt64 issueTypes, UInt64 mask);
 
 		/// <summary>
-		///		validateGetOptions                                      (https://rdf.bg/ifcdoc/CS64/validateGetOptions.html)
+		///		validateGetOptions                                      (http://rdf.bg/ifcdoc/CS64/validateGetOptions.html)
 		///
 		///	Allows to get the time limit in seconds, value 0 means no time limit, input can be left to NULL if not relevant.
 		///	Allows to get the count limit, value 0 means no count limit, input can be left to NULL if not relevant.
@@ -5706,14 +5442,14 @@ namespace RDF
 		///		bit 12:	(__WHERE_RULE)						where-rule check
 		///		bit 13:	(__UNIQUE_RULE)						unique-rule check
 		///		bit 14:	(__STAR_USAGE)						* is used only for derived arguments
-		///		bit 15:	(__CALL_ARGUMENT)					validateModel/validateInstance function argument should be model/instance
+		///		bit 15:	(__CALL_ARGUMENT)					validateModel / validateInstance function argument should be model / instance
 		///		bit 63:	(__INTERNAL_ERROR)					unspecified error
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "validateGetOptions")]
 		public static extern UInt64 validateGetOptions(out int_t timeLimitSeconds, out int_t issueCntLimit, [param: MarshalAs(UnmanagedType.U1)] out bool showEachIssueOnce, UInt64 mask);
 
 		/// <summary>
-		///		validateModel                                           (https://rdf.bg/ifcdoc/CS64/validateModel.html)
+		///		validateModel                                           (http://rdf.bg/ifcdoc/CS64/validateModel.html)
 		///
 		///	Apply validation of a model
 		/// </summary>
@@ -5721,7 +5457,7 @@ namespace RDF
 		public static extern int_t validateModel(int_t model);
 
 		/// <summary>
-		///		validateInstance                                        (https://rdf.bg/ifcdoc/CS64/validateInstance.html)
+		///		validateInstance                                        (http://rdf.bg/ifcdoc/CS64/validateInstance.html)
 		///
 		///	Apply validation of an instance
 		/// </summary>
@@ -5729,7 +5465,7 @@ namespace RDF
 		public static extern int_t validateInstance(int_t instance);
 
 		/// <summary>
-		///		validateFreeResults                                     (https://rdf.bg/ifcdoc/CS64/validateFreeResults.html)
+		///		validateFreeResults                                     (http://rdf.bg/ifcdoc/CS64/validateFreeResults.html)
 		///
 		///	Clean validation results
 		/// </summary>
@@ -5737,7 +5473,7 @@ namespace RDF
 		public static extern void validateFreeResults(int_t results);
 
 		/// <summary>
-		///		validateGetFirstIssue                                   (https://rdf.bg/ifcdoc/CS64/validateGetFirstIssue.html)
+		///		validateGetFirstIssue                                   (http://rdf.bg/ifcdoc/CS64/validateGetFirstIssue.html)
 		///
 		///	Get first issue from validation results.
 		///	If no issues inside validation results or validation results is NULL it will return NULL.
@@ -5746,7 +5482,7 @@ namespace RDF
 		public static extern int_t validateGetFirstIssue(int_t results);
 
 		/// <summary>
-		///		validateGetNextIssue                                    (https://rdf.bg/ifcdoc/CS64/validateGetNextIssue.html)
+		///		validateGetNextIssue                                    (http://rdf.bg/ifcdoc/CS64/validateGetNextIssue.html)
 		///
 		///	Get next issue based on a given issue.
 		///	If no issues left or validation issue is NULL it will return NULL.
@@ -5755,7 +5491,7 @@ namespace RDF
 		public static extern int_t validateGetNextIssue(int_t issue);
 
 		/// <summary>
-		///		validateGetStatus                                       (https://rdf.bg/ifcdoc/CS64/validateGetStatus.html)
+		///		validateGetStatus                                       (http://rdf.bg/ifcdoc/CS64/validateGetStatus.html)
 		///
 		///	Return value is the issueStatus (enum_validation_status):
 		///
@@ -5769,7 +5505,7 @@ namespace RDF
 		public static extern enum_validation_status validateGetStatus(int_t results);
 
 		/// <summary>
-		///		validateGetIssueType                                    (https://rdf.bg/ifcdoc/CS64/validateGetIssueType.html)
+		///		validateGetIssueType                                    (http://rdf.bg/ifcdoc/CS64/validateGetIssueType.html)
 		///
 		///	Return value is the issueType (enum_validation_type):
 		///
@@ -5788,14 +5524,14 @@ namespace RDF
 		///		bit 12:	(__WHERE_RULE)						where-rule check
 		///		bit 13:	(__UNIQUE_RULE)						unique-rule check
 		///		bit 14:	(__STAR_USAGE)						* is used only for derived arguments
-		///		bit 15:	(__CALL_ARGUMENT)					validateModel/validateInstance function argument should be model/instance
+		///		bit 15:	(__CALL_ARGUMENT)					validateModel / validateInstance function argument should be model / instance
 		///		bit 63:	(__INTERNAL_ERROR)					unspecified error
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "validateGetIssueType")]
 		public static extern enum_validation_type validateGetIssueType (int_t issue);
 
 		/// <summary>
-		///		validateGetInstance                                     (https://rdf.bg/ifcdoc/CS64/validateGetInstance.html)
+		///		validateGetInstance                                     (http://rdf.bg/ifcdoc/CS64/validateGetInstance.html)
 		///
 		///	Returns the (first) instance related to the given issue.
 		/// </summary>
@@ -5803,7 +5539,7 @@ namespace RDF
 		public static extern int_t validateGetInstance(int_t issue);
 
 		/// <summary>
-		///		validateGetInstanceRelated                              (https://rdf.bg/ifcdoc/CS64/validateGetInstanceRelated.html)
+		///		validateGetInstanceRelated                              (http://rdf.bg/ifcdoc/CS64/validateGetInstanceRelated.html)
 		///
 		///	Returns the second instance related to the given issue (if relevant).
 		/// </summary>
@@ -5811,7 +5547,7 @@ namespace RDF
 		public static extern int_t validateGetInstanceRelated(int_t issue);
 
 		/// <summary>
-		///		validateGetEntity                                       (https://rdf.bg/ifcdoc/CS64/validateGetEntity.html)
+		///		validateGetEntity                                       (http://rdf.bg/ifcdoc/CS64/validateGetEntity.html)
 		///
 		///	Returns the entity handle related to the given issue (if relevant).
 		/// </summary>
@@ -5819,7 +5555,7 @@ namespace RDF
 		public static extern int_t validateGetEntity(int_t issue);
 
 		/// <summary>
-		///		validateGetAttr                                         (https://rdf.bg/ifcdoc/CS64/validateGetAttr.html)
+		///		validateGetAttr                                         (http://rdf.bg/ifcdoc/CS64/validateGetAttr.html)
 		///
 		///	Returns the attribute handle related to the given issue (if relevant).
 		/// </summary>
@@ -5827,7 +5563,7 @@ namespace RDF
 		public static extern int_t validateGetAttr(int_t issue);
 
 		/// <summary>
-		///		validateGetAggrLevel                                    (https://rdf.bg/ifcdoc/CS64/validateGetAggrLevel.html)
+		///		validateGetAggrLevel                                    (http://rdf.bg/ifcdoc/CS64/validateGetAggrLevel.html)
 		///
 		///	Specifies nesting level of aggregation or 0.
 		/// </summary>
@@ -5835,7 +5571,7 @@ namespace RDF
 		public static extern int_t validateGetAggrLevel(int_t issue);
 
 		/// <summary>
-		///		validateGetAggrIndArray                                 (https://rdf.bg/ifcdoc/CS64/validateGetAggrIndArray.html)
+		///		validateGetAggrIndArray                                 (http://rdf.bg/ifcdoc/CS64/validateGetAggrIndArray.html)
 		///
 		///	Array of indices for each aggregation size is aggrLevel.
 		/// </summary>
@@ -5843,7 +5579,7 @@ namespace RDF
 		public static extern int_t validateGetAggrIndArray(int_t issue);
 
 		/// <summary>
-		///		validateGetIssueLevel                                   (https://rdf.bg/ifcdoc/CS64/validateGetIssueLevel.html)
+		///		validateGetIssueLevel                                   (http://rdf.bg/ifcdoc/CS64/validateGetIssueLevel.html)
 		///
 		///	Returns the issue level (i.e. severity of the issue) of the issue given as input.
 		/// </summary>
@@ -5851,7 +5587,7 @@ namespace RDF
 		public static extern int_t validateGetIssueLevel(int_t issue);
 
 		/// <summary>
-		///		validateGetDescription                                  (https://rdf.bg/ifcdoc/CS64/validateGetDescription.html)
+		///		validateGetDescription                                  (http://rdf.bg/ifcdoc/CS64/validateGetDescription.html)
 		///
 		///	Returns the description text of the issue given as input.
 		/// </summary>
@@ -5869,7 +5605,7 @@ namespace RDF
 		//
 
 		/// <summary>
-		///		initializeModellingInstance                             (https://rdf.bg/ifcdoc/CS64/initializeModellingInstance.html)
+		///		initializeModellingInstance                             (http://rdf.bg/ifcdoc/CS64/initializeModellingInstance.html)
 		///
 		///	This call is deprecated, please use call CalculateInstance().
 		/// </summary>
@@ -5877,7 +5613,7 @@ namespace RDF
 		public static extern int_t initializeModellingInstance(int_t model, out int_t noVertices, out int_t noIndices, double scale, int_t instance);
 
 		/// <summary>
-		///		finalizeModelling                                       (https://rdf.bg/ifcdoc/CS64/finalizeModelling.html)
+		///		finalizeModelling                                       (http://rdf.bg/ifcdoc/CS64/finalizeModelling.html)
 		///
 		///	This call is deprecated, please use call UpdateInstanceVertexBuffer() and UpdateInstanceIndexBuffer().
 		/// </summary>
@@ -5885,15 +5621,15 @@ namespace RDF
 		public static extern int_t finalizeModelling(int_t model, out float vertices, out int_t indices, int_t FVF);
 
 		/// <summary>
-		///		getInstanceInModelling                                  (https://rdf.bg/ifcdoc/CS64/getInstanceInModelling.html)
+		///		getInstanceInModelling                                  (http://rdf.bg/ifcdoc/CS64/getInstanceInModelling.html)
 		///
-		///	This call is deprecated, there is no direct/easy replacement although the functionality is present. If you still use this call please contact RDF to find a solution together.
+		///	This call is deprecated, there is no direct / easy replacement although the functionality is present. If you still use this call please contact RDF to find a solution together.
 		/// </summary>
 		[DllImport(STEPEngineDLL, EntryPoint = "getInstanceInModelling")]
 		public static extern int_t getInstanceInModelling(int_t model, int_t instance, int_t mode, out int_t startVertex, out int_t startIndex, out int_t primitiveCount);
 
 		/// <summary>
-		///		setVertexOffset                                         (https://rdf.bg/ifcdoc/CS64/setVertexOffset.html)
+		///		setVertexOffset                                         (http://rdf.bg/ifcdoc/CS64/setVertexOffset.html)
 		///
 		///	This call is deprecated, please use call SetVertexBufferOffset().
 		/// </summary>
@@ -5901,7 +5637,7 @@ namespace RDF
 		public static extern void setVertexOffset(int_t model, double x, double y, double z);
 
 		/// <summary>
-		///		setFormat                                               (https://rdf.bg/ifcdoc/CS64/setFormat.html)
+		///		setFormat                                               (http://rdf.bg/ifcdoc/CS64/setFormat.html)
 		///
 		///	This call is deprecated, please use call SetFormat().
 		/// </summary>
@@ -5909,7 +5645,7 @@ namespace RDF
 		public static extern void setFormat(int_t model, int_t setting, int_t mask);
 
 		/// <summary>
-		///		getConceptualFaceCnt                                    (https://rdf.bg/ifcdoc/CS64/getConceptualFaceCnt.html)
+		///		getConceptualFaceCnt                                    (http://rdf.bg/ifcdoc/CS64/getConceptualFaceCnt.html)
 		///
 		///	This call is deprecated, please use call GetConceptualFaceCnt().
 		/// </summary>
@@ -5917,7 +5653,7 @@ namespace RDF
 		public static extern int_t getConceptualFaceCnt(int_t instance);
 
 		/// <summary>
-		///		getConceptualFaceEx                                     (https://rdf.bg/ifcdoc/CS64/getConceptualFaceEx.html)
+		///		getConceptualFaceEx                                     (http://rdf.bg/ifcdoc/CS64/getConceptualFaceEx.html)
 		///
 		///	This call is deprecated, please use call GetConceptualFaceEx().
 		/// </summary>
@@ -5925,7 +5661,7 @@ namespace RDF
 		public static extern int_t getConceptualFaceEx(int_t instance, int_t index, out int_t startIndexTriangles, out int_t noIndicesTriangles, out int_t startIndexLines, out int_t noIndicesLines, out int_t startIndexPoints, out int_t noIndicesPoints, out int_t startIndexFacePolygons, out int_t noIndicesFacePolygons, out int_t startIndexConceptualFacePolygons, out int_t noIndicesConceptualFacePolygons);
 
 		/// <summary>
-		///		createGeometryConversion                                (https://rdf.bg/ifcdoc/CS64/createGeometryConversion.html)
+		///		createGeometryConversion                                (http://rdf.bg/ifcdoc/CS64/createGeometryConversion.html)
 		///
 		///	This call is deprecated, please use call owlBuildInstance.
 		/// </summary>
@@ -5933,7 +5669,7 @@ namespace RDF
 		public static extern void createGeometryConversion(int_t instance, out Int64 owlInstance);
 
 		/// <summary>
-		///		convertInstance                                         (https://rdf.bg/ifcdoc/CS64/convertInstance.html)
+		///		convertInstance                                         (http://rdf.bg/ifcdoc/CS64/convertInstance.html)
 		///
 		///	This call is deprecated, please use call owlBuildInstance.
 		/// </summary>
@@ -5941,7 +5677,7 @@ namespace RDF
 		public static extern void convertInstance(int_t instance);
 
 		/// <summary>
-		///		initializeModellingInstanceEx                           (https://rdf.bg/ifcdoc/CS64/initializeModellingInstanceEx.html)
+		///		initializeModellingInstanceEx                           (http://rdf.bg/ifcdoc/CS64/initializeModellingInstanceEx.html)
 		///
 		///	This call is deprecated, please use call CalculateInstance().
 		/// </summary>
@@ -5949,7 +5685,7 @@ namespace RDF
 		public static extern int_t initializeModellingInstanceEx(int_t model, out int_t noVertices, out int_t noIndices, double scale, int_t instance, int_t instanceList);
 
 		/// <summary>
-		///		exportModellingAsOWL                                    (https://rdf.bg/ifcdoc/CS64/exportModellingAsOWL.html)
+		///		exportModellingAsOWL                                    (http://rdf.bg/ifcdoc/CS64/exportModellingAsOWL.html)
 		///
 		///	This call is deprecated, please contact us if you use this call.
 		/// </summary>
@@ -6092,7 +5828,7 @@ namespace RDF
 		public const UInt64 flagbit30 = 1073741824;     // 2^^30   0100.0000..0000.0000  0000.0000..0000.0000
 		public const UInt64 flagbit31 = 2147483648;		// 2^^31   1000.0000..0000.0000  0000.0000..0000.0000
 
-		public const string enginedll = @"STEPEngine.dll";
+		public const string enginedll = @"IFCEngine.dll";
 
         //
         //  Meta information API Calls
