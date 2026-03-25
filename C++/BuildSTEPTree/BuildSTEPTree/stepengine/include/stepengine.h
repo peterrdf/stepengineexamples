@@ -159,7 +159,7 @@ enum class enum_express_declaration : unsigned char
 	__WHERE_RULE				= 8
 };
 
-enum class enum_express_attr_type : unsigned char
+enum class enum_express_data_type : unsigned char
 {
 	__NONE						= 0,					//	attribute type is unknown here but it may be defined by referenced domain entity
 	__BINARY					= 1,
@@ -220,7 +220,7 @@ enum class enum_validation_status : unsigned char
 	typedef unsigned char bool;
 	typedef unsigned char enum_string_encoding;
 	typedef unsigned char enum_express_declaration;
-	typedef unsigned char enum_express_attr_type;
+	typedef unsigned char enum_express_data_type;
 	typedef unsigned char enum_express_aggr;
 	typedef uint64_t	  enum_validation_type;
 	typedef unsigned char enum_validation_status;
@@ -642,6 +642,68 @@ static	inline	SdaiString	GetSchemaName(
 	return	GetSchemaName(
 					model,
 					(SdaiString*) nullptr				//	schemaName
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
+
+//
+//		engiCheckEmbeddedSchema                                 (https://rdf.bg/stepdoc/CP64/engiCheckEmbeddedSchema.html)
+//				const char				* schemaName						IN
+//
+//				bool					returns								OUT
+//
+//	Check if a schema exists as embedded schema within the library.
+//
+bool			DECL STDC	engiCheckEmbeddedSchema(
+									const char				* schemaName
+								);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	bool	engiCheckEmbeddedSchema(
+								char					* schemaName
+							)
+{
+	return	engiCheckEmbeddedSchema(
+					(const char*) schemaName
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
+
+//
+//		engiCheckEmbeddedSchemaUnicode                          (https://rdf.bg/stepdoc/CP64/engiCheckEmbeddedSchemaUnicode.html)
+//				const wchar_t			* schemaName						IN
+//
+//				bool					returns								OUT
+//
+//	Check if a schema exists as embedded schema within the library.
+//
+bool			DECL STDC	engiCheckEmbeddedSchemaUnicode(
+									const wchar_t			* schemaName
+								);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	bool	engiCheckEmbeddedSchemaUnicode(
+								wchar_t					* schemaName
+							)
+{
+	return	engiCheckEmbeddedSchemaUnicode(
+					(const wchar_t*) schemaName
 				);
 }
 
@@ -1599,11 +1661,11 @@ SchemaDecl		DECL STDC	engiGetSelectElement(
 //				SchemaDecl				* referencedDeclaration				IN / OUT
 //				SchemaAggr				* aggregationDefinition				IN / OUT
 //
-//				enum_express_attr_type	returns								OUT
+//				enum_express_data_type	returns								OUT
 //
 //	This call returns a simple type for defined type handle and can inquire referenced type, if any.
 //
-enum_express_attr_type	DECL STDC	engiGetDefinedType(
+enum_express_data_type	DECL STDC	engiGetDefinedType(
 									SchemaDecl				definedType,
 									SchemaDecl				* referencedDeclaration,
 									SchemaAggr				* aggregationDefinition
@@ -1767,6 +1829,20 @@ static	inline	SdaiEntity	sdaiGetComplexEntityBN(
 //
 SdaiModel		DECL STDC	engiGetEntityModel(
 									SdaiEntity				entity
+								);
+
+//
+//		engiGetAttrStepIndex                                    (https://rdf.bg/stepdoc/CP64/engiGetAttrStepIndex.html)
+//				SdaiEntity				entity								IN
+//				SdaiAttr				attribute							IN
+//
+//				int_t					returns								OUT
+//
+//	Get index in step file record when instance of the entity is written on step file as simple instance.
+//
+int_t			DECL STDC	engiGetAttrStepIndex(
+									SdaiEntity				entity,
+									SdaiAttr				attribute
 								);
 
 //
@@ -1986,6 +2062,20 @@ SdaiInteger		DECL STDC	engiGetEntityCount(
 								);
 
 //
+//		engiGetEntityCountEx                                    (https://rdf.bg/stepdoc/CP64/engiGetEntityCountEx.html)
+//				SdaiModel				model								IN
+//				bool					includeComplex						IN
+//
+//				SdaiInteger				returns								OUT
+//
+//	Returns the total number of entities within the loaded schema.
+//
+SdaiInteger		DECL STDC	engiGetEntityCountEx(
+									SdaiModel				model,
+									bool					includeComplex
+								);
+
+//
 //		engiGetEntityElement                                    (https://rdf.bg/stepdoc/CP64/engiGetEntityElement.html)
 //				SdaiModel				model								IN
 //				SdaiInteger				index								IN
@@ -1997,6 +2087,22 @@ SdaiInteger		DECL STDC	engiGetEntityCount(
 SdaiEntity		DECL STDC	engiGetEntityElement(
 									SdaiModel				model,
 									SdaiInteger				index
+								);
+
+//
+//		engiGetEntityElementEx                                  (https://rdf.bg/stepdoc/CP64/engiGetEntityElementEx.html)
+//				SdaiModel				model								IN
+//				SdaiInteger				index								IN
+//				bool					includeComplex						IN
+//
+//				SdaiEntity				returns								OUT
+//
+//	This call returns a specific entity based on an index, the index needs to be 0 or higher but lower then the number of entities in the loaded schema.
+//
+SdaiEntity		DECL STDC	engiGetEntityElementEx(
+									SdaiModel				model,
+									SdaiInteger				index,
+									bool					includeComplex
 								);
 
 //
@@ -2050,6 +2156,49 @@ static	inline	SdaiAggr	sdaiGetEntityExtentBN(
 	return	sdaiGetEntityExtentBN(
 					model,
 					(SdaiString) entityName
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
+
+//
+//		engiGetEntityNameEx                                     (https://rdf.bg/stepdoc/CP64/engiGetEntityNameEx.html)
+//				SdaiEntity				entity								IN
+//				SdaiPrimitiveType		valueType							IN
+//				SdaiString				* entityName						IN / OUT
+//				bool					displayName							IN
+//
+//				SdaiString				returns								OUT
+//
+//	This call can be used to get the name of the given entity.
+//
+SdaiString		DECL STDC	engiGetEntityNameEx(
+									SdaiEntity				entity,
+									SdaiPrimitiveType		valueType,
+									SdaiString				* entityName,
+									bool					displayName
+								);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	SdaiString	engiGetEntityNameEx(
+									SdaiEntity				entity,
+									SdaiPrimitiveType		valueType,
+									char					** entityName,
+									bool					displayName
+								)
+{
+	return	engiGetEntityNameEx(
+					entity,
+					valueType,
+					(SdaiString*) entityName,
+					displayName
 				);
 }
 
@@ -2174,6 +2323,20 @@ int_t			DECL STDC	engiGetEntityNoParents(
 SdaiEntity		DECL STDC	engiGetEntityParentEx(
 									SdaiEntity				entity,
 									SdaiInteger				index
+								);
+
+//
+//		engiIsEntityParent                                      (https://rdf.bg/stepdoc/CP64/engiIsEntityParent.html)
+//				SdaiEntity				superType							IN
+//				SdaiEntity				subType								IN
+//
+//				SdaiBoolean				returns								OUT
+//
+//	Checks if the entity is direct or indirect supertype of another entity.
+//
+SdaiBoolean		DECL STDC	engiIsEntityParent(
+									SdaiEntity				superType,
+									SdaiEntity				subType
 								);
 
 //
@@ -2343,6 +2506,22 @@ static	inline	SdaiBoolean	engiIsAttrOptionalBN(
 //}} End C++ polymorphic versions
 	extern "C" {
 #endif
+
+//
+//		engiGetAttrRedeclarationByIterator                      (https://rdf.bg/stepdoc/CP64/engiGetAttrRedeclarationByIterator.html)
+//				SdaiEntity				entity								IN
+//				const SdaiAttr			attribute							IN
+//				const SdaiAttr			prevRedeclaration					IN
+//
+//				const SdaiAttr			returns								OUT
+//
+//	Get attribute re-declarations by iterator.
+//
+const SdaiAttr	DECL STDC	engiGetAttrRedeclarationByIterator(
+									SdaiEntity				entity,
+									const SdaiAttr			attribute,
+									const SdaiAttr			prevRedeclaration
+								);
 
 //
 //		engiGetAttrDomainName                                   (https://rdf.bg/stepdoc/CP64/engiGetAttrDomainName.html)
@@ -3902,7 +4081,7 @@ static	inline	SdaiAttr	sdaiGetAttrDefinition(
 //				SdaiEntity				* definingEntity					IN / OUT
 //				SdaiBoolean				* isExplicit						IN / OUT
 //				SdaiBoolean				* isInverse							IN / OUT
-//				enum_express_attr_type	* attrType							IN / OUT
+//				enum_express_data_type	* attrType							IN / OUT
 //				SdaiEntity				* domainEntity						IN / OUT
 //				SchemaAggr				* aggregationDefinition				IN / OUT
 //				SdaiBoolean				* isOptional						IN / OUT
@@ -3917,7 +4096,7 @@ void			DECL STDC	engiGetAttrTraits(
 									SdaiEntity				* definingEntity,
 									SdaiBoolean				* isExplicit,
 									SdaiBoolean				* isInverse,
-									enum_express_attr_type	* attrType,
+									enum_express_data_type	* attrType,
 									SdaiEntity				* domainEntity,
 									SchemaAggr				* aggregationDefinition,
 									SdaiBoolean				* isOptional
@@ -3935,7 +4114,7 @@ static	inline	void	engiGetAttrTraits(
 								SdaiEntity				* definingEntity,
 								SdaiBoolean				* isExplicit,
 								SdaiBoolean				* isInverse,
-								enum_express_attr_type	* attrType,
+								enum_express_data_type	* attrType,
 								SdaiEntity				* domainEntity,
 								SchemaAggr				* aggregationDefinition,
 								SdaiBoolean				* isOptional
@@ -4188,6 +4367,30 @@ static	inline	SdaiPrimitiveType	engiGetAttrTypeBN(
 //}} End C++ polymorphic versions
 	extern "C" {
 #endif
+
+//
+//		engiGetAttrTypeBySchema                                 (https://rdf.bg/stepdoc/CP64/engiGetAttrTypeBySchema.html)
+//				const SdaiAttr			attribute							IN
+//
+//				enum_express_data_type	returns								OUT
+//
+//	...
+//
+enum_express_data_type	DECL STDC	engiGetAttrTypeBySchema(
+									const SdaiAttr			attribute
+								);
+
+//
+//		engiGetAttrAggregation                                  (https://rdf.bg/stepdoc/CP64/engiGetAttrAggregation.html)
+//				const SdaiAttr			attribute							IN
+//
+//				SchemaAggr				returns								OUT
+//
+//	...
+//
+SchemaAggr		DECL STDC	engiGetAttrAggregation(
+									const SdaiAttr			attribute
+								);
 
 //
 //		engiGetInstanceAttrType                                 (https://rdf.bg/stepdoc/CP64/engiGetInstanceAttrType.html)
@@ -6943,6 +7146,19 @@ void			DECL STDC	engiEvaluateAllDerivedAttributes(
 								);
 
 //
+//		engiIsComplexEntity                                     (https://rdf.bg/stepdoc/CP64/engiIsComplexEntity.html)
+//				SdaiEntity				entity								IN
+//
+//				bool					returns								OUT
+//
+//	The function checks if instances of the specified entity are complex instances.
+//	You can use engiGetEntityParentEx to list components.
+//
+bool			DECL STDC	engiIsComplexEntity(
+									SdaiEntity				entity
+								);
+
+//
 //		setSegmentation                                         (https://rdf.bg/stepdoc/CP64/setSegmentation.html)
 //				SdaiModel				model								IN
 //				int_t					segmentationParts					IN
@@ -9009,7 +9225,7 @@ static	inline	int_t	engiGetEntityIsAbstractBN(
 //				SdaiEntity				* definingEntity					IN / OUT
 //				bool					* isExplicit						IN / OUT
 //				bool					* isInverse							IN / OUT
-//				enum_express_attr_type	* attrType							IN / OUT
+//				enum_express_data_type	* attrType							IN / OUT
 //				SdaiEntity				* domainEntity						IN / OUT
 //				SchemaAggr				* aggregationDefinition				IN / OUT
 //				bool					* isOptional						IN / OUT
@@ -9024,7 +9240,7 @@ void			DECL STDC	engiGetAttributeTraits(
 									SdaiEntity				* definingEntity,
 									bool					* isExplicit,
 									bool					* isInverse,
-									enum_express_attr_type	* attrType,
+									enum_express_data_type	* attrType,
 									SdaiEntity				* domainEntity,
 									SchemaAggr				* aggregationDefinition,
 									bool					* isOptional
@@ -9042,7 +9258,7 @@ static	inline	void	engiGetAttributeTraits(
 								SdaiEntity				* definingEntity,
 								bool					* isExplicit,
 								bool					* isInverse,
-								enum_express_attr_type	* attrType,
+								enum_express_data_type	* attrType,
 								SdaiEntity				* domainEntity,
 								SchemaAggr				* aggregationDefinition,
 								bool					* isOptional
