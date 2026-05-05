@@ -202,7 +202,7 @@ enum class enum_validation_type : uint64_t
 	__ABSTRACT_ENTITY			= 1 << 11,  			//	abstract entity should not instantiate
 	__WHERE_RULE				= 1 << 12,  			//	where-rule check
 	__UNIQUE_RULE				= 1 << 13,				//	unique-rule check
-	__STAR_USAGE				= 1 << 14,  			//	* is used only for derived arguments
+	__STAR_USAGE				= 1 << 14,  			//	* must be used for and only for derived attributes
 	__CALL_ARGUMENT				= 1 << 15,  			//	validateModel/validateInstance function argument should be model/instance
 	__INVALID_TEXT_LITERAL		= 1 << 16,				//	invalid text literal string
 	__INTERNAL_ERROR			= UINT64_C(1) << 63   	//	unspecified error
@@ -642,68 +642,6 @@ static	inline	SdaiString	GetSchemaName(
 	return	GetSchemaName(
 					model,
 					(SdaiString*) nullptr				//	schemaName
-				);
-}
-
-//}} End C++ polymorphic versions
-	extern "C" {
-#endif
-
-//
-//		engiCheckEmbeddedSchema                                 (https://rdf.bg/stepdoc/CP64/engiCheckEmbeddedSchema.html)
-//				const char				* schemaName						IN
-//
-//				bool					returns								OUT
-//
-//	Check if a schema exists as embedded schema within the library.
-//
-bool			DECL STDC	engiCheckEmbeddedSchema(
-									const char				* schemaName
-								);
-
-#ifdef __cplusplus
-	}
-//{{ Begin C++ polymorphic versions
-
-//
-//
-static	inline	bool	engiCheckEmbeddedSchema(
-								char					* schemaName
-							)
-{
-	return	engiCheckEmbeddedSchema(
-					(const char*) schemaName
-				);
-}
-
-//}} End C++ polymorphic versions
-	extern "C" {
-#endif
-
-//
-//		engiCheckEmbeddedSchemaUnicode                          (https://rdf.bg/stepdoc/CP64/engiCheckEmbeddedSchemaUnicode.html)
-//				const wchar_t			* schemaName						IN
-//
-//				bool					returns								OUT
-//
-//	Check if a schema exists as embedded schema within the library.
-//
-bool			DECL STDC	engiCheckEmbeddedSchemaUnicode(
-									const wchar_t			* schemaName
-								);
-
-#ifdef __cplusplus
-	}
-//{{ Begin C++ polymorphic versions
-
-//
-//
-static	inline	bool	engiCheckEmbeddedSchemaUnicode(
-								wchar_t					* schemaName
-							)
-{
-	return	engiCheckEmbeddedSchemaUnicode(
-					(const wchar_t*) schemaName
 				);
 }
 
@@ -1832,221 +1770,22 @@ SdaiModel		DECL STDC	engiGetEntityModel(
 								);
 
 //
-//		engiGetAttrStepIndex                                    (https://rdf.bg/stepdoc/CP64/engiGetAttrStepIndex.html)
+//		engiGetEntityAttributePosition                          (https://rdf.bg/stepdoc/CP64/engiGetEntityAttributePosition.html)
 //				SdaiEntity				entity								IN
 //				SdaiAttr				attribute							IN
+//				bool					forSimpleInstance					IN
 //
 //				int_t					returns								OUT
 //
-//	Get index in step file record when instance of the entity is written on step file as simple instance.
+//	Get a position in a step file record where the value of the attribute is stored for simple instance or for component of complex instance.
+//	In case of complex entities 'entity' is a component of the complex entity.
+//	The position is 0-based.
+//	Returns -1 if the attribute has no slot to store value (inverse, pure derived or irrelevant attribute) or when 'entity' is a complex entity.
 //
-int_t			DECL STDC	engiGetAttrStepIndex(
+int_t			DECL STDC	engiGetEntityAttributePosition(
 									SdaiEntity				entity,
-									SdaiAttr				attribute
-								);
-
-//
-//		engiGetAttrIndex                                        (https://rdf.bg/stepdoc/CP64/engiGetAttrIndex.html)
-//				SdaiAttr				attribute							IN
-//
-//				int_t					returns								OUT
-//
-//	This call works for non-complex entities and entities without multiple inheritance,
-//	it is advised not to use this call for other schemas.
-//
-int_t			DECL STDC	engiGetAttrIndex(
-									SdaiAttr				attribute
-								);
-
-//
-//		engiGetAttrIndexBN                                      (https://rdf.bg/stepdoc/CP64/engiGetAttrIndexBN.html)
-//				SdaiEntity				entity								IN
-//				SdaiString				attributeName						IN
-//
-//				int_t					returns								OUT
-//
-//	This call works for non-complex entities and entities without multiple inheritance,
-//	it is advised not to use this call for other schemas.
-//
-//	Technically engiGetAttrIndexBN will transform into the following call
-//		engiGetAttrIndex(
-//				sdaiGetAttrDefinition(
-//						entity,
-//						attributeName
-//					)
-//			);
-//
-int_t			DECL STDC	engiGetAttrIndexBN(
-									SdaiEntity				entity,
-									SdaiString				attributeName
-								);
-
-#ifdef __cplusplus
-	}
-//{{ Begin C++ polymorphic versions
-
-//
-//
-static	inline	int_t	engiGetAttrIndexBN(
-								SdaiEntity				entity,
-								char					* attributeName
-							)
-{
-	return	engiGetAttrIndexBN(
-					entity,
-					(SdaiString) attributeName
-				);
-}
-
-//}} End C++ polymorphic versions
-	extern "C" {
-#endif
-
-//
-//		engiGetAttrIndexEx                                      (https://rdf.bg/stepdoc/CP64/engiGetAttrIndexEx.html)
-//				SdaiAttr				attribute							IN
-//				bool					countedWithParents					IN
-//				bool					countedWithInverse					IN
-//
-//				int_t					returns								OUT
-//
-//	This call works for non-complex entities and entities without multiple inheritance,
-//	it is advised not to use this call for other schemas.
-//
-int_t			DECL STDC	engiGetAttrIndexEx(
 									SdaiAttr				attribute,
-									bool					countedWithParents,
-									bool					countedWithInverse
-								);
-
-//
-//		engiGetAttrIndexExBN                                    (https://rdf.bg/stepdoc/CP64/engiGetAttrIndexExBN.html)
-//				SdaiEntity				entity								IN
-//				SdaiString				attributeName						IN
-//				bool					countedWithParents					IN
-//				bool					countedWithInverse					IN
-//
-//				int_t					returns								OUT
-//
-//	This call works for non-complex entities and entities without multiple inheritance,
-//	it is advised not to use this call for other schemas.
-//
-//	Technically engiGetAttrIndexExBN will transform into the following call
-//		engiGetAttrIndexEx(
-//				sdaiGetAttrDefinition(
-//						entity,
-//						attributeName
-//					),
-//				countedWithParents,
-//				countedWithInverse
-//			);
-//
-int_t			DECL STDC	engiGetAttrIndexExBN(
-									SdaiEntity				entity,
-									SdaiString				attributeName,
-									bool					countedWithParents,
-									bool					countedWithInverse
-								);
-
-#ifdef __cplusplus
-	}
-//{{ Begin C++ polymorphic versions
-
-//
-//
-static	inline	int_t	engiGetAttrIndexExBN(
-								SdaiEntity				entity,
-								char					* attributeName,
-								bool					countedWithParents,
-								bool					countedWithInverse
-							)
-{
-	return	engiGetAttrIndexExBN(
-					entity,
-					(SdaiString) attributeName,
-					countedWithParents,
-					countedWithInverse
-				);
-}
-
-//}} End C++ polymorphic versions
-	extern "C" {
-#endif
-
-//
-//		engiGetAttrNameByIndex                                  (https://rdf.bg/stepdoc/CP64/engiGetAttrNameByIndex.html)
-//				SdaiEntity				entity								IN
-//				SdaiInteger				index								IN
-//				SdaiPrimitiveType		valueType							IN
-//				SdaiString				* attributeName						IN / OUT
-//
-//				SdaiString				returns								OUT
-//
-//	This call can be used to retrieve the name of the n-th argument of the given entity. Arguments of parent entities are included in the index. Both explicit and inverse attributes are included.
-//
-SdaiString		DECL STDC	engiGetAttrNameByIndex(
-									SdaiEntity				entity,
-									SdaiInteger				index,
-									SdaiPrimitiveType		valueType,
-									SdaiString				* attributeName
-								);
-
-#ifdef __cplusplus
-	}
-//{{ Begin C++ polymorphic versions
-
-//
-//
-static	inline	SdaiString	engiGetAttrNameByIndex(
-									SdaiEntity				entity,
-									SdaiInteger				index,
-									SdaiPrimitiveType		valueType,
-									char					** attributeName
-								)
-{
-	return	engiGetAttrNameByIndex(
-					entity,
-					index,
-					valueType,
-					(SdaiString*) attributeName
-				);
-}
-
-//
-//
-static	inline	SdaiString	engiGetAttrNameByIndex(
-									SdaiEntity				entity,
-									SdaiInteger				index,
-									SdaiPrimitiveType		valueType
-								)
-{
-	return	engiGetAttrNameByIndex(
-					entity,
-					index,
-					valueType,
-					(SdaiString*) nullptr				//	attributeName
-				);
-}
-
-//}} End C++ polymorphic versions
-	extern "C" {
-#endif
-
-//
-//		engiGetAttrTypeByIndex                                  (https://rdf.bg/stepdoc/CP64/engiGetAttrTypeByIndex.html)
-//				SdaiEntity				entity								IN
-//				SdaiInteger				index								IN
-//				SdaiPrimitiveType		* attributeType						IN / OUT
-//
-//				void					returns
-//
-//	This call can be used to retrieve the type of the n-th argument of the given entity. In case of a select argument no relevant information is given by this call as it depends on the instance.
-//	Arguments of parent entities are included in the index. Both explicit and inverse attributes are included.
-//
-void			DECL STDC	engiGetAttrTypeByIndex(
-									SdaiEntity				entity,
-									SdaiInteger				index,
-									SdaiPrimitiveType		* attributeType
+									bool					forSimpleInstance
 								);
 
 //
@@ -2062,20 +1801,6 @@ SdaiInteger		DECL STDC	engiGetEntityCount(
 								);
 
 //
-//		engiGetEntityCountEx                                    (https://rdf.bg/stepdoc/CP64/engiGetEntityCountEx.html)
-//				SdaiModel				model								IN
-//				bool					includeComplex						IN
-//
-//				SdaiInteger				returns								OUT
-//
-//	Returns the total number of entities within the loaded schema.
-//
-SdaiInteger		DECL STDC	engiGetEntityCountEx(
-									SdaiModel				model,
-									bool					includeComplex
-								);
-
-//
 //		engiGetEntityElement                                    (https://rdf.bg/stepdoc/CP64/engiGetEntityElement.html)
 //				SdaiModel				model								IN
 //				SdaiInteger				index								IN
@@ -2087,22 +1812,6 @@ SdaiInteger		DECL STDC	engiGetEntityCountEx(
 SdaiEntity		DECL STDC	engiGetEntityElement(
 									SdaiModel				model,
 									SdaiInteger				index
-								);
-
-//
-//		engiGetEntityElementEx                                  (https://rdf.bg/stepdoc/CP64/engiGetEntityElementEx.html)
-//				SdaiModel				model								IN
-//				SdaiInteger				index								IN
-//				bool					includeComplex						IN
-//
-//				SdaiEntity				returns								OUT
-//
-//	This call returns a specific entity based on an index, the index needs to be 0 or higher but lower then the number of entities in the loaded schema.
-//
-SdaiEntity		DECL STDC	engiGetEntityElementEx(
-									SdaiModel				model,
-									SdaiInteger				index,
-									bool					includeComplex
 								);
 
 //
@@ -2326,15 +2035,16 @@ SdaiEntity		DECL STDC	engiGetEntityParentEx(
 								);
 
 //
-//		engiIsEntityParent                                      (https://rdf.bg/stepdoc/CP64/engiIsEntityParent.html)
+//		engiIsParentOf                                          (https://rdf.bg/stepdoc/CP64/engiIsParentOf.html)
 //				SdaiEntity				superType							IN
 //				SdaiEntity				subType								IN
 //
 //				SdaiBoolean				returns								OUT
 //
-//	Checks if the entity is direct or indirect supertype of another entity.
+//	Checks if the entity is a supertype of another entity.
+//	An entity is supertype of itself.
 //
-SdaiBoolean		DECL STDC	engiIsEntityParent(
+SdaiBoolean		DECL STDC	engiIsParentOf(
 									SdaiEntity				superType,
 									SdaiEntity				subType
 								);
@@ -2346,7 +2056,9 @@ SdaiBoolean		DECL STDC	engiIsEntityParent(
 //
 //				ExpressScript			returns								OUT
 //
-//	This call can be used to check if an attribute is defined schema wise in the context of a certain entity.
+//	This function checks if the attribute is derived and returns a script to be used to calculate the value of the attribute.
+//	If entity is NULL it checks declaration in defining entity (the most common supertype where the attribute is first declared), 
+//	otherwise it also checks the actual redeclaration for specified entity. 
 //
 ExpressScript	DECL STDC	engiGetAttrDerived(
 									SdaiEntity				entity,
@@ -2515,7 +2227,8 @@ static	inline	SdaiBoolean	engiIsAttrOptionalBN(
 //
 //				const SdaiAttr			returns								OUT
 //
-//	Get attribute re-declarations by iterator.
+//	Iterates actual attribute redeclarations for given entity.
+//	sdaiGetAttrDefinition and other functions returns the first definition in the most common supertype. This function allow to explore redeclarations by subtypes.
 //
 const SdaiAttr	DECL STDC	engiGetAttrRedeclarationByIterator(
 									SdaiEntity				entity,
@@ -2775,24 +2488,6 @@ static	inline	SdaiString	engiGetEnumerationValue(
 SdaiAttr		DECL STDC	engiGetEntityAttributeByIterator(
 									SdaiEntity				entity,
 									SdaiAttr				prev
-								);
-
-//
-//		engiGetEntityAttributeByIndex                           (https://rdf.bg/stepdoc/CP64/engiGetEntityAttributeByIndex.html)
-//				SdaiEntity				entity								IN
-//				SdaiAggrIndex			index								IN
-//				bool					countedWithParents					IN
-//				bool					countedWithInverse					IN
-//
-//				SdaiAttr				returns								OUT
-//
-//	Return attribute definition from attribute index.
-//
-SdaiAttr		DECL STDC	engiGetEntityAttributeByIndex(
-									SdaiEntity				entity,
-									SdaiAggrIndex			index,
-									bool					countedWithParents,
-									bool					countedWithInverse
 								);
 
 //
@@ -4088,7 +3783,9 @@ static	inline	SdaiAttr	sdaiGetAttrDefinition(
 //
 //				void					returns
 //
-//	...
+//	The function returns information how the attribute is declared in the schema.
+//	'attribute' may by a base declaration received by sdaiGetAttrDefinition, engiGetEntityAttributeByIterator, etc. or redeclaration by engiGetAttrRedeclarationByIterator.
+//	'definingEntity' is the entity which declares or re-decelerates the attribute.
 //
 void			DECL STDC	engiGetAttrTraits(
 									const SdaiAttr			attribute,
@@ -4319,6 +4016,8 @@ static	inline	int_t	sdaiIsKindOfBN(
 //	In case of SELECT and sdaiINSTANCE, return value will be combined with engiTypeFlagAggrOption if some options are aggregation
 //	or engiTypeFlagAggr if all options are aggregations of instances
 //
+//	Comparing with engiGetExpressAttrType this function drills down into defined type to find base primitive type.
+//
 //	It works for explicit and inverse attributes
 //
 SdaiPrimitiveType	DECL STDC	engiGetAttrType(
@@ -4369,14 +4068,14 @@ static	inline	SdaiPrimitiveType	engiGetAttrTypeBN(
 #endif
 
 //
-//		engiGetAttrTypeBySchema                                 (https://rdf.bg/stepdoc/CP64/engiGetAttrTypeBySchema.html)
+//		engiGetExpressAttrType                                  (https://rdf.bg/stepdoc/CP64/engiGetExpressAttrType.html)
 //				const SdaiAttr			attribute							IN
 //
 //				enum_express_data_type	returns								OUT
 //
 //	...
 //
-enum_express_data_type	DECL STDC	engiGetAttrTypeBySchema(
+enum_express_data_type	DECL STDC	engiGetExpressAttrType(
 									const SdaiAttr			attribute
 								);
 
@@ -4399,7 +4098,8 @@ SchemaAggr		DECL STDC	engiGetAttrAggregation(
 //
 //				SdaiPrimitiveType		returns								OUT
 //
-//	Returns SDAI type for actual data stored in the instance for the attribute.
+//	Returns SDAI type for actual data stored in the instance for the attribute,
+//	compare with engiGetAttrType that returns type according to schema.
 //	It may be primitive type, sdaiAGGR or sdaiADB.
 //	Returns 0 for $ and *.
 //
@@ -7836,59 +7536,6 @@ SdaiAttr		DECL STDC	xxxxGetAttrDefinitionByValue(
 								);
 
 //
-//		xxxxGetAttrNameByIndex                                  (https://rdf.bg/stepdoc/CP64/xxxxGetAttrNameByIndex.html)
-//				SdaiInstance			instance							IN
-//				SdaiInteger				index								IN
-//				SdaiString				* name								IN / OUT
-//
-//				SdaiString				returns								OUT
-//
-//	...
-//
-SdaiString		DECL STDC	xxxxGetAttrNameByIndex(
-									SdaiInstance			instance,
-									SdaiInteger				index,
-									SdaiString				* name
-								);
-
-#ifdef __cplusplus
-	}
-//{{ Begin C++ polymorphic versions
-
-//
-//
-static	inline	SdaiString	xxxxGetAttrNameByIndex(
-									SdaiInstance			instance,
-									SdaiInteger				index,
-									char					** name
-								)
-{
-	return	xxxxGetAttrNameByIndex(
-					instance,
-					index,
-					(SdaiString*) name
-				);
-}
-
-//
-//
-static	inline	SdaiString	xxxxGetAttrNameByIndex(
-									SdaiInstance			instance,
-									SdaiInteger				index
-								)
-{
-	return	xxxxGetAttrNameByIndex(
-					instance,
-					index,
-					(SdaiString*) nullptr				//	name
-				);
-}
-
-//}} End C++ polymorphic versions
-	extern "C" {
-#endif
-
-//
 //		iterateOverInstances                                    (https://rdf.bg/stepdoc/CP64/iterateOverInstances.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
@@ -7931,21 +7578,6 @@ static	inline	SdaiInstance	iterateOverInstances(
 //}} End C++ polymorphic versions
 	extern "C" {
 #endif
-
-//
-//		iterateOverProperties                                   (https://rdf.bg/stepdoc/CP64/iterateOverProperties.html)
-//				SdaiEntity				entity								IN
-//				SdaiInteger				index								IN
-//
-//				int_t					returns								OUT
-//
-//	This function iterated over all available attributes of a specific given entity.
-//	This call is typically used in combination with iterateOverInstances(..).
-//
-int_t			DECL STDC	iterateOverProperties(
-									SdaiEntity				entity,
-									SdaiInteger				index
-								);
 
 //
 //		sdaiGetAggrByIterator                                   (https://rdf.bg/stepdoc/CP64/sdaiGetAggrByIterator.html)
@@ -8767,13 +8399,50 @@ int_t			DECL STDC	sdaiValidateSchemaInstance(
 //
 
 //
+//		engiGetEntityAttributeByIndex                           (https://rdf.bg/stepdoc/CP64/engiGetEntityAttributeByIndex.html)
+//				SdaiEntity				entity								IN
+//				SdaiAggrIndex			index								IN
+//				bool					countedWithParents					IN
+//				bool					countedWithInverse					IN
+//
+//				SdaiAttr				returns								OUT
+//
+//	Return attribute definition from attribute index.
+//
+//	This call is deprecated, use SdaiAttr or attribute name as primary data and engiGetEntityAttributePosition.
+//
+SdaiAttr		DECL STDC	engiGetEntityAttributeByIndex(
+									SdaiEntity				entity,
+									SdaiAggrIndex			index,
+									bool					countedWithParents,
+									bool					countedWithInverse
+								);
+
+//
+//		iterateOverProperties                                   (https://rdf.bg/stepdoc/CP64/iterateOverProperties.html)
+//				SdaiEntity				entity								IN
+//				SdaiInteger				index								IN
+//
+//				int_t					returns								OUT
+//
+//	This function iterated over all available attributes of a specific given entity.
+//	This call is typically used in combination with iterateOverInstances(..).
+//
+//	This call is deprecated, use engiGetEntityAttributeByIterator.
+//
+int_t			DECL STDC	iterateOverProperties(
+									SdaiEntity				entity,
+									SdaiInteger				index
+								);
+
+//
 //		engiGetEntityAttributeIndex                             (https://rdf.bg/stepdoc/CP64/engiGetEntityAttributeIndex.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
 //				int_t					returns								OUT
 //
-//	This call is deprecated, please use call engiGetAttrIndexBN(..) instead.
+//	This call is deprecated, use engiGetEntityAttributePosition.
 //
 int_t			DECL STDC	engiGetEntityAttributeIndex(
 									SdaiEntity				entity,
@@ -8810,7 +8479,7 @@ static	inline	int_t	engiGetEntityAttributeIndex(
 //
 //				int_t					returns								OUT
 //
-//	This call is deprecated, please use call engiGetAttrIndexExBN(..) instead.
+//	This call is deprecated, use engiGetEntityAttributePosition.
 //
 int_t			DECL STDC	engiGetEntityAttributeIndexEx(
 									SdaiEntity				entity,
@@ -8853,7 +8522,7 @@ static	inline	int_t	engiGetEntityAttributeIndexEx(
 //
 //				SdaiString				returns								OUT
 //
-//	This call is deprecated, please use call engiGetAttrNameByIndex(..) instead.
+//	This call is deprecated, use engiGetEntityAttributeByIterator, engiGetAttrName.
 //
 SdaiString		DECL STDC	engiGetEntityArgumentName(
 									SdaiEntity				entity,
@@ -8911,7 +8580,7 @@ static	inline	SdaiString	engiGetEntityArgumentName(
 //
 //				void					returns
 //
-//	This call is deprecated, please use call engiGetAttrTypeByIndex(..) instead.
+//	This call is deprecated, use engiGetEntityAttributeByIterator, engiGetAttrType.
 //
 void			DECL STDC	engiGetEntityArgumentType(
 									SdaiEntity				entity,
@@ -9324,7 +8993,7 @@ SdaiPrimitiveType	DECL STDC	engiGetAttributeType(
 //
 //				int_t					returns								OUT
 //
-//	This call is deprecated, please use call engiGetAttrIndexBN(..) instead.
+//	This call is deprecated, use engiGetEntityAttributePosition instead.
 //
 int_t			DECL STDC	engiGetEntityArgumentIndex(
 									SdaiEntity				entity,
@@ -9504,7 +9173,7 @@ static	inline	int_t	xxxxOpenModelByStream(
 //
 //				int_t					returns								OUT
 //
-//	This call is deprecated, please use call .... instead.
+//	This call is deprecated, please use call engiGetAttrType(..) instead.
 //
 int_t			DECL STDC	sdaiplusGetAggregationType(
 									SdaiInstance			instance,
@@ -9519,7 +9188,7 @@ int_t			DECL STDC	sdaiplusGetAggregationType(
 //
 //				int_t					returns								OUT
 //
-//	This call is deprecated, please use calls engiGetAttrType(..) instead.
+//	This call is deprecated, please use call engiGetAttrType(..) instead.
 //
 int_t			DECL STDC	xxxxGetAttrType(
 									SdaiInstance			instance,
@@ -9622,8 +9291,277 @@ int_t			DECL STDC	GetSPFFHeaderItemUnicode(
 								);
 
 //
+//		engiGetAttrIndex                                        (https://rdf.bg/stepdoc/CP64/engiGetAttrIndex.html)
+//				SdaiAttr				attribute							IN
+//
+//				int_t					returns								OUT
+//
+//	This call works for non-complex entities and entities without multiple inheritance,
+//	it is advised not to use this call for other schemas.
+//
+//	This call is deprecated, use call engiGetEntityAttributePosition instead.
+//
+int_t			DECL STDC	engiGetAttrIndex(
+									SdaiAttr				attribute
+								);
+
+//
+//		engiGetAttrIndexBN                                      (https://rdf.bg/stepdoc/CP64/engiGetAttrIndexBN.html)
+//				SdaiEntity				entity								IN
+//				SdaiString				attributeName						IN
+//
+//				int_t					returns								OUT
+//
+//	This call works for non-complex entities and entities without multiple inheritance,
+//	it is advised not to use this call for other schemas.
+//
+//	Technically engiGetAttrIndexBN will transform into the following call
+//		engiGetAttrIndex(
+//				sdaiGetAttrDefinition(
+//						entity,
+//						attributeName
+//					)
+//			);
+//
+//	This call is deprecated, use call engiGetEntityAttributePosition instead.
+//
+int_t			DECL STDC	engiGetAttrIndexBN(
+									SdaiEntity				entity,
+									SdaiString				attributeName
+								);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	int_t	engiGetAttrIndexBN(
+								SdaiEntity				entity,
+								char					* attributeName
+							)
+{
+	return	engiGetAttrIndexBN(
+					entity,
+					(SdaiString) attributeName
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
+
+//
+//		engiGetAttrIndexEx                                      (https://rdf.bg/stepdoc/CP64/engiGetAttrIndexEx.html)
+//				SdaiAttr				attribute							IN
+//				bool					countedWithParents					IN
+//				bool					countedWithInverse					IN
+//
+//				int_t					returns								OUT
+//
+//	This call works for non-complex entities and entities without multiple inheritance,
+//	it is advised not to use this call for other schemas.
+//
+//	This call is deprecated, use call engiGetEntityAttributePosition instead.
+//
+int_t			DECL STDC	engiGetAttrIndexEx(
+									SdaiAttr				attribute,
+									bool					countedWithParents,
+									bool					countedWithInverse
+								);
+
+//
+//		engiGetAttrIndexExBN                                    (https://rdf.bg/stepdoc/CP64/engiGetAttrIndexExBN.html)
+//				SdaiEntity				entity								IN
+//				SdaiString				attributeName						IN
+//				bool					countedWithParents					IN
+//				bool					countedWithInverse					IN
+//
+//				int_t					returns								OUT
+//
+//	This call works for non-complex entities and entities without multiple inheritance,
+//	it is advised not to use this call for other schemas.
+//
+//	Technically engiGetAttrIndexExBN will transform into the following call
+//		engiGetAttrIndexEx(
+//				sdaiGetAttrDefinition(
+//						entity,
+//						attributeName
+//					),
+//				countedWithParents,
+//				countedWithInverse
+//			);
+//
+//	This call is deprecated, use call engiGetEntityAttributePosition instead.
+//
+int_t			DECL STDC	engiGetAttrIndexExBN(
+									SdaiEntity				entity,
+									SdaiString				attributeName,
+									bool					countedWithParents,
+									bool					countedWithInverse
+								);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	int_t	engiGetAttrIndexExBN(
+								SdaiEntity				entity,
+								char					* attributeName,
+								bool					countedWithParents,
+								bool					countedWithInverse
+							)
+{
+	return	engiGetAttrIndexExBN(
+					entity,
+					(SdaiString) attributeName,
+					countedWithParents,
+					countedWithInverse
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
+
+//
+//		engiGetAttrNameByIndex                                  (https://rdf.bg/stepdoc/CP64/engiGetAttrNameByIndex.html)
+//				SdaiEntity				entity								IN
+//				SdaiInteger				index								IN
+//				SdaiPrimitiveType		valueType							IN
+//				SdaiString				* attributeName						IN / OUT
+//
+//				SdaiString				returns								OUT
+//
+//	This call can be used to retrieve the name of the n-th argument of the given entity. Arguments of parent entities are included in the index. Both explicit and inverse attributes are included.
+//
+//	This call is deprecated, use SdaiAttr or attribute name as primary data and engiGetEntityAttributePosition.
+//
+SdaiString		DECL STDC	engiGetAttrNameByIndex(
+									SdaiEntity				entity,
+									SdaiInteger				index,
+									SdaiPrimitiveType		valueType,
+									SdaiString				* attributeName
+								);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	SdaiString	engiGetAttrNameByIndex(
+									SdaiEntity				entity,
+									SdaiInteger				index,
+									SdaiPrimitiveType		valueType,
+									char					** attributeName
+								)
+{
+	return	engiGetAttrNameByIndex(
+					entity,
+					index,
+					valueType,
+					(SdaiString*) attributeName
+				);
+}
+
+//
+//
+static	inline	SdaiString	engiGetAttrNameByIndex(
+									SdaiEntity				entity,
+									SdaiInteger				index,
+									SdaiPrimitiveType		valueType
+								)
+{
+	return	engiGetAttrNameByIndex(
+					entity,
+					index,
+					valueType,
+					(SdaiString*) nullptr				//	attributeName
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
+
+//
+//		engiGetAttrTypeByIndex                                  (https://rdf.bg/stepdoc/CP64/engiGetAttrTypeByIndex.html)
+//				SdaiEntity				entity								IN
+//				SdaiInteger				index								IN
+//				SdaiPrimitiveType		* attributeType						IN / OUT
+//
+//				void					returns
+//
+//	This call can be used to retrieve the type of the n-th argument of the given entity. In case of a select argument no relevant information is given by this call as it depends on the instance.
+//	Arguments of parent entities are included in the index. Both explicit and inverse attributes are included.
+//
+//	This call is deprecated, use engiGetEntityAttributePosition, engiGetEntityAttributeByIterator, engiGetAttrType.
+//
+void			DECL STDC	engiGetAttrTypeByIndex(
+									SdaiEntity				entity,
+									SdaiInteger				index,
+									SdaiPrimitiveType		* attributeType
+								);
+
+//
+//		xxxxGetAttrNameByIndex                                  (https://rdf.bg/stepdoc/CP64/xxxxGetAttrNameByIndex.html)
+//				SdaiInstance			instance							IN
+//				SdaiInteger				index								IN
+//				SdaiString				* name								IN / OUT
+//
+//				SdaiString				returns								OUT
+//
+//	This call is deprecated, use SdaiAttr or attribute name as primary data and engiGetEntityAttributePosition, engiGetEntityAttributeByIterator, engiGetAttrName.
+//
+SdaiString		DECL STDC	xxxxGetAttrNameByIndex(
+									SdaiInstance			instance,
+									SdaiInteger				index,
+									SdaiString				* name
+								);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	SdaiString	xxxxGetAttrNameByIndex(
+									SdaiInstance			instance,
+									SdaiInteger				index,
+									char					** name
+								)
+{
+	return	xxxxGetAttrNameByIndex(
+					instance,
+					index,
+					(SdaiString*) name
+				);
+}
+
+//
+//
+static	inline	SdaiString	xxxxGetAttrNameByIndex(
+									SdaiInstance			instance,
+									SdaiInteger				index
+								)
+{
+	return	xxxxGetAttrNameByIndex(
+					instance,
+					index,
+					(SdaiString*) nullptr				//	name
+				);
+}
+
+//
 //  Validation
 //
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
 
 //
 //		validateSetOptions                                      (https://rdf.bg/stepdoc/CP64/validateSetOptions.html)
