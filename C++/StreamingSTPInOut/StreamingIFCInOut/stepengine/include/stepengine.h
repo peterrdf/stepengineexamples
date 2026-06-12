@@ -8091,6 +8091,30 @@ void						DECL STDC	owlGetModel(
 												OwlModel				* owlModel
 											);
 
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	OwlModel	owlGetModel(
+									SdaiModel				model
+								)
+{
+	OwlModel	owlModel = 0;
+
+	owlGetModel(
+			model,
+			&owlModel
+		);
+
+	return owlModel;
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
+
 //
 //		owlConnectModel                                         (https://rdf.bg/stepdoc/CP64/owlConnectModel.html)
 //				SdaiModel				model								IN
@@ -8136,7 +8160,7 @@ void						DECL STDC	owlGetInstance(
 //
 //				void					returns
 //
-//	...
+//	deprecated, if you use this call, please contact us
 //
 void						DECL STDC	owlMaterialInstance(
 												SdaiInstance			instanceBase,
@@ -8166,6 +8190,45 @@ void						DECL STDC	owlBuildInstance(
 											);
 
 //
+//		owlBuildInstanceMT                                      (https://rdf.bg/stepdoc/CP64/owlBuildInstanceMT.html)
+//				SdaiInstance			instance							IN
+//				SdaiModel				model								IN
+//
+//				OwlInstance				returns								OUT
+//
+//	Returns a handle to the instance representing the head of design tree within the Geometry Kernel.
+//	If no design tree is created yet it will be created on-the-fly.
+//
+//	Note: the STEP Engine uses one or more models within the Geometry Kernel to generate design trees
+//		  within the Geometry Kernel. All Geometry Kernel calls can be called with the STEP instance handle also,
+//		  however most correct would be to get and use the Geometry Kernel handle.
+//
+OwlInstance					DECL STDC	owlBuildInstanceMT(
+												SdaiInstance			instance,
+												SdaiModel				model
+											);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	OwlInstance	owlBuildInstanceMT(
+									SdaiInstance			instance
+								)
+{
+	return	owlBuildInstanceMT(
+					instance,
+					0									//	model
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
+
+//
 //		owlBuildInstanceInContext                               (https://rdf.bg/stepdoc/CP64/owlBuildInstanceInContext.html)
 //				SdaiInstance			instanceBase						IN
 //				SdaiInstance			instanceContext						IN
@@ -8185,6 +8248,49 @@ void						DECL STDC	owlBuildInstanceInContext(
 												SdaiInstance			instanceContext,
 												OwlInstance				* owlInstance
 											);
+
+//
+//		owlBuildInstanceInContextMT                             (https://rdf.bg/stepdoc/CP64/owlBuildInstanceInContextMT.html)
+//				SdaiInstance			instanceBase						IN
+//				SdaiInstance			instanceContext						IN
+//				SdaiModel				model								IN
+//
+//				OwlInstance				returns								OUT
+//
+//	Returns a handle to the instance representing the head of design tree within the Geometry Kernel.
+//	If no design tree is created yet it will be created on-the-fly.
+//
+//	Note: the STEP Engine uses one or more models within the Geometry Kernel to generate design trees
+//		  within the Geometry Kernel. All Geometry Kernel calls can be called with the STEP instance handle also,
+//		  however most correct would be to get and use the Geometry Kernel handle.
+//
+OwlInstance					DECL STDC	owlBuildInstanceInContextMT(
+												SdaiInstance			instanceBase,
+												SdaiInstance			instanceContext,
+												SdaiModel				model
+											);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	OwlInstance	owlBuildInstanceInContextMT(
+									SdaiInstance			instanceBase,
+									SdaiInstance			instanceContext
+								)
+{
+	return	owlBuildInstanceInContextMT(
+					instanceBase,
+					instanceContext,
+					0									//	model
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
 
 //
 //		engiInstanceUsesSegmentation                            (https://rdf.bg/stepdoc/CP64/engiInstanceUsesSegmentation.html)
@@ -8208,7 +8314,7 @@ bool						DECL STDC	engiInstanceUsesSegmentation(
 //
 //				void					returns
 //
-//	...
+//	deprecated, if you use this call, please contact us
 //
 void						DECL STDC	owlBuildInstances(
 												SdaiModel				model,
