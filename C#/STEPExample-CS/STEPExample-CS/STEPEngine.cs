@@ -213,7 +213,7 @@ namespace RDF
 		__COUNT_EXCEED				= 4						//	validation was finished because of reach of issue's numbers limit
 	};
 
-	class stepengine
+	class STEPEngine
 	{
 		public const int sdaiTYPE			 = 0;			//	C++ API generator specific
 
@@ -248,7 +248,7 @@ namespace RDF
 		public const int_t sdaiEXPRESSSTRING = sdaiUNICODE + 1;
 		public const int_t engiGLOBALID      = sdaiEXPRESSSTRING + 1;
 
-		public const string STEPEngineDLL = @"STEPEngine.dll";
+		public const string stepenginedll = @"stepengine.dll";
 
         //
         //  Instance Header API Calls
@@ -259,10 +259,10 @@ namespace RDF
 		///
 		///	This call is an aggregate of several SetSPFFHeaderItem calls. In several cases the header can be set easily with this call. In case an argument is zero, this argument will not be updated, i.e. it will not be filled with 0.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "SetSPFFHeader")]
+		[DllImport(stepenginedll, EntryPoint = "SetSPFFHeader")]
 		public static extern void SetSPFFHeader(int_t model, string description, string implementationLevel, string name, string timeStamp, string author, string organization, string preprocessorVersion, string originatingSystem, string authorization, string fileSchema);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "SetSPFFHeader")]
+		[DllImport(stepenginedll, EntryPoint = "SetSPFFHeader")]
 		public static extern void SetSPFFHeader(int_t model, byte[] description, byte[] implementationLevel, byte[] name, byte[] timeStamp, byte[] author, byte[] organization, byte[] preprocessorVersion, byte[] originatingSystem, byte[] authorization, byte[] fileSchema);
 
 		/// <summary>
@@ -270,10 +270,10 @@ namespace RDF
 		///
 		///	This call can be used to write a specific header item, the source code example is larger to show and explain how this call can be used.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "SetSPFFHeaderItem")]
+		[DllImport(stepenginedll, EntryPoint = "SetSPFFHeaderItem")]
 		public static extern int_t SetSPFFHeaderItem(int_t model, int_t itemIndex, int_t itemSubIndex, int_t valueType, string value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "SetSPFFHeaderItem")]
+		[DllImport(stepenginedll, EntryPoint = "SetSPFFHeaderItem")]
 		public static extern int_t SetSPFFHeaderItem(int_t model, int_t itemIndex, int_t itemSubIndex, int_t valueType, byte[] value);
 
 		/// <summary>
@@ -281,7 +281,7 @@ namespace RDF
 		///
 		///	This call can be used to read a specific header item, the source code example is larger to show and explain how this call can be used.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "GetSPFFHeaderItem")]
+		[DllImport(stepenginedll, EntryPoint = "GetSPFFHeaderItem")]
 		public static extern int_t GetSPFFHeaderItem(int_t model, int_t itemIndex, int_t itemSubIndex, int_t valueType, out IntPtr value);
 
 		/// <summary>
@@ -289,7 +289,7 @@ namespace RDF
 		///
 		///	Returns an current date and time according to ISO 8601 without time zone, i.e. formatted as '2099-12-31T23:59:59'.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "GetDateTime")]
+		[DllImport(stepenginedll, EntryPoint = "GetDateTime")]
 		public static extern IntPtr GetDateTime(int_t model, out IntPtr dateTimeStamp);
 
 		public static string GetDateTime(int_t model)
@@ -304,7 +304,7 @@ namespace RDF
 		///
 		///	Returns an identifier for the current instance of this library including date stamp and revision number.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "GetLibraryIdentifier")]
+		[DllImport(stepenginedll, EntryPoint = "GetLibraryIdentifier")]
 		public static extern IntPtr GetLibraryIdentifier(out IntPtr libraryIdentifier);
 
 		public static string GetLibraryIdentifier()
@@ -319,7 +319,7 @@ namespace RDF
 		///
 		///	Returns the value as defined by SCHEMA in the loaded EXPRESS schema.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "GetSchemaName")]
+		[DllImport(stepenginedll, EntryPoint = "GetSchemaName")]
 		public static extern IntPtr GetSchemaName(int_t model, out IntPtr schemaName);
 
 		public static string GetSchemaName(int_t model)
@@ -334,7 +334,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiSetMappingSupport")]
+		[DllImport(stepenginedll, EntryPoint = "engiSetMappingSupport")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool engiSetMappingSupport(int_t entity, [param: MarshalAs(UnmanagedType.U1)] bool enable);
 
@@ -343,7 +343,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetMappingSupport")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetMappingSupport")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool engiGetMappingSupport(int_t entity);
 
@@ -364,21 +364,21 @@ namespace RDF
 		///	Attributes repository and fileName will be ignored, they are their because of backward compatibility.
 		///	A handle to the model will be returned, or 0 in case something went wrong.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateModelBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateModelBN")]
 		public static extern int_t sdaiCreateModelBN(int_t repository, string fileName, string schemaName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateModelBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateModelBN")]
 		public static extern int_t sdaiCreateModelBN(int_t repository, string fileName, byte[] schemaName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateModelBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateModelBN")]
 		public static extern int_t sdaiCreateModelBN(int_t repository, byte[] fileName, string schemaName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateModelBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateModelBN")]
 		public static extern int_t sdaiCreateModelBN(int_t repository, byte[] fileName, byte[] schemaName);
 
         public static int_t sdaiCreateModelBN(int_t repository, string schemaName)
         {
-            int_t model = RDF.stepengine.sdaiCreateModelBN(repository, string.Empty, schemaName);
+            int_t model = RDF.STEPEngine.sdaiCreateModelBN(repository, string.Empty, schemaName);
 
             //	HEADER;
             //	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
@@ -387,41 +387,41 @@ namespace RDF
             //	ENDSEC;
 
             //  set Description
-            //RDF.stepengine.SetSPFFHeaderItem(model, 0, 0, RDF.stepengine.sdaiSTRING, "ViewDefinition [ReferenceView]");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 0, 0, RDF.STEPEngine.sdaiSTRING, "ViewDefinition [ReferenceView]");
 
             //  set Implementation Level
-            RDF.stepengine.SetSPFFHeaderItem(model, 1, 0, RDF.stepengine.sdaiSTRING, "2;1");
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 1, 0, RDF.STEPEngine.sdaiSTRING, "2;1");
 
             //  set Name
-            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.stp");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 2, 0, RDF.STEPEngine.sdaiSTRING, "Header example.stp");
 
             //  set Time Stamp
-            RDF.stepengine.SetSPFFHeaderItem(model, 3, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetDateTime(model));         //	'2099-12-31T23:59:59'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 3, 0, RDF.STEPEngine.sdaiSTRING, RDF.STEPEngine.GetDateTime(model));         //	'2099-12-31T23:59:59'
 
             //  set Author
-            //RDF.stepengine.SetSPFFHeaderItem(model, 4, 0, RDF.stepengine.sdaiSTRING, "Peter Bonsma");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 4, 0, RDF.STEPEngine.sdaiSTRING, "Peter Bonsma");
 
             //  set Organization
-            //RDF.stepengine.SetSPFFHeaderItem(model, 5, 0, RDF.stepengine.sdaiSTRING, "RDF Ltd.");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 5, 0, RDF.STEPEngine.sdaiSTRING, "RDF Ltd.");
 
             //	set Preprocessor Version
-            RDF.stepengine.SetSPFFHeaderItem(model, 6, 0, RDF.stepengine.sdaiSTRING, GetLibraryIdentifier());                 //	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 6, 0, RDF.STEPEngine.sdaiSTRING, GetLibraryIdentifier());                 //	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
 
             //  set Originating System
-            //RDF.stepengine.SetSPFFHeaderItem(model, 7, 0, RDF.stepengine.sdaiSTRING, "Company - Application - 1.0.0.0");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 7, 0, RDF.STEPEngine.sdaiSTRING, "Company - Application - 1.0.0.0");
 
             //  set Authorization
-            RDF.stepengine.SetSPFFHeaderItem(model, 8, 0, RDF.stepengine.sdaiSTRING, "none");
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 8, 0, RDF.STEPEngine.sdaiSTRING, "none");
 
             //	set File Schema
-            RDF.stepengine.SetSPFFHeaderItem(model, 9, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetSchemaName(model));       //	'IFC4X3_ADD2'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 9, 0, RDF.STEPEngine.sdaiSTRING, RDF.STEPEngine.GetSchemaName(model));       //	'IFC4X3_ADD2'
 
             return model;
         }
 
         public static int_t sdaiCreateModelBN(int_t repository, byte[] schemaName)
         {
-            int_t model = RDF.stepengine.sdaiCreateModelBN(repository, string.Empty, schemaName);
+            int_t model = RDF.STEPEngine.sdaiCreateModelBN(repository, string.Empty, schemaName);
 
             //	HEADER;
             //	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
@@ -430,41 +430,41 @@ namespace RDF
             //	ENDSEC;
 
             //  set Description
-            //RDF.stepengine.SetSPFFHeaderItem(model, 0, 0, RDF.stepengine.sdaiSTRING, "ViewDefinition [ReferenceView]");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 0, 0, RDF.STEPEngine.sdaiSTRING, "ViewDefinition [ReferenceView]");
 
             //  set Implementation Level
-            RDF.stepengine.SetSPFFHeaderItem(model, 1, 0, RDF.stepengine.sdaiSTRING, "2;1");
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 1, 0, RDF.STEPEngine.sdaiSTRING, "2;1");
 
             //  set Name
-            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.stp");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 2, 0, RDF.STEPEngine.sdaiSTRING, "Header example.stp");
 
             //  set Time Stamp
-            RDF.stepengine.SetSPFFHeaderItem(model, 3, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetDateTime(model));         //	'2099-12-31T23:59:59'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 3, 0, RDF.STEPEngine.sdaiSTRING, RDF.STEPEngine.GetDateTime(model));         //	'2099-12-31T23:59:59'
 
             //  set Author
-            //RDF.stepengine.SetSPFFHeaderItem(model, 4, 0, RDF.stepengine.sdaiSTRING, "Peter Bonsma");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 4, 0, RDF.STEPEngine.sdaiSTRING, "Peter Bonsma");
 
             //  set Organization
-            //RDF.stepengine.SetSPFFHeaderItem(model, 5, 0, RDF.stepengine.sdaiSTRING, "RDF Ltd.");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 5, 0, RDF.STEPEngine.sdaiSTRING, "RDF Ltd.");
 
             //	set Preprocessor Version
-            RDF.stepengine.SetSPFFHeaderItem(model, 6, 0, RDF.stepengine.sdaiSTRING, GetLibraryIdentifier());                 //	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 6, 0, RDF.STEPEngine.sdaiSTRING, GetLibraryIdentifier());                 //	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
 
             //  set Originating System
-            //RDF.stepengine.SetSPFFHeaderItem(model, 7, 0, RDF.stepengine.sdaiSTRING, "Company - Application - 1.0.0.0");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 7, 0, RDF.STEPEngine.sdaiSTRING, "Company - Application - 1.0.0.0");
 
             //  set Authorization
-            RDF.stepengine.SetSPFFHeaderItem(model, 8, 0, RDF.stepengine.sdaiSTRING, "none");
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 8, 0, RDF.STEPEngine.sdaiSTRING, "none");
 
             //	set File Schema
-            RDF.stepengine.SetSPFFHeaderItem(model, 9, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetSchemaName(model));       //	'IFC4X3_ADD2'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 9, 0, RDF.STEPEngine.sdaiSTRING, RDF.STEPEngine.GetSchemaName(model));       //	'IFC4X3_ADD2'
 
             return model;
         }
 
         public static int_t sdaiCreateModelBN(string schemaName)
         {
-			int_t model = RDF.stepengine.sdaiCreateModelBN(0, string.Empty, schemaName);
+			int_t model = RDF.STEPEngine.sdaiCreateModelBN(0, string.Empty, schemaName);
 
             //	HEADER;
             //	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
@@ -473,41 +473,41 @@ namespace RDF
             //	ENDSEC;
 
             //  set Description
-            //RDF.stepengine.SetSPFFHeaderItem(model, 0, 0, RDF.stepengine.sdaiSTRING, "ViewDefinition [ReferenceView]");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 0, 0, RDF.STEPEngine.sdaiSTRING, "ViewDefinition [ReferenceView]");
 
             //  set Implementation Level
-            RDF.stepengine.SetSPFFHeaderItem(model, 1, 0, RDF.stepengine.sdaiSTRING, "2;1");
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 1, 0, RDF.STEPEngine.sdaiSTRING, "2;1");
 
             //  set Name
-			//RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.stp");
+			//RDF.STEPEngine.SetSPFFHeaderItem(model, 2, 0, RDF.STEPEngine.sdaiSTRING, "Header example.stp");
 
             //  set Time Stamp
-            RDF.stepengine.SetSPFFHeaderItem(model, 3, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetDateTime(model));         //	'2099-12-31T23:59:59'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 3, 0, RDF.STEPEngine.sdaiSTRING, RDF.STEPEngine.GetDateTime(model));         //	'2099-12-31T23:59:59'
 
             //  set Author
-            //RDF.stepengine.SetSPFFHeaderItem(model, 4, 0, RDF.stepengine.sdaiSTRING, "Peter Bonsma");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 4, 0, RDF.STEPEngine.sdaiSTRING, "Peter Bonsma");
 
             //  set Organization
-            //RDF.stepengine.SetSPFFHeaderItem(model, 5, 0, RDF.stepengine.sdaiSTRING, "RDF Ltd.");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 5, 0, RDF.STEPEngine.sdaiSTRING, "RDF Ltd.");
 
             //	set Preprocessor Version
-            RDF.stepengine.SetSPFFHeaderItem(model, 6, 0, RDF.stepengine.sdaiSTRING, GetLibraryIdentifier());					//	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 6, 0, RDF.STEPEngine.sdaiSTRING, GetLibraryIdentifier());					//	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
 
             //  set Originating System
-			//RDF.stepengine.SetSPFFHeaderItem(model, 7, 0, RDF.stepengine.sdaiSTRING, "Company - Application - 1.0.0.0");
+			//RDF.STEPEngine.SetSPFFHeaderItem(model, 7, 0, RDF.STEPEngine.sdaiSTRING, "Company - Application - 1.0.0.0");
 
             //  set Authorization
-            RDF.stepengine.SetSPFFHeaderItem(model, 8, 0, RDF.stepengine.sdaiSTRING, "none");
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 8, 0, RDF.STEPEngine.sdaiSTRING, "none");
 
             //	set File Schema
-            RDF.stepengine.SetSPFFHeaderItem(model, 9, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetSchemaName(model));       //	'IFC4X3_ADD2'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 9, 0, RDF.STEPEngine.sdaiSTRING, RDF.STEPEngine.GetSchemaName(model));       //	'IFC4X3_ADD2'
 
             return model;
         }
 
         public static int_t sdaiCreateModelBN(byte[] schemaName)
         {
-            int_t model = RDF.stepengine.sdaiCreateModelBN(0, string.Empty, schemaName);
+            int_t model = RDF.STEPEngine.sdaiCreateModelBN(0, string.Empty, schemaName);
 
             //	HEADER;
             //	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
@@ -516,34 +516,34 @@ namespace RDF
             //	ENDSEC;
 
             //  set Description
-            //RDF.stepengine.SetSPFFHeaderItem(model, 0, 0, RDF.stepengine.sdaiSTRING, "ViewDefinition [ReferenceView]");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 0, 0, RDF.STEPEngine.sdaiSTRING, "ViewDefinition [ReferenceView]");
 
             //  set Implementation Level
-            RDF.stepengine.SetSPFFHeaderItem(model, 1, 0, RDF.stepengine.sdaiSTRING, "2;1");
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 1, 0, RDF.STEPEngine.sdaiSTRING, "2;1");
 
             //  set Name
-            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.stp");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 2, 0, RDF.STEPEngine.sdaiSTRING, "Header example.stp");
 
             //  set Time Stamp
-            RDF.stepengine.SetSPFFHeaderItem(model, 3, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetDateTime(model));         //	'2099-12-31T23:59:59'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 3, 0, RDF.STEPEngine.sdaiSTRING, RDF.STEPEngine.GetDateTime(model));         //	'2099-12-31T23:59:59'
 
             //  set Author
-            //RDF.stepengine.SetSPFFHeaderItem(model, 4, 0, RDF.stepengine.sdaiSTRING, "Peter Bonsma");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 4, 0, RDF.STEPEngine.sdaiSTRING, "Peter Bonsma");
 
             //  set Organization
-            //RDF.stepengine.SetSPFFHeaderItem(model, 5, 0, RDF.stepengine.sdaiSTRING, "RDF Ltd.");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 5, 0, RDF.STEPEngine.sdaiSTRING, "RDF Ltd.");
 
             //	set Preprocessor Version
-            RDF.stepengine.SetSPFFHeaderItem(model, 6, 0, RDF.stepengine.sdaiSTRING, GetLibraryIdentifier());                 //	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 6, 0, RDF.STEPEngine.sdaiSTRING, GetLibraryIdentifier());                 //	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
 
             //  set Originating System
-            //RDF.stepengine.SetSPFFHeaderItem(model, 7, 0, RDF.stepengine.sdaiSTRING, "Company - Application - 1.0.0.0");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 7, 0, RDF.STEPEngine.sdaiSTRING, "Company - Application - 1.0.0.0");
 
             //  set Authorization
-            RDF.stepengine.SetSPFFHeaderItem(model, 8, 0, RDF.stepengine.sdaiSTRING, "none");
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 8, 0, RDF.STEPEngine.sdaiSTRING, "none");
 
             //	set File Schema
-            RDF.stepengine.SetSPFFHeaderItem(model, 9, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetSchemaName(model));       //	'IFC4X3_ADD2'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 9, 0, RDF.STEPEngine.sdaiSTRING, RDF.STEPEngine.GetSchemaName(model));       //	'IFC4X3_ADD2'
 
             return model;
         }
@@ -555,21 +555,21 @@ namespace RDF
 		///	Attributes repository and fileName will be ignored, they are their because of backward compatibility.
 		///	A handle to the model will be returned, or 0 in case something went wrong.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateModelBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateModelBNUnicode")]
 		public static extern int_t sdaiCreateModelBNUnicode(int_t repository, string fileName, string schemaName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateModelBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateModelBNUnicode")]
 		public static extern int_t sdaiCreateModelBNUnicode(int_t repository, string fileName, byte[] schemaName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateModelBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateModelBNUnicode")]
 		public static extern int_t sdaiCreateModelBNUnicode(int_t repository, byte[] fileName, string schemaName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateModelBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateModelBNUnicode")]
 		public static extern int_t sdaiCreateModelBNUnicode(int_t repository, byte[] fileName, byte[] schemaName);
 
         public static int_t sdaiCreateModelBNUnicode(int_t repository, string schemaName)
         {
-            int_t model = RDF.stepengine.sdaiCreateModelBNUnicode(repository, string.Empty, schemaName);
+            int_t model = RDF.STEPEngine.sdaiCreateModelBNUnicode(repository, string.Empty, schemaName);
 
             //	HEADER;
             //	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
@@ -578,41 +578,41 @@ namespace RDF
             //	ENDSEC;
 
             //  set Description
-            //RDF.stepengine.SetSPFFHeaderItem(model, 0, 0, RDF.stepengine.sdaiSTRING, "ViewDefinition [ReferenceView]");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 0, 0, RDF.STEPEngine.sdaiSTRING, "ViewDefinition [ReferenceView]");
 
             //  set Implementation Level
-            RDF.stepengine.SetSPFFHeaderItem(model, 1, 0, RDF.stepengine.sdaiSTRING, "2;1");
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 1, 0, RDF.STEPEngine.sdaiSTRING, "2;1");
 
             //  set Name
-            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.stp");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 2, 0, RDF.STEPEngine.sdaiSTRING, "Header example.stp");
 
             //  set Time Stamp
-            RDF.stepengine.SetSPFFHeaderItem(model, 3, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetDateTime(model));         //	'2099-12-31T23:59:59'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 3, 0, RDF.STEPEngine.sdaiSTRING, RDF.STEPEngine.GetDateTime(model));         //	'2099-12-31T23:59:59'
 
             //  set Author
-            //RDF.stepengine.SetSPFFHeaderItem(model, 4, 0, RDF.stepengine.sdaiSTRING, "Peter Bonsma");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 4, 0, RDF.STEPEngine.sdaiSTRING, "Peter Bonsma");
 
             //  set Organization
-            //RDF.stepengine.SetSPFFHeaderItem(model, 5, 0, RDF.stepengine.sdaiSTRING, "RDF Ltd.");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 5, 0, RDF.STEPEngine.sdaiSTRING, "RDF Ltd.");
 
             //	set Preprocessor Version
-            RDF.stepengine.SetSPFFHeaderItem(model, 6, 0, RDF.stepengine.sdaiSTRING, GetLibraryIdentifier());                 //	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 6, 0, RDF.STEPEngine.sdaiSTRING, GetLibraryIdentifier());                 //	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
 
             //  set Originating System
-            //RDF.stepengine.SetSPFFHeaderItem(model, 7, 0, RDF.stepengine.sdaiSTRING, "Company - Application - 1.0.0.0");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 7, 0, RDF.STEPEngine.sdaiSTRING, "Company - Application - 1.0.0.0");
 
             //  set Authorization
-            RDF.stepengine.SetSPFFHeaderItem(model, 8, 0, RDF.stepengine.sdaiSTRING, "none");
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 8, 0, RDF.STEPEngine.sdaiSTRING, "none");
 
             //	set File Schema
-            RDF.stepengine.SetSPFFHeaderItem(model, 9, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetSchemaName(model));       //	'IFC4X3_ADD2'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 9, 0, RDF.STEPEngine.sdaiSTRING, RDF.STEPEngine.GetSchemaName(model));       //	'IFC4X3_ADD2'
 
             return model;
         }
 
         public static int_t sdaiCreateModelBNUnicode(int_t repository, byte[] schemaName)
         {
-            int_t model = RDF.stepengine.sdaiCreateModelBNUnicode(repository, string.Empty, schemaName);
+            int_t model = RDF.STEPEngine.sdaiCreateModelBNUnicode(repository, string.Empty, schemaName);
 
             //	HEADER;
             //	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
@@ -621,41 +621,41 @@ namespace RDF
             //	ENDSEC;
 
             //  set Description
-            //RDF.stepengine.SetSPFFHeaderItem(model, 0, 0, RDF.stepengine.sdaiSTRING, "ViewDefinition [ReferenceView]");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 0, 0, RDF.STEPEngine.sdaiSTRING, "ViewDefinition [ReferenceView]");
 
             //  set Implementation Level
-            RDF.stepengine.SetSPFFHeaderItem(model, 1, 0, RDF.stepengine.sdaiSTRING, "2;1");
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 1, 0, RDF.STEPEngine.sdaiSTRING, "2;1");
 
             //  set Name
-            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.stp");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 2, 0, RDF.STEPEngine.sdaiSTRING, "Header example.stp");
 
             //  set Time Stamp
-            RDF.stepengine.SetSPFFHeaderItem(model, 3, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetDateTime(model));         //	'2099-12-31T23:59:59'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 3, 0, RDF.STEPEngine.sdaiSTRING, RDF.STEPEngine.GetDateTime(model));         //	'2099-12-31T23:59:59'
 
             //  set Author
-            //RDF.stepengine.SetSPFFHeaderItem(model, 4, 0, RDF.stepengine.sdaiSTRING, "Peter Bonsma");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 4, 0, RDF.STEPEngine.sdaiSTRING, "Peter Bonsma");
 
             //  set Organization
-            //RDF.stepengine.SetSPFFHeaderItem(model, 5, 0, RDF.stepengine.sdaiSTRING, "RDF Ltd.");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 5, 0, RDF.STEPEngine.sdaiSTRING, "RDF Ltd.");
 
             //	set Preprocessor Version
-            RDF.stepengine.SetSPFFHeaderItem(model, 6, 0, RDF.stepengine.sdaiSTRING, GetLibraryIdentifier());                 //	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 6, 0, RDF.STEPEngine.sdaiSTRING, GetLibraryIdentifier());                 //	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
 
             //  set Originating System
-            //RDF.stepengine.SetSPFFHeaderItem(model, 7, 0, RDF.stepengine.sdaiSTRING, "Company - Application - 1.0.0.0");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 7, 0, RDF.STEPEngine.sdaiSTRING, "Company - Application - 1.0.0.0");
 
             //  set Authorization
-            RDF.stepengine.SetSPFFHeaderItem(model, 8, 0, RDF.stepengine.sdaiSTRING, "none");
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 8, 0, RDF.STEPEngine.sdaiSTRING, "none");
 
             //	set File Schema
-            RDF.stepengine.SetSPFFHeaderItem(model, 9, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetSchemaName(model));       //	'IFC4X3_ADD2'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 9, 0, RDF.STEPEngine.sdaiSTRING, RDF.STEPEngine.GetSchemaName(model));       //	'IFC4X3_ADD2'
 
             return model;
         }
 
         public static int_t sdaiCreateModelBNUnicode(string schemaName)
         {
-			int_t model = RDF.stepengine.sdaiCreateModelBNUnicode(0, string.Empty, schemaName);
+			int_t model = RDF.STEPEngine.sdaiCreateModelBNUnicode(0, string.Empty, schemaName);
 
             //	HEADER;
             //	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
@@ -664,41 +664,41 @@ namespace RDF
             //	ENDSEC;
 
             //  set Description
-            //RDF.stepengine.SetSPFFHeaderItem(model, 0, 0, RDF.stepengine.sdaiSTRING, "ViewDefinition [ReferenceView]");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 0, 0, RDF.STEPEngine.sdaiSTRING, "ViewDefinition [ReferenceView]");
 
             //  set Implementation Level
-            RDF.stepengine.SetSPFFHeaderItem(model, 1, 0, RDF.stepengine.sdaiSTRING, "2;1");
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 1, 0, RDF.STEPEngine.sdaiSTRING, "2;1");
 
             //  set Name
-			//RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.stp");
+			//RDF.STEPEngine.SetSPFFHeaderItem(model, 2, 0, RDF.STEPEngine.sdaiSTRING, "Header example.stp");
 
             //  set Time Stamp
-            RDF.stepengine.SetSPFFHeaderItem(model, 3, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetDateTime(model));         //	'2099-12-31T23:59:59'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 3, 0, RDF.STEPEngine.sdaiSTRING, RDF.STEPEngine.GetDateTime(model));         //	'2099-12-31T23:59:59'
 
             //  set Author
-			//RDF.stepengine.SetSPFFHeaderItem(model, 4, 0, RDF.stepengine.sdaiSTRING, "Peter Bonsma");
+			//RDF.STEPEngine.SetSPFFHeaderItem(model, 4, 0, RDF.STEPEngine.sdaiSTRING, "Peter Bonsma");
 
             //  set Organization
-			//RDF.stepengine.SetSPFFHeaderItem(model, 5, 0, RDF.stepengine.sdaiSTRING, "RDF Ltd.");
+			//RDF.STEPEngine.SetSPFFHeaderItem(model, 5, 0, RDF.STEPEngine.sdaiSTRING, "RDF Ltd.");
 
             //	set Preprocessor Version
-            RDF.stepengine.SetSPFFHeaderItem(model, 6, 0, RDF.stepengine.sdaiSTRING, GetLibraryIdentifier());					//	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 6, 0, RDF.STEPEngine.sdaiSTRING, GetLibraryIdentifier());					//	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
 
             //  set Originating System
-			//RDF.stepengine.SetSPFFHeaderItem(model, 7, 0, RDF.stepengine.sdaiSTRING, "Company - Application - 1.0.0.0");
+			//RDF.STEPEngine.SetSPFFHeaderItem(model, 7, 0, RDF.STEPEngine.sdaiSTRING, "Company - Application - 1.0.0.0");
 
             //  set Authorization
-            RDF.stepengine.SetSPFFHeaderItem(model, 8, 0, RDF.stepengine.sdaiSTRING, "none");
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 8, 0, RDF.STEPEngine.sdaiSTRING, "none");
 
             //	set File Schema
-            RDF.stepengine.SetSPFFHeaderItem(model, 9, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetSchemaName(model));       //	'IFC4X3_ADD2'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 9, 0, RDF.STEPEngine.sdaiSTRING, RDF.STEPEngine.GetSchemaName(model));       //	'IFC4X3_ADD2'
 
             return model;
         }
 
         public static int_t sdaiCreateModelBNUnicode(byte[] schemaName)
         {
-            int_t model = RDF.stepengine.sdaiCreateModelBNUnicode(0, string.Empty, schemaName);
+            int_t model = RDF.STEPEngine.sdaiCreateModelBNUnicode(0, string.Empty, schemaName);
 
             //	HEADER;
             //	FILE_DESCRIPTION(('ViewDefinition [ReferenceView]'), '2;1');
@@ -707,34 +707,34 @@ namespace RDF
             //	ENDSEC;
 
             //  set Description
-            //RDF.stepengine.SetSPFFHeaderItem(model, 0, 0, RDF.stepengine.sdaiSTRING, "ViewDefinition [ReferenceView]");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 0, 0, RDF.STEPEngine.sdaiSTRING, "ViewDefinition [ReferenceView]");
 
             //  set Implementation Level
-            RDF.stepengine.SetSPFFHeaderItem(model, 1, 0, RDF.stepengine.sdaiSTRING, "2;1");
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 1, 0, RDF.STEPEngine.sdaiSTRING, "2;1");
 
             //  set Name
-            //RDF.stepengine.SetSPFFHeaderItem(model, 2, 0, RDF.stepengine.sdaiSTRING, "Header example.stp");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 2, 0, RDF.STEPEngine.sdaiSTRING, "Header example.stp");
 
             //  set Time Stamp
-            RDF.stepengine.SetSPFFHeaderItem(model, 3, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetDateTime(model));         //	'2099-12-31T23:59:59'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 3, 0, RDF.STEPEngine.sdaiSTRING, RDF.STEPEngine.GetDateTime(model));         //	'2099-12-31T23:59:59'
 
             //  set Author
-            //RDF.stepengine.SetSPFFHeaderItem(model, 4, 0, RDF.stepengine.sdaiSTRING, "Peter Bonsma");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 4, 0, RDF.STEPEngine.sdaiSTRING, "Peter Bonsma");
 
             //  set Organization
-            //RDF.stepengine.SetSPFFHeaderItem(model, 5, 0, RDF.stepengine.sdaiSTRING, "RDF Ltd.");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 5, 0, RDF.STEPEngine.sdaiSTRING, "RDF Ltd.");
 
             //	set Preprocessor Version
-            RDF.stepengine.SetSPFFHeaderItem(model, 6, 0, RDF.stepengine.sdaiSTRING, GetLibraryIdentifier());                 //	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 6, 0, RDF.STEPEngine.sdaiSTRING, GetLibraryIdentifier());                 //	'IFC Engine Library, revision 9999, 2099-12-31T23:59:59'
 
             //  set Originating System
-            //RDF.stepengine.SetSPFFHeaderItem(model, 7, 0, RDF.stepengine.sdaiSTRING, "Company - Application - 1.0.0.0");
+            //RDF.STEPEngine.SetSPFFHeaderItem(model, 7, 0, RDF.STEPEngine.sdaiSTRING, "Company - Application - 1.0.0.0");
 
             //  set Authorization
-            RDF.stepengine.SetSPFFHeaderItem(model, 8, 0, RDF.stepengine.sdaiSTRING, "none");
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 8, 0, RDF.STEPEngine.sdaiSTRING, "none");
 
             //	set File Schema
-            RDF.stepengine.SetSPFFHeaderItem(model, 9, 0, RDF.stepengine.sdaiSTRING, RDF.stepengine.GetSchemaName(model));       //	'IFC4X3_ADD2'
+            RDF.STEPEngine.SetSPFFHeaderItem(model, 9, 0, RDF.STEPEngine.sdaiSTRING, RDF.STEPEngine.GetSchemaName(model));       //	'IFC4X3_ADD2'
 
             return model;
         }
@@ -746,16 +746,16 @@ namespace RDF
 		///	Attribute repository will be ignored, they are their because of backward compatibility.
 		///	A handle to the model will be returned, or 0 in case something went wrong.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiOpenModelBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiOpenModelBN")]
 		public static extern int_t sdaiOpenModelBN(int_t repository, string fileName, string schemaName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiOpenModelBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiOpenModelBN")]
 		public static extern int_t sdaiOpenModelBN(int_t repository, string fileName, byte[] schemaName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiOpenModelBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiOpenModelBN")]
 		public static extern int_t sdaiOpenModelBN(int_t repository, byte[] fileName, string schemaName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiOpenModelBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiOpenModelBN")]
 		public static extern int_t sdaiOpenModelBN(int_t repository, byte[] fileName, byte[] schemaName);
 
 		/// <summary>
@@ -765,16 +765,16 @@ namespace RDF
 		///	Attribute repository will be ignored, they are their because of backward compatibility.
 		///	A handle to the model will be returned, or 0 in case something went wrong.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiOpenModelBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiOpenModelBNUnicode")]
 		public static extern int_t sdaiOpenModelBNUnicode(int_t repository, string fileName, string schemaName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiOpenModelBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiOpenModelBNUnicode")]
 		public static extern int_t sdaiOpenModelBNUnicode(int_t repository, string fileName, byte[] schemaName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiOpenModelBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiOpenModelBNUnicode")]
 		public static extern int_t sdaiOpenModelBNUnicode(int_t repository, byte[] fileName, string schemaName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiOpenModelBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiOpenModelBNUnicode")]
 		public static extern int_t sdaiOpenModelBNUnicode(int_t repository, byte[] fileName, byte[] schemaName);
 
 		/// <summary>
@@ -784,10 +784,10 @@ namespace RDF
 		///	Attribute repository will be ignored, they are their because of backward compatibility.
 		///	A handle to the model will be returned, or 0 in case something went wrong.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiOpenModelByStream")]
+		[DllImport(stepenginedll, EntryPoint = "engiOpenModelByStream")]
 		public static extern int_t engiOpenModelByStream(int_t repository, [MarshalAs(UnmanagedType.FunctionPtr)] ReadCallBackFunction callback, string schemaName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiOpenModelByStream")]
+		[DllImport(stepenginedll, EntryPoint = "engiOpenModelByStream")]
 		public static extern int_t engiOpenModelByStream(int_t repository, [MarshalAs(UnmanagedType.FunctionPtr)] ReadCallBackFunction callback, byte[] schemaName);
 
 		/// <summary>
@@ -797,10 +797,10 @@ namespace RDF
 		///	Attribute repository will be ignored, they are their because of backward compatibility.
 		///	A handle to the model will be returned, or 0 in case something went wrong.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiOpenModelByArray")]
+		[DllImport(stepenginedll, EntryPoint = "engiOpenModelByArray")]
 		public static extern int_t engiOpenModelByArray(int_t repository, byte[] content, int_t size, string schemaName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiOpenModelByArray")]
+		[DllImport(stepenginedll, EntryPoint = "engiOpenModelByArray")]
 		public static extern int_t engiOpenModelByArray(int_t repository, byte[] content, int_t size, byte[] schemaName);
 
 		/// <summary>
@@ -808,10 +808,10 @@ namespace RDF
 		///
 		///	This function saves the model (char file name).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiSaveModelBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiSaveModelBN")]
 		public static extern void sdaiSaveModelBN(int_t model, string fileName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiSaveModelBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiSaveModelBN")]
 		public static extern void sdaiSaveModelBN(int_t model, byte[] fileName);
 
 		/// <summary>
@@ -819,10 +819,10 @@ namespace RDF
 		///
 		///	This function saves the model (wchar, i.e. Unicode file name).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiSaveModelBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiSaveModelBNUnicode")]
 		public static extern void sdaiSaveModelBNUnicode(int_t model, string fileName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiSaveModelBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiSaveModelBNUnicode")]
 		public static extern void sdaiSaveModelBNUnicode(int_t model, byte[] fileName);
 
 		/// <summary>
@@ -830,7 +830,7 @@ namespace RDF
 		///
 		///	This function saves the model as a stream.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiSaveModelByStream")]
+		[DllImport(stepenginedll, EntryPoint = "engiSaveModelByStream")]
 		public static extern void engiSaveModelByStream(int_t model, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, int_t size);
 
 		/// <summary>
@@ -838,7 +838,7 @@ namespace RDF
 		///
 		///	This function saves the model as an array.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiSaveModelByArray")]
+		[DllImport(stepenginedll, EntryPoint = "engiSaveModelByArray")]
 		public static extern void engiSaveModelByArray(int_t model, byte[] content, out int_t size);
 
 		/// <summary>
@@ -846,10 +846,10 @@ namespace RDF
 		///
 		///	This function saves the model as XML according to IFC2x3's way of XML serialization (char file name).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiSaveModelAsXmlBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiSaveModelAsXmlBN")]
 		public static extern void sdaiSaveModelAsXmlBN(int_t model, string fileName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiSaveModelAsXmlBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiSaveModelAsXmlBN")]
 		public static extern void sdaiSaveModelAsXmlBN(int_t model, byte[] fileName);
 
 		/// <summary>
@@ -857,10 +857,10 @@ namespace RDF
 		///
 		///	This function saves the model as XML according to IFC2x3's way of XML serialization (wchar, i.e. Unicode file name).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiSaveModelAsXmlBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiSaveModelAsXmlBNUnicode")]
 		public static extern void sdaiSaveModelAsXmlBNUnicode(int_t model, string fileName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiSaveModelAsXmlBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiSaveModelAsXmlBNUnicode")]
 		public static extern void sdaiSaveModelAsXmlBNUnicode(int_t model, byte[] fileName);
 
 		/// <summary>
@@ -868,10 +868,10 @@ namespace RDF
 		///
 		///	This function saves the model as XML according to IFC4's way of XML serialization (char file name).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiSaveModelAsSimpleXmlBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiSaveModelAsSimpleXmlBN")]
 		public static extern void sdaiSaveModelAsSimpleXmlBN(int_t model, string fileName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiSaveModelAsSimpleXmlBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiSaveModelAsSimpleXmlBN")]
 		public static extern void sdaiSaveModelAsSimpleXmlBN(int_t model, byte[] fileName);
 
 		/// <summary>
@@ -879,10 +879,10 @@ namespace RDF
 		///
 		///	This function saves the model as XML according to IFC4's way of XML serialization (wchar, i.e. Unicode file name).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiSaveModelAsSimpleXmlBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiSaveModelAsSimpleXmlBNUnicode")]
 		public static extern void sdaiSaveModelAsSimpleXmlBNUnicode(int_t model, string fileName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiSaveModelAsSimpleXmlBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiSaveModelAsSimpleXmlBNUnicode")]
 		public static extern void sdaiSaveModelAsSimpleXmlBNUnicode(int_t model, byte[] fileName);
 
 		/// <summary>
@@ -890,10 +890,10 @@ namespace RDF
 		///
 		///	This function saves the model as JSON according to IFC4's way of JSON serialization (char file name).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiSaveModelAsJsonBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiSaveModelAsJsonBN")]
 		public static extern void sdaiSaveModelAsJsonBN(int_t model, string fileName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiSaveModelAsJsonBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiSaveModelAsJsonBN")]
 		public static extern void sdaiSaveModelAsJsonBN(int_t model, byte[] fileName);
 
 		/// <summary>
@@ -901,10 +901,10 @@ namespace RDF
 		///
 		///	This function saves the model as JSON according to IFC4's way of JSON serialization (wchar, i.e. Unicode file name).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiSaveModelAsJsonBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiSaveModelAsJsonBNUnicode")]
 		public static extern void sdaiSaveModelAsJsonBNUnicode(int_t model, string fileName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiSaveModelAsJsonBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiSaveModelAsJsonBNUnicode")]
 		public static extern void sdaiSaveModelAsJsonBNUnicode(int_t model, byte[] fileName);
 
 		/// <summary>
@@ -912,10 +912,10 @@ namespace RDF
 		///
 		///	This function saves the schema.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiSaveSchemaBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiSaveSchemaBN")]
 		public static extern byte engiSaveSchemaBN(int_t model, string filePath);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiSaveSchemaBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiSaveSchemaBN")]
 		public static extern byte engiSaveSchemaBN(int_t model, byte[] filePath);
 
 		/// <summary>
@@ -923,10 +923,10 @@ namespace RDF
 		///
 		///	This function saves the schema (wchar, i.e. Unicode file name).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiSaveSchemaBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "engiSaveSchemaBNUnicode")]
 		public static extern byte engiSaveSchemaBNUnicode(int_t model, string filePath);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiSaveSchemaBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "engiSaveSchemaBNUnicode")]
 		public static extern byte engiSaveSchemaBNUnicode(int_t model, byte[] filePath);
 
 		/// <summary>
@@ -937,7 +937,7 @@ namespace RDF
 		///	be known in the kernel, however known to be disabled. Calls containing the model reference will be
 		///	protected from crashing when called.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCloseModel")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCloseModel")]
 		public static extern void sdaiCloseModel(int_t model);
 
 		/// <summary>
@@ -945,7 +945,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "setPrecisionDoubleExport")]
+		[DllImport(stepenginedll, EntryPoint = "setPrecisionDoubleExport")]
 		public static extern void setPrecisionDoubleExport(int_t model, int_t precisionCap, int_t precisionRound, [param: MarshalAs(UnmanagedType.U1)] bool clean);
 
         //
@@ -961,7 +961,7 @@ namespace RDF
 		///	The declaration can be ENTITY, TYPE ENUM, TYPE SELECT, or defined TYPE.
 		///	Use engiGetDeclarationFromIterator to access the further information.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetNextTypeDeclarationIterator")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetNextTypeDeclarationIterator")]
 		public static extern int_t engiGetNextTypeDeclarationIterator(int_t model, int_t iterator);
 
 		/// <summary>
@@ -972,7 +972,7 @@ namespace RDF
 		///	Use engiGetDeclarationType to access the further information.
 		///	Use engiGetNextTypeDeclarationIterator to iterate declarations.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetTypeDeclarationFromIterator")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetTypeDeclarationFromIterator")]
 		public static extern int_t engiGetTypeDeclarationFromIterator(int_t model, int_t iterator);
 
 		/// <summary>
@@ -983,7 +983,7 @@ namespace RDF
 		///	If prev is the last declaration it returns NULL.
 		///	Use engiGetDeclarationType to access the further information.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetSchemaScriptDeclarationByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetSchemaScriptDeclarationByIterator")]
 		public static extern int_t engiGetSchemaScriptDeclarationByIterator(int_t model, int_t prev);
 
 		/// <summary>
@@ -1000,7 +1000,7 @@ namespace RDF
 		///
 		///	Use engiGetTypeDeclarationFromIterator or engiGetSchemaScriptDeclarationByIterator to obtain declaration handle.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetDeclarationType")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetDeclarationType")]
 		public static extern enum_express_declaration engiGetDeclarationType(int_t declaration);
 
 		/// <summary>
@@ -1009,7 +1009,7 @@ namespace RDF
 		///	This call returns a name of the enumeration element with the given index (zero based).
 		///	It returns NULL if the index out of range.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEnumerationElement")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEnumerationElement")]
 		public static extern IntPtr engiGetEnumerationElement(int_t enumeration, int_t index);
 
 		/// <summary>
@@ -1018,7 +1018,7 @@ namespace RDF
 		///	This call returns a declaration handle of the select element with the given index (zero based).
 		///	It returns 0 if the index out of range.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetSelectElement")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetSelectElement")]
 		public static extern int_t engiGetSelectElement(int_t select, int_t index);
 
 		/// <summary>
@@ -1026,7 +1026,7 @@ namespace RDF
 		///
 		///	This call returns a simple type for defined type handle and can inquire referenced type, if any.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetDefinedType")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetDefinedType")]
 		public static extern enum_express_attr_type engiGetDefinedType(int_t definedType, out int_t referencedDeclaration, out int_t aggregationDefinition);
 
 		/// <summary>
@@ -1034,7 +1034,7 @@ namespace RDF
 		///
 		///	This call returns name and body text for entity local (where) rule, schema rule, function or procedure.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetScriptText")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetScriptText")]
 		public static extern void engiGetScriptText(int_t declaration, out IntPtr label, out IntPtr text);
 
         public static void engiGetScriptText(int_t declaration, out string label, out string text)
@@ -1054,16 +1054,16 @@ namespace RDF
 		///	This function can evaluate EXPRESS expression for entity where rule or derived attribute,
 		///	valueType, value and return type work similary to sdaiGetAttr.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiEvaluateScriptExpression")]
+		[DllImport(stepenginedll, EntryPoint = "engiEvaluateScriptExpression")]
 		public static extern int_t engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiEvaluateScriptExpression")]
+		[DllImport(stepenginedll, EntryPoint = "engiEvaluateScriptExpression")]
 		public static extern int_t engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, out int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiEvaluateScriptExpression")]
+		[DllImport(stepenginedll, EntryPoint = "engiEvaluateScriptExpression")]
 		public static extern int_t engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, out double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiEvaluateScriptExpression")]
+		[DllImport(stepenginedll, EntryPoint = "engiEvaluateScriptExpression")]
 		public static extern int_t engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, out IntPtr value);
 
 		public static int_t engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, out string value)
@@ -1087,10 +1087,10 @@ namespace RDF
 		///
 		///	This call retrieves a handle to an entity based on a given entity name.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetEntity")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetEntity")]
 		public static extern int_t sdaiGetEntity(int_t model, string entityName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetEntity")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetEntity")]
 		public static extern int_t sdaiGetEntity(int_t model, byte[] entityName);
 
 		/// <summary>
@@ -1098,7 +1098,7 @@ namespace RDF
 		///
 		///	This call retrieves a model based on a given entity handle.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityModel")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityModel")]
 		public static extern int_t engiGetEntityModel(int_t entity);
 
 		/// <summary>
@@ -1106,10 +1106,10 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrIndexBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrIndexBN")]
 		public static extern int_t engiGetAttrIndexBN(int_t entity, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrIndexBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrIndexBN")]
 		public static extern int_t engiGetAttrIndexBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
@@ -1117,10 +1117,10 @@ namespace RDF
 		///
 		///	..
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrIndexExBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrIndexExBN")]
 		public static extern int_t engiGetAttrIndexExBN(int_t entity, string attributeName, [param: MarshalAs(UnmanagedType.U1)] bool countedWithParents, [param: MarshalAs(UnmanagedType.U1)] bool countedWithInverse);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrIndexExBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrIndexExBN")]
 		public static extern int_t engiGetAttrIndexExBN(int_t entity, byte[] attributeName, [param: MarshalAs(UnmanagedType.U1)] bool countedWithParents, [param: MarshalAs(UnmanagedType.U1)] bool countedWithInverse);
 
 		/// <summary>
@@ -1128,7 +1128,7 @@ namespace RDF
 		///
 		///	This call can be used to retrieve the name of the n-th argument of the given entity. Arguments of parent entities are included in the index. Both explicit and inverse attributes are included.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrNameByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrNameByIndex")]
 		public static extern IntPtr engiGetAttrNameByIndex(int_t entity, int_t index, int_t valueType, out IntPtr attributeName);
 
 		public static string engiGetAttrNameByIndex(int_t entity, int_t index)
@@ -1144,7 +1144,7 @@ namespace RDF
 		///	This call can be used to retrieve the type of the n-th argument of the given entity. In case of a select argument no relevant information is given by this call as it depends on the instance.
 		///	Arguments of parent entities are included in the index. Both explicit and inverse attributes are included.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrTypeByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrTypeByIndex")]
 		public static extern void engiGetAttrTypeByIndex(int_t entity, int_t index, out int_t attributeType);
 
 		/// <summary>
@@ -1152,7 +1152,7 @@ namespace RDF
 		///
 		///	Returns the total number of entities within the loaded schema.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityCount")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityCount")]
 		public static extern int_t engiGetEntityCount(int_t model);
 
 		/// <summary>
@@ -1160,7 +1160,7 @@ namespace RDF
 		///
 		///	This call returns a specific entity based on an index, the index needs to be 0 or higher but lower then the number of entities in the loaded schema.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityElement")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityElement")]
 		public static extern int_t engiGetEntityElement(int_t model, int_t index);
 
 		/// <summary>
@@ -1168,7 +1168,7 @@ namespace RDF
 		///
 		///	This call retrieves an aggregation that contains all instances of the entity given.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetEntityExtent")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetEntityExtent")]
 		public static extern int_t sdaiGetEntityExtent(int_t model, int_t entity);
 
 		/// <summary>
@@ -1185,10 +1185,10 @@ namespace RDF
 		///					)
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetEntityExtentBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetEntityExtentBN")]
 		public static extern int_t sdaiGetEntityExtentBN(int_t model, string entityName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetEntityExtentBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetEntityExtentBN")]
 		public static extern int_t sdaiGetEntityExtentBN(int_t model, byte[] entityName);
 
 		/// <summary>
@@ -1196,7 +1196,7 @@ namespace RDF
 		///
 		///	This call can be used to get the name of the given entity.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityName")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityName")]
 		public static extern IntPtr engiGetEntityName(int_t entity, int_t valueType, out IntPtr entityName);
 
 		public static string engiGetEntityName(int_t entity)
@@ -1211,7 +1211,7 @@ namespace RDF
 		///
 		///	This call returns the number of arguments, this includes the arguments of its (nested) parents and inverse arguments.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityNoAttributes")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityNoAttributes")]
 		public static extern int_t engiGetEntityNoAttributes(int_t entity);
 
 		/// <summary>
@@ -1219,7 +1219,7 @@ namespace RDF
 		///
 		///	This call returns the number of attributes, inclusion of parents and inverse depends on includeParent and includeInverse values.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityNoAttributesEx")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityNoAttributesEx")]
 		public static extern int_t engiGetEntityNoAttributesEx(int_t entity, [param: MarshalAs(UnmanagedType.U1)] bool includeParent, [param: MarshalAs(UnmanagedType.U1)] bool includeInverse);
 
 		/// <summary>
@@ -1227,7 +1227,7 @@ namespace RDF
 		///
 		///	Returns the first parent entity, for example the parent of IfcObject is IfcObjectDefinition, of IfcObjectDefinition is IfcRoot and of IfcRoot is 0.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityParent")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityParent")]
 		public static extern int_t engiGetEntityParent(int_t entity);
 
 		/// <summary>
@@ -1235,7 +1235,7 @@ namespace RDF
 		///
 		///	Returns number of parent entities.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityNoParents")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityNoParents")]
 		public static extern int_t engiGetEntityNoParents(int_t entity);
 
 		/// <summary>
@@ -1243,7 +1243,7 @@ namespace RDF
 		///
 		///	Returns the N-th parent of entity or NULL if index exceeds number of parents.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityParentEx")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityParentEx")]
 		public static extern int_t engiGetEntityParentEx(int_t entity, int_t index);
 
 		/// <summary>
@@ -1251,7 +1251,7 @@ namespace RDF
 		///
 		///	This call can be used to check if an attribute is defined schema wise in the context of a certain entity.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrDerived")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrDerived")]
 		public static extern int_t engiGetAttrDerived(int_t entity, int_t attribute);
 
 		/// <summary>
@@ -1268,10 +1268,10 @@ namespace RDF
 		///					)
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrDerivedBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrDerivedBN")]
 		public static extern int_t engiGetAttrDerivedBN(int_t entity, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrDerivedBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrDerivedBN")]
 		public static extern int_t engiGetAttrDerivedBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
@@ -1279,7 +1279,7 @@ namespace RDF
 		///
 		///	This call can be used to check if an attribute is an inverse relation
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrInverse")]
+		[DllImport(stepenginedll, EntryPoint = "engiIsAttrInverse")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool engiIsAttrInverse(int_t attribute);
 
@@ -1296,11 +1296,11 @@ namespace RDF
 		///					)
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrInverseBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiIsAttrInverseBN")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool engiIsAttrInverseBN(int_t entity, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrInverseBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiIsAttrInverseBN")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool engiIsAttrInverseBN(int_t entity, byte[] attributeName);
 
@@ -1309,7 +1309,7 @@ namespace RDF
 		///
 		///	This call can be used to check if an attribute is optional.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrOptional")]
+		[DllImport(stepenginedll, EntryPoint = "engiIsAttrOptional")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool engiIsAttrOptional(int_t attribute);
 
@@ -1326,11 +1326,11 @@ namespace RDF
 		///					)
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrOptionalBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiIsAttrOptionalBN")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool engiIsAttrOptionalBN(int_t entity, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrOptionalBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiIsAttrOptionalBN")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool engiIsAttrOptionalBN(int_t entity, byte[] attributeName);
 
@@ -1339,7 +1339,7 @@ namespace RDF
 		///
 		///	This call can be used to get the domain of an attribute.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrDomainName")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrDomainName")]
 		public static extern IntPtr engiGetAttrDomainName(int_t attribute, out IntPtr domainName);
 
 		public static string engiGetAttrDomainName(int_t attribute)
@@ -1365,10 +1365,10 @@ namespace RDF
 		///				domainName
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrDomainNameBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrDomainNameBN")]
 		public static extern IntPtr engiGetAttrDomainNameBN(int_t entity, string attributeName, out IntPtr domainName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrDomainNameBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrDomainNameBN")]
 		public static extern IntPtr engiGetAttrDomainNameBN(int_t entity, byte[] attributeName, out IntPtr domainName);
 
 		public static string engiGetAttrDomainNameBN(int_t entity, string attributeName)
@@ -1390,7 +1390,7 @@ namespace RDF
 		///
 		///	This call can be used to check if an entity is abstract.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiIsEntityAbstract")]
+		[DllImport(stepenginedll, EntryPoint = "engiIsEntityAbstract")]
 		public static extern int_t engiIsEntityAbstract(int_t entity);
 
 		/// <summary>
@@ -1406,10 +1406,10 @@ namespace RDF
 		///					)
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiIsEntityAbstractBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiIsEntityAbstractBN")]
 		public static extern int_t engiIsEntityAbstractBN(int_t model, string entityName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiIsEntityAbstractBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiIsEntityAbstractBN")]
 		public static extern int_t engiIsEntityAbstractBN(int_t model, byte[] entityName);
 
 		/// <summary>
@@ -1417,7 +1417,7 @@ namespace RDF
 		///
 		///	Allows to retrieve enumeration values of an attribute by index.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEnumerationValue")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEnumerationValue")]
 		public static extern IntPtr engiGetEnumerationValue(int_t attribute, int_t index, int_t valueType, out IntPtr enumerationValue);
 
 		public static string engiGetEnumerationValue(int_t attribute, int_t index)
@@ -1436,7 +1436,7 @@ namespace RDF
 		///	Returns first attribute if prev is NULL.
 		///	Returns NULL when prev is the last attribute.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityAttributeByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityAttributeByIterator")]
 		public static extern int_t engiGetEntityAttributeByIterator(int_t entity, int_t prev);
 
 		/// <summary>
@@ -1444,7 +1444,7 @@ namespace RDF
 		///
 		///	Return attribute definition from attribute index.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityAttributeByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityAttributeByIndex")]
 		public static extern int_t engiGetEntityAttributeByIndex(int_t entity, int_t index, [param: MarshalAs(UnmanagedType.U1)] bool countedWithParents, [param: MarshalAs(UnmanagedType.U1)] bool countedWithInverse);
 
 		/// <summary>
@@ -1452,7 +1452,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAggregationDefinition")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAggregationDefinition")]
 		public static extern void engiGetAggregationDefinition(int_t aggregationDefinition, out enum_express_aggr aggregationType, out int_t cardinalityMin, out int_t cardinalityMax, [param: MarshalAs(UnmanagedType.U1)] out bool optional, [param: MarshalAs(UnmanagedType.U1)] out bool unique, out int_t nextAggregationLevel);
 
 		/// <summary>
@@ -1463,7 +1463,7 @@ namespace RDF
 		///	Returns first rule if prev is NULL.
 		///	Returns NULL when prev is the last rule.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityUniqueRuleByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityUniqueRuleByIterator")]
 		public static extern int_t engiGetEntityUniqueRuleByIterator(int_t entity, int_t prev, out IntPtr label);
 
 		public static int_t engiGetEntityUniqueRuleByIterator(int_t entity, int_t prev, out string label)
@@ -1483,10 +1483,10 @@ namespace RDF
 		///	Returns first attribute name if prev is NULL.
 		///	Returns NULL when prev is the name of the last attribute.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityUniqueRuleAttributeByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityUniqueRuleAttributeByIterator")]
 		public static extern IntPtr engiGetEntityUniqueRuleAttributeByIterator(int_t rule, string prev, out IntPtr domain);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityUniqueRuleAttributeByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityUniqueRuleAttributeByIterator")]
 		public static extern IntPtr engiGetEntityUniqueRuleAttributeByIterator(int_t rule, byte[] prev, out IntPtr domain);
 
 		public static string engiGetEntityUniqueRuleAttributeByIterator(int_t rule, string prev, out string domain)
@@ -1511,7 +1511,7 @@ namespace RDF
 		///	Returns NULL when prev is the last rule.
 		///	Use engiGetScriptText to get further information.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityWhereRuleByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityWhereRuleByIterator")]
 		public static extern int_t engiGetEntityWhereRuleByIterator(int_t declaration, int_t prev, out IntPtr label);
 
 		public static int_t engiGetEntityWhereRuleByIterator(int_t entity, int_t prev, out string label)
@@ -1533,7 +1533,7 @@ namespace RDF
 		///
 		///	This call can be used to get the used type within this ADB type.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetADBType")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetADBType")]
 		public static extern int_t sdaiGetADBType(int_t ADB);
 
 		/// <summary>
@@ -1541,7 +1541,7 @@ namespace RDF
 		///
 		///	This call can be used to get the path of an ADB type.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetADBTypePath")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetADBTypePath")]
 		public static extern IntPtr sdaiGetADBTypePath(int_t ADB, int_t typeNameNumber);
 
 		/// <summary>
@@ -1630,16 +1630,16 @@ namespace RDF
 		///	Note: sdaiGetAttr, stdaiGetAttrBN, engiGetElement will success with any model data, except non-set($)
 		///		  (Non-standard extensions) sdaiGetADBValue: sdaiADB is allowed and will success when sdaiGetADBTypePath is not NULL, returning ABD value has type path element removed.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetADBValue")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetADBValue")]
 		public static extern int_t sdaiGetADBValue(int_t ADB, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetADBValue")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetADBValue")]
 		public static extern int_t sdaiGetADBValue(int_t ADB, int_t valueType, out int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetADBValue")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetADBValue")]
 		public static extern int_t sdaiGetADBValue(int_t ADB, int_t valueType, out double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetADBValue")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetADBValue")]
 		public static extern int_t sdaiGetADBValue(int_t ADB, int_t valueType, out IntPtr value);
 
 		public static int_t sdaiGetADBValue(int_t ADB, int_t valueType, out string value)
@@ -1664,7 +1664,7 @@ namespace RDF
 		///
 		///	Creates an empty ADB (Attribute Data Block).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateEmptyADB")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateEmptyADB")]
 		public static extern int_t sdaiCreateEmptyADB();
 
 		/// <summary>
@@ -1672,7 +1672,7 @@ namespace RDF
 		///
 		///	Deletes an ADB (Attribute Data Block).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiDeleteADB")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiDeleteADB")]
 		public static extern void sdaiDeleteADB(int_t ADB);
 
 		/// <summary>
@@ -1761,16 +1761,16 @@ namespace RDF
 		///	Note: sdaiGetAttr, stdaiGetAttrBN, engiGetElement will success with any model data, except non-set($)
 		///		  (Non-standard extensions) sdaiGetADBValue: sdaiADB is allowed and will success when sdaiGetADBTypePath is not NULL, returning ABD value has type path element removed.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAggrByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAggrByIndex")]
 		public static extern int_t sdaiGetAggrByIndex(int_t aggregate, int_t index, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAggrByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAggrByIndex")]
 		public static extern int_t sdaiGetAggrByIndex(int_t aggregate, int_t index, int_t valueType, out int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAggrByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAggrByIndex")]
 		public static extern int_t sdaiGetAggrByIndex(int_t aggregate, int_t index, int_t valueType, out double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAggrByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAggrByIndex")]
 		public static extern int_t sdaiGetAggrByIndex(int_t aggregate, int_t index, int_t valueType, out IntPtr value);
 
 		public static int_t sdaiGetAggrByIndex(int_t aggregate, int_t index, int_t valueType, out string value)
@@ -1866,25 +1866,25 @@ namespace RDF
 		///	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAggrByIndex")]
 		public static extern void sdaiPutAggrByIndex(int_t aggregate, int_t index, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAggrByIndex")]
 		public static extern void sdaiPutAggrByIndex(int_t aggregate, int_t index, int_t valueType, ref int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAggrByIndex")]
 		public static extern void sdaiPutAggrByIndex(int_t aggregate, int_t index, int_t valueType, int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAggrByIndex")]
 		public static extern void sdaiPutAggrByIndex(int_t aggregate, int_t index, int_t valueType, ref double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAggrByIndex")]
 		public static extern void sdaiPutAggrByIndex(int_t aggregate, int_t index, int_t valueType, ref IntPtr value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAggrByIndex")]
 		public static extern void sdaiPutAggrByIndex(int_t aggregate, int_t index, int_t valueType, byte[] value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAggrByIndex")]
 		public static extern void sdaiPutAggrByIndex(int_t aggregate, int_t index, int_t valueType, string value);
 
 		/// <summary>
@@ -1892,7 +1892,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAggrType")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAggrType")]
 		public static extern void engiGetAggrType(int_t aggregate, out int_t aggregateType);
 
 		/// <summary>
@@ -1900,7 +1900,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAggrTypex")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAggrTypex")]
 		public static extern void engiGetAggrTypex(int_t aggregate, out int_t aggregateType);
 
 		/// <summary>
@@ -1989,16 +1989,16 @@ namespace RDF
 		///	Note: sdaiGetAttr, stdaiGetAttrBN, engiGetElement will success with any model data, except non-set($)
 		///		  (Non-standard extensions) sdaiGetADBValue: sdaiADB is allowed and will success when sdaiGetADBTypePath is not NULL, returning ABD value has type path element removed.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAttr")]
 		public static extern int_t sdaiGetAttr(int_t instance, int_t attribute, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAttr")]
 		public static extern int_t sdaiGetAttr(int_t instance, int_t attribute, int_t valueType, out int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAttr")]
 		public static extern int_t sdaiGetAttr(int_t instance, int_t attribute, int_t valueType, out double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAttr")]
 		public static extern int_t sdaiGetAttr(int_t instance, int_t attribute, int_t valueType, out IntPtr value);
 
 		public static int_t sdaiGetAttr(int_t instance, int_t attribute, int_t valueType, out string value)
@@ -2117,28 +2117,28 @@ namespace RDF
 		///				value
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAttrBN")]
 		public static extern int_t sdaiGetAttrBN(int_t instance, string attributeName, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAttrBN")]
 		public static extern int_t sdaiGetAttrBN(int_t instance, string attributeName, int_t valueType, out int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAttrBN")]
 		public static extern int_t sdaiGetAttrBN(int_t instance, string attributeName, int_t valueType, out double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAttrBN")]
 		public static extern int_t sdaiGetAttrBN(int_t instance, string attributeName, int_t valueType, out IntPtr value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAttrBN")]
 		public static extern int_t sdaiGetAttrBN(int_t instance, byte[] attributeName, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAttrBN")]
 		public static extern int_t sdaiGetAttrBN(int_t instance, byte[] attributeName, int_t valueType, out int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAttrBN")]
 		public static extern int_t sdaiGetAttrBN(int_t instance, byte[] attributeName, int_t valueType, out double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAttrBN")]
 		public static extern int_t sdaiGetAttrBN(int_t instance, byte[] attributeName, int_t valueType, out IntPtr value);
 
 		public static int_t sdaiGetAttrBN(int_t instance, string attrName, int_t valueType, out string value)
@@ -2163,10 +2163,10 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttrBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAttrBNUnicode")]
 		public static extern int_t sdaiGetAttrBNUnicode(int_t instance, string attributeName, byte[] buffer, int_t bufferLength);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttrBNUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAttrBNUnicode")]
 		public static extern int_t sdaiGetAttrBNUnicode(int_t instance, byte[] attributeName, byte[] buffer, int_t bufferLength);
 
 		/// <summary>
@@ -2191,10 +2191,10 @@ namespace RDF
 		///			);
 		///		return	rValue;
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetStringAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetStringAttrBN")]
 		public static extern IntPtr sdaiGetStringAttrBN(int_t instance, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetStringAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetStringAttrBN")]
 		public static extern IntPtr sdaiGetStringAttrBN(int_t instance, byte[] attributeName);
 
 		/// <summary>
@@ -2219,10 +2219,10 @@ namespace RDF
 		///			);
 		///		return	inst;
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetInstanceAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetInstanceAttrBN")]
 		public static extern int_t sdaiGetInstanceAttrBN(int_t instance, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetInstanceAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetInstanceAttrBN")]
 		public static extern int_t sdaiGetInstanceAttrBN(int_t instance, byte[] attributeName);
 
 		/// <summary>
@@ -2247,10 +2247,10 @@ namespace RDF
 		///			);
 		///		return	aggr;
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAggregationAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAggregationAttrBN")]
 		public static extern int_t sdaiGetAggregationAttrBN(int_t instance, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAggregationAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAggregationAttrBN")]
 		public static extern int_t sdaiGetAggregationAttrBN(int_t instance, byte[] attributeName);
 
 		/// <summary>
@@ -2258,10 +2258,10 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttrDefinition")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAttrDefinition")]
 		public static extern int_t sdaiGetAttrDefinition(int_t entity, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAttrDefinition")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAttrDefinition")]
 		public static extern int_t sdaiGetAttrDefinition(int_t entity, byte[] attributeName);
 
 		/// <summary>
@@ -2269,7 +2269,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrTraits")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrTraits")]
 		public static extern void engiGetAttrTraits(
 			int_t attribute, 
 			out IntPtr name, 
@@ -2293,7 +2293,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrName")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrName")]
         public static extern IntPtr engiGetAttrNamePtr(int_t attribute);
 
         public static string engiGetAttrName(int_t attribute)
@@ -2307,7 +2307,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrDefiningEntity")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrDefiningEntity")]
 		public static extern int_t engiGetAttrDefiningEntity(int_t attribute);
 
 		/// <summary>
@@ -2315,7 +2315,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrExplicit")]
+		[DllImport(stepenginedll, EntryPoint = "engiIsAttrExplicit")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool engiIsAttrExplicit(int_t attribute);
 
@@ -2324,11 +2324,11 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrExplicitBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiIsAttrExplicitBN")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool engiIsAttrExplicitBN(int_t entity, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiIsAttrExplicitBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiIsAttrExplicitBN")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool engiIsAttrExplicitBN(int_t entity, byte[] attributeName);
 
@@ -2337,7 +2337,7 @@ namespace RDF
 		///
 		///	Returns the model based on an instance.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetInstanceModel")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetInstanceModel")]
 		public static extern int_t sdaiGetInstanceModel(int_t instance);
 
 		/// <summary>
@@ -2345,7 +2345,7 @@ namespace RDF
 		///
 		///	Returns the entity based on an instance.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetInstanceType")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetInstanceType")]
 		public static extern int_t sdaiGetInstanceType(int_t instance);
 
 		/// <summary>
@@ -2353,7 +2353,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetMemberCount")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetMemberCount")]
 		public static extern int_t sdaiGetMemberCount(int_t aggregate);
 
 		/// <summary>
@@ -2361,7 +2361,7 @@ namespace RDF
 		///
 		///	This call checks if an instance is a type of a certain given entity.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsKindOf")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiIsKindOf")]
 		public static extern int_t sdaiIsKindOf(int_t instance, int_t entity);
 
 		/// <summary>
@@ -2381,10 +2381,10 @@ namespace RDF
 		///						entityName
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsKindOfBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiIsKindOfBN")]
 		public static extern int_t sdaiIsKindOfBN(int_t instance, string entityName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsKindOfBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiIsKindOfBN")]
 		public static extern int_t sdaiIsKindOfBN(int_t instance, byte[] entityName);
 
 		/// <summary>
@@ -2400,7 +2400,7 @@ namespace RDF
 		///
 		///	It works for explicit and inverse attributes
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrType")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrType")]
 		public static extern int_t engiGetAttrType(int_t attribute);
 
 		/// <summary>
@@ -2416,10 +2416,10 @@ namespace RDF
 		///					)
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrTypeBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrTypeBN")]
 		public static extern int_t engiGetAttrTypeBN(int_t entity, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrTypeBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrTypeBN")]
 		public static extern int_t engiGetAttrTypeBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
@@ -2429,7 +2429,7 @@ namespace RDF
 		///	It may be primitive type, sdaiAGGR or sdaiADB.
 		///	Returns 0 for $ and *.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetInstanceAttrType")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetInstanceAttrType")]
 		public static extern int_t engiGetInstanceAttrType(int_t instance, int_t attribute);
 
 		/// <summary>
@@ -2448,10 +2448,10 @@ namespace RDF
 		///					)
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetInstanceAttrTypeBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetInstanceAttrTypeBN")]
 		public static extern int_t engiGetInstanceAttrTypeBN(int_t instance, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetInstanceAttrTypeBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetInstanceAttrTypeBN")]
 		public static extern int_t engiGetInstanceAttrTypeBN(int_t instance, byte[] attributeName);
 
 		/// <summary>
@@ -2459,7 +2459,7 @@ namespace RDF
 		///
 		///	This call checks if an instance is an exact instance of a given entity.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsInstanceOf")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiIsInstanceOf")]
 		public static extern int_t sdaiIsInstanceOf(int_t instance, int_t entity);
 
 		/// <summary>
@@ -2480,10 +2480,10 @@ namespace RDF
 		///					)
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsInstanceOfBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiIsInstanceOfBN")]
 		public static extern int_t sdaiIsInstanceOfBN(int_t instance, string entityName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsInstanceOfBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiIsInstanceOfBN")]
 		public static extern int_t sdaiIsInstanceOfBN(int_t instance, byte[] entityName);
 
 		/// <summary>
@@ -2491,7 +2491,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsEqual")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiIsEqual")]
 		public static extern byte sdaiIsEqual(int_t instanceI, int_t instanceII);
 
 		/// <summary>
@@ -2499,7 +2499,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiValidateAttribute")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiValidateAttribute")]
 		public static extern int_t sdaiValidateAttribute(int_t instance, int_t attribute);
 
 		/// <summary>
@@ -2516,10 +2516,10 @@ namespace RDF
 		///					)
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiValidateAttributeBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiValidateAttributeBN")]
 		public static extern int_t sdaiValidateAttributeBN(int_t instance, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiValidateAttributeBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiValidateAttributeBN")]
 		public static extern int_t sdaiValidateAttributeBN(int_t instance, byte[] attributeName);
 
 		/// <summary>
@@ -2527,7 +2527,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetInstanceClassInfo")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetInstanceClassInfo")]
 		public static extern IntPtr engiGetInstanceClassInfo(int_t instance);
 
 		/// <summary>
@@ -2535,7 +2535,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetInstanceClassInfoUC")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetInstanceClassInfoUC")]
 		public static extern IntPtr engiGetInstanceClassInfoUC(int_t instance);
 
 		/// <summary>
@@ -2543,7 +2543,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetInstanceMetaInfo")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetInstanceMetaInfo")]
 		public static extern int_t engiGetInstanceMetaInfo(int_t instance, out int_t localId, out IntPtr entityName, out IntPtr entityNameUC);
 
 		/// <summary>
@@ -2551,7 +2551,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiFindInstanceUsers")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiFindInstanceUsers")]
 		public static extern int_t sdaiFindInstanceUsers(int_t instance, int_t domain, int_t resultList);
 
 		/// <summary>
@@ -2559,10 +2559,10 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiFindInstanceUsedInBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiFindInstanceUsedInBN")]
 		public static extern int_t sdaiFindInstanceUsedInBN(int_t instance, string roleName, int_t domain, int_t resultList);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiFindInstanceUsedInBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiFindInstanceUsedInBN")]
 		public static extern int_t sdaiFindInstanceUsedInBN(int_t instance, byte[] roleName, int_t domain, int_t resultList);
 
         //
@@ -2645,22 +2645,22 @@ namespace RDF
 		///	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPrepend")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPrepend")]
 		public static extern void sdaiPrepend(int_t aggregate, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPrepend")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPrepend")]
 		public static extern void sdaiPrepend(int_t aggregate, int_t valueType, ref int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPrepend")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPrepend")]
 		public static extern void sdaiPrepend(int_t aggregate, int_t valueType, int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPrepend")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPrepend")]
 		public static extern void sdaiPrepend(int_t aggregate, int_t valueType, ref double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPrepend")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPrepend")]
 		public static extern void sdaiPrepend(int_t aggregate, int_t valueType, ref IntPtr value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPrepend")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPrepend")]
 		public static extern void sdaiPrepend(int_t aggregate, int_t valueType, byte[] value);
 
 		public static void sdaiPrepend(int_t aggregate, int_t valueType, string value)
@@ -2752,22 +2752,22 @@ namespace RDF
 		///	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiAppend")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiAppend")]
 		public static extern void sdaiAppend(int_t aggregate, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiAppend")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiAppend")]
 		public static extern void sdaiAppend(int_t aggregate, int_t valueType, ref int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiAppend")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiAppend")]
 		public static extern void sdaiAppend(int_t aggregate, int_t valueType, int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiAppend")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiAppend")]
 		public static extern void sdaiAppend(int_t aggregate, int_t valueType, ref double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiAppend")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiAppend")]
 		public static extern void sdaiAppend(int_t aggregate, int_t valueType, ref IntPtr value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiAppend")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiAppend")]
 		public static extern void sdaiAppend(int_t aggregate, int_t valueType, byte[] value);
 
 		public static void sdaiAppend(int_t aggregate, int_t valueType, string value)
@@ -2859,22 +2859,22 @@ namespace RDF
 		///	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiAdd")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiAdd")]
 		public static extern void sdaiAdd(int_t aggregate, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiAdd")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiAdd")]
 		public static extern void sdaiAdd(int_t aggregate, int_t valueType, ref int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiAdd")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiAdd")]
 		public static extern void sdaiAdd(int_t aggregate, int_t valueType, int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiAdd")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiAdd")]
 		public static extern void sdaiAdd(int_t aggregate, int_t valueType, ref double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiAdd")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiAdd")]
 		public static extern void sdaiAdd(int_t aggregate, int_t valueType, ref IntPtr value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiAdd")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiAdd")]
 		public static extern void sdaiAdd(int_t aggregate, int_t valueType, byte[] value);
 
 		public static void sdaiAdd(int_t aggregate, int_t valueType, string value)
@@ -2966,22 +2966,22 @@ namespace RDF
 		///	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertByIndex")]
 		public static extern void sdaiInsertByIndex(int_t aggregate, int_t index, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertByIndex")]
 		public static extern void sdaiInsertByIndex(int_t aggregate, int_t index, int_t valueType, ref int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertByIndex")]
 		public static extern void sdaiInsertByIndex(int_t aggregate, int_t index, int_t valueType, int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertByIndex")]
 		public static extern void sdaiInsertByIndex(int_t aggregate, int_t index, int_t valueType, ref double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertByIndex")]
 		public static extern void sdaiInsertByIndex(int_t aggregate, int_t index, int_t valueType, ref IntPtr value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertByIndex")]
 		public static extern void sdaiInsertByIndex(int_t aggregate, int_t index, int_t valueType, byte[] value);
 
 		public static void sdaiInsertByIndex(int_t aggregate, int_t index, int_t valueType, string value)
@@ -3073,25 +3073,25 @@ namespace RDF
 		///	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertBefore")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertBefore")]
 		public static extern void sdaiInsertBefore(int_t iterator, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertBefore")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertBefore")]
 		public static extern void sdaiInsertBefore(int_t iterator, int_t valueType, ref int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertBefore")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertBefore")]
 		public static extern void sdaiInsertBefore(int_t iterator, int_t valueType, int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertBefore")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertBefore")]
 		public static extern void sdaiInsertBefore(int_t iterator, int_t valueType, ref double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertBefore")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertBefore")]
 		public static extern void sdaiInsertBefore(int_t iterator, int_t valueType, ref IntPtr value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertBefore")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertBefore")]
 		public static extern void sdaiInsertBefore(int_t iterator, int_t valueType, byte[] value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertBefore")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertBefore")]
 		public static extern void sdaiInsertBefore(int_t iterator, int_t valueType, string value);
 
 		/// <summary>
@@ -3170,25 +3170,25 @@ namespace RDF
 		///	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertAfter")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertAfter")]
 		public static extern void sdaiInsertAfter(int_t iterator, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertAfter")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertAfter")]
 		public static extern void sdaiInsertAfter(int_t iterator, int_t valueType, ref int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertAfter")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertAfter")]
 		public static extern void sdaiInsertAfter(int_t iterator, int_t valueType, int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertAfter")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertAfter")]
 		public static extern void sdaiInsertAfter(int_t iterator, int_t valueType, ref double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertAfter")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertAfter")]
 		public static extern void sdaiInsertAfter(int_t iterator, int_t valueType, ref IntPtr value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertAfter")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertAfter")]
 		public static extern void sdaiInsertAfter(int_t iterator, int_t valueType, byte[] value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertAfter")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertAfter")]
 		public static extern void sdaiInsertAfter(int_t iterator, int_t valueType, string value);
 
 		/// <summary>
@@ -3262,22 +3262,22 @@ namespace RDF
 		///	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateADB")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateADB")]
 		public static extern int_t sdaiCreateADB(int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateADB")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateADB")]
 		public static extern int_t sdaiCreateADB(int_t valueType, ref int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateADB")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateADB")]
 		public static extern int_t sdaiCreateADB(int_t valueType, int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateADB")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateADB")]
 		public static extern int_t sdaiCreateADB(int_t valueType, ref double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateADB")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateADB")]
 		public static extern int_t sdaiCreateADB(int_t valueType, ref IntPtr value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateADB")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateADB")]
 		public static extern int_t sdaiCreateADB(int_t valueType, byte[] value);
 
 		public static int_t sdaiCreateADB(int_t valueType, string value)
@@ -3302,7 +3302,7 @@ namespace RDF
 		///	the attribute argument can be empty (0) in case the aggregation is an nested aggregation for this specific instance,
 		///	preferred use would be use of sdaiCreateNestedAggr in such a case.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateAggr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateAggr")]
 		public static extern int_t sdaiCreateAggr(int_t instance, int_t attribute);
 
 		/// <summary>
@@ -3329,10 +3329,10 @@ namespace RDF
 		///					nullptr
 		///				);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateAggrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateAggrBN")]
 		public static extern int_t sdaiCreateAggrBN(int_t instance, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateAggrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateAggrBN")]
 		public static extern int_t sdaiCreateAggrBN(int_t instance, byte[] attributeName);
 
 		/// <summary>
@@ -3340,7 +3340,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateNPL")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateNPL")]
 		public static extern int_t sdaiCreateNPL();
 
 		/// <summary>
@@ -3348,7 +3348,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiDeleteNPL")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiDeleteNPL")]
 		public static extern void sdaiDeleteNPL(int_t list);
 
 		/// <summary>
@@ -3356,7 +3356,7 @@ namespace RDF
 		///
 		///	This call creates an aggregation within an aggregation.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateNestedAggr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateNestedAggr")]
 		public static extern int_t sdaiCreateNestedAggr(int_t aggregate);
 
 		/// <summary>
@@ -3365,7 +3365,7 @@ namespace RDF
 		///	The function creates an aggregate instance and replaces the existing member of the specified ordered aggregate instance
 		///	referenced by the specified index.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateNestedAggrByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateNestedAggrByIndex")]
 		public static extern int_t sdaiCreateNestedAggrByIndex(int_t aggregate, int_t index);
 
 		/// <summary>
@@ -3374,7 +3374,7 @@ namespace RDF
 		///	The function creates an aggregate instance as a member of the specified ordered aggregate instance.
 		///	The newly created aggregate is inserted into the aggregate at the position referenced by the specified index.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertNestedAggrByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertNestedAggrByIndex")]
 		public static extern int_t sdaiInsertNestedAggrByIndex(int_t aggregate, int_t index);
 
 		/// <summary>
@@ -3383,7 +3383,7 @@ namespace RDF
 		///	The function creates an aggregate instance replacing the current member of the aggregate instance
 		///	referenced by the specified iterator.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateNestedAggrByItr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateNestedAggrByItr")]
 		public static extern int_t sdaiCreateNestedAggrByItr(int_t iterator);
 
 		/// <summary>
@@ -3392,7 +3392,7 @@ namespace RDF
 		///	The function creates an aggregate instance as a member of a list instance.
 		///	The newly created aggregate is inserted into the list instance before the member referenced by the specified iterator.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertNestedAggrBefore")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertNestedAggrBefore")]
 		public static extern int_t sdaiInsertNestedAggrBefore(int_t iterator);
 
 		/// <summary>
@@ -3401,7 +3401,7 @@ namespace RDF
 		///	The function creates an aggregate instance as a member of a list instance.
 		///	The newly created aggregate is inserted into the list instance after the member referenced by the specified iterator.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertNestedAggrAfter")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertNestedAggrAfter")]
 		public static extern int_t sdaiInsertNestedAggrAfter(int_t iterator);
 
 		/// <summary>
@@ -3413,7 +3413,7 @@ namespace RDF
 		///	Input ADB is expected to have type path.
 		///	The function sets the value of the ADB with the identifier of the newly created aggregate instance.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateNestedAggrADB")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateNestedAggrADB")]
 		public static extern int_t sdaiCreateNestedAggrADB(int_t aggregate, int_t selaggrInstance);
 
 		/// <summary>
@@ -3424,7 +3424,7 @@ namespace RDF
 		///	Input ADB is expected to have type path.
 		///	The function sets the value of the ADB with the identifier of the newly created aggregate instance.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateNestedAggrByIndexADB")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateNestedAggrByIndexADB")]
 		public static extern int_t sdaiCreateNestedAggrByIndexADB(int_t aggregate, int_t index, int_t selaggrInstance);
 
 		/// <summary>
@@ -3435,7 +3435,7 @@ namespace RDF
 		///	Input ADB is expected to have type path.
 		///	The function sets the value of the ADB with the identifier of the newly created aggregate instance.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertNestedAggrByIndexADB")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertNestedAggrByIndexADB")]
 		public static extern int_t sdaiInsertNestedAggrByIndexADB(int_t aggregate, int_t index, int_t selaggrInstance);
 
 		/// <summary>
@@ -3446,7 +3446,7 @@ namespace RDF
 		///	Input ADB is expected to have type path.
 		///	The function sets the value of the ADB with the identifier of the newly created aggregate instance.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateNestedAggrByItrADB")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateNestedAggrByItrADB")]
 		public static extern int_t sdaiCreateNestedAggrByItrADB(int_t iterator, int_t selaggrInstance);
 
 		/// <summary>
@@ -3457,7 +3457,7 @@ namespace RDF
 		///	Input ADB is expected to have type path.
 		///	The function sets the value of the ADB with the identifier of the newly created aggregate instance.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertNestedAggrBeforeADB")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertNestedAggrBeforeADB")]
 		public static extern int_t sdaiInsertNestedAggrBeforeADB(int_t iterator, int_t selaggrInstance);
 
 		/// <summary>
@@ -3468,7 +3468,7 @@ namespace RDF
 		///	Input ADB is expected to have type path.
 		///	The function sets the value of the ADB with the identifier of the newly created aggregate instance.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiInsertNestedAggrAfterADB")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiInsertNestedAggrAfterADB")]
 		public static extern int_t sdaiInsertNestedAggrAfterADB(int_t iterator, int_t selaggrInstance);
 
 		/// <summary>
@@ -3476,7 +3476,7 @@ namespace RDF
 		///
 		///	The function removes the member of the specified list referenced by the specified index.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiRemoveByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiRemoveByIndex")]
 		public static extern void sdaiRemoveByIndex(int_t aggregate, int_t index);
 
 		/// <summary>
@@ -3485,7 +3485,7 @@ namespace RDF
 		///	The function removes the current member of an aggregate instance, that is not an array, referenced by the specified iterator.
 		///	After executing the function, the iterator position set as if the sdaiNext function had been invoked before the member was removed.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiRemoveByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiRemoveByIterator")]
 		public static extern void sdaiRemoveByIterator(int_t iterator);
 
 		/// <summary>
@@ -3560,25 +3560,25 @@ namespace RDF
 		///	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiRemove")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiRemove")]
 		public static extern void sdaiRemove(int_t aggregate, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiRemove")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiRemove")]
 		public static extern void sdaiRemove(int_t aggregate, int_t valueType, ref int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiRemove")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiRemove")]
 		public static extern void sdaiRemove(int_t aggregate, int_t valueType, int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiRemove")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiRemove")]
 		public static extern void sdaiRemove(int_t aggregate, int_t valueType, ref double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiRemove")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiRemove")]
 		public static extern void sdaiRemove(int_t aggregate, int_t valueType, ref IntPtr value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiRemove")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiRemove")]
 		public static extern void sdaiRemove(int_t aggregate, int_t valueType, byte[] value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiRemove")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiRemove")]
 		public static extern void sdaiRemove(int_t aggregate, int_t valueType, string value);
 
 		/// <summary>
@@ -3586,7 +3586,7 @@ namespace RDF
 		///
 		///	The function tests whether the member of the specified array referenced by the specified index position has a value.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiTestArrayByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiTestArrayByIndex")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool sdaiTestArrayByIndex(int_t aggregate, int_t index);
 
@@ -3595,7 +3595,7 @@ namespace RDF
 		///
 		///	The function tests whether the member of the specified array referenced by the specified index position has a value.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiTestArrayByItr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiTestArrayByItr")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool sdaiTestArrayByItr(int_t iterator);
 
@@ -3604,7 +3604,7 @@ namespace RDF
 		///
 		///	This call creates an instance of the given entity.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateInstance")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateInstance")]
 		public static extern int_t sdaiCreateInstance(int_t model, int_t entity);
 
 		/// <summary>
@@ -3621,10 +3621,10 @@ namespace RDF
 		///					)
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateInstanceBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateInstanceBN")]
 		public static extern int_t sdaiCreateInstanceBN(int_t model, string entityName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateInstanceBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateInstanceBN")]
 		public static extern int_t sdaiCreateInstanceBN(int_t model, byte[] entityName);
 
 		/// <summary>
@@ -3632,7 +3632,7 @@ namespace RDF
 		///
 		///	This call will delete an existing instance.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiDeleteInstance")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiDeleteInstance")]
 		public static extern void sdaiDeleteInstance(int_t instance);
 
 		/// <summary>
@@ -3640,10 +3640,10 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutADBTypePath")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutADBTypePath")]
 		public static extern void sdaiPutADBTypePath(int_t ADB, int_t pathCount, string path);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutADBTypePath")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutADBTypePath")]
 		public static extern void sdaiPutADBTypePath(int_t ADB, int_t pathCount, byte[] path);
 
 		/// <summary>
@@ -3722,22 +3722,22 @@ namespace RDF
 		///	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttr")]
 		public static extern void sdaiPutAttr(int_t instance, int_t attribute, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttr")]
 		public static extern void sdaiPutAttr(int_t instance, int_t attribute, int_t valueType, ref int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttr")]
 		public static extern void sdaiPutAttr(int_t instance, int_t attribute, int_t valueType, int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttr")]
 		public static extern void sdaiPutAttr(int_t instance, int_t attribute, int_t valueType, ref double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttr")]
 		public static extern void sdaiPutAttr(int_t instance, int_t attribute, int_t valueType, ref IntPtr value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttr")]
 		public static extern void sdaiPutAttr(int_t instance, int_t attribute, int_t valueType, byte[] value);
 
 		public static void sdaiPutAttr(int_t instance, int_t attribute, int_t valueType, string value)
@@ -3842,22 +3842,22 @@ namespace RDF
 		///				value
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, string attributeName, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, string attributeName, int_t valueType, ref int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, string attributeName, int_t valueType, int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, string attributeName, int_t valueType, ref double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, string attributeName, int_t valueType, ref IntPtr value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, string attributeName, int_t valueType, byte[] value);
 
 		public static void sdaiPutAttrBN(int_t instance, string attributeName, int_t valueType, string value)
@@ -3873,25 +3873,25 @@ namespace RDF
 			}
 		}
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, byte[] attributeName, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, byte[] attributeName, int_t valueType, ref int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, byte[] attributeName, int_t valueType, int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, byte[] attributeName, int_t valueType, ref double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, byte[] attributeName, int_t valueType, ref IntPtr value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, byte[] attributeName, int_t valueType, byte[] value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, byte[] attributeName, int_t valueType, string value);
 
 		/// <summary>
@@ -3899,7 +3899,7 @@ namespace RDF
 		///
 		///	This call removes all data from a specific attribute for the given instance.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiUnsetAttr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiUnsetAttr")]
 		public static extern void sdaiUnsetAttr(int_t instance, int_t attribute);
 
 		/// <summary>
@@ -3918,10 +3918,10 @@ namespace RDF
 		///					)
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiUnsetAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiUnsetAttrBN")]
 		public static extern void sdaiUnsetAttrBN(int_t instance, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiUnsetAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiUnsetAttrBN")]
 		public static extern void sdaiUnsetAttrBN(int_t instance, byte[] attributeName);
 
 		/// <summary>
@@ -3929,10 +3929,10 @@ namespace RDF
 		///
 		///	This call can be used to add a comment to an instance when exporting the content. The comment is available in the exported/saved IFC file.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiSetComment")]
+		[DllImport(stepenginedll, EntryPoint = "engiSetComment")]
 		public static extern void engiSetComment(int_t instance, string comment);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiSetComment")]
+		[DllImport(stepenginedll, EntryPoint = "engiSetComment")]
 		public static extern void engiSetComment(int_t instance, byte[] comment);
 
 		/// <summary>
@@ -3940,7 +3940,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetInstanceLocalId")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetInstanceLocalId")]
 		public static extern Int64 engiGetInstanceLocalId(int_t instance);
 
 		/// <summary>
@@ -3948,7 +3948,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiTestAttr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiTestAttr")]
 		public static extern int_t sdaiTestAttr(int_t instance, int_t attribute);
 
 		/// <summary>
@@ -3962,10 +3962,10 @@ namespace RDF
 		///				attributeName
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiTestAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiTestAttrBN")]
 		public static extern int_t sdaiTestAttrBN(int_t instance, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiTestAttrBN")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiTestAttrBN")]
 		public static extern int_t sdaiTestAttrBN(int_t instance, byte[] attributeName);
 
 		/// <summary>
@@ -3973,7 +3973,7 @@ namespace RDF
 		///
 		///	This call creates an instance at a specific given express ID, the instance is only created if the express ID was not used yet.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateInstanceEI")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateInstanceEI")]
 		public static extern int_t sdaiCreateInstanceEI(int_t model, int_t entity, Int64 expressID);
 
 		/// <summary>
@@ -3981,10 +3981,10 @@ namespace RDF
 		///
 		///	This call creates an instance at a specific given express ID, the instance is only created if the express ID was not used yet.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateInstanceBNEI")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateInstanceBNEI")]
 		public static extern int_t sdaiCreateInstanceBNEI(int_t model, string entityName, Int64 expressID);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateInstanceBNEI")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateInstanceBNEI")]
 		public static extern int_t sdaiCreateInstanceBNEI(int_t model, byte[] entityName, Int64 expressID);
 
 		/// <summary>
@@ -3994,7 +3994,7 @@ namespace RDF
 		///	The iterator is positioned as if the sdaiBeginning function had been executed such that so that no
 		///	member of the aggregate is referenced as the current member.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiCreateIterator")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiCreateIterator")]
 		public static extern int_t sdaiCreateIterator(int_t aggregate);
 
 		/// <summary>
@@ -4002,7 +4002,7 @@ namespace RDF
 		///
 		///	This function deletes the specified iterator.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiDeleteIterator")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiDeleteIterator")]
 		public static extern void sdaiDeleteIterator(int_t iterator);
 
 		/// <summary>
@@ -4010,7 +4010,7 @@ namespace RDF
 		///
 		///	The function positions the iterator at the beginning of its associated aggregate instance such that there is no current member.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiBeginning")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiBeginning")]
 		public static extern void sdaiBeginning(int_t iterator);
 
 		/// <summary>
@@ -4018,7 +4018,7 @@ namespace RDF
 		///
 		///	This function positions the iterator to the succeeding member of the associated aggregate instance.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiNext")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiNext")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool sdaiNext(int_t iterator);
 
@@ -4031,7 +4031,7 @@ namespace RDF
 		///	If the iterator is at the beginning of the aggregate no repositioning occur.
 		///	If the iterator references the first member of the aggregate, the iterator is set at the beginning so there is no current member.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPrevious")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPrevious")]
 		public static extern int_t sdaiPrevious(int_t iterator);
 
 		/// <summary>
@@ -4039,7 +4039,7 @@ namespace RDF
 		///
 		///	This function positions the specified iterator at the end of the ordered aggregate instance members such that there is no current member.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiEnd")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiEnd")]
 		public static extern void sdaiEnd(int_t iterator);
 
 		/// <summary>
@@ -4116,31 +4116,31 @@ namespace RDF
 		///	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsMember")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiIsMember")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsMember")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiIsMember")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, ref int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsMember")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiIsMember")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsMember")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiIsMember")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, ref double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsMember")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiIsMember")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, ref IntPtr value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsMember")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiIsMember")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, byte[] value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiIsMember")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiIsMember")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, string value);
 
@@ -4150,7 +4150,7 @@ namespace RDF
 		///	The function returns the current value of the real precision, the string width, or the binary width
 		///	for the current member referenced by the specified iterator.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAggrElementBoundByItr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAggrElementBoundByItr")]
 		public static extern int_t sdaiGetAggrElementBoundByItr(int_t iterator);
 
 		/// <summary>
@@ -4159,7 +4159,7 @@ namespace RDF
 		///	The function returns the current value of the real precision, the string width, or the binary width 
 		///	of the aggregate element at the specified index position in the specified ordered aggregate instance.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAggrElementBoundByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAggrElementBoundByIndex")]
 		public static extern int_t sdaiGetAggrElementBoundByIndex(int_t aggregate, int_t index);
 
 		/// <summary>
@@ -4167,7 +4167,7 @@ namespace RDF
 		///
 		///	The function returns the current value of the lower bound, or index, of the specified aggregate instance.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetLowerBound")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetLowerBound")]
 		public static extern int_t sdaiGetLowerBound(int_t aggregate);
 
 		/// <summary>
@@ -4175,7 +4175,7 @@ namespace RDF
 		///
 		///	The function returns the current value of the upper bound, or index, of the specified aggregate instance.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetUpperBound")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetUpperBound")]
 		public static extern int_t sdaiGetUpperBound(int_t aggregate);
 
 		/// <summary>
@@ -4183,7 +4183,7 @@ namespace RDF
 		///
 		///	The function returns the value of the lower index of the specified array instance when it was created.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetLowerIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetLowerIndex")]
 		public static extern int_t sdaiGetLowerIndex(int_t aggregate);
 
 		/// <summary>
@@ -4191,7 +4191,7 @@ namespace RDF
 		///
 		///	The function returns the value of the upper index of the specified array instance when it was created.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetUpperIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetUpperIndex")]
 		public static extern int_t sdaiGetUpperIndex(int_t aggregate);
 
 		/// <summary>
@@ -4200,7 +4200,7 @@ namespace RDF
 		///	The function restores the unset (not assigned a value) status of the member
 		///	of the specified array at the specified index position.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiUnsetArrayByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiUnsetArrayByIndex")]
 		public static extern void sdaiUnsetArrayByIndex(int_t array, int_t index);
 
 		/// <summary>
@@ -4209,7 +4209,7 @@ namespace RDF
 		///	The function restores the unset (not assigned a value) status of a member at the
 		///	position identified by the iterator in the array associated with the iterator.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiUnsetArrayByItr")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiUnsetArrayByItr")]
 		public static extern void sdaiUnsetArrayByItr(int_t iterator);
 
 		/// <summary>
@@ -4218,7 +4218,7 @@ namespace RDF
 		///	The function resizes the specified array instance setting the lower, or upper index,
 		///	or both, based upon the current population of the application schema.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiReindexArray")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiReindexArray")]
 		public static extern void sdaiReindexArray(int_t array);
 
 		/// <summary>
@@ -4227,7 +4227,7 @@ namespace RDF
 		///	The function shall resizes the specified array instance setting the lower and upper
 		///	index with the specified values.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiResetArrayIndex")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiResetArrayIndex")]
 		public static extern void sdaiResetArrayIndex(int_t array, int_t lower, int_t upper);
 
 		/// <summary>
@@ -4235,7 +4235,7 @@ namespace RDF
 		///
 		///	The function returns next part of complex instance or NULL.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetComplexInstanceNextPart")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetComplexInstanceNextPart")]
 		public static extern int_t engiGetComplexInstanceNextPart(int_t instance);
 
 		/// <summary>
@@ -4244,7 +4244,7 @@ namespace RDF
 		///	The function enables calculation of derived attributes for sdaiGetAttr(BN) and other get value functions and dynamic aggregation indexes.
 		///	Returns success flag.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiEnableDerivedAttributes")]
+		[DllImport(stepenginedll, EntryPoint = "engiEnableDerivedAttributes")]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool engiEnableDerivedAttributes(int_t model, [param: MarshalAs(UnmanagedType.U1)] bool enable);
 
@@ -4253,7 +4253,7 @@ namespace RDF
 		///
 		///	The function evaluates and replaces all * with values, optionally can handle $ values as derived attributes.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiEvaluateAllDerivedAttributes")]
+		[DllImport(stepenginedll, EntryPoint = "engiEvaluateAllDerivedAttributes")]
 		public static extern void engiEvaluateAllDerivedAttributes(int_t model, [param: MarshalAs(UnmanagedType.U1)] bool includeNullValues);
 
 		/// <summary>
@@ -4268,7 +4268,7 @@ namespace RDF
 		///	For example a slightly curved wall with large size will get much more precise segmentation as the segmentLength
 		///	will force the segmentation for the wall to increase.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "setSegmentation")]
+		[DllImport(stepenginedll, EntryPoint = "setSegmentation")]
 		public static extern void setSegmentation(int_t model, int_t segmentationParts, double segmentationLength);
 
 		/// <summary>
@@ -4280,7 +4280,7 @@ namespace RDF
 		///		segmentationParts  = 36
 		///		segmentationLength = 0.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getSegmentation")]
+		[DllImport(stepenginedll, EntryPoint = "getSegmentation")]
 		public static extern void getSegmentation(int_t model, out int_t segmentationParts, out double segmentationLength);
 
 		/// <summary>
@@ -4288,7 +4288,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "setEpsilon")]
+		[DllImport(stepenginedll, EntryPoint = "setEpsilon")]
 		public static extern void setEpsilon(int_t model, int_t mask, double absoluteEpsilon, double relativeEpsilon);
 
 		/// <summary>
@@ -4296,7 +4296,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getEpsilon")]
+		[DllImport(stepenginedll, EntryPoint = "getEpsilon")]
 		public static extern int_t getEpsilon(int_t model, int_t mask, out double absoluteEpsilon, out double relativeEpsilon);
 
         //
@@ -4313,7 +4313,7 @@ namespace RDF
 		///		getSegmentation(model, nullptr, &segmentationLength);
 		///		setSegmentation(model, circles, segmentationLength);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "circleSegments")]
+		[DllImport(stepenginedll, EntryPoint = "circleSegments")]
 		public static extern void circleSegments(int_t circles, int_t smallCircles);
 
 		/// <summary>
@@ -4326,7 +4326,7 @@ namespace RDF
 		///		getSegmentation(model, &segmentationParts, nullptr);
 		///		setSegmentation(model, segmentationParts, length);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "setMaximumSegmentationLength")]
+		[DllImport(stepenginedll, EntryPoint = "setMaximumSegmentationLength")]
 		public static extern void setMaximumSegmentationLength(int_t model, double length);
 
 		/// <summary>
@@ -4334,10 +4334,10 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getProjectUnitConversionFactor")]
+		[DllImport(stepenginedll, EntryPoint = "getProjectUnitConversionFactor")]
 		public static extern double getProjectUnitConversionFactor(int_t model, string unitType, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "getProjectUnitConversionFactor")]
+		[DllImport(stepenginedll, EntryPoint = "getProjectUnitConversionFactor")]
 		public static extern double getProjectUnitConversionFactor(int_t model, byte[] unitType, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName);
 
 		/// <summary>
@@ -4345,7 +4345,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getUnitInstanceConversionFactor")]
+		[DllImport(stepenginedll, EntryPoint = "getUnitInstanceConversionFactor")]
 		public static extern double getUnitInstanceConversionFactor(int_t unitInstance, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName);
 
 		/// <summary>
@@ -4378,7 +4378,7 @@ namespace RDF
 		///			if 0 this setting is applied to BoundaryRepresentation based geometries
 		///			if larger than 0 it is applied to all BoundaryRepresentation based geometries with vertices size smaller or equal to the given number
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "setBRepProperties")]
+		[DllImport(stepenginedll, EntryPoint = "setBRepProperties")]
 		public static extern void setBRepProperties(int_t model, Int64 consistencyCheck, double fraction, double epsilon, int_t maxVerticesSize);
 
 		/// <summary>
@@ -4391,7 +4391,7 @@ namespace RDF
 		///		3	cached and non-cached geometry tree structures
 		///		4	clean memory allocated within a session for ADB structures and string values (including enumerations requested as wide char).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "cleanMemory")]
+		[DllImport(stepenginedll, EntryPoint = "cleanMemory")]
 		public static extern void cleanMemory(int_t model, int_t mode);
 
 		/// <summary>
@@ -4399,7 +4399,7 @@ namespace RDF
 		///
 		///	Returns the line STEP / Express ID of an instance
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "internalGetP21Line")]
+		[DllImport(stepenginedll, EntryPoint = "internalGetP21Line")]
 		public static extern Int64 internalGetP21Line(int_t instance);
 
 		/// <summary>
@@ -4407,7 +4407,7 @@ namespace RDF
 		///
 		///	Returns an instance based on the model and STEP / Express ID (even when the instance itself might be non-existant).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "internalForceInstanceFromP21Line")]
+		[DllImport(stepenginedll, EntryPoint = "internalForceInstanceFromP21Line")]
 		public static extern int_t internalForceInstanceFromP21Line(int_t model, Int64 P21Line);
 
 		/// <summary>
@@ -4415,7 +4415,7 @@ namespace RDF
 		///
 		///	Returns an instance based on the model and STEP / Express ID
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "internalGetInstanceFromP21Line")]
+		[DllImport(stepenginedll, EntryPoint = "internalGetInstanceFromP21Line")]
 		public static extern int_t internalGetInstanceFromP21Line(int_t model, Int64 P21Line);
 
 		/// <summary>
@@ -4423,7 +4423,7 @@ namespace RDF
 		///
 		///	In case an XML file is loaded the XML ID values are kept in memory and can be retrieved through this API call.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "internalGetXMLID")]
+		[DllImport(stepenginedll, EntryPoint = "internalGetXMLID")]
 		public static extern IntPtr internalGetXMLID(int_t instance, out IntPtr XMLID);
 
 		public static string internalGetXMLID(int_t instance)
@@ -4442,7 +4442,7 @@ namespace RDF
 		///		2 - char16_t*
 		///		4 - char32_t*
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "setStringUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "setStringUnicode")]
 		public static extern int_t setStringUnicode(int_t unicode);
 
 		/// <summary>
@@ -4450,7 +4450,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getStringUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "getStringUnicode")]
 		public static extern int_t getStringUnicode();
 
 		/// <summary>
@@ -4460,7 +4460,7 @@ namespace RDF
 		///	if model is NULL it will set codepage for models, created after the call or for contexts when model is not known
 		///	returns 1 when successful of 0 when fails.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiSetStringEncoding")]
+		[DllImport(stepenginedll, EntryPoint = "engiSetStringEncoding")]
 		public static extern int_t engiSetStringEncoding(int_t model, byte encoding);
 
 		/// <summary>
@@ -4468,7 +4468,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "setFilter")]
+		[DllImport(stepenginedll, EntryPoint = "setFilter")]
 		public static extern void setFilter(int_t model, int_t setting, int_t mask);
 
 		/// <summary>
@@ -4476,7 +4476,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getFilter")]
+		[DllImport(stepenginedll, EntryPoint = "getFilter")]
 		public static extern int_t getFilter(int_t model, int_t mask);
 
         //
@@ -4488,7 +4488,7 @@ namespace RDF
 		///
 		///	Model input parameter is irrelevant, but is required for backwards compatibility.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "xxxxGetEntityAndSubTypesExtent")]
+		[DllImport(stepenginedll, EntryPoint = "xxxxGetEntityAndSubTypesExtent")]
 		public static extern int_t xxxxGetEntityAndSubTypesExtent(int_t model, int_t entity);
 
 		/// <summary>
@@ -4503,10 +4503,10 @@ namespace RDF
 		///					)
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "xxxxGetEntityAndSubTypesExtentBN")]
+		[DllImport(stepenginedll, EntryPoint = "xxxxGetEntityAndSubTypesExtentBN")]
 		public static extern int_t xxxxGetEntityAndSubTypesExtentBN(int_t model, string entityName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "xxxxGetEntityAndSubTypesExtentBN")]
+		[DllImport(stepenginedll, EntryPoint = "xxxxGetEntityAndSubTypesExtentBN")]
 		public static extern int_t xxxxGetEntityAndSubTypesExtentBN(int_t model, byte[] entityName);
 
 		/// <summary>
@@ -4514,7 +4514,7 @@ namespace RDF
 		///
 		///	This call returns an aggregation containing all instances.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "xxxxGetAllInstances")]
+		[DllImport(stepenginedll, EntryPoint = "xxxxGetAllInstances")]
 		public static extern int_t xxxxGetAllInstances(int_t model);
 
 		/// <summary>
@@ -4524,7 +4524,7 @@ namespace RDF
 		///
 		///	note: this is independent from if there are inverse relations defining such an aggregation or parts of it.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "xxxxGetInstancesUsing")]
+		[DllImport(stepenginedll, EntryPoint = "xxxxGetInstancesUsing")]
 		public static extern int_t xxxxGetInstancesUsing(int_t instance);
 
 		/// <summary>
@@ -4532,7 +4532,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "xxxxDeleteFromAggregation")]
+		[DllImport(stepenginedll, EntryPoint = "xxxxDeleteFromAggregation")]
 		public static extern int_t xxxxDeleteFromAggregation(int_t instance, int_t aggregate, int_t elementIndex);
 
 		/// <summary>
@@ -4540,7 +4540,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "xxxxGetAttrDefinitionByValue")]
+		[DllImport(stepenginedll, EntryPoint = "xxxxGetAttrDefinitionByValue")]
 		public static extern int_t xxxxGetAttrDefinitionByValue(int_t instance, out IntPtr value);
 
 		/// <summary>
@@ -4548,7 +4548,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "xxxxGetAttrNameByIndex")]
+		[DllImport(stepenginedll, EntryPoint = "xxxxGetAttrNameByIndex")]
 		public static extern IntPtr xxxxGetAttrNameByIndex(int_t instance, int_t index, out IntPtr name);
 
 		public static string xxxxGetAttrNameByIndex(int_t instance, int_t index)
@@ -4564,7 +4564,7 @@ namespace RDF
 		///	This function iterates over all available instances loaded in memory, it is the fastest way to find all instances.
 		///	Argument entity and entityName are both optional and if non-zero are filled with respectively the entity handle and entity name as char array.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "iterateOverInstances")]
+		[DllImport(stepenginedll, EntryPoint = "iterateOverInstances")]
 		public static extern int_t iterateOverInstances(int_t model, int_t instance, out int_t entity, out IntPtr entityName);
 
 		/// <summary>
@@ -4573,7 +4573,7 @@ namespace RDF
 		///	This function iterated over all available attributes of a specific given entity.
 		///	This call is typically used in combination with iterateOverInstances(..).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "iterateOverProperties")]
+		[DllImport(stepenginedll, EntryPoint = "iterateOverProperties")]
 		public static extern int_t iterateOverProperties(int_t entity, int_t index);
 
 		/// <summary>
@@ -4662,16 +4662,16 @@ namespace RDF
 		///	Note: sdaiGetAttr, stdaiGetAttrBN, engiGetElement will success with any model data, except non-set($)
 		///		  (Non-standard extensions) sdaiGetADBValue: sdaiADB is allowed and will success when sdaiGetADBTypePath is not NULL, returning ABD value has type path element removed.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAggrByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAggrByIterator")]
 		public static extern int_t sdaiGetAggrByIterator(int_t iterator, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAggrByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAggrByIterator")]
 		public static extern int_t sdaiGetAggrByIterator(int_t iterator, int_t valueType, out int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAggrByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAggrByIterator")]
 		public static extern int_t sdaiGetAggrByIterator(int_t iterator, int_t valueType, out double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetAggrByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetAggrByIterator")]
 		public static extern int_t sdaiGetAggrByIterator(int_t iterator, int_t valueType, out IntPtr value);
 
 		public static int_t sdaiGetAggrByIterator(int_t iterator, int_t valueType, out string value)
@@ -4767,22 +4767,22 @@ namespace RDF
 		///	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAggrByIterator")]
 		public static extern void sdaiPutAggrByIterator(int_t iterator, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] ref bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAggrByIterator")]
 		public static extern void sdaiPutAggrByIterator(int_t iterator, int_t valueType, ref int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAggrByIterator")]
 		public static extern void sdaiPutAggrByIterator(int_t iterator, int_t valueType, int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAggrByIterator")]
 		public static extern void sdaiPutAggrByIterator(int_t iterator, int_t valueType, ref double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAggrByIterator")]
 		public static extern void sdaiPutAggrByIterator(int_t iterator, int_t valueType, ref IntPtr value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiPutAggrByIterator")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiPutAggrByIterator")]
 		public static extern void sdaiPutAggrByIterator(int_t iterator, int_t valueType, byte[] value);
 
 
@@ -4804,10 +4804,10 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "internalSetLink")]
+		[DllImport(stepenginedll, EntryPoint = "internalSetLink")]
 		public static extern void internalSetLink(int_t instance, string attributeName, int_t linked_id);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "internalSetLink")]
+		[DllImport(stepenginedll, EntryPoint = "internalSetLink")]
 		public static extern void internalSetLink(int_t instance, byte[] attributeName, int_t linked_id);
 
 		/// <summary>
@@ -4815,7 +4815,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "internalAddAggrLink")]
+		[DllImport(stepenginedll, EntryPoint = "internalAddAggrLink")]
 		public static extern void internalAddAggrLink(int_t aggregate, int_t linked_id);
 
 		/// <summary>
@@ -4823,7 +4823,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetNotReferedAggr")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetNotReferedAggr")]
 		public static extern void engiGetNotReferedAggr(int_t model, out int_t value);
 
 		/// <summary>
@@ -4831,7 +4831,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttributeAggr")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttributeAggr")]
 		public static extern void engiGetAttributeAggr(int_t instance, out int_t value);
 
 		/// <summary>
@@ -4839,16 +4839,16 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAggrUnknownElement")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAggrUnknownElement")]
 		public static extern void engiGetAggrUnknownElement(int_t aggregate, int_t elementIndex, out int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAggrUnknownElement")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAggrUnknownElement")]
 		public static extern void engiGetAggrUnknownElement(int_t aggregate, int_t elementIndex, out int_t valueType, out int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAggrUnknownElement")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAggrUnknownElement")]
 		public static extern void engiGetAggrUnknownElement(int_t aggregate, int_t elementIndex, out int_t valueType, out double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAggrUnknownElement")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAggrUnknownElement")]
 		public static extern void engiGetAggrUnknownElement(int_t aggregate, int_t elementIndex, out int_t valueType, out IntPtr value);
 
 //		public static void engiGetAggrUnknownElement(int_t aggregate, int_t elementIndex, out int_t valueType, out string value)
@@ -4873,7 +4873,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiErrorQuery")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiErrorQuery")]
 		public static extern int_t sdaiErrorQuery();
 
         //
@@ -4889,7 +4889,7 @@ namespace RDF
 		///		  within the Geometry Kernel. All Geometry Kernel calls can be called with the STEP model handle also,
 		///		  however most correct would be to get and use the Geometry Kernel handle.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "owlGetModel")]
+		[DllImport(stepenginedll, EntryPoint = "owlGetModel")]
 		public static extern void owlGetModel(int_t model, out Int64 owlModel);
 
 		/// <summary>
@@ -4901,7 +4901,7 @@ namespace RDF
 		///		  within the Geometry Kernel. All Geometry Kernel calls can be called with the STEP instance handle also,
 		///		  however most correct would be to get and use the Geometry Kernel handle.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "owlGetInstance")]
+		[DllImport(stepenginedll, EntryPoint = "owlGetInstance")]
 		public static extern void owlGetInstance(int_t model, int_t instance, out Int64 owlInstance);
 
 		/// <summary>
@@ -4909,7 +4909,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "owlMaterialInstance")]
+		[DllImport(stepenginedll, EntryPoint = "owlMaterialInstance")]
 		public static extern void owlMaterialInstance(int_t instanceBase, int_t instanceContext, out Int64 owlInstance);
 
 		/// <summary>
@@ -4922,7 +4922,7 @@ namespace RDF
 		///		  within the Geometry Kernel. All Geometry Kernel calls can be called with the STEP instance handle also,
 		///		  however most correct would be to get and use the Geometry Kernel handle.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "owlBuildInstance")]
+		[DllImport(stepenginedll, EntryPoint = "owlBuildInstance")]
 		public static extern void owlBuildInstance(int_t model, int_t instance, out Int64 owlInstance);
 
 		/// <summary>
@@ -4935,7 +4935,7 @@ namespace RDF
 		///		  within the Geometry Kernel. All Geometry Kernel calls can be called with the STEP instance handle also,
 		///		  however most correct would be to get and use the Geometry Kernel handle.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "owlBuildInstanceInContext")]
+		[DllImport(stepenginedll, EntryPoint = "owlBuildInstanceInContext")]
 		public static extern void owlBuildInstanceInContext(int_t instanceBase, int_t instanceContext, out Int64 owlInstance);
 
 		/// <summary>
@@ -4943,7 +4943,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiInstanceUsesSegmentation")]
+		[DllImport(stepenginedll, EntryPoint = "engiInstanceUsesSegmentation")]
 		public static extern byte engiInstanceUsesSegmentation(int_t instance);
 
 		/// <summary>
@@ -4951,7 +4951,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "owlBuildInstances")]
+		[DllImport(stepenginedll, EntryPoint = "owlBuildInstances")]
 		public static extern void owlBuildInstances(int_t model, int_t instance, out Int64 owlInstanceComplete, out Int64 owlInstanceSolids, out Int64 owlInstanceVoids);
 
 		/// <summary>
@@ -4959,7 +4959,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "owlGetMappedItem")]
+		[DllImport(stepenginedll, EntryPoint = "owlGetMappedItem")]
 		public static extern void owlGetMappedItem(int_t model, int_t instance, out Int64 owlInstance, out double transformationMatrix);
 
 		/// <summary>
@@ -4967,7 +4967,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getInstanceDerivedPropertiesInModelling")]
+		[DllImport(stepenginedll, EntryPoint = "getInstanceDerivedPropertiesInModelling")]
 		public static extern int_t getInstanceDerivedPropertiesInModelling(int_t model, int_t instance, out double height, out double width, out double thickness);
 
 		/// <summary>
@@ -4975,7 +4975,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getInstanceDerivedBoundingBox")]
+		[DllImport(stepenginedll, EntryPoint = "getInstanceDerivedBoundingBox")]
 		public static extern int_t getInstanceDerivedBoundingBox(int_t model, int_t instance, out double Ox, out double Oy, out double Oz, out double Vx, out double Vy, out double Vz);
 
 		/// <summary>
@@ -4983,7 +4983,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getInstanceTransformationMatrix")]
+		[DllImport(stepenginedll, EntryPoint = "getInstanceTransformationMatrix")]
 		public static extern int_t getInstanceTransformationMatrix(int_t model, int_t instance, out double _11, out double _12, out double _13, out double _14, out double _21, out double _22, out double _23, out double _24, out double _31, out double _32, out double _33, out double _34, out double _41, out double _42, out double _43, out double _44);
 
 		/// <summary>
@@ -4991,7 +4991,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getInstanceDerivedTransformationMatrix")]
+		[DllImport(stepenginedll, EntryPoint = "getInstanceDerivedTransformationMatrix")]
 		public static extern int_t getInstanceDerivedTransformationMatrix(int_t model, int_t instance, out double _11, out double _12, out double _13, out double _14, out double _21, out double _22, out double _23, out double _24, out double _31, out double _32, out double _33, out double _34, out double _41, out double _42, out double _43, out double _44);
 
 		/// <summary>
@@ -4999,7 +4999,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "internalGetBoundingBox")]
+		[DllImport(stepenginedll, EntryPoint = "internalGetBoundingBox")]
 		public static extern int_t internalGetBoundingBox(int_t model, int_t instance);
 
 		/// <summary>
@@ -5007,7 +5007,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "internalGetCenter")]
+		[DllImport(stepenginedll, EntryPoint = "internalGetCenter")]
 		public static extern int_t internalGetCenter(int_t model, int_t instance);
 
 		/// <summary>
@@ -5015,7 +5015,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getRootAxis2Placement")]
+		[DllImport(stepenginedll, EntryPoint = "getRootAxis2Placement")]
 		public static extern int_t getRootAxis2Placement(int_t model, [param: MarshalAs(UnmanagedType.U1)] bool exclusiveIfHasGeometry);
 
 		/// <summary>
@@ -5025,10 +5025,10 @@ namespace RDF
 		///	This is all done semantically, i.e. it can be seen as a derived call representing a small SDAI function adjust (in case of set) the
 		///	origin of a model. 
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getGlobalPlacement")]
+		[DllImport(stepenginedll, EntryPoint = "getGlobalPlacement")]
 		public static extern int_t getGlobalPlacement(int_t model, out double origin);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "getGlobalPlacement")]
+		[DllImport(stepenginedll, EntryPoint = "getGlobalPlacement")]
 		public static extern int_t getGlobalPlacement(int_t model, [Out] double[] origin);
 
 		/// <summary>
@@ -5037,10 +5037,10 @@ namespace RDF
 		///	The call setGlobalPlacement allows you to adjust the placement of a model.
 		///	This is all done semantically, i.e. it can be seen as a derived call representing a small SDAI function adjust the origin of a model. 
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "setGlobalPlacement")]
+		[DllImport(stepenginedll, EntryPoint = "setGlobalPlacement")]
 		public static extern int_t setGlobalPlacement(int_t model, ref double origin, [param: MarshalAs(UnmanagedType.U1)] bool includeRotation);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "setGlobalPlacement")]
+		[DllImport(stepenginedll, EntryPoint = "setGlobalPlacement")]
 		public static extern int_t setGlobalPlacement(int_t model, double[] origin, [param: MarshalAs(UnmanagedType.U1)] bool includeRotation);
 
 		/// <summary>
@@ -5048,7 +5048,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getTimeStamp")]
+		[DllImport(stepenginedll, EntryPoint = "getTimeStamp")]
 		public static extern int_t getTimeStamp(int_t model);
 
 		/// <summary>
@@ -5056,7 +5056,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "setInstanceReference")]
+		[DllImport(stepenginedll, EntryPoint = "setInstanceReference")]
 		public static extern int_t setInstanceReference(int_t instance, int_t value);
 
 		/// <summary>
@@ -5064,7 +5064,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getInstanceReference")]
+		[DllImport(stepenginedll, EntryPoint = "getInstanceReference")]
 		public static extern int_t getInstanceReference(int_t instance);
 
 		/// <summary>
@@ -5080,7 +5080,7 @@ namespace RDF
 		///		IfcLinearPlacement => in case CartesianPosition is empty the internally calculated matrix will be
 		///							  represented as an IfcAxis2Placement
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "inferenceInstance")]
+		[DllImport(stepenginedll, EntryPoint = "inferenceInstance")]
 		public static extern int_t inferenceInstance(int_t instance);
 
 		/// <summary>
@@ -5088,7 +5088,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiValidateSchemaInstance")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiValidateSchemaInstance")]
 		public static extern int_t sdaiValidateSchemaInstance(int_t instance);
 
         //
@@ -5100,10 +5100,10 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiGetAttrIndexBN(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityAttributeIndex")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityAttributeIndex")]
 		public static extern int_t engiGetEntityAttributeIndex(int_t entity, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityAttributeIndex")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityAttributeIndex")]
 		public static extern int_t engiGetEntityAttributeIndex(int_t entity, byte[] attributeName);
 
 		/// <summary>
@@ -5111,10 +5111,10 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiGetAttrIndexExBN(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityAttributeIndexEx")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityAttributeIndexEx")]
 		public static extern int_t engiGetEntityAttributeIndexEx(int_t entity, string attributeName, [param: MarshalAs(UnmanagedType.U1)] bool countedWithParents, [param: MarshalAs(UnmanagedType.U1)] bool countedWithInverse);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityAttributeIndexEx")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityAttributeIndexEx")]
 		public static extern int_t engiGetEntityAttributeIndexEx(int_t entity, byte[] attributeName, [param: MarshalAs(UnmanagedType.U1)] bool countedWithParents, [param: MarshalAs(UnmanagedType.U1)] bool countedWithInverse);
 
 		/// <summary>
@@ -5122,7 +5122,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiGetAttrNameByIndex(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityArgumentName")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityArgumentName")]
 		public static extern IntPtr engiGetEntityArgumentName(int_t entity, int_t index, int_t valueType, out IntPtr attributeName);
 
 		/// <summary>
@@ -5130,7 +5130,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiGetAttrTypeByIndex(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityArgumentType")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityArgumentType")]
 		public static extern void engiGetEntityArgumentType(int_t entity, int_t index, out int_t attributeType);
 
 		/// <summary>
@@ -5138,7 +5138,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiIsAttrOptional(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrOptional")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrOptional")]
 		public static extern int_t engiGetAttrOptional(int_t attribute);
 
 		/// <summary>
@@ -5146,10 +5146,10 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiIsAttrOptionalBN(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrOptionalBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrOptionalBN")]
 		public static extern int_t engiGetAttrOptionalBN(int_t entity, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrOptionalBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrOptionalBN")]
 		public static extern int_t engiGetAttrOptionalBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
@@ -5157,7 +5157,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiIsAttrInverse(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrInverse")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrInverse")]
 		public static extern int_t engiGetAttrInverse(int_t attribute);
 
 		/// <summary>
@@ -5165,10 +5165,10 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiIsAttrInverseBN(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrInverseBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrInverseBN")]
 		public static extern int_t engiGetAttrInverseBN(int_t entity, string attributeName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrInverseBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrInverseBN")]
 		public static extern int_t engiGetAttrInverseBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
@@ -5176,7 +5176,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiIsAttrInverse(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiAttrIsInverse")]
+		[DllImport(stepenginedll, EntryPoint = "engiAttrIsInverse")]
 		public static extern int_t engiAttrIsInverse(int_t attribute);
 
 		/// <summary>
@@ -5184,7 +5184,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiGetAttrDomainName(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrDomain")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrDomain")]
 		public static extern IntPtr engiGetAttrDomain(int_t attribute, out IntPtr domainName);
 
 		/// <summary>
@@ -5192,10 +5192,10 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiGetAttrDomainNameBN(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrDomainBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrDomainBN")]
 		public static extern IntPtr engiGetAttrDomainBN(int_t entity, string attributeName, out IntPtr domainName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttrDomainBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttrDomainBN")]
 		public static extern IntPtr engiGetAttrDomainBN(int_t entity, byte[] attributeName, out IntPtr domainName);
 
 		/// <summary>
@@ -5203,7 +5203,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiIsEntityAbstract(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityIsAbstract")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityIsAbstract")]
 		public static extern int_t engiGetEntityIsAbstract(int_t entity);
 
 		/// <summary>
@@ -5211,10 +5211,10 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiIsEntityAbstractbn(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityIsAbstractBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityIsAbstractBN")]
 		public static extern int_t engiGetEntityIsAbstractBN(int_t model, string entityName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityIsAbstractBN")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityIsAbstractBN")]
 		public static extern int_t engiGetEntityIsAbstractBN(int_t model, byte[] entityName);
 
 		/// <summary>
@@ -5222,7 +5222,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiGetAttrTraits(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttributeTraits")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttributeTraits")]
 		public static extern void engiGetAttributeTraits(
 			int_t attribute, 
 			out IntPtr name, 
@@ -5239,7 +5239,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiGetEntityNoAttributes(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityNoArguments")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityNoArguments")]
 		public static extern int_t engiGetEntityNoArguments(int_t entity);
 
 		/// <summary>
@@ -5247,7 +5247,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiGetAttrType(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetArgumentType")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetArgumentType")]
 		public static extern int_t engiGetArgumentType(int_t attribute);
 
 		/// <summary>
@@ -5255,7 +5255,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiGetAttrType(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAttributeType")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAttributeType")]
 		public static extern int_t engiGetAttributeType(int_t attribute);
 
 		/// <summary>
@@ -5263,10 +5263,10 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiGetAttrIndexBN(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityArgumentIndex")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityArgumentIndex")]
 		public static extern int_t engiGetEntityArgumentIndex(int_t entity, string argumentName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityArgumentIndex")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityArgumentIndex")]
 		public static extern int_t engiGetEntityArgumentIndex(int_t entity, byte[] argumentName);
 
 		/// <summary>
@@ -5274,16 +5274,16 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call sdaiGetAggrByIndex(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAggrElement")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAggrElement")]
 		public static extern int_t engiGetAggrElement(int_t aggregate, int_t index, int_t valueType, [param: MarshalAs(UnmanagedType.U1)] out bool value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAggrElement")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAggrElement")]
 		public static extern int_t engiGetAggrElement(int_t aggregate, int_t index, int_t valueType, out int_t value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAggrElement")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAggrElement")]
 		public static extern int_t engiGetAggrElement(int_t aggregate, int_t index, int_t valueType, out double value);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetAggrElement")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetAggrElement")]
 		public static extern int_t engiGetAggrElement(int_t aggregate, int_t index, int_t valueType, out IntPtr value);
 
 		public static int_t engiGetAggrElement(int_t aggregate, int_t index, int_t valueType, out string value)
@@ -5308,10 +5308,10 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call sdaiGetAttrDefinition(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityArgument")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityArgument")]
 		public static extern int_t engiGetEntityArgument(int_t entity, string argumentName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "engiGetEntityArgument")]
+		[DllImport(stepenginedll, EntryPoint = "engiGetEntityArgument")]
 		public static extern int_t engiGetEntityArgument(int_t entity, byte[] argumentName);
 
 		/// <summary>
@@ -5319,7 +5319,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call sdaiGetADBTypePath(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiGetADBTypePathx")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiGetADBTypePathx")]
 		public static extern IntPtr sdaiGetADBTypePathx(int_t ADB, int_t typeNameNumber, out IntPtr path);
 
 		public static string sdaiGetADBTypePathx(int_t ADB, int_t typeNameNumber)
@@ -5334,10 +5334,10 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call engiOpenModelByStream(..) instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "xxxxOpenModelByStream")]
+		[DllImport(stepenginedll, EntryPoint = "xxxxOpenModelByStream")]
 		public static extern int_t xxxxOpenModelByStream(int_t repository, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, string schemaName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "xxxxOpenModelByStream")]
+		[DllImport(stepenginedll, EntryPoint = "xxxxOpenModelByStream")]
 		public static extern int_t xxxxOpenModelByStream(int_t repository, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, byte[] schemaName);
 
 		/// <summary>
@@ -5345,7 +5345,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call .... instead.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "sdaiplusGetAggregationType")]
+		[DllImport(stepenginedll, EntryPoint = "sdaiplusGetAggregationType")]
 		public static extern int_t sdaiplusGetAggregationType(int_t instance, int_t aggregate);
 
 		/// <summary>
@@ -5353,7 +5353,7 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "xxxxGetAttrType")]
+		[DllImport(stepenginedll, EntryPoint = "xxxxGetAttrType")]
 		public static extern int_t xxxxGetAttrType(int_t instance, int_t attribute, out IntPtr attributeType);
 
 		/// <summary>
@@ -5373,10 +5373,10 @@ namespace RDF
 		///				attributeType
 		///			);
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "xxxxGetAttrTypeBN")]
+		[DllImport(stepenginedll, EntryPoint = "xxxxGetAttrTypeBN")]
 		public static extern int_t xxxxGetAttrTypeBN(int_t instance, string attributeName, out IntPtr attributeType);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "xxxxGetAttrTypeBN")]
+		[DllImport(stepenginedll, EntryPoint = "xxxxGetAttrTypeBN")]
 		public static extern int_t xxxxGetAttrTypeBN(int_t instance, byte[] attributeName, out IntPtr attributeType);
 
 		/// <summary>
@@ -5384,7 +5384,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call GetSPFFHeaderItem instead
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "GetSPFFHeaderItemUnicode")]
+		[DllImport(stepenginedll, EntryPoint = "GetSPFFHeaderItemUnicode")]
 		public static extern int_t GetSPFFHeaderItemUnicode(int_t model, int_t itemIndex, int_t itemSubIndex, byte[] buffer, int_t bufferLength);
 
         //
@@ -5416,7 +5416,7 @@ namespace RDF
 		///		bit 15:	(__CALL_ARGUMENT)					validateModel / validateInstance function argument should be model / instance
 		///		bit 63:	(__INTERNAL_ERROR)					unspecified error
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateSetOptions")]
+		[DllImport(stepenginedll, EntryPoint = "validateSetOptions")]
 		public static extern void validateSetOptions(int_t timeLimitSeconds, int_t issueCntLimit, [param: MarshalAs(UnmanagedType.U1)] bool showEachIssueOnce, UInt64 issueTypes, UInt64 mask);
 
 		/// <summary>
@@ -5445,7 +5445,7 @@ namespace RDF
 		///		bit 15:	(__CALL_ARGUMENT)					validateModel / validateInstance function argument should be model / instance
 		///		bit 63:	(__INTERNAL_ERROR)					unspecified error
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateGetOptions")]
+		[DllImport(stepenginedll, EntryPoint = "validateGetOptions")]
 		public static extern UInt64 validateGetOptions(out int_t timeLimitSeconds, out int_t issueCntLimit, [param: MarshalAs(UnmanagedType.U1)] out bool showEachIssueOnce, UInt64 mask);
 
 		/// <summary>
@@ -5453,7 +5453,7 @@ namespace RDF
 		///
 		///	Apply validation of a model
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateModel")]
+		[DllImport(stepenginedll, EntryPoint = "validateModel")]
 		public static extern int_t validateModel(int_t model);
 
 		/// <summary>
@@ -5461,7 +5461,7 @@ namespace RDF
 		///
 		///	Apply validation of an instance
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateInstance")]
+		[DllImport(stepenginedll, EntryPoint = "validateInstance")]
 		public static extern int_t validateInstance(int_t instance);
 
 		/// <summary>
@@ -5469,7 +5469,7 @@ namespace RDF
 		///
 		///	Clean validation results
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateFreeResults")]
+		[DllImport(stepenginedll, EntryPoint = "validateFreeResults")]
 		public static extern void validateFreeResults(int_t results);
 
 		/// <summary>
@@ -5478,7 +5478,7 @@ namespace RDF
 		///	Get first issue from validation results.
 		///	If no issues inside validation results or validation results is NULL it will return NULL.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateGetFirstIssue")]
+		[DllImport(stepenginedll, EntryPoint = "validateGetFirstIssue")]
 		public static extern int_t validateGetFirstIssue(int_t results);
 
 		/// <summary>
@@ -5487,7 +5487,7 @@ namespace RDF
 		///	Get next issue based on a given issue.
 		///	If no issues left or validation issue is NULL it will return NULL.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateGetNextIssue")]
+		[DllImport(stepenginedll, EntryPoint = "validateGetNextIssue")]
 		public static extern int_t validateGetNextIssue(int_t issue);
 
 		/// <summary>
@@ -5501,7 +5501,7 @@ namespace RDF
 		///		value 3:	(__TIME_EXCEED)					validation was finished because of reach time limit
 		///		value 4:	(__COUNT_EXCEED)				validation was finished because of reach of issue's numbers limit
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateGetStatus")]
+		[DllImport(stepenginedll, EntryPoint = "validateGetStatus")]
 		public static extern enum_validation_status validateGetStatus(int_t results);
 
 		/// <summary>
@@ -5527,7 +5527,7 @@ namespace RDF
 		///		bit 15:	(__CALL_ARGUMENT)					validateModel / validateInstance function argument should be model / instance
 		///		bit 63:	(__INTERNAL_ERROR)					unspecified error
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateGetIssueType")]
+		[DllImport(stepenginedll, EntryPoint = "validateGetIssueType")]
 		public static extern enum_validation_type validateGetIssueType (int_t issue);
 
 		/// <summary>
@@ -5535,7 +5535,7 @@ namespace RDF
 		///
 		///	Returns the (first) instance related to the given issue.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateGetInstance")]
+		[DllImport(stepenginedll, EntryPoint = "validateGetInstance")]
 		public static extern int_t validateGetInstance(int_t issue);
 
 		/// <summary>
@@ -5543,7 +5543,7 @@ namespace RDF
 		///
 		///	Returns the second instance related to the given issue (if relevant).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateGetInstanceRelated")]
+		[DllImport(stepenginedll, EntryPoint = "validateGetInstanceRelated")]
 		public static extern int_t validateGetInstanceRelated(int_t issue);
 
 		/// <summary>
@@ -5551,7 +5551,7 @@ namespace RDF
 		///
 		///	Returns the entity handle related to the given issue (if relevant).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateGetEntity")]
+		[DllImport(stepenginedll, EntryPoint = "validateGetEntity")]
 		public static extern int_t validateGetEntity(int_t issue);
 
 		/// <summary>
@@ -5559,7 +5559,7 @@ namespace RDF
 		///
 		///	Returns the attribute handle related to the given issue (if relevant).
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateGetAttr")]
+		[DllImport(stepenginedll, EntryPoint = "validateGetAttr")]
 		public static extern int_t validateGetAttr(int_t issue);
 
 		/// <summary>
@@ -5567,7 +5567,7 @@ namespace RDF
 		///
 		///	Specifies nesting level of aggregation or 0.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateGetAggrLevel")]
+		[DllImport(stepenginedll, EntryPoint = "validateGetAggrLevel")]
 		public static extern int_t validateGetAggrLevel(int_t issue);
 
 		/// <summary>
@@ -5575,7 +5575,7 @@ namespace RDF
 		///
 		///	Array of indices for each aggregation size is aggrLevel.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateGetAggrIndArray")]
+		[DllImport(stepenginedll, EntryPoint = "validateGetAggrIndArray")]
 		public static extern int_t validateGetAggrIndArray(int_t issue);
 
 		/// <summary>
@@ -5583,7 +5583,7 @@ namespace RDF
 		///
 		///	Returns the issue level (i.e. severity of the issue) of the issue given as input.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateGetIssueLevel")]
+		[DllImport(stepenginedll, EntryPoint = "validateGetIssueLevel")]
 		public static extern int_t validateGetIssueLevel(int_t issue);
 
 		/// <summary>
@@ -5591,7 +5591,7 @@ namespace RDF
 		///
 		///	Returns the description text of the issue given as input.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "validateGetDescription")]
+		[DllImport(stepenginedll, EntryPoint = "validateGetDescription")]
 		public static extern IntPtr validateGetDescription(int_t issue);
 
 		public static string validateGetDescriptionString (int_t issue)
@@ -5609,7 +5609,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call CalculateInstance().
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "initializeModellingInstance")]
+		[DllImport(stepenginedll, EntryPoint = "initializeModellingInstance")]
 		public static extern int_t initializeModellingInstance(int_t model, out int_t noVertices, out int_t noIndices, double scale, int_t instance);
 
 		/// <summary>
@@ -5617,7 +5617,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call UpdateInstanceVertexBuffer() and UpdateInstanceIndexBuffer().
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "finalizeModelling")]
+		[DllImport(stepenginedll, EntryPoint = "finalizeModelling")]
 		public static extern int_t finalizeModelling(int_t model, out float vertices, out int_t indices, int_t FVF);
 
 		/// <summary>
@@ -5625,7 +5625,7 @@ namespace RDF
 		///
 		///	This call is deprecated, there is no direct / easy replacement although the functionality is present. If you still use this call please contact RDF to find a solution together.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getInstanceInModelling")]
+		[DllImport(stepenginedll, EntryPoint = "getInstanceInModelling")]
 		public static extern int_t getInstanceInModelling(int_t model, int_t instance, int_t mode, out int_t startVertex, out int_t startIndex, out int_t primitiveCount);
 
 		/// <summary>
@@ -5633,7 +5633,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call SetVertexBufferOffset().
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "setVertexOffset")]
+		[DllImport(stepenginedll, EntryPoint = "setVertexOffset")]
 		public static extern void setVertexOffset(int_t model, double x, double y, double z);
 
 		/// <summary>
@@ -5641,7 +5641,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call SetFormat().
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "setFormat")]
+		[DllImport(stepenginedll, EntryPoint = "setFormat")]
 		public static extern void setFormat(int_t model, int_t setting, int_t mask);
 
 		/// <summary>
@@ -5649,7 +5649,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call GetConceptualFaceCnt().
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getConceptualFaceCnt")]
+		[DllImport(stepenginedll, EntryPoint = "getConceptualFaceCnt")]
 		public static extern int_t getConceptualFaceCnt(int_t instance);
 
 		/// <summary>
@@ -5657,7 +5657,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call GetConceptualFaceEx().
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "getConceptualFaceEx")]
+		[DllImport(stepenginedll, EntryPoint = "getConceptualFaceEx")]
 		public static extern int_t getConceptualFaceEx(int_t instance, int_t index, out int_t startIndexTriangles, out int_t noIndicesTriangles, out int_t startIndexLines, out int_t noIndicesLines, out int_t startIndexPoints, out int_t noIndicesPoints, out int_t startIndexFacePolygons, out int_t noIndicesFacePolygons, out int_t startIndexConceptualFacePolygons, out int_t noIndicesConceptualFacePolygons);
 
 		/// <summary>
@@ -5665,7 +5665,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call owlBuildInstance.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "createGeometryConversion")]
+		[DllImport(stepenginedll, EntryPoint = "createGeometryConversion")]
 		public static extern void createGeometryConversion(int_t instance, out Int64 owlInstance);
 
 		/// <summary>
@@ -5673,7 +5673,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call owlBuildInstance.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "convertInstance")]
+		[DllImport(stepenginedll, EntryPoint = "convertInstance")]
 		public static extern void convertInstance(int_t instance);
 
 		/// <summary>
@@ -5681,7 +5681,7 @@ namespace RDF
 		///
 		///	This call is deprecated, please use call CalculateInstance().
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "initializeModellingInstanceEx")]
+		[DllImport(stepenginedll, EntryPoint = "initializeModellingInstanceEx")]
 		public static extern int_t initializeModellingInstanceEx(int_t model, out int_t noVertices, out int_t noIndices, double scale, int_t instance, int_t instanceList);
 
 		/// <summary>
@@ -5689,10 +5689,10 @@ namespace RDF
 		///
 		///	This call is deprecated, please contact us if you use this call.
 		/// </summary>
-		[DllImport(STEPEngineDLL, EntryPoint = "exportModellingAsOWL")]
+		[DllImport(stepenginedll, EntryPoint = "exportModellingAsOWL")]
 		public static extern void exportModellingAsOWL(int_t model, string fileName);
 
-		[DllImport(STEPEngineDLL, EntryPoint = "exportModellingAsOWL")]
+		[DllImport(stepenginedll, EntryPoint = "exportModellingAsOWL")]
 		public static extern void exportModellingAsOWL(int_t model, byte[] fileName);
 
 		/// <summary>
@@ -5779,7 +5779,7 @@ namespace RDF
 
     }
 
-    class engine
+    class Engine
 	{
 		public const Int64 OBJECTPROPERTY_TYPE             = 1;
 		public const Int64 DATATYPEPROPERTY_TYPE_BOOLEAN   = 2;
@@ -5828,7 +5828,7 @@ namespace RDF
 		public const UInt64 flagbit30 = 1073741824;     // 2^^30   0100.0000..0000.0000  0000.0000..0000.0000
 		public const UInt64 flagbit31 = 2147483648;		// 2^^31   1000.0000..0000.0000  0000.0000..0000.0000
 
-		public const string enginedll = @"IFCEngine.dll";
+		public const string enginedll = @"stepengine.dll";
 
         //
         //  Meta information API Calls

@@ -562,6 +562,41 @@ static	inline	const char	* GetDateTime(
 #endif
 
 //
+//		GetDateTimeW                                            (https://rdf.bg/stepdoc/CP64/GetDateTimeW.html)
+//				SdaiModel				model								IN
+//				const wchar_t			** dateTimeStamp					IN / OUT
+//
+//				const wchar_t			* returns							OUT
+//
+//	Returns an current date and time according to ISO 8601 without time zone, i.e. formatted as '2099-12-31T23:59:59'.
+//
+const wchar_t				DECL * STDC	GetDateTimeW(
+												SdaiModel				model,
+												const wchar_t			** dateTimeStamp
+											);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	const wchar_t	* GetDateTimeW(
+										SdaiModel				model,
+										wchar_t					** dateTimeStamp
+									)
+{
+	return	GetDateTimeW(
+					model,
+					(const wchar_t**) dateTimeStamp
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
+
+//
 //		GetLibraryIdentifier                                    (https://rdf.bg/stepdoc/CP64/GetLibraryIdentifier.html)
 //				const char				** libraryIdentifier				IN / OUT
 //
@@ -595,6 +630,37 @@ static	inline	const char	* GetLibraryIdentifier(
 {
 	return	GetLibraryIdentifier(
 					(const char**) nullptr				//	libraryIdentifier
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
+
+//
+//		GetLibraryIdentifierW                                   (https://rdf.bg/stepdoc/CP64/GetLibraryIdentifierW.html)
+//				const wchar_t			** libraryIdentifier				IN / OUT
+//
+//				const wchar_t			* returns							OUT
+//
+//	Returns an identifier for the current instance of this library including date stamp and revision number.
+//
+const wchar_t				DECL * STDC	GetLibraryIdentifierW(
+												const wchar_t			** libraryIdentifier
+											);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	const wchar_t	* GetLibraryIdentifierW(
+										wchar_t					** libraryIdentifier
+									)
+{
+	return	GetLibraryIdentifierW(
+					(const wchar_t**) libraryIdentifier
 				);
 }
 
@@ -642,6 +708,41 @@ static	inline	SdaiString	GetSchemaName(
 	return	GetSchemaName(
 					model,
 					(SdaiString*) nullptr				//	schemaName
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
+
+//
+//		GetSchemaNameW                                          (https://rdf.bg/stepdoc/CP64/GetSchemaNameW.html)
+//				SdaiModel				model								IN
+//				const wchar_t			** schemaName						IN / OUT
+//
+//				const wchar_t			* returns							OUT
+//
+//	Returns the value as defined by SCHEMA in the loaded EXPRESS schema.
+//
+const wchar_t				DECL * STDC	GetSchemaNameW(
+												SdaiModel				model,
+												const wchar_t			** schemaName
+											);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	const wchar_t	* GetSchemaNameW(
+										SdaiModel				model,
+										wchar_t					** schemaName
+									)
+{
+	return	GetSchemaNameW(
+					model,
+					(const wchar_t**) schemaName
 				);
 }
 
@@ -2809,16 +2910,19 @@ SdaiString					DECL STDC	sdaiGetADBTypePath(
 //	sdaiAGGR				SdaiAggr aggr;										int_t aggr;
 //							sdaiGetADBValue (ADB, sdaiAGGR, &aggr);				stepengine.sdaiGetADBValue (ADB, stepengine.sdaiAGGR, out aggr);
 //
-//	sdaiADB					SdaiADB adb = sdaiCreateEmptyADB();					int_t adb = 0;	//	it is important to initialize
-//							sdaiGetADBValue (ADB, sdaiADB, adb);				stepengine.sdaiGetADBValue (ADB, stepengine.sdaiADB, out adb);		
-//							sdaiDeleteADB (adb);
+//	sdaiADB					SdaiADB adb = sdaiCreateEmptyADB();					int_t adb = stepengine.sdaiCreateEmptyADB();
+//							sdaiGetADBValue (ADB, sdaiADB, adb);				stepengine.sdaiGetADBValue (ADB, stepengine.sdaiADB, adb);
+//							...													...
+//							sdaiDeleteADB (adb);	//	optional				stepengine.sdaiDeleteADB (adb);	//	optional
 //
-//							SdaiADB adb = nullptr;	//	it is important to initialize
-//							sdaiGetADBValue (ADB, sdaiADB, &adb);
+//							SdaiADB adb = nullptr;								int_t adb = 0;	//	it is important to initialize
+//							sdaiGetADBValue (ADB, sdaiADB, &adb);				stepengine.sdaiGetADBValue (ADB, stepengine.sdaiADB, out adb);
+//							...													...
+//							sdaiDeleteADB (adb);	//	optional				stepengine.sdaiDeleteADB (adb);	//	optional
 //
 //	TCHAR is �char� or �wchar_t� depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//	(Non-standard extension) sdiADB has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table (all open ADB's will be deleted on model close).
 //
 //
 //	Table 2 - valueType can be requested depending on actual model data.
@@ -2938,11 +3042,12 @@ static	inline	SdaiInstance	sdaiGetADBValue(
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
 //							sdaiPutADBTypePath (val, 1, "INTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiPutADBValue (ADB, sdaiADB, val);						stepengine.sdaiPutADBValue (ADB, stepengine.sdaiADB, val);	
-//							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
+//							...															...
+//							sdaiDeleteADB (val);	//	optional						stepengine.sdaiDeleteADB (val);	//	optional
 //
 //	TCHAR is �char� or �wchar_t� depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//	(Non-standard extension) sdiADB has an option to work without sdaiDeleteADB as shown in the table (all open ADB's will be deleted on model close).
 //
 //
 //	Table 2 - valueType can be requested depending on actual model data.
@@ -3088,16 +3193,19 @@ void						DECL STDC	sdaiDeleteADB(
 //	sdaiAGGR				SdaiAggr aggr;														int_t aggr;
 //							sdaiGetAggrByIndex (aggregate, index, sdaiAGGR, &aggr);				stepengine.sdaiGetAggrByIndex (aggregate, index, stepengine.sdaiAGGR, out aggr);
 //
-//	sdaiADB					SdaiADB adb = sdaiCreateEmptyADB();									int_t adb = 0;	//	it is important to initialize
-//							sdaiGetAggrByIndex (aggregate, index, sdaiADB, adb);				stepengine.sdaiGetAggrByIndex (aggregate, index, stepengine.sdaiADB, out adb);		
-//							sdaiDeleteADB (adb);
+//	sdaiADB					SdaiADB adb = sdaiCreateEmptyADB();									int_t adb = stepengine.sdaiCreateEmptyADB();
+//							sdaiGetAggrByIndex (aggregate, index, sdaiADB, adb);				stepengine.sdaiGetAggrByIndex (aggregate, index, stepengine.sdaiADB, adb);
+//							...																	...
+//							sdaiDeleteADB (adb);	//	optional								stepengine.sdaiDeleteADB (adb);	//	optional
 //
-//							SdaiADB adb = nullptr;	//	it is important to initialize
-//							sdaiGetAggrByIndex (aggregate, index, sdaiADB, &adb);
+//							SdaiADB adb = nullptr;												int_t adb = 0;	//	it is important to initialize
+//							sdaiGetAggrByIndex (aggregate, index, sdaiADB, &adb);				stepengine.sdaiGetAggrByIndex (aggregate, index, stepengine.sdaiADB, out adb);
+//							...																	...
+//							sdaiDeleteADB (adb);	//	optional								stepengine.sdaiDeleteADB (adb);	//	optional
 //
 //	TCHAR is �char� or �wchar_t� depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//	(Non-standard extension) sdiADB has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table (all open ADB's will be deleted on model close).
 //
 //
 //	Table 2 - valueType can be requested depending on actual model data.
@@ -3223,11 +3331,12 @@ static	inline	SdaiInstance	sdaiGetAggrByIndex(
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);		int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
 //							sdaiPutADBTypePath (val, 1, "INTEGER");							stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiPutAggrByIndex (aggregate, index, sdaiADB, val);			stepengine.sdaiPutAggrByIndex (aggregate, index, stepengine.sdaiADB, val);	
-//							sdaiDeleteADB (val);											stepengine.sdaiDeleteADB (val);
+//							...																...
+//							sdaiDeleteADB (val);	//	optional							stepengine.sdaiDeleteADB (val);	//	optional
 //
 //	TCHAR is �char� or �wchar_t� depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//	(Non-standard extension) sdiADB has an option to work without sdaiDeleteADB as shown in the table (all open ADB's will be deleted on model close).
 //
 //
 //	Table 2 - valueType can be requested depending on actual model data.
@@ -3385,16 +3494,19 @@ void						DECL STDC	engiGetAggrTypex(
 //	sdaiAGGR				SdaiAggr aggr;													int_t aggr;
 //							sdaiGetAttr (instance, attribute, sdaiAGGR, &aggr);				stepengine.sdaiGetAttr (instance, attribute, stepengine.sdaiAGGR, out aggr);
 //
-//	sdaiADB					SdaiADB adb = sdaiCreateEmptyADB();								int_t adb = 0;	//	it is important to initialize
-//							sdaiGetAttr (instance, attribute, sdaiADB, adb);				stepengine.sdaiGetAttr (instance, attribute, stepengine.sdaiADB, out adb);		
-//							sdaiDeleteADB (adb);
+//	sdaiADB					SdaiADB adb = sdaiCreateEmptyADB();								int_t adb = stepengine.sdaiCreateEmptyADB();
+//							sdaiGetAttr (instance, attribute, sdaiADB, adb);				stepengine.sdaiGetAttr (instance, attribute, stepengine.sdaiADB, adb);
+//							...																...
+//							sdaiDeleteADB (adb);	//	optional							stepengine.sdaiDeleteADB (adb);	//	optional
 //
-//							SdaiADB adb = nullptr;	//	it is important to initialize
-//							sdaiGetAttr (instance, attribute, sdaiADB, &adb);
+//							SdaiADB adb = nullptr;											int_t adb = 0;	//	it is important to initialize
+//							sdaiGetAttr (instance, attribute, sdaiADB, &adb);				stepengine.sdaiGetAttr (instance, attribute, stepengine.sdaiADB, out adb);
+//							...																...
+//							sdaiDeleteADB (adb);	//	optional							stepengine.sdaiDeleteADB (adb);	//	optional
 //
 //	TCHAR is �char� or �wchar_t� depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//	(Non-standard extension) sdiADB has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table (all open ADB's will be deleted on model close).
 //
 //
 //	Table 2 - valueType can be requested depending on actual model data.
@@ -3523,16 +3635,19 @@ static	inline	SdaiInstance	sdaiGetAttr(
 //	sdaiAGGR				SdaiAggr aggr;														int_t aggr;
 //							sdaiGetAttrBN (instance, "attrName", sdaiAGGR, &aggr);				stepengine.sdaiGetAttrBN (instance, "attrName", stepengine.sdaiAGGR, out aggr);
 //
-//	sdaiADB					SdaiADB adb = sdaiCreateEmptyADB();									int_t adb = 0;	//	it is important to initialize
-//							sdaiGetAttrBN (instance, "attrName", sdaiADB, adb);					stepengine.sdaiGetAttrBN (instance, "attrName", stepengine.sdaiADB, out adb);		
-//							sdaiDeleteADB (adb);
+//	sdaiADB					SdaiADB adb = sdaiCreateEmptyADB();									int_t adb = stepengine.sdaiCreateEmptyADB();
+//							sdaiGetAttrBN (instance, "attrName", sdaiADB, adb);					stepengine.sdaiGetAttrBN (instance, "attrName", stepengine.sdaiADB, adb);
+//							...																	...
+//							sdaiDeleteADB (adb);	//	optional								stepengine.sdaiDeleteADB (adb);	//	optional
 //
-//							SdaiADB adb = nullptr;	//	it is important to initialize
-//							sdaiGetAttrBN (instance, "attrName", sdaiADB, &adb);
+//							SdaiADB adb = nullptr;												int_t adb = 0;	//	it is important to initialize
+//							sdaiGetAttrBN (instance, "attrName", sdaiADB, &adb);				stepengine.sdaiGetAttrBN (instance, "attrName", stepengine.sdaiADB, out adb);
+//							...																	...
+//							sdaiDeleteADB (adb);	//	optional								stepengine.sdaiDeleteADB (adb);	//	optional
 //
 //	TCHAR is �char� or �wchar_t� depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//	(Non-standard extension) sdiADB has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table (all open ADB's will be deleted on model close).
 //
 //
 //	Table 2 - valueType can be requested depending on actual model data.
@@ -4632,11 +4747,12 @@ static	inline	SdaiNPL	sdaiFindInstanceUsedInBN(
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
 //							sdaiPutADBTypePath (val, 1, "INTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiPrepend (aggregate, sdaiADB, val);						stepengine.sdaiPrepend (aggregate, stepengine.sdaiADB, val);	
-//							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
+//							...															...
+//							sdaiDeleteADB (val);	//	optional						stepengine.sdaiDeleteADB (val);	//	optional
 //
 //	TCHAR is �char� or �wchar_t� depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//	(Non-standard extension) sdiADB has an option to work without sdaiDeleteADB as shown in the table (all open ADB's will be deleted on model close).
 //
 //
 //	Table 2 - valueType can be requested depending on actual model data.
@@ -4757,11 +4873,12 @@ static	inline	void	sdaiPrepend(
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
 //							sdaiPutADBTypePath (val, 1, "INTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiAppend (aggregate, sdaiADB, val);						stepengine.sdaiAppend (aggregate, stepengine.sdaiADB, val);	
-//							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
+//							...															...
+//							sdaiDeleteADB (val);	//	optional						stepengine.sdaiDeleteADB (val);	//	optional
 //
 //	TCHAR is �char� or �wchar_t� depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//	(Non-standard extension) sdiADB has an option to work without sdaiDeleteADB as shown in the table (all open ADB's will be deleted on model close).
 //
 //
 //	Table 2 - valueType can be requested depending on actual model data.
@@ -4882,11 +4999,12 @@ static	inline	void	sdaiAppend(
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
 //							sdaiPutADBTypePath (val, 1, "INTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiAdd (aggregate, sdaiADB, val);							stepengine.sdaiAdd (aggregate, stepengine.sdaiADB, val);	
-//							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
+//							...															...
+//							sdaiDeleteADB (val);	//	optional						stepengine.sdaiDeleteADB (val);	//	optional
 //
 //	TCHAR is �char� or �wchar_t� depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//	(Non-standard extension) sdiADB has an option to work without sdaiDeleteADB as shown in the table (all open ADB's will be deleted on model close).
 //
 //
 //	Table 2 - valueType can be requested depending on actual model data.
@@ -5008,11 +5126,12 @@ static	inline	void	sdaiAdd(
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);		int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
 //							sdaiPutADBTypePath (val, 1, "INTEGER");							stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiInsertByIndex (aggregate, index, sdaiADB, val);				stepengine.sdaiInsertByIndex (aggregate, index, stepengine.sdaiADB, val);	
-//							sdaiDeleteADB (val);											stepengine.sdaiDeleteADB (val);
+//							...																...
+//							sdaiDeleteADB (val);	//	optional							stepengine.sdaiDeleteADB (val);	//	optional
 //
 //	TCHAR is �char� or �wchar_t� depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//	(Non-standard extension) sdiADB has an option to work without sdaiDeleteADB as shown in the table (all open ADB's will be deleted on model close).
 //
 //
 //	Table 2 - valueType can be requested depending on actual model data.
@@ -5138,11 +5257,12 @@ static	inline	void	sdaiInsertByIndex(
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
 //							sdaiPutADBTypePath (val, 1, "INTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiInsertBefore (iterator, sdaiADB, val);					stepengine.sdaiInsertBefore (iterator, stepengine.sdaiADB, val);	
-//							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
+//							...															...
+//							sdaiDeleteADB (val);	//	optional						stepengine.sdaiDeleteADB (val);	//	optional
 //
 //	TCHAR is �char� or �wchar_t� depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//	(Non-standard extension) sdiADB has an option to work without sdaiDeleteADB as shown in the table (all open ADB's will be deleted on model close).
 //
 //
 //	Table 2 - valueType can be requested depending on actual model data.
@@ -5263,11 +5383,12 @@ static	inline	void	sdaiInsertBefore(
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
 //							sdaiPutADBTypePath (val, 1, "INTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiInsertAfter (iterator, sdaiADB, val);					stepengine.sdaiInsertAfter (iterator, stepengine.sdaiADB, val);	
-//							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
+//							...															...
+//							sdaiDeleteADB (val);	//	optional						stepengine.sdaiDeleteADB (val);	//	optional
 //
 //	TCHAR is �char� or �wchar_t� depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//	(Non-standard extension) sdiADB has an option to work without sdaiDeleteADB as shown in the table (all open ADB's will be deleted on model close).
 //
 //
 //	Table 2 - valueType can be requested depending on actual model data.
@@ -6121,11 +6242,12 @@ static	inline	void	sdaiPutADBTypePath(
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
 //							sdaiPutADBTypePath (val, 1, "INTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiPutAttr (instance, attribute, sdaiADB, val);			stepengine.sdaiPutAttr (instance, attribute, stepengine.sdaiADB, val);	
-//							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
+//							...															...
+//							sdaiDeleteADB (val);	//	optional						stepengine.sdaiDeleteADB (val);	//	optional
 //
 //	TCHAR is �char� or �wchar_t� depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//	(Non-standard extension) sdiADB has an option to work without sdaiDeleteADB as shown in the table (all open ADB's will be deleted on model close).
 //
 //
 //	Table 2 - valueType can be requested depending on actual model data.
@@ -6252,11 +6374,12 @@ static	inline	void	sdaiPutAttr(
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);		int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
 //							sdaiPutADBTypePath (val, 1, "INTEGER");							stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiPutAttrBN (instance, "attrName", sdaiADB, val);				stepengine.sdaiPutAttrBN (instance, "attrName", stepengine.sdaiADB, val);	
-//							sdaiDeleteADB (val);											stepengine.sdaiDeleteADB (val);
+//							...																...
+//							sdaiDeleteADB (val);	//	optional							stepengine.sdaiDeleteADB (val);	//	optional
 //
 //	TCHAR is �char� or �wchar_t� depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//	(Non-standard extension) sdiADB has an option to work without sdaiDeleteADB as shown in the table (all open ADB's will be deleted on model close).
 //
 //
 //	Table 2 - valueType can be requested depending on actual model data.
@@ -7113,7 +7236,13 @@ void						DECL STDC	setMaximumSegmentationLength(
 //
 //				double					returns								OUT
 //
-//	...
+//	This function will return the conversion factor compared to the base SI unit.
+//
+//	The possible unitType values are all enumeration values from enumeration type IfcUnitEnum.
+//
+//	For example getProjectUnitConversionFactor(model, "LENGTHUNIT") returns 0.001 in case of MilliMeters.
+//
+//	Optional arguments unitPrefix (for example "MILLI"), unitName (if defined) and SIUnitName (for example "METRE") can be requested.
 //
 double						DECL STDC	getProjectUnitConversionFactor(
 												SdaiModel				model,
@@ -7146,6 +7275,35 @@ static	inline	double	getProjectUnitConversionFactor(
 				);
 }
 
+//
+//
+static	inline	double	getProjectUnitConversionFactor(
+								SdaiModel				model,
+								SdaiString				unitType
+							)
+{
+	return	getProjectUnitConversionFactor(
+					model,
+					unitType,
+					nullptr,							//	unitPrefix
+					nullptr,							//	unitName
+					nullptr								//	SIUnitName
+				);
+}
+
+//
+//
+static	inline	double	getProjectUnitConversionFactor(
+								SdaiModel				model,
+								char					* unitType
+							)
+{
+	return	getProjectUnitConversionFactor(
+					model,
+					(SdaiString) unitType
+				);
+}
+
 //}} End C++ polymorphic versions
 	extern "C" {
 #endif
@@ -7160,7 +7318,13 @@ static	inline	double	getProjectUnitConversionFactor(
 //
 //				double					returns								OUT
 //
-//	...
+//	This function will return the conversion factor compared to the base SI unit.
+//
+//	The possible unitType values are all enumeration values from enumeration type IfcUnitEnum.
+//
+//	For example getProjectUnitConversionFactorW(model, L"LENGTHUNIT") returns 0.001 in case of MilliMeters.
+//
+//	Optional arguments unitPrefix (for example L"MILLI"), unitName (if defined) and SIUnitName (for example L"METRE") can be requested.
 //
 double						DECL STDC	getProjectUnitConversionFactorW(
 												SdaiModel				model,
@@ -7193,6 +7357,35 @@ static	inline	double	getProjectUnitConversionFactorW(
 				);
 }
 
+//
+//
+static	inline	double	getProjectUnitConversionFactorW(
+								SdaiModel				model,
+								const wchar_t			* unitType
+							)
+{
+	return	getProjectUnitConversionFactorW(
+					model,
+					unitType,
+					nullptr,							//	unitPrefix
+					nullptr,							//	unitName
+					nullptr								//	SIUnitName
+				);
+}
+
+//
+//
+static	inline	double	getProjectUnitConversionFactorW(
+								SdaiModel				model,
+								wchar_t					* unitType
+							)
+{
+	return	getProjectUnitConversionFactorW(
+					model,
+					(const wchar_t*) unitType
+				);
+}
+
 //}} End C++ polymorphic versions
 	extern "C" {
 #endif
@@ -7207,7 +7400,13 @@ static	inline	double	getProjectUnitConversionFactorW(
 //
 //				double					returns								OUT
 //
-//	...
+//	This function will return the conversion factor compared to the base SI unit.
+//
+//	The unitType is derived from the instance.
+//
+//	For example getUnitInstanceConversionFactor(myInstance) returns 0.001 in case of MilliMeters if the instance defines a length unit.
+//
+//	Optional arguments unitType (for example "LENGTHUNIT"), unitPrefix (for example "MILLI"), unitName (if defined) and SIUnitName (for example "METRE") can be requested.
 //
 double						DECL STDC	getUnitInstanceConversionFactor(
 												SdaiInstance			unitInstance,
@@ -7254,7 +7453,13 @@ static	inline	double	getUnitInstanceConversionFactor(
 //
 //				double					returns								OUT
 //
-//	...
+//	This function will return the conversion factor compared to the base SI unit.
+//
+//	The unitType is derived from the instance.
+//
+//	For example getUnitInstanceConversionFactorW(myInstance) returns 0.001 in case of MilliMeters if the instance defines a length unit.
+//
+//	Optional arguments unitType (for example L"LENGTHUNIT"), unitPrefix (for example L"MILLI"), unitName (if defined) and SIUnitName (for example L"METRE") can be requested.
 //
 double						DECL STDC	getUnitInstanceConversionFactorW(
 												SdaiInstance			unitInstance,
@@ -7301,7 +7506,13 @@ static	inline	double	getUnitInstanceConversionFactorW(
 //
 //				void					returns
 //
-//	This call can be used to optimize Boundary Representation geometries.
+//	This call can be used to optimize Boundary Representation or Mesh geometries.
+//
+//	In many cases geometry within an IFC file is not semantically rich similar to an extruded profile or polygon,
+//	bounded surfaces or results from boolean operations on top of basic parametric shapes. Depending on how such geometries are stored very often
+//	only vertices and triangles or polygons based on these vertices are available. Looking at the shape however, they meant to represent often 
+//	parametric surfaces. In case normal and surface boundary information is missing in the IFC file this call allows automatic recalculation of such
+//	information.
 //
 //		consistencyCheck
 //			bit0  (1)		merge elements in the vertex array are duplicated (epsilon used as distance)
@@ -7325,8 +7536,8 @@ static	inline	double	getUnitInstanceConversionFactorW(
 //			then it will be defined as equal
 //
 //		maxVerticesSize
-//			if 0 this setting is applied to BoundaryRepresentation based geometries
-//			if larger than 0 it is applied to all BoundaryRepresentation based geometries with vertices size smaller or equal to the given number
+//			if 0 this setting is applied to all BoundaryRepresentation/Mesh based geometries
+//			if larger than 0 it is applied to BoundaryRepresentation/Mesh based geometries with vertices size smaller or equal to the given number
 //
 void						DECL STDC	setBRepProperties(
 												SdaiModel				model,
@@ -7762,16 +7973,19 @@ static	inline	SdaiInstance	iterateOverInstances(
 //	sdaiAGGR				SdaiAggr aggr;													int_t aggr;
 //							sdaiGetAggrByIterator (iterator, sdaiAGGR, &aggr);				stepengine.sdaiGetAggrByIterator (iterator, stepengine.sdaiAGGR, out aggr);
 //
-//	sdaiADB					SdaiADB adb = sdaiCreateEmptyADB();								int_t adb = 0;	//	it is important to initialize
-//							sdaiGetAggrByIterator (iterator, sdaiADB, adb);					stepengine.sdaiGetAggrByIterator (iterator, stepengine.sdaiADB, out adb);		
-//							sdaiDeleteADB (adb);
+//	sdaiADB					SdaiADB adb = sdaiCreateEmptyADB();								int_t adb = stepengine.sdaiCreateEmptyADB();
+//							sdaiGetAggrByIterator (iterator, sdaiADB, adb);					stepengine.sdaiGetAggrByIterator (iterator, stepengine.sdaiADB, adb);
+//							...																...
+//							sdaiDeleteADB (adb);	//	optional							stepengine.sdaiDeleteADB (adb);	//	optional
 //
-//							SdaiADB adb = nullptr;	//	it is important to initialize
-//							sdaiGetAggrByIterator (iterator, sdaiADB, &adb);
+//							SdaiADB adb = nullptr;											int_t adb = 0;	//	it is important to initialize
+//							sdaiGetAggrByIterator (iterator, sdaiADB, &adb);				stepengine.sdaiGetAggrByIterator (iterator, stepengine.sdaiADB, out adb);
+//							...																...
+//							sdaiDeleteADB (adb);	//	optional							stepengine.sdaiDeleteADB (adb);	//	optional
 //
 //	TCHAR is �char� or �wchar_t� depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//	(Non-standard extension) sdiADB has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table (all open ADB's will be deleted on model close).
 //
 //
 //	Table 2 - valueType can be requested depending on actual model data.
@@ -7891,11 +8105,12 @@ static	inline	SdaiInstance	sdaiGetAggrByIterator(
 //							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = stepengine.sdaiCreateADB (stepengine.sdaiINTEGER, ref integerValue);
 //							sdaiPutADBTypePath (val, 1, "INTEGER");						stepengine.sdaiPutADBTypePath (val, 1, "INTEGER");
 //							sdaiPutAggrByIterator (iterator, sdaiADB, val);				stepengine.sdaiPutAggrByIterator (iterator, stepengine.sdaiADB, val);	
-//							sdaiDeleteADB (val);										stepengine.sdaiDeleteADB (val);
+//							...															...
+//							sdaiDeleteADB (val);	//	optional						stepengine.sdaiDeleteADB (val);	//	optional
 //
 //	TCHAR is �char� or �wchar_t� depending on setStringUnicode.
 //	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t.
-//	(Non-standard extension) sdiADB in C++ has an option to work without sdaiCreateEmptyADB and sdaiDeleteADB as shown in the table.
+//	(Non-standard extension) sdiADB has an option to work without sdaiDeleteADB as shown in the table (all open ADB's will be deleted on model close).
 //
 //
 //	Table 2 - valueType can be requested depending on actual model data.
@@ -8067,6 +8282,25 @@ int_t						DECL STDC	InitializeMultiThreading(
 												SdaiModel				model,
 												int_t					threadCount
 											);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	int_t	InitializeMultiThreading(
+							)
+{
+	return	InitializeMultiThreading(
+					0,									//	model
+					0									//	threadCount
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
 
 //
 //		CreateOwlModelMultiThreadingWrapper                     (https://rdf.bg/stepdoc/CP64/CreateOwlModelMultiThreadingWrapper.html)
