@@ -25,7 +25,7 @@ namespace StreamingSTPInOut_CS
 
             StreamSTP_OUT.OUT mySTP_OUTStream = new StreamSTP_OUT.OUT(mySTP_INStream.mySTPModel);
 
-            stepengine.sdaiCloseModel(mySTP_INStream.mySTPModel);
+            STEPEngine.sdaiCloseModel(mySTP_INStream.mySTPModel);
         }
     }
 }

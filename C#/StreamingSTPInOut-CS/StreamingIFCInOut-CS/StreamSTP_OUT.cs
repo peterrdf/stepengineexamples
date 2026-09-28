@@ -29,7 +29,7 @@ namespace StreamSTP_OUT
         {
 
             // define a progress callback delegate
-            stepengine.WriteCallBackFunction callback =
+            STEPEngine.WriteCallBackFunction callback =
                 (value, size) =>
                 {
                     byte[] buffer = new byte[size];
@@ -41,7 +41,7 @@ namespace StreamSTP_OUT
 
             fs = File.Open("StreamingSTPInOut-CS_exported_as1-oc-214.stp", FileMode.Create);
 
-            stepengine.engiSaveModelByStream(mySTPModel, callback, BLOCK_LENGTH_WRITE);
+            STEPEngine.engiSaveModelByStream(mySTPModel, callback, BLOCK_LENGTH_WRITE);
 
             fs.Close();
         } 

@@ -30,7 +30,7 @@ namespace StreamSTP_IN
         {
 
             // define a progress callback delegate
-            stepengine.ReadCallBackFunction callback =
+            STEPEngine.ReadCallBackFunction callback =
                 (value) =>
                 {
                     byte[] buffer = new byte[BLOCK_LENGTH_READ]; 
@@ -53,7 +53,7 @@ namespace StreamSTP_IN
 
             if (fs != null)
             {
-                mySTPModel = stepengine.engiOpenModelByStream(0, callback, "");
+                mySTPModel = STEPEngine.engiOpenModelByStream(0, callback, "");
 
                 //
                 // Do something with the model here
