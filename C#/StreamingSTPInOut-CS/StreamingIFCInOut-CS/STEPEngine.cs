@@ -26,56 +26,56 @@ namespace RDF
 
 		//	control vertex data
 		///	<summary>Vertex contains 3D point info</summary>
-		public const Int64 VERTEX_POINT = (1<<4); 
+		public const Int64 VERTEX_POINT = (1<<4);
 		///	<summary>Vertex contains normal info</summary>
-		public const Int64 VERTEX_NORMAL = (1<<5); 
+		public const Int64 VERTEX_NORMAL = (1<<5);
 		///	<summary>Vertex contains first 2D texture info</summary>
-		public const Int64 VERTEX_TEXTURE_UV = (1<<6); 
+		public const Int64 VERTEX_TEXTURE_UV = (1<<6);
 		///	<summary>Vertex does contain tangent vector for first texture</summary>
-		public const Int64 VERTEX_TEXTURE_TANGENT = (1<<28); 
+		public const Int64 VERTEX_TEXTURE_TANGENT = (1<<28);
 		///	<summary>Vertex does contain binormal vector for first texture</summary>
-		public const Int64 VERTEX_TEXTURE_BINORMAL = (1<<29); 
+		public const Int64 VERTEX_TEXTURE_BINORMAL = (1<<29);
 		///	<summary>Vertex contains second 2D texture info</summary>
-		public const Int64 VERTEX_TEXTURE2_UV = (1<<7); 
+		public const Int64 VERTEX_TEXTURE2_UV = (1<<7);
 		///	<summary>Vertex does contain tangent vector for second texture (only 64 bit platform)</summary>
-		public const Int64 VERTEX_TEXTURE2_TANGENT = (1<<30); 
+		public const Int64 VERTEX_TEXTURE2_TANGENT = (1<<30);
 		///	<summary>Vertex does contain binormal vector for second texture (only 64 bit platform)</summary>
-		public const Int64 VERTEX_TEXTURE2_BINORMAL = (1<<31); 
+		public const Int64 VERTEX_TEXTURE2_BINORMAL = (1<<31);
 		///	<summary>Vertex does contain Ambient color information</summary>
-		public const Int64 VERTEX_COLOR_AMBIENT = (1<<24); 
+		public const Int64 VERTEX_COLOR_AMBIENT = (1<<24);
 		///	<summary>Vertex does contain Diffuse color information</summary>
-		public const Int64 VERTEX_COLOR_DIFFUSE = (1<<25); 
+		public const Int64 VERTEX_COLOR_DIFFUSE = (1<<25);
 		///	<summary>Vertex does contain Emissive color information</summary>
-		public const Int64 VERTEX_COLOR_EMISSIVE = (1<<26); 
+		public const Int64 VERTEX_COLOR_EMISSIVE = (1<<26);
 		///	<summary>Vertex does contain Specular color information</summary>
-		public const Int64 VERTEX_COLOR_SPECULAR = (1<<27); 
+		public const Int64 VERTEX_COLOR_SPECULAR = (1<<27);
 		//	control CalculateInstance behaviour
 		///	<summary>Object form triangles are exported (effective if instance contains faces and/or solids)(triangulated surface representation)</summary>
 		public const Int64 EXPORT_TRIANGLES = (1<<8);
 		///	<summary>Object polygon lines are exported (effective if instance contains line representations)</summary>
 		public const Int64 EXPORT_LINES = (1<<9);
 		///	<summary>Object points are exported (effective if instance contains point representations)</summary>
-		public const Int64 EXPORT_POINTS = (1<<10); 
+		public const Int64 EXPORT_POINTS = (1<<10);
 		///	<summary>Object face polygon lines (dense wireframe) are exported (requires FORMAT_FLAG_CONTAINS_TRIANGLES)</summary>
-		public const Int64 EXPORT_FACE_POLYGONS = (1<<12); 
+		public const Int64 EXPORT_FACE_POLYGONS = (1<<12);
 		///	<summary>Object conceptual face polygon lines (wireframe) are exported </summary>
-		public const Int64 EXPORT_CONCEPTUAL_FACE_POLYGONS = (1<<13); 
+		public const Int64 EXPORT_CONCEPTUAL_FACE_POLYGONS = (1<<13);
 		///	<summary>Polygon lines (wireframe) exported as tuples (edges) - else as list (loop)</summary>
-		public const Int64 EXPORT_POLYGONS_AS_TUPLES = (1<<14); 
+		public const Int64 EXPORT_POLYGONS_AS_TUPLES = (1<<14);
 		///	<summary>Normal's are exported to be in line with the original semantic form description (orthogonal to conceptual face, could be non orthogonal to the planar face or triangle) - else all normal vectors of triangles are transformed orthogonal to the planar face or triangle they belong to</summary>
-		public const Int64 EXPORT_ADVANCED_NORMALS = (1<<15); 
+		public const Int64 EXPORT_ADVANCED_NORMALS = (1<<15);
 		///	<summary>Where possible DirectX compatibility is given to exported data. Unsets FORMAT_FLAG_OPENGL, FORMAT_FLAG_VERSION_0001, FORMAT_FLAG_VERSION_0010</summary>
-		public const Int64 EXPORT_DIRECTX = (1<<16); 
+		public const Int64 EXPORT_DIRECTX = (1<<16);
 		///	<summary>Where possible OpenGL compatibility is given to exported data. Unsets FORMAT_FLAG_DIRECTX. Sets FORMAT_FLAG_VERSION_0001, FORMAT_FLAG_VERSION_0010</summary>
-		public const Int64 EXPORT_OPENGL = (1<<17); 
+		public const Int64 EXPORT_OPENGL = (1<<17);
 		///	<summary>Every face has exactly one opposite face (normally both index and vertex array are doubled in size)</summary>
-		public const Int64 EXPORT_DOUBLE_SIDED = (1<<18); 
+		public const Int64 EXPORT_DOUBLE_SIDED = (1<<18);
 		///	<summary>Opposite Triangle Rotation (RHS as expected by OpenGL) - else  Standard Triangle Rotation (LHS as expected by DirectX)</summary>
-		public const Int64 EXPORT_VERSION_0001 = (1<<20); 
+		public const Int64 EXPORT_VERSION_0001 = (1<<20);
 		///	<summary>X, Y, Z (nX, nY, nZ) formatted as , i.e. X, -Z, Y (nX, -nZ, nY) considering internal concepts (OpenGL) - else X, Y, Z (nX, nY, nZ) formatted as considering internal concepts</summary>
-		public const Int64 EXPORT_VERSION_0010 = (1<<21); 
-		public const Int64 EXPORT_VERSION_0100 = (1<<22); 
-		public const Int64 EXPORT_VERSION_1000 = (1<<23); 
+		public const Int64 EXPORT_VERSION_0010 = (1<<21);
+		public const Int64 EXPORT_VERSION_0100 = (1<<22);
+		public const Int64 EXPORT_VERSION_1000 = (1<<23);
 	}
 
 	///	<summary>
@@ -119,25 +119,25 @@ namespace RDF
 		///	<summary>get color from array of 4 components in range 0..1</summary>
 		public static UInt32 RGBW(double[] r) { return RGBW(r[0], r[1], r[2], r[3]); }
 
-		///	<summary>get color comments in range 0..255 to array of 4 elements</summary>
+		///	<summary>get color components in range 0..255 to array of 4 elements</summary>
 		public static byte[] GET_COMPONENTS255(UInt32 clr)
 		{
-			var	r = new byte[4]; 
-			r[0] = GET_R255(clr); 
-			r[1] = GET_G255(clr); 
-			r[2] = GET_B255(clr); 
-			r[3] = GET_W255(clr); 
-			return	r; 
+			var	r = new byte[4];
+			r[0] = GET_R255(clr);
+			r[1] = GET_G255(clr);
+			r[2] = GET_B255(clr);
+			r[3] = GET_W255(clr);
+			return	r;
 		}
 
-		///	<summary>get color comments in range 0..1 to array of 4 elements</summary>
+		///	<summary>get color components in range 0..1 to array of 4 elements</summary>
 		public static double[] GET_COMPONENTS(UInt32 clr)
 		{
-			var	r = new double[4]; 
-			r[0] = GET_R(clr); 
-			r[1] = GET_G(clr); 
-			r[2] = GET_B(clr); 
-			r[3] = GET_W(clr); 
+			var	r = new double[4];
+			r[0] = GET_R(clr);
+			r[1] = GET_G(clr);
+			r[2] = GET_B(clr);
+			r[3] = GET_W(clr);
 			return	r;
 		}
 	}//COLOR
@@ -396,11 +396,11 @@ namespace RDF
 		//  File IO API Calls
 		//
 
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate Int64 ReadCallBackFunction(IntPtr value);
+		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		public delegate Int64 ReadCallBackFunction(IntPtr value);
 
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate void WriteCallBackFunction(IntPtr value, Int64 size);
+		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		public delegate void WriteCallBackFunction(IntPtr value, Int64 size);
 
 		/// <summary>
 		///		sdaiCreateModelBN                                       (https://rdf.bg/stepdoc/CS64/sdaiCreateModelBN.html)
@@ -6423,12 +6423,6 @@ namespace RDF
 
 		public const string enginedll = @"stepengine.dll";
 
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-		public delegate Int64 ReadCallBackFunction(IntPtr value);
-
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-		public delegate void WriteCallBackFunction(IntPtr value, Int64 size);
-
 		//
 		//  Meta information API Calls
 		//
@@ -6929,6 +6923,12 @@ namespace RDF
 		//
 		//  File IO/Stream/Copy API Calls
 		//
+
+		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		public delegate Int64 ReadCallBackFunction(IntPtr value);
+
+		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		public delegate void WriteCallBackFunction(IntPtr value, Int64 size);
 
 		/// <summary>
 		///		CreateModel                                             (https://rdf.bg/gkdoc/CS64/CreateModel.html)
